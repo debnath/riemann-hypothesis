@@ -71,7 +71,7 @@ theorem zBig : ZBig := by
       refine ⟨by simp [Formalism.QuantumDeterminants.UH], fun a => by simp, by simp⟩
     have h1W' : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ Formalism.QuantumDeterminants.UWset k r zH' := by
       refine ⟨by simp [Formalism.QuantumDeterminants.UH], fun a => by simp, by simp⟩
-    have := (Formalism.FourierDecayAlt.P.b2_rank_one_mem k r zH zH' μsec hzH hzH' hsec q.2 hζ 1 h1W 1 h1W').2
+    have := (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem k r zH zH' μsec hzH hzH' hsec q.2 hζ 1 h1W 1 h1W').2
     rw [inv_one, Matrix.one_mul, Matrix.mul_one] at this
     rw [bigCell_mulVec_wb q.1 _ hzH']
     exact this

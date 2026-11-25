@@ -25,7 +25,7 @@ variable {k r : ℕ}
 def InW (k r : ℕ) (z x : Fin (2 * r + k + 1) → ℂ) : Prop := inWb k r x ∧ herm (Hpk k r) x z = 0
 
 theorem herm_alt {z : Fin (2 * r + k + 1) → ℂ} : herm (Hpk k r) z z = ((-(Tz k r z) : ℝ) : ℂ) := by
-  have h := P.Qx2.herm_star (k := k) (r := r) z z
+  have h := _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj (k := k) (r := r) z z
   apply Complex.ext
   · simp [Tz]
   · have := congrArg Complex.im h
@@ -45,13 +45,13 @@ theorem blockProjection_mem_block (x : Fin (2 * r + k + 1) → ℂ) : inWb k r (
 theorem prWv_add (z x y : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (x + y) = SSn.prWv k r z x + SSn.prWv k r z y := by
   unfold SSn.prWv
-  rw [blockProjection_add, P.Qx8.herm_add_left', add_div, add_smul]
+  rw [blockProjection_add, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, add_div, add_smul]
   abel
 
 theorem prWv_smul (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (x : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (c • x) = c • SSn.prWv k r z x := by
   unfold SSn.prWv
-  rw [blockProjection_smul, P.Qx8.herm_smul_left', smul_add, smul_smul, mul_div_assoc]
+  rw [blockProjection_smul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, smul_add, smul_smul, mul_div_assoc]
 
 alias inWb_smul := _root_.Formalism.FourierDecayAlt.P.NFRadRedLocSec.inWb_smul
 
@@ -59,7 +59,7 @@ theorem prWv_inW {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
     InW k r z (SSn.prWv k r z y) := by
   refine ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.inWb_add (blockProjection_mem_block y) (inWb_smul _ hz), ?_⟩
   unfold SSn.prWv
-  rw [P.Qx8.herm_add_left', P.Qx8.herm_smul_left', herm_alt]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, herm_alt]
   have : ((Tz k r z : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT.ne'
   field_simp
   push_cast
@@ -94,8 +94,8 @@ def hh (k r : ℕ) (u x : Fin (2 * r + k + 1) → ℂ) : Fin (2 * r + k + 1) →
 theorem herm_hh (u x y : Fin (2 * r + k + 1) → ℂ) {t : ℝ} (ht : herm (Hpk k r) u u = (t : ℂ)) (ht0 : t ≠ 0) :
     herm (Hpk k r) (hh k r u x) (hh k r u y) = herm (Hpk k r) x y := by
   unfold hh
-  rw [Qx8.herm_add_left', Qx8.herm_add_right', Qx8.herm_add_right', Qx8.herm_smul_left', Qx8.herm_smul_left',
-    Qx8.herm_smul_right', Qx8.herm_smul_right', ht, ← Qx8.herm_conj y u]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, Qx8.herm_add_right', Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left,
+    _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, ht, ← Qx8.herm_conj y u]
   have ht0' : (t : ℂ) ≠ 0 := by exact_mod_cast ht0
   simp only [star_neg, star_div₀, star_mul', Complex.star_def, Complex.conj_ofReal, map_ofNat]
   field_simp
@@ -127,7 +127,7 @@ theorem ehat_facts {e₀ b : Fin (2 * r + k + 1) → ℂ} (hN : 0 < (herm (Hpk k
   have hN0 : (N : ℂ) ≠ 0 := by exact_mod_cast hN.ne'
   refine ⟨?_, ?_, ?_⟩
   · unfold ehat
-    rw [Qx8.herm_smul_left', Qx8.herm_smul_right', hbb]
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hbb]
     unfold phi
     rw [← hsv, ← hNdef]
     simp only [star_div₀, Complex.star_def, Complex.conj_conj, Complex.conj_ofReal]
@@ -136,7 +136,7 @@ theorem ehat_facts {e₀ b : Fin (2 * r + k + 1) → ℂ} (hN : 0 < (herm (Hpk k
       (starRingEnd ℂ sv * sv) * ↑N / ((↑(Real.sqrt N)) ^ 2 * (↑‖sv‖) ^ 2) by ring, hcs, hq2]
     field_simp
   · unfold ehat
-    rw [Qx8.herm_smul_left']
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left]
     unfold phi
     rw [← hsv, ← hNdef]
     push_cast
@@ -161,7 +161,7 @@ theorem uu_facts {e₀ b : Fin (2 * r + k + 1) → ℂ} (he : herm (Hpk k r) e�
     unfold uu; rw [Qx8.herm_add_right', he, hc']; push_cast; ring
   have huu : herm (Hpk k r) (uu k r e₀ b) (uu k r e₀ b) = ((2 + 2 * c : ℝ) : ℂ) := by
     unfold uu
-    rw [Qx8.herm_add_left', Qx8.herm_add_right', Qx8.herm_add_right', he, hc', hc, h1]
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, Qx8.herm_add_right', Qx8.herm_add_right', he, hc', hc, h1]
     push_cast; ring
   refine ⟨c, hc0, huu, ?_⟩
   have h2 : (2 : ℂ) + 2 * (c : ℂ) ≠ 0 := by
@@ -194,19 +194,19 @@ theorem frame_at {z e₀ b : Fin (2 * r + k + 1) → ℂ} {m : ℕ} {F : Fin m �
   have huW : inWb k r (uu k r e₀ b) :=
     _root_.Formalism.FourierDecayAlt.P.Qx8.inWb_add he₀.1 (inWb_smul _ hb.1)
   have huz : herm (Hpk k r) (uu k r e₀ b) z = 0 := by
-    unfold uu ehat; rw [Qx8.herm_add_left', Qx8.herm_smul_left', he₀.2, hb.2]; ring
+    unfold uu ehat; rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, he₀.2, hb.2]; ring
   refine ⟨fun t => ?_, fun t t' => ?_, fun t v hv => ?_⟩
   · unfold hh; exact _root_.Formalism.FourierDecayAlt.P.Qx8.inWb_add (hF.1 t) (inWb_smul _ huW)
   · rw [herm_hh _ _ _ huu hc2]; exact hF.2.1 t t'
   · simp only [List.mem_cons, List.not_mem_nil, or_false] at hv
     rcases hv with h | h <;> subst h
     · unfold hh
-      rw [Qx8.herm_add_left', Qx8.herm_smul_left', hF.2.2 t v (by simp), huz]; ring
+      rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hF.2.2 t v (by simp), huz]; ring
     · have hkey : herm (Hpk k r) (hh k r (uu k r e₀ v) (F t)) (hh k r (uu k r e₀ v) e₀) = 0 := by
         rw [herm_hh _ _ _ huu hc2]; exact hF.2.2 t e₀ (by simp)
       have hv' : v = (-(phi k r e₀ v)⁻¹) • hh k r (uu k r e₀ v) e₀ := by
         rw [hhe]; unfold ehat; rw [smul_neg, neg_smul, neg_neg, smul_smul, inv_mul_cancel₀ hφ, one_smul]
-      have := Qx8.herm_smul_right' (Hpk k r) (-(phi k r e₀ v)⁻¹) (hh k r (uu k r e₀ v) (F t)) (hh k r (uu k r e₀ v) e₀)
+      have := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right (Hpk k r) (-(phi k r e₀ v)⁻¹) (hh k r (uu k r e₀ v) (F t)) (hh k r (uu k r e₀ v) e₀)
       rw [← hv', hkey, mul_zero] at this
       exact this
 
@@ -221,10 +221,10 @@ theorem frame_locality_holds : FrameLoc := by
   have hq : 0 < Real.sqrt N₀ := Real.sqrt_pos.2 hN₀
   set e₀ : Fin (2 * r + k + 1) → ℂ := (((Real.sqrt N₀)⁻¹ : ℝ) : ℂ) • b a₀ with he₀def
   have he₀W : InW k r z e₀ :=
-    ⟨inWb_smul _ (hbW a₀).1, by rw [he₀def, Qx8.herm_smul_left', (hbW a₀).2, mul_zero]⟩
+    ⟨inWb_smul _ (hbW a₀).1, by rw [he₀def, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, (hbW a₀).2, mul_zero]⟩
   have hbb₀ : herm (Hpk k r) (b a₀) (b a₀) = (N₀ : ℂ) := SSn.Geom.herm_self_real (b a₀)
   have he₀1 : herm (Hpk k r) e₀ e₀ = 1 := by
-    rw [he₀def, Qx8.herm_smul_left', Qx8.herm_smul_right', hbb₀, Complex.star_def, Complex.conj_ofReal]
+    rw [he₀def, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hbb₀, Complex.star_def, Complex.conj_ofReal]
     have hq2 : ((Real.sqrt N₀ : ℝ) : ℂ) ^ 2 = (N₀ : ℂ) := by
       rw [← Complex.ofReal_pow, Real.sq_sqrt hN₀.le]
     have hq0 : ((Real.sqrt N₀ : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hq.ne'
@@ -232,7 +232,7 @@ theorem frame_locality_holds : FrameLoc := by
     rw [← hq2]
     field_simp
   have hs₀ : herm (Hpk k r) (b a₀) e₀ ≠ 0 := by
-    rw [he₀def, Qx8.herm_smul_right', hbb₀, Complex.star_def, Complex.conj_ofReal]
+    rw [he₀def, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hbb₀, Complex.star_def, Complex.conj_ofReal]
     have : (0 : ℝ) < (Real.sqrt N₀)⁻¹ * N₀ := mul_pos (inv_pos.2 hq) hN₀
     exact_mod_cast this.ne'
   obtain ⟨n, rfl⟩ : ∃ n, k = n + 1 := ⟨k - 1, by omega⟩

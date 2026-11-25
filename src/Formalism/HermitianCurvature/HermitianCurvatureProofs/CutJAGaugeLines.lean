@@ -176,7 +176,7 @@ theorem gauge_right_line_holds : GLRight := by
           exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
         exact this.preimage continuous_fst
       have h2 : IsOpen {x : (Fin P.r → ℂ) × Q.Mx P.k P.r | 0 < Q.GGl P.k P.r Bs.z Bs.z' x.2} :=
-        isOpen_lt continuous_const ((Formalism.FourierDecayAlt.P.Qx5.GGl_continuous P.k P.r Bs.z Bs.z').comp continuous_snd)
+        isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont P.k P.r Bs.z Bs.z').comp continuous_snd)
       exact h1.inter h2
     · have hq' : ((q.1.1, q.1.2) : (Fin P.r → ℂ) × ℂ) ∈ NF.QR P.k P.r Bs.z Bs.z' :=
         ⟨q.2.1, by rw [hTz, hTz']; exact q.2.2⟩

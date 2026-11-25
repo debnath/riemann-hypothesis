@@ -97,7 +97,7 @@ theorem mp_conj {z : Fin (2 * r + k + 1) → ℂ} {μ : Measure (Mt k r)} (hz : 
 theorem mp_conj_inv {z : Fin (2 * r + k + 1) → ℂ} {μ : Measure (Mt k r)} (hz : inWb k r z) (hT : 0 < Tz k r z)
     (h : B.IsHaarOn (Nset k r) μ) {a : B.Mat k r} (ha : a ∈ UWset k r z) :
     MeasurePreserving (conjInvM a) μ μ := by
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z
   have := mp_conj hz hT h (hW.inv_mem a ha)
   have e : conjM (a⁻¹) = conjInvM a := by
     funext x
@@ -115,8 +115,8 @@ theorem GlobalTheory.sParam_measurePreserving : ∀ (k r : ℕ) (z : Fin (2 * r 
   have hN : B.IsHaarOn (Formalism.QuantumDeterminants.Nset k r) μN := (GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μN).2.1.1 hN0
   have := hW0.1
   have := hN0.1
-  have cW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z
-  have cN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have cW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z
+  have cN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have aW := Formalism.FourierDecayAlt.P.B7.ae_mem hW
   have aN := Formalism.FourierDecayAlt.P.B7.ae_mem hN
   have m1 : Measurable (Prod.fst : Formalism.QuantumDeterminants.Mt k r × Formalism.QuantumDeterminants.Mt k r → _) := measurable_fst

@@ -25,35 +25,10 @@ section Herm
 
 variable {ι : Type*} [Fintype ι] (H : Matrix ι ι ℂ)
 
-lemma herm_add_left (u u' v : ι → ℂ) : herm H (u + u') v = herm H u v + herm H u' v := by
-  simp only [herm, mulVec_add, dotProduct_add]
-
-lemma herm_smul_left (c : ℂ) (u v : ι → ℂ) : herm H (c • u) v = c * herm H u v := by
-  simp only [herm, mulVec_smul, dotProduct_smul, smul_eq_mul]
-
-lemma herm_neg_left (u v : ι → ℂ) : herm H (-u) v = -herm H u v := by
-  simp only [herm, mulVec_neg, dotProduct_neg]
-
-lemma herm_add_right (u v v' : ι → ℂ) : herm H u (v + v') = herm H u v + herm H u v' := by
-  simp only [herm, star_add, add_dotProduct]
-
 lemma herm_zero_right (u : ι → ℂ) : herm H u 0 = 0 := by
   simp [herm]
 
-lemma herm_conj (hH : Hᴴ = H) (u v : ι → ℂ) : conj (herm H u v) = herm H v u := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x8.herm_conj <;> assumption
-
-lemma herm_UH [DecidableEq ι] {g : Matrix ι ι ℂ} (hg : g ∈ UH H) (u v : ι → ℂ) :
-    herm H (g *ᵥ u) (g *ᵥ v) = herm H u v := by
-  have hg' : gᴴ * H * g = H := hg
-  simp only [herm]
-  rw [star_mulVec, ← dotProduct_mulVec, mulVec_mulVec, mulVec_mulVec, hg']
-
 end Herm
-
-lemma mat_ext {m : ℕ} {A B : Matrix (Fin m) (Fin m) ℂ} (h : ∀ u, A *ᵥ u = B *ᵥ u) : A = B := by
-  ext i j
-  simpa [mulVec, dotProduct, Pi.single_apply] using congrFun (h (Pi.single j 1)) i
 
 def i0 (k r' : ℕ) : Fin (2 * (1 + r') + k + 1) := eI k (1 + r') (a0 r')
 
@@ -150,10 +125,6 @@ lemma H_lev_iL (k r' : ℕ) (i : Fin (2 * r' + k + 1)) : Hpk k (1 + r') (levPos 
   simp only [Hpk, iL_val, lev_val, Fin.ext_iff]
   split_ifs <;> first | rfl | omega
 
-lemma H_lev_lev (k r' : ℕ) (i j : Fin (2 * r' + k + 1)) :
-    Hpk k (1 + r') (levPos k 1 r' i) (levPos k 1 r' j) = Hpk k r' i j := by
-  apply Formalism.FourierDecayAlt.P.B2x4.Hpk_levPos
-
 lemma hermitian_matrix_mul_first (k r' : ℕ) (u : Fin (2 * (1 + r') + k + 1) → ℂ) : (Hpk k (1 + r') *ᵥ u) (i0 k r') = u (iL k r') := by
   simp [mulVec, dotProduct, hermitian_form_first_basis]
 
@@ -165,7 +136,7 @@ lemma Hmul_res (k r' : ℕ) (u : Fin (2 * (1 + r') + k + 1) → ℂ) :
   funext j
   simp only [res, mulVec, dotProduct]
   rw [sum_split k r']
-  simp [hermitian_levi_entry_zero, H_lev_iL, H_lev_lev]
+  simp [hermitian_levi_entry_zero, H_lev_iL, _root_.Formalism.FourierDecayAlt.P.B2x4.Hpk_levPos]
 
 lemma herm_split (k r' : ℕ) (u v : Fin (2 * (1 + r') + k + 1) → ℂ) :
     herm (Hpk k (1 + r')) u v =
@@ -300,7 +271,7 @@ lemma heis_act' (k r' : ℕ) (y : Fin (2 * r' + k + 1) → ℂ) (u : Fin (2 * (1
 lemma heisG_mul (k r' : ℕ) (y y' : Fin (2 * r' + k + 1) → ℂ) (b b' : ℂ) :
     heisG k r' (liftVec k 1 r' y) b * heisG k r' (liftVec k 1 r' y') b' =
       heisG k r' (liftVec k 1 r' (y + y')) (b + b' - herm (Hpk k r') y' y) := by
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro w
   rw [← mulVec_mulVec, heis_act', heis_act', heis_act']
   have hL : (w - herm (Hpk k r') (res k r' w) y' • e0 k r' + w (iL k r') • (liftVec k 1 r' y' + b' • e0 k r'))
@@ -309,29 +280,23 @@ lemma heisG_mul (k r' : ℕ) (y y' : Fin (2 * r' + k + 1) → ℂ) (b b' : ℂ) 
   have hR : res k r' (w - herm (Hpk k r') (res k r' w) y' • e0 k r' +
       w (iL k r') • (liftVec k 1 r' y' + b' • e0 k r')) = res k r' w + w (iL k r') • y' := by
     simp only [res_add, res_sub, res_smul, restriction_base_vector_zero, res_lift, smul_zero, sub_zero, add_zero]
-  rw [hL, hR, herm_add_left, herm_smul_left, herm_add_right, lift_add]
+  rw [hL, hR, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_add_right, lift_add]
   funext p
   simp only [Pi.add_apply, Pi.sub_apply, Pi.smul_apply, smul_eq_mul]
   ring
 
 lemma heisG_zero (k r' : ℕ) : heisG k r' (liftVec k 1 r' 0) 0 = 1 := by
-  refine mat_ext fun w => ?_
+  refine _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext fun w => ?_
   simpa [lift_zero, herm_zero_right] using heis_act' k r' 0 w 0
-
-lemma Hherm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x8.Hpk_herm <;> assumption
-
-lemma herm_self_im (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) : (herm (Hpk k r) y y).im = 0 := by
-  exact Complex.conj_eq_iff_im.mp (herm_conj _ (Hherm k r) y y)
 
 lemma hb_add (k r' : ℕ) (y y' : Fin (2 * r' + k + 1) → ℂ) (s s' : ℝ) :
     hb k r' y s + hb k r' y' s' - herm (Hpk k r') y' y = hb k r' (y + y') (s + s' - (herm (Hpk k r') y' y).im) := by
   have h1 : herm (Hpk k r') (y + y') (y + y') =
       herm (Hpk k r') y y + herm (Hpk k r') y' y + (herm (Hpk k r') y y' + herm (Hpk k r') y' y') := by
-    rw [herm_add_left, herm_add_right, herm_add_right]
+    rw [_root_.Formalism.FourierDecayAlt.P.B2x8.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_add_right, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_add_right]
     ring
   have h2 : (herm (Hpk k r') y y').re = (herm (Hpk k r') y' y).re := by
-    rw [← herm_conj _ (Hherm k r') y' y, Complex.conj_re]
+    rw [← _root_.Formalism.FourierDecayAlt.P.B2x8.herm_conj _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r') y' y, Complex.conj_re]
   simp only [hb]
   apply Complex.ext
   · simp only [Complex.add_re, Complex.sub_re, Complex.ofReal_re, Complex.mul_re, Complex.I_re, Complex.I_im,
@@ -353,14 +318,11 @@ lemma heisenberg_at_zero (k r' : ℕ) : heis0 k r' (0, 0) = 1 := by
 
 lemma heisenberg_mul_neg (k r' : ℕ) (x : HPar k r') : heis0 k r' x * heis0 k r' (-x.1, -x.2) = 1 := by
   rw [heisMul k r' x (-x.1, -x.2)]
-  convert heisenberg_at_zero k r' using 2 <;> simp [herm_neg_left, herm_self_im]
+  convert heisenberg_at_zero k r' using 2 <;> simp [_root_.Formalism.FourierDecayAlt.P.B2x8.al_herm_neg_left, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_self_im]
 
 theorem heisInv : HeisInv := by
   intro k r' x
   exact Matrix.inv_eq_right_inv (heisenberg_mul_neg k r' x)
-
-lemma herm_zero_left {ι : Type*} [Fintype ι] (H : Matrix ι ι ℂ) (v : ι → ℂ) : herm H 0 v = 0 := by
-  simp [herm]
 
 lemma heis_col (k r' : ℕ) (x : HPar k r') (p : Fin (2 * (1 + r') + k + 1)) :
     heis0 k r' x p (iL k r') = (es0 k r' + (liftVec k 1 r' x.1 + hb k r' x.1 x.2 • e0 k r')) p := by
@@ -368,7 +330,7 @@ lemma heis_col (k r' : ℕ) (x : HPar k r') (p : Fin (2 * (1 + r') + k + 1)) :
     simp [dual_base_vector_eq_single, mulVec, dotProduct, Pi.single_apply]
   rw [hcol]
   simp only [heis0]
-  rw [heis_act', restriction_dual_base_vector_zero, dual_base_vector_last_one, herm_zero_left]
+  rw [heis_act', restriction_dual_base_vector_zero, dual_base_vector_last_one, _root_.Formalism.FourierDecayAlt.P.B2x8.al_herm_zero_left]
   simp
 
 def coord (k r' : ℕ) (g : Mat k (1 + r')) : HPar k r' :=
@@ -482,14 +444,6 @@ lemma lev_lev_iL (k r' : ℕ) (g : Mat k r') (i : Fin (2 * r' + k + 1)) :
   rw [dite_eq_left, dite_eq_right]
   all_goals first | omega | (simp only [iL_val, lev_val]; omega)
 
-lemma lev_lev_lev (k r' : ℕ) (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
-    ιLev k 1 r' g (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
-  have hi := i.isLt
-  have hj := j.isLt
-  simp only [ιLev]
-  rw [dite_eq_left, dite_eq_left]
-  all_goals first | rfl | omega | (simp only [lev_val]; omega)
-
 lemma levi_action_first_coordinate (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) → ℂ) :
     (ιLev k 1 r' g *ᵥ u) (i0 k r') = u (i0 k r') := by
   simp [mulVec, dotProduct, levi_first_row]
@@ -503,17 +457,17 @@ lemma lev_act_res (k r' : ℕ) (g : Mat k r') (u : Fin (2 * (1 + r') + k + 1) �
   funext j
   simp only [res, mulVec, dotProduct]
   rw [sum_split k r']
-  simp [levi_entry_first_zero, lev_lev_iL, lev_lev_lev]
+  simp [levi_entry_first_zero, lev_lev_iL, _root_.Formalism.FourierDecayAlt.P.B2x2.lev_mm]
 
 lemma lev_mul (k r' : ℕ) (g h : Mat k r') : ιLev k 1 r' g * ιLev k 1 r' h = ιLev k 1 r' (g * h) := by
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro u
   rw [← mulVec_mulVec]
   apply vec_ext <;> simp only [levi_action_first_coordinate, lev_act_res, lev_act_iL]
   rw [mulVec_mulVec]
 
 lemma lev_one (k r' : ℕ) : ιLev k 1 r' (1 : Mat k r') = 1 := by
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro u
   rw [one_mulVec]
   apply vec_ext <;> simp [levi_action_first_coordinate, lev_act_res, lev_act_iL]
@@ -525,31 +479,22 @@ lemma lev_lift (k r' : ℕ) (g : Mat k r') (y : Fin (2 * r' + k + 1) → ℂ) :
     ιLev k 1 r' g *ᵥ liftVec k 1 r' y = liftVec k 1 r' (g *ᵥ y) := by
   apply vec_ext <;> simp [levi_action_first_coordinate, lev_act_res, lev_act_iL, res_lift, lifted_vector_first, lift_iL]
 
-lemma isUnit_det_Hpk (k r : ℕ) : IsUnit (Hpk k r).det := Matrix.isUnit_det_of_right_inverse (hpkFacts k r).2.1
-
-lemma isUnit_det_GV {k r : ℕ} {g : Mat k r} (hg : g ∈ GV k r) : IsUnit g.det := by
-  rw [isUnit_iff_ne_zero]
-  intro hg0
-  have h2 := congrArg Matrix.det (show gᴴ * Hpk k r * g = Hpk k r from hg)
-  rw [Matrix.det_mul, Matrix.det_mul, hg0, mul_zero] at h2
-  exact (isUnit_iff_ne_zero.mp (isUnit_det_Hpk k r)) h2.symm
-
 lemma isUnit_det_lev {k r' : ℕ} {g : Mat k r'} (hg : IsUnit g.det) : IsUnit (ιLev k 1 r' g).det := by
   apply Matrix.isUnit_det_of_right_inverse (B := ιLev k 1 r' g⁻¹)
   rw [lev_mul, Matrix.mul_nonsing_inv _ hg, lev_one]
 
 lemma lev_heisG (k r' : ℕ) {g : Mat k r'} (hg : g ∈ GV k r') (y : Fin (2 * r' + k + 1) → ℂ) (b : ℂ) :
     ιLev k 1 r' g * heisG k r' (liftVec k 1 r' y) b = heisG k r' (liftVec k 1 r' (g *ᵥ y)) b * ιLev k 1 r' g := by
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro u
-  rw [← mulVec_mulVec, ← mulVec_mulVec, heis_act', heis_act', lev_act_res, lev_act_iL, herm_UH (H := Hpk k r') hg]
+  rw [← mulVec_mulVec, ← mulVec_mulVec, heis_act', heis_act', lev_act_res, lev_act_iL, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_UH (H := Hpk k r') hg]
   simp only [mulVec_add, mulVec_sub, mulVec_smul, levi_fixes_base_vector, lev_lift]
 
 theorem heisConjLev : HeisConjLev := by
   intro k r' g hg x
-  have hu : IsUnit (ιLev k 1 r' g).det := isUnit_det_lev (isUnit_det_GV hg)
+  have hu : IsUnit (ιLev k 1 r' g).det := isUnit_det_lev (_root_.Formalism.FourierDecayAlt.P.B2x8.al_unit hg)
   have hb' : hb k r' (g *ᵥ x.1) x.2 = hb k r' x.1 x.2 := by
-    simp only [hb, herm_UH (H := Hpk k r') hg]
+    simp only [hb, _root_.Formalism.FourierDecayAlt.P.B2x8.herm_UH (H := Hpk k r') hg]
   simp only [heis0]
   rw [lev_heisG k r' hg, Matrix.mul_assoc, Matrix.mul_nonsing_inv _ hu, Matrix.mul_one, hb']
 
@@ -638,7 +583,7 @@ lemma normSq_det_GV {k r : ℕ} {g : Mat k r} (hg : g ∈ GV k r) : Complex.norm
     rw [one_mul]
     nth_rewrite 2 [← h2]
     ring
-  have h3 := (isUnit_det_Hpk k r).mul_right_cancel h4
+  have h3 := (_root_.Formalism.FourierDecayAlt.P.B2x3.hpk_unit k r).mul_right_cancel h4
   have h5 : ((Complex.normSq g.det : ℝ) : ℂ) = 1 := by
     rw [Complex.normSq_eq_conj_mul_self]
     exact h3
@@ -668,19 +613,3 @@ theorem heisConjLevMeas : HeisConjLevMeas := by
   rw [heisConjLev k r' g hg y, add_zero]
 
 end Formalism.FourierDecayAlt.P.B2x5
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem heisMul_statement : Formalism.FourierDecayAlt.B2.HeisMul := B2x5.heisMul
-
-theorem heisenberg_inverse : Formalism.FourierDecayAlt.B2.HeisInv := B2x5.heisInv
-
-theorem heisenberg_subgroup_closed : Formalism.FourierDecayAlt.B2.HeisClosed := B2x5.heisClosed
-
-theorem heisenberg_haar_measure : Formalism.FourierDecayAlt.B2.HeisHaar := B2x5.heisHaar
-
-theorem heisenberg_conjugation_by_levi : Formalism.FourierDecayAlt.B2.HeisConjLev := B2x5.heisConjLev
-
-theorem heisenberg_levi_conjugation_measure : Formalism.FourierDecayAlt.B2.HeisConjLevMeas := B2x5.heisConjLevMeas
-
-end Formalism.FourierDecayAlt.P

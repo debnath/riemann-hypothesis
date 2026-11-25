@@ -56,7 +56,7 @@ theorem s3dx1S_lower {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Mt k 
   have hsx : Matrix.of p.1 * Matrix.of p.2 * Matrix.of x ∈ UH (Hpk k r) := PI.WUN.UH_mul hs hx
   have h1 := ((Formalism.MainNotions.InverseNormDecayBounds.normInvP k r).1 _ hsx).2
   have hsub := (Formalism.MainNotions.InverseNormDecayBounds.normInvP k r).2 (Matrix.of p.1 * Matrix.of p.2) (Matrix.of x)
-  have hs0 := gN_nonneg_bessel_integrability (Matrix.of p.1 * Matrix.of p.2)
+  have hs0 := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (Matrix.of p.1 * Matrix.of p.2)
   have hle : Formalism.FourierDecayAlt.B.gN (Matrix.of p.1 * Matrix.of p.2 * Matrix.of x) ≤
       Formalism.FourierDecayAlt.B.gN (Matrix.of p.1 * Matrix.of p.2) * Rr :=
     hsub.trans (mul_le_mul_of_nonneg_left hxR hs0)
@@ -164,7 +164,7 @@ theorem growth_spherical_bound : Formalism.FourierDecayAlt.ThreeDimData.GrowthS 
   have hGint := Formalism.FourierDecayAlt.P.growth_group_bound k r μG A hG hA
   have hT : ∫⁻ x, haarCompactGrowthDensity A x ∂μG < ⊤ :=
     (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun x =>
-      Real.rpow_nonneg (gN_nonneg_bessel_integrability _) _)).1 hGint.2
+      Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)).1 hGint.2
   have hchain : ENNReal.ofReal (((n : ℝ) + 1) ^ (-A)) *
       (∫⁻ p, ENNReal.ofReal (Formalism.FourierDecayAlt.B.gN (Matrix.of p.1 * Matrix.of p.2) ^ (-A)) ∂(μW.prod μN)) *
       νq {x : Mt k r | Matrix.of x ∈ UH (Hpk k r) ∧ Formalism.FourierDecayAlt.B.gN (Matrix.of x) ≤ (n : ℝ) + 1} ≤
@@ -180,7 +180,7 @@ theorem growth_spherical_bound : Formalism.FourierDecayAlt.ThreeDimData.GrowthS 
     rw [hc, ENNReal.mul_top hc0, ENNReal.top_mul hn] at hlt
     exact lt_irrefl _ hlt
   refine ⟨((s3dx1S_gNc.comp s3dx1S_mulc).measurable.pow_const (-A)).aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun p => Real.rpow_nonneg (gN_nonneg_bessel_integrability _) _)]
+  rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun p => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)]
   exact hI
 
 end Formalism.FourierDecayAlt.P

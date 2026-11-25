@@ -348,7 +348,7 @@ theorem cont_uMap (z : Fin (2 * r + k + 1) → ℂ) : Continuous fun x : Mt k r 
       continuous_const)).div_const _
 
 theorem isClosed_setOf_of_mem_n0set (z : Fin (2 * r + k + 1) → ℂ) : IsClosed {x : Mt k r | Matrix.of x ∈ C2.N0set k r z} := by
-  have h1 : IsClosed {x : Mt k r | Matrix.of x ∈ Nset k r} := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).closed
+  have h1 : IsClosed {x : Mt k r | Matrix.of x ∈ Nset k r} := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   have h2 : IsClosed {x : Mt k r | C2.uMap k r z (Matrix.of x) = 1} := isClosed_eq (cont_uMap z) continuous_const
   exact h1.inter h2
 
@@ -478,7 +478,7 @@ theorem isHaar_stabilizer_measure {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.Std
   · intro a ha
     obtain ⟨x0, rfl⟩ := stabilizer_subset_range hz ha
     unfold mu0
-    rw [Measure.map_map (Formalism.FourierDecayAlt.P.Dx2.OrbJ.contL _).measurable hm]
+    rw [Measure.map_map (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont _).measurable hm]
     have e : lmulM (E z x0) ∘ Et z = Et z ∘ mulX z x0 := by
       funext x; exact E_mul z x0 x
     rw [e, ← Measure.map_map hm (mp_mulX_left z x0).measurable, (mp_mulX_left z x0).map_eq]
@@ -589,7 +589,7 @@ lemma sub_upper_mem (u : G.UT (r + 1) → ℂ) :
 
 theorem cont_tauU (z : Fin (2 * r + k + 1) → ℂ) :
     Continuous fun u : G.UT (r + 1) → ℂ => C2.tauM k r z (G.upper u) := by
-  have hup : Continuous (G.upper (d := r + 1)) := Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper
+  have hup : Continuous (G.upper (d := r + 1)) := _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper
   have e : (fun u : G.UT (r + 1) → ℂ => C2.tauM k r z (G.upper u)) = fun u =>
       C2.nEich k r z (fun a => G.upper u a.castSucc (Fin.last r)) *
         mXa k r ((G.upper u).submatrix Fin.castSucc Fin.castSucc) := by
@@ -620,7 +620,7 @@ lemma uMap_UT {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {s : B.Mat 
 
 lemma uMap_inv {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {n : B.Mat k r} (hn : n ∈ Nset k r) :
     C2.uMap k r z n⁻¹ = (C2.uMap k r z n)⁻¹ := by
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have h1 : C2.uMap k r z n⁻¹ * C2.uMap k r z n = 1 := by
     rw [← uMap_mul hz (hN.inv_mem n hn) hn, Matrix.nonsing_inv_mul _ (hN.unit n hn)]
     exact Formalism.FourierDecayAlt.P.Dx2.Rad.uMap_one z hz
@@ -655,7 +655,7 @@ theorem mp_UTleft {m : ℕ} {A : Matrix (Fin m) (Fin m) ℂ} (hA : A ∈ C2.UTse
     MeasurePreserving (fun u : G.UT m → ℂ => StabilizerDisintegration.utc (A * G.upper u)) volume volume := by
   refine Formalism.FourierDecayAlt.P.ShearMeasurability.shear_mp (fun q : G.UT m => q.1.2.val - q.1.1.val) _ ?_ ?_
   · refine Measurable.of_eval fun q => ?_
-    exact ((continuous_const.matrix_mul Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper).matrix_elem q.1.1 q.1.2).measurable
+    exact ((continuous_const.matrix_mul _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper).matrix_elem q.1.1 q.1.2).measurable
   · intro q x y hxy
     show (A * G.upper x) q.1.1 q.1.2 - x q = (A * G.upper y) q.1.1 q.1.2 - y q
     rw [mul_upper_sub hA, mul_upper_sub hA]
@@ -687,7 +687,7 @@ lemma cont_bC (z : Fin (2 * r + k + 1) → ℂ) (a : B.Mat k r) (ha : a ∈ Nset
       (fun u => C2.tauM k r z (G.upper u)) ∘ fun u => StabilizerDisintegration.utc (C2.uMap k r z a * G.upper u) := by
     funext u; simp only [Function.comp, upper_utc (_root_.Formalism.FourierDecayAlt.P.C2x2.ut_mul hA (upper_mem u))]
   have h1 : Continuous fun u : G.UT (r + 1) → ℂ => C2.tauM k r z (C2.uMap k r z a * G.upper u) := by
-    rw [e]; exact (cont_tauU z).comp (cont_utc.comp (continuous_const.matrix_mul Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper))
+    rw [e]; exact (cont_tauU z).comp (cont_utc.comp (continuous_const.matrix_mul _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper))
   unfold bC
   exact (((continuous_const.matrix_mul h1.matrix_conjTranspose).matrix_mul continuous_const).matrix_mul
     continuous_const).matrix_mul (cont_tauU z)
@@ -700,7 +700,7 @@ lemma bC_eq {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {a : B.Mat k 
 
 lemma bC_mem {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {a : B.Mat k r} (ha : a ∈ Nset k r)
     (u : G.UT (r + 1) → ℂ) : bC z a u ∈ C2.N0set k r z := by
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hA := uMap_UT hz ha
   have hAU := _root_.Formalism.FourierDecayAlt.P.C2x2.ut_mul hA (upper_mem u)
   have hT1 := tau_N hz hAU
@@ -723,13 +723,13 @@ lemma Phi_S {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {a : B.Mat k 
   show C2.tauM k r z (C2.uMap k r z a * G.upper p.1) * ((C2.tauM k r z (C2.uMap k r z a * G.upper p.1))⁻¹ * a *
       C2.tauM k r z (G.upper p.1) * Matrix.of p.2) = a * (C2.tauM k r z (G.upper p.1) * Matrix.of p.2)
   rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, ← Matrix.mul_assoc,
-    Matrix.mul_nonsing_inv _ ((Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).unit _ hT1), Matrix.one_mul, Matrix.mul_assoc]
+    Matrix.mul_nonsing_inv _ ((_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).unit _ hT1), Matrix.one_mul, Matrix.mul_assoc]
 
 theorem disint {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {μ0 μN : Measure (Mt k r)}
     (h0 : B.IsHaarOn (C2.N0set k r z) μ0) (hN : B.IsHaarOn (Nset k r) μN) :
     ∃ c : NNReal, 0 < c ∧ μN = c • ((volume : Measure (G.UT (r + 1) → ℂ)).prod μ0).map (Phi z) := by
-  have hNc := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
-  haveI := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF h0
+  have hNc := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf h0
   haveI := Formalism.FourierDecayAlt.P.Dx2.OrbJ.fmoc h0
   have hPm : Measurable (Phi (k := k) (r := r) z) := (cont_Phi z).measurable
   set P := ((volume : Measure (G.UT (r + 1) → ℂ)).prod μ0).map (Phi z) with hP
@@ -757,7 +757,7 @@ theorem disint {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {μ0 μN :
       have hcb : Continuous fun p : (G.UT (r + 1) → ℂ) × Mt k r => (lmulM (bC z a p.1) p.2 : Mt k r) :=
         ((cont_bC z a ha hz).comp continuous_fst).matrix_mul continuous_snd
       exact hcb.measurable
-    rw [hP, Measure.map_map (Formalism.FourierDecayAlt.P.Dx2.OrbJ.contL a).measurable hPm]
+    rw [hP, Measure.map_map (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont a).measurable hPm]
     have e : lmulM a ∘ Phi z = Phi z ∘ fun p : (G.UT (r + 1) → ℂ) × Mt k r =>
         (StabilizerDisintegration.utc (C2.uMap k r z a * G.upper p.1), lmulM (bC z a p.1) p.2) := by
       funext p; exact (Phi_S hz ha p).symm
@@ -791,7 +791,7 @@ theorem disint {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {μ0 μN :
     refine (measure_mono hsub).trans_lt ((measure_union_le _ _).trans_lt ?_)
     rw [hbad, add_zero, Measure.prod_prod]
     exact ENNReal.mul_lt_top ((hK.image hf1).measure_lt_top) ((hK.image hf2).measure_lt_top)
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r (Nset k r) μN P hNc hN hconc hleft hfin
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r (Nset k r) μN P hNc hN hconc hleft hfin
   have hP0 : P ≠ 0 := by
     rw [hP]
     refine (Measure.map_ne_zero_iff hPm.aemeasurable).mpr ?_

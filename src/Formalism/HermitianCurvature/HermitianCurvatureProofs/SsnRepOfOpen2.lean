@@ -788,9 +788,9 @@ theorem second_shift_pointwise_holds : SSn.Rep.Core.SSPointwise := by
       ∀ W : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π'), NF.IsMulZ W f → Commute (d.SS l).1 W := by
     intro f hf W hW
     obtain ⟨W₁, hW₁⟩ := Formalism.FourierDecayAlt.P.multiplication_zeta_exists Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl (NF.dZ f)
-      (Formalism.FourierDecayAlt.P.NFx4.NO.dZ_smooth (Formalism.FourierDecayAlt.P.NFx4.NO.isOpen_U _) hf)
+      (Formalism.FourierDecayAlt.P.NFx4.NO.dZ_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hf)
     obtain ⟨W₂, hW₂⟩ := Formalism.FourierDecayAlt.P.multiplication_zeta_exists Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl (NF.dZb f)
-      (Formalism.FourierDecayAlt.P.NFx4.NO.dZb_smooth (Formalism.FourierDecayAlt.P.NFx4.NO.isOpen_U _) hf)
+      (Formalism.FourierDecayAlt.P.NFx4.NO.dZb_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hf)
     exact ((Formalism.FourierDecayAlt.P.normal_form_order_zero Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl X d hL hS hRel hQQ f hf W W₁ W₂
       hW hW₁ hW₂).2.1 l hl).1
 
@@ -913,9 +913,6 @@ theorem cd_comp {X : Type} [NormedAddCommGroup X] [NormedSpace ℝ X] {U V W : T
     ContDiff ℝ n (fun x => (g x).comp (f x)) :=
   ((ContinuousLinearMap.compL ℂ U V W).bilinearRestrictScalars ℝ).isBoundedBilinearMap.contDiff.comp (hg.prodMk hf)
 
-theorem hsInner_zero_r (A : Wq →L[ℂ] Wp) : B.hsInner A (0 : Wq →L[ℂ] Wp) = 0 := by
-  unfold B.hsInner; rw [_root_.Formalism.FourierDecayAlt.P.JCx1.needs.hsVec_zero, inner_zero_left]
-
 theorem inner_hs_smul (c : ℂ) (A B' : Wq →L[ℂ] Wp) :
     inner ℂ (B.hsVec A) (B.hsVec (c • B')) = c * inner ℂ (B.hsVec A) (B.hsVec B') := by
   rw [Formalism.FourierDecayAlt.P.JCTx2.hsVec_smul', inner_smul_right]
@@ -929,7 +926,7 @@ theorem mat_gen {Ty : Type} [Fintype Ty] [DecidableEq Ty] (Qd : Ty → (Wq →L[
   · rw [kap_hsInner_sum_left, Finset.sum_eq_single ρ]
     · rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline π π, hline ρ ρ, ite_eq_left rfl, ite_eq_left rfl]
     · intro ρ' _ hne
-      rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline ρ' ρ, ite_eq_right hne, hsInner_zero_r, mul_zero]
+      rw [_root_.Formalism.FourierDecayAlt.P5.hsInner_smul_left, hQadj, hline ρ' ρ, ite_eq_right hne, _root_.Formalism.FourierDecayAlt.P.B5.hs_zero_right, mul_zero]
     · intro h; exact absurd (Finset.mem_univ ρ) h
   · intro π' _ hne
     rw [hline π' π, ite_eq_right hne, map_zero]

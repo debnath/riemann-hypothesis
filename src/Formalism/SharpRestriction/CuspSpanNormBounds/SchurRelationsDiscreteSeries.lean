@@ -509,9 +509,9 @@ theorem isHaarOn_map_conjCayley {P : MatKR k r} (hP : IsCayleyU k r ε P) :
 theorem transport {P : MatKR k r} (hP : IsCayleyU k r ε P) {μ : Measure (Mt k r)}
     (hμ : Formalism.MainNotions.S.IsHaarOn (UH (Hpk k r)) μ) :
     ∃ c : ℝ≥0∞, c ≠ 0 ∧ c ≠ ⊤ ∧ μ = c • (Formalism.REAL.muG ε).map (ioP P) := by
-  obtain ⟨ν, hν⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
-  obtain ⟨c1, a1, a2, e1⟩ := BridgeLemma₃.hu_eq_smul (Formalism.FourierDecayAlt.P.unitary_group_closed k r) hν hμ
-  obtain ⟨c2, b1, b2, e2⟩ := BridgeLemma₃.hu_eq_smul (Formalism.FourierDecayAlt.P.unitary_group_closed k r) hν (isHaarOn_map_conjCayley hP)
+  obtain ⟨ν, hν⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
+  obtain ⟨c1, a1, a2, e1⟩ := BridgeLemma₃.hu_eq_smul (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) hν hμ
+  obtain ⟨c2, b1, b2, e2⟩ := BridgeLemma₃.hu_eq_smul (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) hν (isHaarOn_map_conjCayley hP)
   refine ⟨c1 / c2, ENNReal.div_ne_zero.2 ⟨a1, b2⟩, ENNReal.div_ne_top a2 b1, ?_⟩
   rw [e1, e2, smul_smul, ENNReal.div_mul_cancel b1 b2]
 

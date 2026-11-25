@@ -66,13 +66,6 @@ theorem topPart_zero {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
   obtain ⟨hi, hs, -⟩ := hTop x y hx hy c hc
   exact ⟨hi, hs⟩
 
-theorem hsInner_zero_right' {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
-    [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq] (A : Wq →L[ℂ] Wp) : B.hsInner A (0 : Wq →L[ℂ] Wp) = 0 := by
-  unfold B.hsInner B.hsVec
-  have : (WithLp.toLp 2 fun i : Fin (Module.finrank ℂ Wq) => (0 : Wq →L[ℂ] Wp) (stdOrthonormalBasis ℂ Wq i)) = 0 := by
-    simp; rfl
-  rw [this, inner_zero_left]
-
 theorem continuous_fsv (s : ℂ) : Continuous (fun t : ℂ => fsv s t) := by
   unfold fsv
   exact Complex.continuous_exp.comp ((continuous_const.mul continuous_id).sub
@@ -157,7 +150,7 @@ theorem pStd_top (hP : P5.ThmPActualCpt) (hHT : KB.HeadTop) (hOne : FormOne) (hZ
       rw [hψdef, Set.piecewise_eq_of_notMem _ _ _ hU']
       unfold topDens
       refine Finset.sum_eq_zero fun e _ => ?_
-      rw [(act (Fr.ofWord L st (D.positionted w)).F Φ' e).2.1 (c0, Matrix.of g) hnd, hsInner_zero_right']
+      rw [(act (Fr.ofWord L st (D.positionted w)).F Φ' e).2.1 (c0, Matrix.of g) hnd, _root_.Formalism.FourierDecayAlt.P.B5.hs_zero_right]
 
   set φ : ℂ → ℂ := fun c => (KB.levW P (P.r + 1) c : ℂ) * R c with hφdef
   have hlev : ∀ c, KB.levW P (P.r + 1) c = B2.zWeight P.k P.T P.T' c := fun c => by simp [KB.levW]

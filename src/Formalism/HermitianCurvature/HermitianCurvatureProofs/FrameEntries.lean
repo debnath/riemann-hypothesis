@@ -78,11 +78,6 @@ variable {k r : ℕ}
 theorem mul_inv_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 := by
   apply _root_.Formalism.FourierDecayAlt.P.Qx8.mul_inv_uh <;> assumption
 
-theorem inv_mul_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ * g = 1 := Matrix.nonsing_inv_mul g (Matrix.isUnit_det_of_right_inverse (mul_inv_uh hg))
-
-theorem glev_inv {i : Fin (r + 1)} {g : Mx k r} (hg : g ∈ Glev k r i) : g⁻¹ ∈ Glev k r i := by
-  apply Formalism.FourierDecayAlt.Q.TInvW.glev_inv <;> assumption
-
 theorem herm_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (x y : Fin (2 * r + k + 1) → ℂ) :
     herm (Hpk k r) (g *ᵥ x) y = herm (Hpk k r) x (g⁻¹ *ᵥ y) := by
   have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
@@ -96,13 +91,10 @@ theorem herm_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (x y : Fin (2 * r + k + 
   simp only [Matrix.mulVec_mulVec]
   rw [key2]
 
-theorem herm_self (z : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) z z = -((Tz k r z : ℝ) : ℂ) := by
-  apply _root_.Formalism.FourierDecayAlt.P.Qx8.herm_self' <;> assumption
-
 theorem frame_inv {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) {m : ℕ} {z : Fin (2 * r + k + 1) → ℂ}
     {Bs : Fin m → Fin (2 * r + k + 1) → ℂ} (hB : IsFrameOf k r [z] Bs) :
     IsFrameOf k r [g⁻¹ *ᵥ z] (fun a => g⁻¹ *ᵥ Bs a) := by
-  have hi := glev_inv hg
+  have hi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hg
   refine ⟨fun a => Qx8.inWb_mulVec hi (hB.1 a), fun a b => ?_, fun a v hv => ?_⟩
   · rw [Qx2.herm_uh hi.1]; exact hB.2.1 a b
   · rw [List.mem_singleton] at hv
@@ -182,10 +174,10 @@ theorem qr_detHat_of (hA : Formalism.FourierDecayAlt.Qr.AlgDet) (hC : Formalism.
     (hS : Formalism.FourierDecayAlt.Qr.LeftRightSwap) : Formalism.FourierDecayAlt.Q.DetHat := by
   intro E _ _ k r z z' D f hz hz' hT hT' hD hf Bs Bs' hB hB' g hg Y
   have hne : herm (Hpk k r) z z ≠ 0 := by
-    rw [FrameEntries.herm_self, neg_ne_zero, Complex.ofReal_ne_zero]; exact hT.ne'
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, neg_ne_zero, Complex.ofReal_ne_zero]; exact hT.ne'
   have hne' : herm (Hpk k r) z' z' ≠ 0 := by
-    rw [FrameEntries.herm_self, neg_ne_zero, Complex.ofReal_ne_zero]; exact hT'.ne'
-  have hgi := FrameEntries.glev_inv hg.1
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, neg_ne_zero, Complex.ofReal_ne_zero]; exact hT'.ne'
+  have hgi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hg.1
   rw [FrameEntries.qhat_ring hD z z' hf Y hg, FrameEntries.ring_id hA hD z z' Y]
   obtain ⟨u, hu⟩ : ∃ u, u = uC k r (Fin.last r) Y := ⟨_, rfl⟩
   rw [← FrameEntries.uC_last, ← hu]
@@ -210,7 +202,7 @@ theorem qr_detHat_of (hA : Formalism.FourierDecayAlt.Qr.AlgDet) (hC : Formalism.
   rw [← hψ, FrameEntries.chYY_eval hD z u ψ hg, e1, e2,
     hC E k r D hD (g⁻¹ *ᵥ z) _ (Qx8.inWb_mulVec hgi hz) hne2 (FrameEntries.frame_inv hg.1 hB) u ψ g hg,
     Qx2.herm_uh hgi.1, hS E k r k (Fin.last r) D hD Bs hB.1 u ψ.1 ψ.2.1 g hg,
-    Qx8.loc_capLft hD Bs hB.1 u _ _ e3 g hg, FrameEntries.capLft_smul, FrameEntries.herm_self, FrameEntries.herm_self, smul_smul, ← neg_smul]
+    Qx8.loc_capLft hD Bs hB.1 u _ _ e3 g hg, FrameEntries.capLft_smul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, smul_smul, ← neg_smul]
   congr 1
   push_cast
   ring

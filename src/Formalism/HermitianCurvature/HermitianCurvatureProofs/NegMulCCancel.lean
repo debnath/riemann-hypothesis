@@ -276,8 +276,8 @@ theorem ae_goodP (Bj : B.RealPlaceData k ρ Wp Wq) : ∀ᵐ x ∂(muXP (p := p) 
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
-  have w1 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarW
-  have w2 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarN
+  have w1 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarW
+  have w2 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarN
   unfold muXP
   filter_upwards [Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_fst.ae w1),
     Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_snd.ae w2)] with x a b

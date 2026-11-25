@@ -28,9 +28,6 @@ namespace QrCap
 
 variable {k r : ℕ}
 
-theorem inWb_bvec_wI (j : Fin (k + 1)) : inWb k r (bvec (wI k r j)) := by
-  apply _root_.Formalism.MainNotions.FrameBoundFromBesselTorus.inWb_bvec_wI <;> assumption
-
 def fr (k r : ℕ) (g : Mx k r) : Fin k → Fin (2 * r + k + 1) → ℂ := fun a => g *ᵥ bvec (wI k r a.castSucc)
 
 section Frame
@@ -41,7 +38,7 @@ theorem fr_frame (hgU : g ∈ UH (Hpk k r))
     (hgfix : ∀ a : Fin r, g *ᵥ bvec (eI k r a) = bvec (eI k r a) ∧ g *ᵥ bvec (esI k r a) = bvec (esI k r a))
     (s : ℂ) (hgz : g *ᵥ (s • bvec (wI k r (Fin.last k))) = z) : IsFrameOf k r [z] (fr k r g) := by
   refine ⟨fun a => ?_, fun a b => ?_, fun a v hv => ?_⟩
-  · exact Qx8.inWb_mulVec (show g ∈ Glev k r (Fin.last r) from ⟨hgU, fun c _ => hgfix c⟩) (inWb_bvec_wI _)
+  · exact Qx8.inWb_mulVec (show g ∈ Glev k r (Fin.last r) from ⟨hgU, fun c _ => hgfix c⟩) (_root_.Formalism.FourierDecayAlt.P.Qx8.inWb_bvec_wI _)
   · unfold fr
     rw [Qx8.herm_UH hgU, Qx8.herm_wI]
     by_cases h : a = b
@@ -51,7 +48,7 @@ theorem fr_frame (hgU : g ∈ UH (Hpk k r))
   · rw [List.mem_singleton] at hv
     subst hv
     unfold fr
-    rw [← hgz, Qx8.herm_UH hgU, Qx8.herm_smul_right', Qx8.herm_wI, ite_eq_right (Fin.castSucc_lt_last a).ne, mul_zero]
+    rw [← hgz, Qx8.herm_UH hgU, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, Qx8.herm_wI, ite_eq_right (Fin.castSucc_lt_last a).ne, mul_zero]
 
 theorem sig_wI (j : Fin (k + 1)) : GBasic.sig k r (wI k r j) = wI k r j := by
   have := j.isLt
@@ -273,7 +270,7 @@ theorem capChange {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteD
       rw [h3, HermitianFormSums.herm_rsum]
       apply Finset.sum_congr rfl
       intro d _
-      simp only [hP, hQ, Matrix.of_apply, Qx2.herm_star]
+      simp only [hP, hQ, Matrix.of_apply, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj]
     simp only [Matrix.sum_apply, Matrix.smul_apply, unitB, Matrix.of_apply, smul_eq_mul]
     rw [h1, h2, Finset.sum_mul_sum]
     apply Finset.sum_congr rfl

@@ -65,11 +65,11 @@ theorem cq_isDom (hD : Q.IsDom k r z z' 0 D) {c : Fin r → ℂ} (hc : c ∈ OmX
   refine ⟨hD.1.preimage (continuous_const.matrix_mul continuous_id), ?_⟩
   rintro g ⟨hgG, hgD⟩ s ⟨h, hh, m, hm, rfl⟩ s' ⟨h', hh', m', hm', rfl⟩
   have hhm : h * m ∈ Q.Glev k r (Fin.last r) :=
-    Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.uw_glev _ hh) hm.2
+    _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev _ hh) hm.2
   have hcomm : Q.wCell k r (Fin.last r) c * (h * m) = (h * m) * Q.wCell k r (Fin.last r) c :=
     Formalism.FourierDecayAlt.P.Qx3.wlist_comm (Fin.last r) c _ (fun a _ => a.isLt) hhm
   have hwg : Q.wCell k r (Fin.last r) c * g ∈ Q.Glev k r 0 :=
-    Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
+    _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
       (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) hgG)
   have e : Q.wCell k r (Fin.last r) c * (h * m * g * (h' * m')) =
       h * m * (Q.wCell k r (Fin.last r) c * g) * (h' * m') := by

@@ -640,9 +640,9 @@ theorem nL_eq {j ρ : ℕ} (hρ : 1 ≤ ρ) (a : Fin j → ℂ) :
   obtain ⟨y, rfl⟩ := (U.eB k j ρ).surjective q
   rw [nL_apply hρ, Ux3.rn_eq, Ux3.block3_apply]
   simp only [cHc_zero hρ, skewOf_zero, smul_zero, add_zero, Matrix.mul_zero]
-  have v1 := @Ux3.block_index_first_val k j ρ
-  have v2 := @Ux3.block_index_middle_val k j ρ
-  have v3 := @Ux3.block_index_last_val k j ρ
+  have v1 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll k j ρ
+  have v2 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr k j ρ
+  have v3 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r k j ρ
   rcases x with ((α | u) | α) <;> rcases y with ((β | v) | β) <;>
     simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁,
       Matrix.fromBlocks_apply₂₂, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,

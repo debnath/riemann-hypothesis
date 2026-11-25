@@ -84,11 +84,6 @@ theorem haar_sigmaFinite {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaar
   haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
   infer_instance
 
-theorem haar_ae {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
-    ∀ᵐ g ∂μ, (Matrix.of g : Mat k r) ∈ U := by
-  rw [ae_iff]
-  exact h.conc
-
 theorem aDil_inv (k r : ℕ) (t : ℝ) (ht : t ≠ 0) : (aDil k r t)⁻¹ = aDil k r t⁻¹ := by
   have htc : (t : ℂ) ≠ 0 := by exact_mod_cast ht
   apply Matrix.inv_eq_left_inv
@@ -307,21 +302,13 @@ theorem GV_closed : IsClosed (GV k r) := by
   exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
     continuous_id) continuous_const
 
-theorem ckOn_continuousOn {m : ℕ∞} {f : Mat k r → E} (h : CkOn m (GV k r) f) : ContinuousOn f (GV k r) := by
-  intro g₀ hg₀
-  obtain ⟨U, f', hU, hg₀U, hf', he⟩ := h g₀ hg₀
-  have hc : ContinuousAt f' g₀ := hf'.continuousOn.continuousAt (hU.mem_nhds hg₀U)
-  refine hc.continuousWithinAt.congr_of_eventuallyEq ?_ (he g₀ hg₀U hg₀)
-  filter_upwards [self_mem_nhdsWithin, nhdsWithin_le_nhds (hU.mem_nhds hg₀U)] with g hg hgU
-  exact he g hgU hg
-
 theorem aesm_of_continuousOn {μ : Measure (Mt k r)} (h : IsHaarOn (GV k r) μ) {f : Mat k r → E}
     (hf : ContinuousOn f (GV k r)) : AEStronglyMeasurable (fun g : Mt k r => f (Matrix.of g)) μ := by
   have hc : IsClosed (X := Mt k r) (GV k r) := GV_closed
   have hs : MeasurableSet (α := Mt k r) (GV k r) := hc.measurableSet
   have hf' : ContinuousOn (fun g : Mt k r => f (Matrix.of g)) (GV k r) := hf
   have h1 := hf'.aestronglyMeasurable (μ := μ) hs
-  rwa [Measure.restrict_eq_self_of_ae_mem (haar_ae h)] at h1
+  rwa [Measure.restrict_eq_self_of_ae_mem (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem h)] at h1
 
 end ck
 
@@ -344,10 +331,6 @@ theorem inSS_right (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) :
     (Matrix.of p.2.2 * Matrix.of p.2.1 : Mat k r) ∈ GV k r := by
   unfold RealPlaceData.inSS at hp
   exact mul_mem_uh hp.2.2.2.1 hp.2.2.1.1
-
-theorem rho_norm_le (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) (F : Mat k r → (Wq →L[ℂ] Wp))
-    (g : Mat k r) : ‖rho D p F g‖ ≤ ‖F (sgs p g)‖ := by
-  apply _root_.Formalism.FourierDecayAlt.P.B7.norm_rho_le <;> assumption
 
 end phbound
 
@@ -372,9 +355,9 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_bound : Formalism.Four
   have hc' : 0 ≤ c' :=
     le_trans (mul_nonneg (Real.rpow_nonneg (Real.sqrt_nonneg _) _) (norm_nonneg _)) (hb' 1 h1G)
   have mF : AEStronglyMeasurable (fun g : Mt k r => F (Matrix.of g)) D.μG :=
-    aesm_of_continuousOn D.haarG (ckOn_continuousOn hF.1)
+    aesm_of_continuousOn D.haarG (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hF.1)
   have mF' : AEStronglyMeasurable (fun g : Mt k r => F' (Matrix.of g)) D.μG :=
-    aesm_of_continuousOn D.haarG (ckOn_continuousOn hF'.1)
+    aesm_of_continuousOn D.haarG (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hF'.1)
   have hx := inSS_left D hp
   have hy := inSS_right D hp
   have hL := hC F F' c c' mF mF' hb hb' _ hx _ hy
@@ -384,7 +367,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_bound : Formalism.Four
           ‖F' (Matrix.of g)‖ₑ) := by
     intro g
     have e1 := hs_norm_le (rho D p F (Matrix.of g)) (F' (Matrix.of g))
-    have e2 := rho_norm_le D hp F (Matrix.of g)
+    have e2 := _root_.Formalism.FourierDecayAlt.P.B7.norm_rho_le D hp F (Matrix.of g)
     rw [sgs_eq] at e2
     rw [← ofReal_norm_eq_enorm, ← ofReal_norm_eq_enorm, ← ENNReal.ofReal_mul (norm_nonneg _),
       ← ENNReal.ofReal_mul hK]
@@ -637,12 +620,12 @@ theorem ibp (D : RealPlaceData k r Wp Wq) {X : Mat k r} (hX : inLie k r X) {f1 f
   have hae : ∀ᵐ g ∂D.μG, RdV X h (Matrix.of g) =
       hsInner (RdV X f1 (Matrix.of g)) (f2 (Matrix.of g)) +
         hsInner (f1 (Matrix.of g)) (RdV X f2 (Matrix.of g)) := by
-    filter_upwards [haar_ae D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     exact hR _ hg
   have hinv : ∀ t : ℝ, D.μG.map (rmulF (NormedSpace.exp ((t : ℂ) • X))) = D.μG :=
     fun t => D.haarG.right _ (exp_mem hX t)
   have hcd : ∀ᵐ g ∂D.μG, ContDiff ℝ 1 fun t : ℝ => h (Matrix.of g * NormedSpace.exp ((t : ℂ) • X)) := by
-    filter_upwards [haar_ae D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     exact hs_contDiff (ckOn_curve h1 hg hX) (ckOn_curve h2 hg hX)
   have hI : Integrable (fun g : Mt k r => RdV X h (Matrix.of g)) D.μG := by
     refine (i1.add i2).congr ?_
@@ -686,10 +669,10 @@ theorem word_adj (D : RealPlaceData k r Wp Wq) (w : List (Mat k r)) (hw : ∀ X 
     have h2 : CkOn 1 (GV k r) (Rw (w.take j).reverse φ) := by
       have h0 := ckOn_Rw hφ ((w.take j).reverse) hwt 1 (by simp; omega)
       exact_mod_cast h0
-    have c1 := ckOn_continuousOn h1
-    have c2 := ckOn_continuousOn h2
-    have c3 := ckOn_continuousOn (ckOn_RdV (m := 0) hX (by simpa using h1))
-    have c4 := ckOn_continuousOn (ckOn_RdV (m := 0) hX (by simpa using h2))
+    have c1 := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn h1
+    have c2 := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn h2
+    have c3 := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (ckOn_RdV (m := 0) hX (by simpa using h1))
+    have c4 := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (ckOn_RdV (m := 0) hX (by simpa using h2))
     have i0 := hs_integrable D c1 c2 (hI j (j + 1) (by omega) (by omega))
     have hI1 := hI j j le_rfl (by omega)
     rw [hd] at hI1
@@ -772,7 +755,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_adjoint : Formalism.Fo
       hsInner (Rw T.word (rho D p F) (Matrix.of g)) (T.coefAdj (Matrix.of g) (F' (Matrix.of g)))).sum ∂D.μG := by
     unfold Ph
     apply integral_congr_ae
-    filter_upwards [haar_ae D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     by_cases hgU : (Matrix.of g : Mat k r) ∈ UU
     · rw [← hcom p hp F (ckOn_mono (by exact_mod_cast Nat.le_add_right _ _) hF) _ hgU]
       unfold opApply
@@ -802,15 +785,15 @@ theorem _root_.Formalism.FourierDecayAlt.P.phase_function_adjoint : Formalism.Fo
       hsInner (Rw T.word (rho D p F) (Matrix.of g)) (T.coefAdj (Matrix.of g) (F' (Matrix.of g)))) D.μG := by
     intro T hT
     refine hs_integrable D (B := fun x => T.coefAdj x (F' x))
-      (ckOn_continuousOn (ckOn_Rw hf T.word T.word_lie 0 (by have := hlen T hT; omega)))
-      (ckOn_continuousOn (hφ T hT)) ?_
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (ckOn_Rw hf T.word T.word_lie 0 (by have := hlen T hT; omega)))
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (hφ T hT)) ?_
     simpa [Rw] using hIC p hp T hT 0 0 le_rfl (Nat.zero_le _)
   have hIr : ∀ T ∈ Θ, Integrable (fun g : Mt k r => (-1 : ℂ) ^ T.word.length *
       hsInner (rho D p F (Matrix.of g))
         (Rw T.word.reverse (fun x => T.coefAdj x (F' x)) (Matrix.of g))) D.μG := by
     intro T hT
-    refine (hs_integrable D (ckOn_continuousOn hf)
-      (ckOn_continuousOn (ckOn_Rw (hφ T hT) T.word.reverse
+    refine (hs_integrable D (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hf)
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (ckOn_Rw (hφ T hT) T.word.reverse
         (fun X hX => T.word_lie X (List.mem_reverse.1 hX)) 0
         (by have := hlen T hT; simp only [List.length_reverse]; omega))) ?_).const_mul _
     simpa [Rw] using hIC p hp T hT T.word.length T.word.length le_rfl le_rfl

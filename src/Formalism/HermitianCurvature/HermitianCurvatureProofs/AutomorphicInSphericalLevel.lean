@@ -789,20 +789,20 @@ def automorphic_in_spherical_level (Bs : B.RealPlaceData k r Wp Wq) (p : B.SS k 
 theorem ae_mem_good_set (Bs : B.RealPlaceData k r Wp Wq) (μ0 μ0' : Measure (Mt k r))
     (hμ0 : B.IsHaarOn (C2.N0set k r Bs.z) μ0) (hμ0' : B.IsHaarOn (C2.N0set k r Bs.z') μ0') :
     ∀ᵐ p ∂((Bs.μW.prod μ0).prod (Bs.μW'.prod μ0')), automorphic_in_spherical_level Bs p := by
-  have hW := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW
-  have hW' := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW'
-  have hN := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0
-  have hN' := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0'
+  have hW := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have hW' := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+  have hN := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0
+  have hN' := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0'
   have b1 : ∀ᵐ q ∂(Bs.μW.prod μ0), Matrix.of q.1 ∈ UWset k r Bs.z :=
     (Measure.quasiMeasurePreserving_fst (μ := Bs.μW) (ν := μ0)).ae
-      (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem Bs.haarW)
+      (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW)
   have b2 : ∀ᵐ q ∂(Bs.μW.prod μ0), Matrix.of q.2 ∈ C2.N0set k r Bs.z :=
-    (Measure.quasiMeasurePreserving_snd (μ := Bs.μW) (ν := μ0)).ae (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem hμ0)
+    (Measure.quasiMeasurePreserving_snd (μ := Bs.μW) (ν := μ0)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ0)
   have c1 : ∀ᵐ q ∂(Bs.μW'.prod μ0'), Matrix.of q.1 ∈ UWset k r Bs.z' :=
     (Measure.quasiMeasurePreserving_fst (μ := Bs.μW') (ν := μ0')).ae
-      (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem Bs.haarW')
+      (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW')
   have c2 : ∀ᵐ q ∂(Bs.μW'.prod μ0'), Matrix.of q.2 ∈ C2.N0set k r Bs.z' :=
-    (Measure.quasiMeasurePreserving_snd (μ := Bs.μW') (ν := μ0')).ae (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem hμ0')
+    (Measure.quasiMeasurePreserving_snd (μ := Bs.μW') (ν := μ0')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ0')
   have d1 : ∀ᵐ p ∂((Bs.μW.prod μ0).prod (Bs.μW'.prod μ0')),
       Matrix.of p.1.1 ∈ UWset k r Bs.z ∧ Matrix.of p.1.2 ∈ C2.N0set k r Bs.z :=
     (Measure.quasiMeasurePreserving_fst (μ := Bs.μW.prod μ0) (ν := Bs.μW'.prod μ0')).ae (b1.and b2)
@@ -815,10 +815,10 @@ theorem ae_mem_good_set (Bs : B.RealPlaceData k r Wp Wq) (μ0 μ0' : Measure (Mt
 theorem isClosed_good_set (Bs : B.RealPlaceData k r Wp Wq) : IsClosed {p : B.SS k r | automorphic_in_spherical_level Bs p} := by
   have hz : C2.StdZ k r Bs.z := ⟨Bs.z_mem, Bs.T_pos⟩
   have hz' : C2.StdZ k r Bs.z' := ⟨Bs.z'_mem, Bs.T'_pos⟩
-  have u1 : IsClosed {x : Mt k r | Matrix.of x ∈ UWset k r Bs.z} := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r Bs.z).closed
+  have u1 : IsClosed {x : Mt k r | Matrix.of x ∈ UWset k r Bs.z} := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z).closed
   have u2 : IsClosed {x : Mt k r | Matrix.of x ∈ C2.N0set k r Bs.z} := (PI.UnitaryGroupMassFormula.DLm.unipotent_integral_closed k r Bs.z hz).closed
   have u3 : IsClosed {x : Mt k r | Matrix.of x ∈ UWset k r Bs.z'} :=
-    (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r Bs.z').closed
+    (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').closed
   have u4 : IsClosed {x : Mt k r | Matrix.of x ∈ C2.N0set k r Bs.z'} :=
     (PI.UnitaryGroupMassFormula.DLm.unipotent_integral_closed k r Bs.z' hz').closed
   have h := ((u1.preimage (continuous_fst.comp continuous_fst)).inter (u2.preimage (continuous_snd.comp continuous_fst))).inter
@@ -827,16 +827,10 @@ theorem isClosed_good_set (Bs : B.RealPlaceData k r Wp Wq) : IsClosed {p : B.SS 
   ext p
   simp [automorphic_in_spherical_level, and_assoc]
 
-theorem norm_pi_le_one (Bs : B.RealPlaceData k r Wp Wq) {h : B.Mat k r} (hh : h ∈ UWset k r Bs.z) : ‖Bs.π h‖ ≤ 1 :=
-  ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun v => by rw [Bs.π_unitary h hh v, one_mul]
-
-theorem norm_pi'_le_one (Bs : B.RealPlaceData k r Wp Wq) {h : B.Mat k r} (hh : h ∈ UWset k r Bs.z') : ‖Bs.π' h‖ ≤ 1 :=
-  ContinuousLinearMap.opNorm_le_bound _ zero_le_one fun v => by rw [Bs.π'_unitary h hh v, one_mul]
-
 theorem hinv_mem (Bs : B.RealPlaceData k r Wp Wq) {p : B.SS k r} (hp : automorphic_in_spherical_level Bs p) :
     Matrix.of (hinvM p.2.1) ∈ UWset k r Bs.z' := by
   rw [of_hinvM hp.2.2.1.1]
-  exact (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r Bs.z').inv_mem _ hp.2.2.1
+  exact (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').inv_mem _ hp.2.2.1
 
 variable [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
 
@@ -861,11 +855,11 @@ theorem fR_loc (Bs : B.RealPlaceData k r Wp Wq) (μ0 μ0' : Measure (Mt k r))
       (isClosed_good_set Bs).measurableSet
     rwa [Measure.restrict_eq_self_of_ae_mem (s := {p | automorphic_in_spherical_level Bs p}) hae] at h
   have hbd : ∀ᵐ p ∂((Bs.μW.prod μ0).prod (Bs.μW'.prod μ0')), ‖fR Bs p‖ ≤ 1 :=
-    hae.mono fun p hp => sand_norm_le _ _ (norm_pi_le_one Bs hp.1) (norm_pi'_le_one Bs (hinv_mem Bs hp))
-  have := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW
-  have := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW'
-  have := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0
-  have := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0'
+    hae.mono fun p hp => sand_norm_le _ _ (_root_.Formalism.FourierDecayAlt.P.B7.norm_pi_le Bs hp.1) (_root_.Formalism.FourierDecayAlt.P.B7.norm_pi'_le Bs (hinv_mem Bs hp))
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0'
   have : IsFiniteMeasureOnCompacts Bs.μW := ⟨fun K hK => Bs.haarW.finite_compact K hK⟩
   have : IsFiniteMeasureOnCompacts Bs.μW' := ⟨fun K hK => Bs.haarW'.finite_compact K hK⟩
   have : IsFiniteMeasureOnCompacts μ0 := ⟨fun K hK => hμ0.finite_compact K hK⟩

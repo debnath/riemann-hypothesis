@@ -98,7 +98,7 @@ theorem locRootHaar (k r : ℕ) (hk : 1 ≤ k) (z z' : Fin (2 * r + k + 1) → �
       μ₀.map (rootCoords k r z' p) = c • volume := by
   obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
   obtain ⟨Ds, hDz, hDz'⟩ := Formalism.MainNotions.S.Pv.AmpDDPf.bsetting_of (k0 + 1) r hk z' z ⟨hz', hT'⟩ ⟨hz, hT⟩
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed (k0 + 1) r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG (k0 + 1) r
   have hgG : g₀ ∈ Formalism.FourierDecayAlt.B.GV (k0 + 1) r := hg
   have hu : IsUnit g₀.det := hG.unit g₀ hgG
   have hgi : g₀⁻¹ ∈ Formalism.FourierDecayAlt.B.GV (k0 + 1) r := hG.inv_mem g₀ hgG
@@ -124,11 +124,11 @@ theorem locRootHaar (k r : ℕ) (hk : 1 ≤ k) (z z' : Fin (2 * r + k + 1) → �
       rw [← hia]
     · have hia : ¬ i = w a := fun h => hai (by rw [h, wPt_invol])
       rw [ite_eq_right hai, ite_eq_right hia, mul_zero, star_zero]
-  have hH := Formalism.FourierDecayAlt.P.radial_measure_is_haar (k0 + 1) r ℂ ℂ Ds g₀⁻¹ w d hgi hd hZ'
+  have hH := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar (k0 + 1) r ℂ ℂ Ds g₀⁻¹ w d hgi hd hZ'
   have hset : Formalism.FourierDecayAlt.C6.Rset g₀⁻¹ = Formalism.MainNotions.S.Rset (k0 + 1) r g₀ := by
     ext x
     simp only [Formalism.FourierDecayAlt.C6.Rset, Formalism.MainNotions.S.Rset, Set.mem_setOf_eq, Matrix.nonsing_inv_nonsing_inv _ hu]
-  refine ⟨Formalism.FourierDecayAlt.D.muR Ds g₀⁻¹ w, 1, ⟨Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hH, hH.ne_zero, ?_, ?_⟩, one_ne_zero,
+  refine ⟨Formalism.FourierDecayAlt.D.muR Ds g₀⁻¹ w, 1, ⟨_root_.Formalism.FourierDecayAlt.P.B7.sf hH, hH.ne_zero, ?_, ?_⟩, one_ne_zero,
     ENNReal.one_ne_top, ?_⟩
   · rw [← hset]; exact hH.conc
   · intro s hs; rw [← hset] at hs; exact hH.left s hs

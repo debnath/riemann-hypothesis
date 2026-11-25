@@ -53,7 +53,7 @@ theorem exists_wCell_eq_wCell_succ_mul_tail_factor (c : Fin r → ℂ) (hc : ∀
     intro i hi
     have hbase : i = b.succ := Fin.ext (by simpa using hi)
     rw [hbase]
-    refine ⟨1, by simp, glev_one _, fun a _ => by simp, fun a h1 h2 => ?_⟩
+    refine ⟨1, by simp, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun a _ => by simp, fun a h1 h2 => ?_⟩
     simp at h2
     omega
   | succ n ih =>
@@ -66,7 +66,7 @@ theorem exists_wCell_eq_wCell_succ_mul_tail_factor (c : Fin r → ℂ) (hc : ∀
     have hw := (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hc l)).1
     refine ⟨T * w1 k r l (c l), ?_, ?_, ?_, ?_⟩
     · rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ, hT, Matrix.mul_assoc]
-    · exact glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
+    · exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
     · intro a ha
       have ha' : l.val + 1 ≤ a.val := by simpa using ha
       have h1 : eI k r a ≠ eI k r l := by simp [eI, Fin.ext_iff]; omega
@@ -102,7 +102,7 @@ theorem rightRuleBv (z' : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : M
     have := hR (g * x) ⟨glev0 hg.1 hx.1, hx.2⟩ n (nlev_mono (zero_le' _) hn)
     simpa [Matrix.mul_assoc] using this
   have h1 : (1 : Mx k r) ∈ Glev k r a.castSucc ∩ {x | g * x ∈ D} :=
-    ⟨glev_one _, by simpa using hg.2⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, by simpa using hg.2⟩
   have hrule := (Formalism.FourierDecayAlt.P.right_action_rule E k r z' a {x | g * x ∈ D} (fun x => f (g * x)) hz' hD' hS' hR'
     1 h1).2.1
   have hjlt : r + w.val - a.val - 1 < mdim k r a.succ := by simp [mdim]; omega
@@ -135,18 +135,18 @@ theorem leftRuleBv (z : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : Mx 
     induction i using Fin.induction with
     | zero =>
       rw [Formalism.FourierDecayAlt.P.Qx6.wCell_zero]
-      exact ⟨glev_one _, fun _ _ x _ => by simp⟩
+      exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun _ _ x _ => by simp⟩
     | succ l ih =>
       obtain ⟨ih0, ihc⟩ := ih
       have hw := Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hcne l)
       rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ]
-      refine ⟨glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
+      refine ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
       have hx1 : x ∈ Glev k r l.succ := glev_mono hj hx
       have hcj : l.castSucc ≤ j := le_trans (by rw [Fin.le_def]; simp) hj
       rw [Matrix.mul_assoc, (hw.2 x hx1).2.1, ← Matrix.mul_assoc, ihc j hcj x hx, Matrix.mul_assoc]
   obtain ⟨hW0, hWcomm⟩ := head_comm b.castSucc
   obtain ⟨T, hT, hTG, -, hTs⟩ := exists_wCell_eq_wCell_succ_mul_tail_factor (k := k) c hcne b (r - b.val - 1) (Fin.last r) (by simp; omega)
-  have hg₁ : T * g ∈ Glev k r b.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r b.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r b.castSucc c * (w1 k r b (c b) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r b.castSucc, wCell k r b.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -604,7 +604,7 @@ theorem mirror_residue_second_move : JDRvStepB := by
     intro c' s
     rw [← Matrix.mulVec_mulVec]
     exact top_wlist_wb c' _ _ (Formalism.FourierDecayAlt.P.NFRadRedLocSec.inWb_uwb (Formalism.FourierDecayAlt.P5.Rad.glev_last_uwb hg)
-      (bvec_wI_inWb s))
+      (_root_.Formalism.FourierDecayAlt.P.Qx8.inWb_bvec_wI s))
   have hFN : ∀ (m : ℕ) (hm : m ≤ r), ∀ c' ∈ OmX r, FNv k r z z' Y J ⟨m, by omega⟩ c' g =
       wt c' • ∑ s, ∑ t, κ s t • qminorOp (EH k r) (rowsNv k r ⟨m, by omega⟩ s) (rowsNv k r ⟨m, by omega⟩ t)
         (Q.uC k r (Fin.last r) Y - 1) J (wCell k r (Fin.last r) c' * g) := by

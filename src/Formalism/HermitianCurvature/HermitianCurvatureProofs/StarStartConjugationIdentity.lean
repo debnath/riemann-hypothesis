@@ -53,10 +53,6 @@ theorem star_comm_zfns (L : LevelData A r) (hL : IsStarLevel L) {u : A} (hu : �
   have hc := (hu (star g) (star_zfns L hL hg)).star_star
   rwa [star_star] at hc
 
-theorem xi_comm {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {Y : ℂ} (hY : Y ∈ st.inv) {g : A}
-    (hg : Commute (st.x Y) g) : Commute (st.xi Y) g := by
-  apply _root_.Formalism.FourierDecayAlt.P.TLA.L1.xi_comm <;> assumption
-
 def Cz (st : Start A) (a : A) : Prop := ∀ b ∈ kAlg st, Commute b a
 
 theorem cz_zfns {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {g : A} (hg : g ∈ zfns L) : Cz st g := by
@@ -69,7 +65,7 @@ theorem cz_zfns {L : LevelData A r} {st : Start A} (h : IsLevelStart L st) {g : 
     · simp only [SetLike.mem_coe, Subalgebra.mem_centralizer_iff, Set.mem_singleton_iff, forall_eq]
       exact (h.x_fn Y g hg).eq.symm
     · simp only [SetLike.mem_coe, Subalgebra.mem_centralizer_iff, Set.mem_singleton_iff, forall_eq]
-      exact (xi_comm h hY (h.x_fn Y g hg)).eq.symm
+      exact (_root_.Formalism.FourierDecayAlt.P.TLA.L1.xi_comm h hY (h.x_fn Y g hg)).eq.symm
   have hb' := hle hb
   simp only [Subalgebra.mem_centralizer_iff, Set.mem_singleton_iff, forall_eq] at hb'
   exact hb'.symm

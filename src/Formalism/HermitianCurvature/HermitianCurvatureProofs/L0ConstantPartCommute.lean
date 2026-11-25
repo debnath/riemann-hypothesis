@@ -123,11 +123,8 @@ lemma io_alg (c : ℂ) : (io (algebraMap ℂ A c) : SlopeTestRemainingChoices S 
   rw [Matrix.scalar_apply, Matrix.algebraMap_eq_diagonal]
   rfl
 
-lemma hat_apply {Y : ℂ} (hY : Y ∈ f.reg) (i j : Fin 2) : f.hatT Y i j = f.F * f.TT Y i j * f.Fi := by
-  simp [FrameData.hatT, hY]
-
 lemma hat_τ (hf : IsFrame L f) {Y : ℂ} (hY : Y ∈ f.reg) : f.hatT Y 1 1 = io L.GG * f.x Y := by
-  rw [hat_apply hY, hf.frame_τ Y hY, mul_assoc, hf.F_Fi, mul_one]
+  rw [_root_.Formalism.FourierDecayAlt.P.Fr9.hat_reg hY, hf.frame_τ Y hY, mul_assoc, hf.F_Fi, mul_one]
 
 lemma commute_x_l0 (hf : IsFrame L f) (Ya Y : ℂ) : Commute (f.x Ya) (io (L.l0 Y)) := by
   unfold LevelData.l0
@@ -160,25 +157,6 @@ lemma d_star (hL : IsStarLevel L) (hf : IsFrame L f) : star (f.d L) = f.d L := b
   unfold FrameData.d
   rw [star_mul, star_pow, wt_star hL, hf.c_star, ((c_wt hf).pow_right _).eq]
 
-lemma wti_wt : (wti L : SlopeTestRemainingChoices S A) * wt L = 1 := by
-  have e : L.GG * L.ζi * L.ζbi * (L.ζ * L.ζb * L.GGi) = 1 := by
-    calc L.GG * L.ζi * L.ζbi * (L.ζ * L.ζb * L.GGi)
-        = L.GG * L.ζi * (L.ζbi * L.ζ) * L.ζb * L.GGi := by simp only [mul_assoc]
-      _ = L.GG * L.ζi * (L.ζ * L.ζbi) * L.ζb * L.GGi := by rw [(zc L (mζbi L) (mζ L)).eq]
-      _ = L.GG * (L.ζi * L.ζ) * (L.ζbi * L.ζb) * L.GGi := by simp only [mul_assoc]
-      _ = 1 := by rw [L.ζi_ζ, L.ζbi_ζb, mul_one, mul_one, L.GG_GGi]
-  unfold wti wt
-  rw [← io_mul, e, io_one]
-
-lemma di_d (hf : IsFrame L f) : f.di L * f.d L = 1 := by
-  have p : ∀ n : ℕ, (wti L : SlopeTestRemainingChoices S A) ^ n * wt L ^ n = 1 := by
-    intro n
-    induction n with
-    | zero => simp
-    | succ n ih => rw [pow_succ, pow_succ', mul_assoc, ← mul_assoc (wti L), wti_wt, one_mul, ih]
-  unfold FrameData.di FrameData.d
-  rw [mul_assoc, ← mul_assoc (wti L ^ f.N), p, one_mul, hf.c_ci.2]
-
 omit [StarRing A] [StarModule ℂ A] [Algebra ℂ A] [Fintype S] [DecidableEq S] in
 lemma cancel2 {B : Type} [Ring B] {P Pi Q Qi X Y : B} (h1 : Pi * P = 1) (h2 : Q * Qi = 1)
     (h : P * X * Q = P * Y * Q) : X = Y := by
@@ -186,10 +164,6 @@ lemma cancel2 {B : Type} [Ring B] {P Pi Q Qi X Y : B} (h1 : Pi * P = 1) (h2 : Q 
     _ = Pi * (P * X * Q) * Qi := by noncomm_ring
     _ = Pi * P * Y * (Q * Qi) := by rw [h]; noncomm_ring
     _ = Y := by rw [h1, h2, one_mul, mul_one]
-
-lemma hat_herm (hf : IsFrame L f) {Z : ℂ} (hZ : Z ∈ f.reg) (hr : star Z = Z) (i j : Fin 2) :
-    star (f.d L * f.hatT Z i j) = f.d L * f.hatT Z j i := by
-  apply Formalism.FourierDecayAlt.P.Fr9.hat_herm <;> assumption
 
 end Frame
 
@@ -245,17 +219,17 @@ theorem frame_adjoint_m : Formalism.FourierDecayAlt.Fr.FrameM := by
   have hr' : star (Y - 1) = Y - 1 := by rw [star_sub, hr, star_one]
   have hY' : Y - 1 + 1 ∈ f.inv := by rwa [sub_add_cancel]
   have adj := adjoint_l_shift_relation ℂ (SlopeTestRemainingChoices S A) f.hatT (fun Y => io L.GGi * f.xi Y) f.hatQ f.inv (f.d L) H
-    (d_star hL hf) (Y - 1) hYm hY' (hat_herm hf (hf.inv_reg hYm) hr')
+    (d_star hL hf) (Y - 1) hYm hY' (_root_.Formalism.FourierDecayAlt.P.Fr9.hat_herm hf (hf.inv_reg hYm) hr')
   rw [Hl (Y - 1) hYm hY', sub_add_cancel] at adj
   have hm : mf f.hatT (fun Y => io L.GGi * f.xi Y) Y = f.m L Y := by
     unfold FrameData.m
-    rw [mul_assoc, ← adj, ← mul_assoc, di_d hf, one_mul]
+    rw [mul_assoc, ← adj, ← mul_assoc, _root_.Formalism.FourierDecayAlt.P.Fr9.di_d hf, one_mul]
   have hτ : io L.GG * f.x Y * (io L.GGi * f.xi Y) = 1 := by
     have := (H.2.2.2.1 Y hY).1
     rwa [hat_τ hf (hf.inv_reg hY)] at this
   rw [← hm]
   unfold mf
-  rw [← mul_assoc (io L.GG * f.x Y), hτ, one_mul, hat_apply (hf.inv_reg hY), mul_assoc, hf.Fi_F, mul_one]
+  rw [← mul_assoc (io L.GG * f.x Y), hτ, one_mul, _root_.Formalism.FourierDecayAlt.P.Fr9.hat_reg (hf.inv_reg hY), mul_assoc, hf.Fi_F, mul_one]
 
 theorem minus_letter_last_entry : Formalism.FourierDecayAlt.Fr.MinusLast := by
   intro A S _ _ _ _ _ _ r L f b Yb hH Y hY hY1

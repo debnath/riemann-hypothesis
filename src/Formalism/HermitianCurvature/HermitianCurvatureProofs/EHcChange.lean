@@ -30,21 +30,16 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt Form
 
 variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-theorem Hinv (k r : ℕ) : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv (Hsq k r)
-
-theorem lie_inv {X : Mat k r} (hX : inLie k r X) : (Hpk k r)⁻¹ * Xᴴ * Hpk k r = -X := by
-  have hX0 : Xᴴ * Hpk k r + Hpk k r * X = 0 := hX
-  have h1 : Xᴴ * Hpk k r = -(Hpk k r * X) := eq_neg_of_add_eq_zero_left hX0
-  rw [Hinv, Matrix.mul_assoc, h1, Matrix.mul_neg, ← Matrix.mul_assoc, Hsq, Matrix.one_mul]
+theorem Hinv (k r : ℕ) : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
 
 theorem hermPart_eq_self_of_mem_lie {X : Mat k r} (hX : inLie k r X) : hpart1 (Hpk k r) X = X := by
   simp only [hpart1]
-  rw [lie_inv hX, sub_neg_eq_add, ← two_smul ℂ X, smul_smul]
+  rw [_root_.Formalism.FourierDecayAlt.P.LieDecompositionLocal.hconj_lie hX, sub_neg_eq_add, ← two_smul ℂ X, smul_smul]
   norm_num
 
 theorem hpart2_eq_zero_of_inLie {X : Mat k r} (hX : inLie k r X) : hpart2 (Hpk k r) X = 0 := by
   simp only [hpart2]
-  rw [lie_inv hX]
+  rw [_root_.Formalism.FourierDecayAlt.P.LieDecompositionLocal.hconj_lie hX]
   simp
 
 theorem two_I_inv : (1 / (2 * Complex.I) : ℂ) = -(Complex.I / 2) := by

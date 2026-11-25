@@ -80,8 +80,6 @@ end form
 
 def lastI (k r' : ℕ) : Fin (2 * (1 + r') + k + 1) := ⟨2 * (1 + r') + k, by omega⟩
 
-lemma Hpk_herm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := (hpkFacts k r).1
-
 lemma Hpk_zero_row (k r' : ℕ) (j : Fin (2 * (1 + r') + k + 1)) :
     Hpk k (1 + r') (eI k (1 + r') (a0 r')) j = if j.val = 2 * (1 + r') + k then 1 else 0 := by
   have hv : (eI k (1 + r') (a0 r')).val = 0 := rfl
@@ -100,7 +98,7 @@ lemma hermitian_first_basis_right (k r' : ℕ) (u : Fin (2 * (1 + r') + k + 1) �
 
 lemma hermitian_form_base_vector_left (k r' : ℕ) (w : Fin (2 * (1 + r') + k + 1) → ℂ) :
     herm (Hpk k (1 + r')) (e0 k r') w = star (w (lastI k r')) := by
-  rw [← herm_symm _ (Hpk_herm k (1 + r')), hermitian_first_basis_right]
+  rw [← herm_symm _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k (1 + r')), hermitian_first_basis_right]
 
 lemma goodRowsProjector_apply_eq_sum (k r' : ℕ) (i : Fin (2 * (1 + r') + k + 1)) : e0 k r' i = if i.val = 0 then 1 else 0 := by
   simp only [e0, bvec, eI, a0, Pi.single_apply, Fin.ext_iff]
@@ -158,7 +156,7 @@ lemma herm_lift (k r' : ℕ) (y y' : Fin (2 * r' + k + 1) → ℂ) :
 
 lemma hb_rel (k r' : ℕ) (y : Fin (2 * r' + k + 1) → ℂ) (s : ℝ) :
     hb k r' y s + star (hb k r' y s) + herm (Hpk k r') y y = 0 := by
-  have h := herm_symm _ (Hpk_herm k r') y y
+  have h := herm_symm _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r') y y
   have him : (herm (Hpk k r') y y).im = 0 := by
     have := congrArg Complex.im h
     simp only [Complex.star_def, Complex.conj_im] at this
@@ -195,7 +193,7 @@ theorem heisMem : HeisMem := by
     intro u w
     simp only [heis0]
     rw [heisAct, heisAct]
-    apply heis_isom _ (Hpk_herm k (1 + r'))
+    apply heis_isom _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k (1 + r'))
     · rw [hermitian_first_basis_right, goodRowsProjector_apply_eq_sum]; simp [lastI]
     · rw [hermitian_first_basis_right, liftVec_last]
     · rw [herm_lift]; exact hb_rel k r' y s
@@ -238,13 +236,9 @@ theorem B2x4.conjInv_of (hN : ClosedN) (hW : ClosedW) (hK : CompactW) : ConjInvR
   conjugation_invariance_of_parts compact_subgroup_conjugation hN hW hK uWNormal
 
 theorem b2_conjInvRaw_proof : Formalism.FourierDecayAlt.B2.ConjInvRaw :=
-  (B2x4.conjInv_of unipotent_radical_closed weyl_subgroup_closed weyl_subgroup_compact).1
+  (B2x4.conjInv_of _root_.Formalism.FourierDecayAlt.P.B2x2.closedN _root_.Formalism.FourierDecayAlt.P.B2x3.closedW _root_.Formalism.FourierDecayAlt.P.B2x3.compactW).1
 
 theorem conjugation_invariance_every_setting : Formalism.FourierDecayAlt.B2.ConjInvAll :=
-  (B2x4.conjInv_of unipotent_radical_closed weyl_subgroup_closed weyl_subgroup_compact).2
-
-theorem heisenberg_action_formula : Formalism.FourierDecayAlt.B2.HeisAct := B2x4.heisAct
-
-theorem heisenberg_mem_unipotent : Formalism.FourierDecayAlt.B2.HeisMem := B2x4.heisMem
+  (B2x4.conjInv_of _root_.Formalism.FourierDecayAlt.P.B2x2.closedN _root_.Formalism.FourierDecayAlt.P.B2x3.closedW _root_.Formalism.FourierDecayAlt.P.B2x3.compactW).2
 
 end Formalism.FourierDecayAlt.P

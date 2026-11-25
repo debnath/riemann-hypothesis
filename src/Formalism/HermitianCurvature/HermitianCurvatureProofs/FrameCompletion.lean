@@ -27,14 +27,14 @@ theorem herm_lsum {N : ℕ} {ι : Type*} (H : Matrix (Fin N) (Fin N) ℂ) (s : F
   classical
   induction s using Finset.induction_on with
   | empty => simp [herm]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Qx8.herm_add_left', Qx8.herm_smul_left', ih]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, ih]
 
 theorem herm_rsum {N : ℕ} {ι : Type*} (H : Matrix (Fin N) (Fin N) ℂ) (s : Finset ι) (c : ι → ℂ) (v : ι → Fin N → ℂ)
     (w : Fin N → ℂ) : herm H w (∑ a ∈ s, c a • v a) = ∑ a ∈ s, star (c a) * herm H w (v a) := by
   classical
   induction s using Finset.induction_on with
   | empty => simp [herm]
-  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Qx8.herm_add_right', Qx8.herm_smul_right', ih]
+  | insert a s ha ih => rw [Finset.sum_insert ha, Finset.sum_insert ha, Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, ih]
 
 variable {k r : ℕ}
 
@@ -52,15 +52,10 @@ theorem herm_comb {m : ℕ} {vs : List (Fin (2 * r + k + 1) → ℂ)} {C : Fin m
   rw [herm_lsum]
   simp only [herm_rsum, hC.2.1, mul_ite, mul_one, mul_zero, Finset.sum_ite_eq, Finset.mem_univ, ite_true]
 
-theorem complete {x : Fin (2 * r + k + 1) → ℂ} {Bs : Fin k → Fin (2 * r + k + 1) → ℂ} (hx : inWb k r x)
-    (hxx : herm (Hpk k r) x x ≠ 0) (hB : IsFrameOf k r [x] Bs) {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
-    v = ∑ a, herm (Hpk k r) v (Bs a) • Bs a + (herm (Hpk k r) v x * (herm (Hpk k r) x x)⁻¹) • x := by
-  apply Formalism.FourierDecayAlt.P.SkewHermitianParts.complete <;> assumption
-
 theorem complete0 {x : Fin (2 * r + k + 1) → ℂ} {Bs : Fin k → Fin (2 * r + k + 1) → ℂ} (hx : inWb k r x)
     (hxx : herm (Hpk k r) x x ≠ 0) (hB : IsFrameOf k r [x] Bs) {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v)
     (hvx : herm (Hpk k r) v x = 0) : v = ∑ a, herm (Hpk k r) v (Bs a) • Bs a := by
-  simpa [hvx] using complete hx hxx hB hv
+  simpa [hvx] using _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.complete hx hxx hB hv
 
 theorem hzz {z : Fin (2 * r + k + 1) → ℂ} (hT : 0 < Tz k r z) : herm (Hpk k r) z z ≠ 0 := by
   intro h
@@ -140,7 +135,7 @@ theorem qr_frameChange_of : Formalism.FourierDecayAlt.Qr.EcLie → Formalism.Fou
   have hCl : C (Fin.last n) = e := by rw [hCdef, Fin.snoc_last]
   have hBe : ∀ a, herm (Hpk (n + 1) r) (Bs' a) e = 0 := fun a => hB'.2.2 a e (by simp)
   have heB : ∀ a, herm (Hpk (n + 1) r) e (Bs' a) = 0 := fun a => by
-    rw [← Qx2.herm_star, hBe, star_zero]
+    rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, hBe, star_zero]
   have hC : IsFrameOf (n + 1) r [z] C := by
     refine ⟨fun a => ?_, fun a b => ?_, fun a v hv => ?_⟩
     · refine Fin.lastCases ?_ (fun a => ?_) a
@@ -195,7 +190,7 @@ theorem qr_frameChange_of : Formalism.FourierDecayAlt.Qr.EcLie → Formalism.Fou
       rw [h3, HermitianFormSums.herm_rsum]
       apply Finset.sum_congr rfl
       intro d _
-      simp only [hP, hQ, Matrix.of_apply, Qx2.herm_star]
+      simp only [hP, hQ, Matrix.of_apply, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj]
     simp only [Matrix.sum_apply, Matrix.smul_apply, unitB, Matrix.of_apply, smul_eq_mul]
     rw [h1, h2, Finset.sum_mul_sum]
     apply Finset.sum_congr rfl

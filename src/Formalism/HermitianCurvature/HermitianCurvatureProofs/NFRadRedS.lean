@@ -49,10 +49,6 @@ variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Matri
   {Wp Wq : Type} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp] [NormedAddCommGroup Wq] [NormedSpace ℂ Wq]
   {π : Q.Mx k r → (Wp →L[ℂ] Wp)} {π' : Q.Mx k r → (Wq →L[ℂ] Wq)}
 
-theorem uw_mul {z : Fin (2 * r + k + 1) → ℂ} {g h : Q.Mx k r} (hg : g ∈ UWset k r z) (hh : h ∈ UWset k r z) :
-    g * h ∈ UWset k r z := by
-  apply _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul <;> assumption
-
 private theorem isUnit_det_of_mem_uwset {z : Fin (2 * r + k + 1) → ℂ} {g : Q.Mx k r} (hg : g ∈ UWset k r z) :
     IsUnit g.det := by
   apply _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.In.uw_unit <;> assumption
@@ -73,7 +69,7 @@ theorem wd (hπ : IsCRepOn (UWset k r z) π) (hπ' : IsCRepOn (UWset k r z') π'
     (hb₂ : b₂ ∈ UWset k r z') (he : a₁ * muZ k r μsec ζ * b₁ = a₂ * muZ k r μsec ζ * b₂) :
     (π a₁).comp (X.comp (π' b₁)) = (π a₂).comp (X.comp (π' b₂)) := by
   have hp : (a₂⁻¹ * a₁, b₁ * b₂⁻¹) ∈ Stab k r z z' μsec ζ := by
-    refine ⟨uw_mul (inv_mem_uwset_of_mem ha₂) ha₁, uw_mul hb₁ (inv_mem_uwset_of_mem hb₂), ?_⟩
+    refine ⟨_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (inv_mem_uwset_of_mem ha₂) ha₁, _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hb₁ (inv_mem_uwset_of_mem hb₂), ?_⟩
     show a₂⁻¹ * a₁ * muZ k r μsec ζ * (b₁ * b₂⁻¹) = muZ k r μsec ζ
     calc a₂⁻¹ * a₁ * muZ k r μsec ζ * (b₁ * b₂⁻¹) = a₂⁻¹ * (a₁ * muZ k r μsec ζ * b₁) * b₂⁻¹ := by
           simp only [Matrix.mul_assoc]
@@ -82,10 +78,10 @@ theorem wd (hπ : IsCRepOn (UWset k r z) π) (hπ' : IsCRepOn (UWset k r z') π'
       _ = muZ k r μsec ζ := by rw [uw_inv_mul ha₂, uw_mul_inv hb₂, Matrix.one_mul, Matrix.mul_one]
   have hXp : (π (a₂⁻¹ * a₁)).comp (X.comp (π' (b₁ * b₂⁻¹))) = X := hX _ hp
   have ea : π a₁ = (π a₂).comp (π (a₂⁻¹ * a₁)) := by
-    rw [← hπ.2 _ ha₂ _ (uw_mul (inv_mem_uwset_of_mem ha₂) ha₁), ← Matrix.mul_assoc, uw_mul_inv ha₂,
+    rw [← hπ.2 _ ha₂ _ (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (inv_mem_uwset_of_mem ha₂) ha₁), ← Matrix.mul_assoc, uw_mul_inv ha₂,
       Matrix.one_mul]
   have eb : π' b₁ = (π' (b₁ * b₂⁻¹)).comp (π' b₂) := by
-    rw [← hπ'.2 _ (uw_mul hb₁ (inv_mem_uwset_of_mem hb₂)) _ hb₂, Matrix.mul_assoc, uw_inv_mul hb₂,
+    rw [← hπ'.2 _ (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hb₁ (inv_mem_uwset_of_mem hb₂)) _ hb₂, Matrix.mul_assoc, uw_inv_mul hb₂,
       Matrix.mul_one]
   rw [ea, eb]
   conv_rhs => rw [← hXp]
@@ -196,7 +192,7 @@ theorem radRedSurj_of (hL : LocSec) (hR : RepSmooth) : NF.RadRedSurj := by
     obtain ⟨V, -, hgV, a, b, -, -, hab⟩ := hL k r z z' μsec hk hz hz' hT hT' hsec g hgl hgg
     obtain ⟨ha, hb, hfac⟩ := hab g hgV hgl hgg
     have hzi : zetaL k r z z' (Fin.last r) (h * g * h') = zetaL k r z z' (Fin.last r) g :=
-      Qx5.zeta_inv hh hh' g
+      _root_.Formalism.FourierDecayAlt.P.Qx8.zetaL_equiv hh hh' g
     have hgg' : 0 < GGl k r z z' (h * g * h') := by
       have e : GGl k r z z' (h * g * h') = GGl k r z z' g := by unfold GGl; rw [hzi]
       rw [e]; exact hgg
@@ -206,7 +202,7 @@ theorem radRedSurj_of (hL : LocSec) (hR : RepSmooth) : NF.RadRedSurj := by
       conv_lhs => rw [hfac]
       simp only [Matrix.mul_assoc]
     show Phi k r z z' μsec π π' φ c (h * g * h') = (π h).comp ((Phi k r z z' μsec π π' φ c g).comp (π' h'))
-    rw [phi_val hπ hπ' hφf hdom' (uw_mul hh ha) (uw_mul hb hh') hfac',
+    rw [phi_val hπ hπ' hφf hdom' (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hh ha) (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hb hh') hfac',
       phi_val hπ hπ' hφf ⟨hc, hgl, hgg⟩ ha hb hfac, hzi, hπ.2 _ hh _ ha, hπ'.2 _ hb _ hh']
     simp only [ContinuousLinearMap.comp_assoc]
   · funext q

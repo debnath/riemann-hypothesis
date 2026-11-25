@@ -554,17 +554,3 @@ theorem charBlock : CharBlock := by
 end twoBlocks
 
 end Formalism.FourierDecayAlt.P.Ux2
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem hermitian_group_blocks : Formalism.FourierDecayAlt.U.HpkBlocks := Ux2.hpkBlocks
-
-theorem slice_membership : Formalism.FourierDecayAlt.U.SliceMem := Ux2.sliceMem
-
-theorem radical_parametrisation : Formalism.FourierDecayAlt.U.RadicalParam := Ux2.radicalParam
-
-theorem low_weight_specialisation : Formalism.FourierDecayAlt.U.LowWSpec := Ux2.lowWSpec
-
-theorem character_on_blocks : Formalism.FourierDecayAlt.U.CharBlock := Ux2.charBlock
-
-end Formalism.FourierDecayAlt.P

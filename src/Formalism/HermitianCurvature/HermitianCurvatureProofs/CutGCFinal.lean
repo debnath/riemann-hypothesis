@@ -62,7 +62,7 @@ theorem family_locality_holds : FamLocal := by
     have hS : ∀ {w : Fin (2 * P.r + P.k + 1) → ℂ} {s : Q.Mx P.k P.r}, s ∈ UWset P.k P.r w →
         s ∈ Q.Slev P.k P.r w (Fin.last P.r) := by
       intro w s hs
-      exact ⟨s, hs, 1, Formalism.FourierDecayAlt.P.Qx6.one_nlev _, by simp⟩
+      exact ⟨s, hs, 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one _, by simp⟩
     rw [hg]
     exact (hIsDom x.1 hx.1).2 _ ⟨hmuG, hmu⟩ h (hS hh) h' (hS hh')
 
@@ -80,7 +80,7 @@ theorem family_locality_holds : FamLocal := by
             exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
           exact this.preimage continuous_fst
         have h2 : IsOpen {x : (Fin P.r → ℂ) × Q.Mx P.k P.r | 0 < Q.GGl P.k P.r Bs.z Bs.z' x.2} :=
-          isOpen_lt continuous_const ((Formalism.FourierDecayAlt.P.Qx5.GGl_continuous P.k P.r Bs.z Bs.z').comp continuous_snd)
+          isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont P.k P.r Bs.z Bs.z').comp continuous_snd)
         exact h1.inter h2
       refine ⟨U ∩ {x | x.1 ∈ OmX P.r ∧ 0 < Q.GGl P.k P.r Bs.z Bs.z' x.2}, F, hU.inter hO, ⟨hx₀U, hx₀.1, hx₀.2.2⟩,
         hF.mono Set.inter_subset_left, fun x hx hxG => ?_⟩
@@ -108,7 +108,7 @@ theorem family_locality_holds : FamLocal := by
   show Q.tL P.k P.r Bs.z Bs.z' (Fin.last P.r) Y a b (Φt q.1.1) (NF.muZ P.k P.r Bs.μsec ζ') =
     Q.tL P.k P.r Bs.z Bs.z' (Fin.last P.r) Y a b (Φ q.1.1) (NF.muZ P.k P.r Bs.μsec ζ')
   have hDo : IsOpen {g : Q.Mx P.k P.r | 0 < Q.GGl P.k P.r Bs.z Bs.z' g} :=
-    isOpen_lt continuous_const (Formalism.FourierDecayAlt.P.Qx5.GGl_continuous P.k P.r Bs.z Bs.z')
+    isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont P.k P.r Bs.z Bs.z')
   refine (Formalism.FourierDecayAlt.P.Qx2.ll_tL (i := Fin.last P.r) hDo Bs.z Bs.z' Y a b).1 (Φt q.1.1) (Φ q.1.1) (fun x hx => ?_)
     _ ⟨hqD.2.1, hqD.2.2⟩
   show (if (q.1.1, x) ∈ Q.DomR P.k P.r Bs.z Bs.z' then Φ q.1.1 x else 0) = Φ q.1.1 x

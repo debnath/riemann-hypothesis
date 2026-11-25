@@ -24,7 +24,7 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 
 theorem cut_of_haar (B : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) (γ : Formalism.FourierDecayAlt.B.Mat k r) (μ : Measure (Formalism.QuantumDeterminants.Mt k r))
     (F : Formalism.FourierDecayAlt.B.Mat k r → (Wq →L[ℂ] Wp)) (A₀ : ℝ)
-    (hA : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((r : ℝ) + 1) ^ 2 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1) ≤ A₀)
+    (hA : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((r : ℝ) + 1) ^ 2 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1) ≤ A₀)
     (hCC : Formalism.FourierDecayAlt.B.InCC A₀ 1 F) (hGV : γ ∈ Formalism.FourierDecayAlt.B.GV k r) (hRel : Formalism.FourierDecayAlt.C6.IsRelevant B γ)
     (w : Equiv.Perm (Fin (r + 1))) (d : Fin (r + 1) → ℂ) (hd : ∀ a, d a ≠ 0)
     (hZ : Formalism.QuantumDeterminants.Zhat k r B.z B.z' γ = Formalism.FourierDecayAlt.C2.monoP w d) (hGf : 0 < Formalism.QuantumDeterminants.Gf k r B.z B.z' γ)
@@ -32,10 +32,10 @@ theorem cut_of_haar (B : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) (�
       (∀ K : Set (Formalism.QuantumDeterminants.Mt k r), IsCompact K → μ K < ⊤) ∧ μ ≠ 0) :
     ∃ θ', Formalism.FourierDecayAlt.D.IsNormCut B γ μ θ' ∧
       Integrable (fun p => θ' p • Formalism.FourierDecayAlt.D.orbIntegrand B γ F p) B.μSS := by
-  obtain ⟨θ, hθ, hint⟩ := Formalism.FourierDecayAlt.P.orbital_integral_converges.choose_spec k r Wp Wq B γ w d A₀ F hGV hRel hd hZ hGf hA hCC
-  have hMu := Formalism.FourierDecayAlt.P.radial_measure_is_haar k r Wp Wq B γ w d hGV hd hZ
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r (Formalism.FourierDecayAlt.C6.Rset γ) (Formalism.FourierDecayAlt.D.muR B γ w) μ
-    (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hGV)) hMu hH.1 hH.2.1 hH.2.2.1
+  obtain ⟨θ, hθ, hint⟩ := _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose_spec k r Wp Wq B γ w d A₀ F hGV hRel hd hZ hGf hA hCC
+  have hMu := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar k r Wp Wq B γ w d hGV hd hZ
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r (Formalism.FourierDecayAlt.C6.Rset γ) (Formalism.FourierDecayAlt.D.muR B γ w) μ
+    (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hGV)) hMu hH.1 hH.2.1 hH.2.2.1
   have hc0 : c ≠ 0 := by
     intro h0
     apply hH.2.2.2
@@ -89,7 +89,7 @@ def FrameAt (u u' : D.what₂.Word) (τ : D.what₂.Tau) : Prop :=
 
 theorem cutAt_of (u u' : D.what₂.Word) (τ : D.what₂.Tau) (a b : X.B.H (vOf X τ)) (ξ : X.Vloc u (vOf X τ))
     (ξ' : X.Vloc u' (vOf X τ)) (c : ℂ) (hF : FrameAt C u u' τ) (A₀ : ℝ)
-    (hA : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
+    (hA : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ A₀)
     (hCC : Formalism.FourierDecayAlt.B.InCC A₀ 1 (fcAt C u u' τ a b ξ ξ' c)) : CutAt C u u' τ a b ξ ξ' c := by
   intro γ μRv ν hP
@@ -137,7 +137,7 @@ theorem frameAt_of (u u' : D.what₂.Word) (τ : D.what₂.Tau) (hH : HaarAtC C 
 
 theorem cutAt_of_haar (u u' : D.what₂.Word) (τ : D.what₂.Tau) (a b : X.B.H (vOf X τ)) (ξ : X.Vloc u (vOf X τ))
     (ξ' : X.Vloc u' (vOf X τ)) (c : ℂ) (hH : HaarAtC C u u' τ) (A₀ : ℝ)
-    (hA : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
+    (hA : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ A₀)
     (hCC : Formalism.FourierDecayAlt.B.InCC A₀ 1 (fcAt C u u' τ a b ξ ξ' c)) : CutAt C u u' τ a b ξ ξ' c :=
   cutAt_of C u u' τ a b ξ ξ' c (frameAt_of C u u' τ hH) A₀ hA hCC

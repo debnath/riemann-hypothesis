@@ -30,10 +30,8 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
-lemma Hsq (k r : ℕ) : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
-
 lemma Hdet (k r : ℕ) : IsUnit (Hpk k r).det := by
-  exact Matrix.isUnit_det_of_right_inverse (Hsq k r)
+  exact Matrix.isUnit_det_of_right_inverse (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
 
 lemma gv_one : (1 : Mat k r) ∈ GV k r := by
   show (1 : Mat k r)ᴴ * Hpk k r * 1 = Hpk k r
@@ -53,19 +51,11 @@ lemma gv_closed : IsClosed (GV k r) := by
   exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul
     continuous_id) continuous_const
 
-lemma exp_mem {X : Mat k r} (hX : inLie k r X) : NormedSpace.exp X ∈ GV k r := by
-  apply ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem <;> assumption
-
 lemma lie_rsmul {X : Mat k r} (hX : inLie k r X) (t : ℝ) : inLie k r ((t : ℂ) • X) := by
   have hX' : Xᴴ * Hpk k r + Hpk k r * X = 0 := hX
   have h : star (t : ℂ) = (t : ℂ) := by simp
   show ((t : ℂ) • X)ᴴ * Hpk k r + Hpk k r * ((t : ℂ) • X) = 0
   rw [Matrix.conjTranspose_smul, h, Matrix.smul_mul, Matrix.mul_smul, ← smul_add, hX', smul_zero]
-
-lemma lie_neg {X : Mat k r} (hX : inLie k r X) : inLie k r (-X) := by
-  have hX' : Xᴴ * Hpk k r + Hpk k r * X = 0 := hX
-  show (-X)ᴴ * Hpk k r + Hpk k r * (-X) = 0
-  rw [Matrix.conjTranspose_neg, Matrix.neg_mul, Matrix.mul_neg, ← neg_add, hX', neg_zero]
 
 def crv (x : Bool × Mat k r) (g : Mat k r) (t : ℝ) : Mat k r :=
   if x.1 then NormedSpace.exp (-((t : ℂ) • x.2)) * g else g * NormedSpace.exp ((t : ℂ) • x.2)
@@ -99,8 +89,8 @@ lemma crv_hasDerivAt (x : Bool × Mat k r) (g : Mat k r) : HasDerivAt (crv x g) 
 lemma crv_mem {x : Bool × Mat k r} (hx : inLie k r x.2) {g : Mat k r} (hg : g ∈ GV k r) (t : ℝ) :
     crv x g t ∈ GV k r := by
   rcases x with ⟨_ | _, X⟩
-  · exact gv_mul hg (exp_mem (lie_rsmul hx t))
-  · exact gv_mul (exp_mem (lie_neg (lie_rsmul hx t))) hg
+  · exact gv_mul hg (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem (lie_rsmul hx t))
+  · exact gv_mul (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.lie_neg (lie_rsmul hx t))) hg
 
 lemma crv_ev {x : Bool × Mat k r} {g : Mat k r} {O : Set (Mat k r)} (hO : IsOpen O) (hg : g ∈ O) :
     ∀ᶠ t : ℝ in 𝓝 0, crv x g t ∈ O := by

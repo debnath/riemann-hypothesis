@@ -183,13 +183,13 @@ theorem lie_expand {z : Fin (2 * r + k + 1) → ℂ} {Bs : Fin k → Fin (2 * r 
 theorem hpart1_skew {X : Mx k r} (hX : Xᴴ * Hpk k r + Hpk k r * X = 0) : hpart1 (Hpk k r) X = X := by
   unfold hpart1
   rw [Qx8.hpk_inv, Matrix.mul_assoc, eq_neg_of_add_eq_zero_left hX, Matrix.mul_neg,
-    ← Matrix.mul_assoc, Qx2.hpk_sq', Matrix.one_mul, sub_neg_eq_add, ← two_smul ℂ X, smul_smul]
+    ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul, sub_neg_eq_add, ← two_smul ℂ X, smul_smul]
   norm_num
 
 theorem hpart2_skew {X : Mx k r} (hX : Xᴴ * Hpk k r + Hpk k r * X = 0) : hpart2 (Hpk k r) X = 0 := by
   unfold hpart2
   rw [Qx8.hpk_inv, Matrix.mul_assoc, eq_neg_of_add_eq_zero_left hX, Matrix.mul_neg,
-    ← Matrix.mul_assoc, Qx2.hpk_sq', Matrix.one_mul, add_neg_cancel, smul_zero]
+    ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul, add_neg_cancel, smul_zero]
 
 theorem inLie_zero (z : Fin (2 * r + k + 1) → ℂ) : InLieW k r z 0 :=
   ⟨⟨by simp, fun a _ => by simp⟩, by simp⟩
@@ -263,7 +263,7 @@ theorem stabilizer_lie_algebra : Formalism.FourierDecayAlt.Qr.StabLie := by
 theorem qr_lieStab_of : Formalism.FourierDecayAlt.Qr.ExpGen → Formalism.FourierDecayAlt.Qr.PiExp → Formalism.FourierDecayAlt.Qr.EcLie → Formalism.FourierDecayAlt.Qr.LieStab := by
   intro hG hP hE W _ _ _ k r z π Bs hz hT hπ hB S hS h hh
   have hzz : herm (Hpk k r) z z ≠ 0 := by
-    rw [Qx8.herm_self']
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
     intro h0
     rw [neg_eq_zero, Complex.ofReal_eq_zero] at h0
     exact hT.ne' h0

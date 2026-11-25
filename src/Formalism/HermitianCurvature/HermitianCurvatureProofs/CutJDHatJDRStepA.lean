@@ -393,7 +393,7 @@ theorem NL_re (z z' : Fin (2 * (r + 1) + k + 1) → ℂ) (u : ℂ) (f : Mx k (r 
             (posL k (r + 1) (Fin.last r).castSucc ∘ bE (e0 k (Fin.last r)) (v0 k (Fin.last r) ∘ skip1 t)) u f x := by
   have h : mdim k (r + 1) (Fin.last r).succ - 1 + 1 = r + 1 - ((Fin.last r).castSucc : Fin (r + 2)).val + k := by
     simp [mdim]; omega
-  have hf : fvec k (r + 1) z' (Fin.last r).succ = z' := Formalism.FourierDecayAlt.P.Qx5.fvec_last k (r + 1) z'
+  have hf : fvec k (r + 1) z' (Fin.last r).succ = z' := _root_.Formalism.FourierDecayAlt.P.Qx8.fvec_last k (r + 1) z'
   unfold NL
   refine Fintype.sum_equiv (finCongr mdimL_eq.symm) _ _ fun s => ?_
   refine Fintype.sum_equiv (finCongr mdimL_eq.symm) _ _ fun t => ?_
@@ -498,7 +498,7 @@ theorem stepA_core (Wp Wq : Type) [NormedAddCommGroup Wp] [NormedSpace ℂ Wp] [
       quantum_minor_point_evaluation R hz hz' hD' hs hle hri (skip1 s) (skip1 t) _ hc hg hgD]
     congr 1
     simp only [aY, yv]
-    rw [show fvec k (r + 1) z (Fin.last r).succ = z from Formalism.FourierDecayAlt.P.Qx5.fvec_last k (r + 1) z]
+    rw [show fvec k (r + 1) z (Fin.last r).succ = z from _root_.Formalism.FourierDecayAlt.P.Qx8.fvec_last k (r + 1) z]
   have e1 : evP (ho1 l hD'.1) (rho (Wq →L[ℂ] Wp) R.w l hD'.1 (J0 hD'.1 hs)) c g
       (opB (Wq →L[ℂ] Wp) l.succ (ho1 l hD'.1) l 0 * tB (Wq →L[ℂ] Wp) l.succ (ho1 l hD'.1) z z' Y 1 0) = pOp l WorkedExample c := by
     show ((opB (Wq →L[ℂ] Wp) l.succ (ho1 l hD'.1) l 0 (tB (Wq →L[ℂ] Wp) l.succ (ho1 l hD'.1) z z' Y 1 0

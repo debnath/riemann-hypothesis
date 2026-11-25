@@ -49,13 +49,6 @@ theorem block3_apply (A11 : Matrix (Fin j) (Fin j) ℂ) (A12 : Matrix (Fin j) (F
       Matrix.fromBlocks (Matrix.fromBlocks A11 A12 A21 A22) (Matrix.fromRows A13 A23) (Matrix.fromCols A31 A32) A33 x y := by
   simp [blk3, Matrix.reindex_apply, Matrix.submatrix_apply]
 
-theorem block_index_first_val (a : Fin j) : (eB k j ρ (Sum.inl (Sum.inl a))).val = a.val := by
-  simp [eB]
-theorem block_index_middle_val (i : Fin (2 * ρ + k + 1)) : (eB k j ρ (Sum.inl (Sum.inr i))).val = j + i.val := by
-  simp [eB]
-theorem block_index_last_val (a : Fin j) : (eB k j ρ (Sum.inr a)).val = j + (2 * ρ + k + 1) + a.val := by
-  simp [eB]
-
 theorem wMat_mul_apply {n : ℕ} {m : Type*} (A : Matrix (Fin n) m ℂ) (a : Fin n) (b : m) :
     (G.wMat n * A) a b = A a.rev b := by
   simp [G.wMat, Matrix.mul_apply, ite_mul]
@@ -71,12 +64,12 @@ theorem hat_z_of_block3 (A11 : Matrix (Fin j) (Fin j) ℂ) (A12 : Matrix (Fin j)
   rw [wMat_mul_apply]
   have h1 : (⟨2 * (j + ρ) + k - a.val, by omega⟩ : Fin (2 * (j + ρ) + k + 1)) = eB k j ρ (Sum.inr a.rev) := by
     apply Fin.ext
-    rw [block_index_last_val]
+    rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]
     simp only [Fin.val_rev]
     omega
   have h2 : (⟨b.val, by omega⟩ : Fin (2 * (j + ρ) + k + 1)) = eB k j ρ (Sum.inl (Sum.inl b)) := by
     apply Fin.ext
-    rw [block_index_first_val]
+    rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]
   simp only [Zh]
   rw [h1, h2, block3_apply]
   simp
@@ -196,7 +189,7 @@ theorem block3_conjTranspose (A11 : Matrix (Fin j) (Fin j) ℂ) (A12 : Matrix (F
   ext ((a | a) | a) ((b | b) | b) <;> simp
 
 theorem hpkBlocks : HpkBlocks := by
-  apply _root_.Formalism.FourierDecayAlt.P.hermitian_group_blocks <;> assumption
+  apply _root_.Formalism.FourierDecayAlt.P.Ux2.hpkBlocks <;> assumption
 
 theorem wMat_conjTranspose (n : ℕ) : (G.wMat n)ᴴ = G.wMat n := by
   apply _root_.Formalism.FourierDecayAlt.P.Ux2.wMat_ct <;> assumption
@@ -205,7 +198,6 @@ theorem skewOf_conjTranspose {n : ℕ} (q : (G.UT n → ℂ) × (Fin n → ℝ))
   apply _root_.Formalism.FourierDecayAlt.P.Ux2.skewOf_ct <;> assumption
 
 theorem hpk_herm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := (hpkFacts k r).1
-theorem hpk_sq (k r : ℕ) : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
 
 theorem mul_wMat_wMat {m : Type*} (n : ℕ) (M : Matrix m (Fin n) ℂ) : M * G.wMat n * G.wMat n = M := by
   rw [Matrix.mul_assoc, wMat_mul_self, Matrix.mul_one]
@@ -230,7 +222,7 @@ theorem uni_nset (A12 : Matrix (Fin j) (Fin (2 * ρ + k + 1)) ℂ) (A13 : Matrix
     simp only [eI] at hv
     rw [← hv] at hai
     rcases x with ((x | x) | x) <;> rcases y with ((y | y) | y) <;>
-      simp only [block_index_first_val, block_index_middle_val, block_index_last_val] at hv hai <;>
+      simp only [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] at hv hai <;>
       first
       | (simp [Matrix.one_apply, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
           Matrix.fromCols_apply_inr]; done)
@@ -241,7 +233,7 @@ theorem uni_nset (A12 : Matrix (Fin j) (Fin (2 * ρ + k + 1)) ℂ) (A13 : Matrix
     rw [block3_apply]
     simp only [(eB k j ρ).apply_eq_iff_eq]
     rcases x with ((x | x) | x) <;> rcases y with ((y | y) | y) <;>
-      simp only [block_index_first_val, block_index_middle_val, block_index_last_val] at hc1 hc2 hi <;>
+      simp only [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] at hc1 hc2 hi <;>
       first
       | (simp [Matrix.one_apply, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
           Matrix.fromCols_apply_inr]; done)
@@ -277,30 +269,30 @@ theorem fm_eq (z : Fin (2 * (j + ρ) + k + 1) → ℂ) (hz : inWb k (j + ρ) z) 
   obtain ⟨y, rfl⟩ := (eC j ρ).surjective c
   simp only [Matrix.reindex_apply, Matrix.submatrix_apply, Equiv.symm_apply_apply, Formalism.QuantumDeterminants.Fm, Matrix.of_apply, F0]
   rcases x with ((x | x) | x) <;> rcases y with (y | y)
-  · rw [fvec_apply_lt z hz _ _ (by rw [block_index_first_val]; omega), block_index_first_val, column_index_first_val]
+  · rw [fvec_apply_lt z hz _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]; omega), _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, column_index_first_val]
     simp [Matrix.one_apply, Fin.ext_iff, eq_comm]
-  · rw [fvec_apply_lt z hz _ _ (by rw [block_index_first_val]; omega), block_index_first_val, column_index_second_val, ite_eq_right (by omega)]
+  · rw [fvec_apply_lt z hz _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]; omega), _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, column_index_second_val, ite_eq_right (by omega)]
     simp
   · by_cases hlt : j + x.val < j + ρ
-    · rw [fvec_apply_lt z hz _ _ (by rw [block_index_middle_val]; omega), block_index_middle_val, column_index_first_val, ite_eq_right (by omega)]
+    · rw [fvec_apply_lt z hz _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; omega), _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, column_index_first_val, ite_eq_right (by omega)]
       simp
-    · rw [fvec_apply_ge z _ _ (by rw [block_index_middle_val]; omega), column_index_first_val, ite_eq_right (by omega)]
+    · rw [fvec_apply_ge z _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; omega), column_index_first_val, ite_eq_right (by omega)]
       simp
   · simp only [Matrix.fromRows_apply_inl, Matrix.fromBlocks_apply₂₂, Matrix.of_apply]
     unfold fvec
     rw [column_index_second_val]
     by_cases hc : y.val < ρ
     · rw [dite_eq_left (by omega), dite_eq_left hc]
-      simp only [bvec, eI, Pi.single_apply, Fin.ext_iff, block_index_middle_val]
+      simp only [bvec, eI, Pi.single_apply, Fin.ext_iff, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]
       by_cases hxy : x.val = y.val
       · rw [ite_eq_left (by omega), ite_eq_left hxy]
       · rw [ite_eq_right (by omega), ite_eq_right hxy]
     · rw [dite_eq_right (by omega), dite_eq_right hc]
       simp only [lowV]
       congr 1
-  · rw [fvec_apply_ge z _ _ (by rw [block_index_last_val]; omega), hz _ (Or.inr (by rw [block_index_last_val]; omega))]
+  · rw [fvec_apply_ge z _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega), hz _ (Or.inr (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega))]
     simp
-  · rw [fvec_apply_ge z _ _ (by rw [block_index_last_val]; omega), hz _ (Or.inr (by rw [block_index_last_val]; omega))]
+  · rw [fvec_apply_ge z _ _ (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega), hz _ (Or.inr (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega))]
     simp
 
 theorem fq_of_block3 (Fj Fj' : Matrix (Fin (2 * ρ + k + 1)) (Fin (ρ + 1)) ℂ)
@@ -455,7 +447,7 @@ theorem wMat_det (n : ℕ) : IsUnit (G.wMat n).det := isUnit_of_mul_self _ (wMat
 
 theorem gv_det {r : ℕ} {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) : IsUnit γ.det := by
   have h : γᴴ * Hpk k r * γ = Hpk k r := hγ
-  have hH : IsUnit (Hpk k r).det := isUnit_of_mul_self _ (hpk_sq k r)
+  have hH : IsUnit (Hpk k r).det := isUnit_of_mul_self _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
   have h2 := congrArg Matrix.det h
   rw [Matrix.det_mul, Matrix.det_mul] at h2
   have h3 : IsUnit ((γᴴ).det * (Hpk k r).det * γ.det) := by
@@ -558,17 +550,17 @@ theorem block3_eta (M : B.Mat k (j + ρ)) : M = blk3
   rw [block3_apply]
   rcases x' with ((a | a) | a) <;> rcases y' with ((b | b) | b) <;> simp
 
-theorem hpk_det (k r : ℕ) : IsUnit (Hpk k r).det := isUnit_of_mul_self _ (hpk_sq k r)
+theorem hpk_det (k r : ℕ) : IsUnit (Hpk k r).det := isUnit_of_mul_self _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
 
 theorem unitary_right {r : ℕ} (g : B.Mat k r) (h : gᴴ * Hpk k r * g = Hpk k r) : g * Hpk k r * gᴴ = Hpk k r := by
   have h1 : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     calc (Hpk k r * gᴴ * Hpk k r) * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [h, hpk_sq]
+      _ = 1 := by rw [h, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq]
   have h2 : g * (Hpk k r * gᴴ * Hpk k r) = 1 := by
     rw [← Matrix.inv_eq_left_inv h1]
     exact Matrix.mul_nonsing_inv g (Matrix.isUnit_det_of_left_inverse h1)
   calc g * Hpk k r * gᴴ = g * (Hpk k r * gᴴ * Hpk k r) * Hpk k r := by
-        simp only [Matrix.mul_assoc, hpk_sq, Matrix.mul_one]
+        simp only [Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one]
     _ = Hpk k r := by rw [h2, Matrix.one_mul]
 
 def skewCoords {n : ℕ} (S : Matrix (Fin n) (Fin n) ℂ) : (G.UT n → ℂ) × (Fin n → ℝ) :=
@@ -602,7 +594,7 @@ theorem wMat_mul_wMat_mul {m : Type*} (n : ℕ) (X : Matrix (Fin n) m ℂ) : G.w
   rw [← Matrix.mul_assoc, wMat_mul_self, Matrix.one_mul]
 
 theorem hpk_mul_hpk_mul {m : Type*} (k r : ℕ) (X : Matrix (Fin (2 * r + k + 1)) m ℂ) : Hpk k r * (Hpk k r * X) = X := by
-  rw [← Matrix.mul_assoc, hpk_sq, Matrix.one_mul]
+  rw [← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.one_mul]
 
 theorem rn_of (c : Matrix (Fin (2 * ρ + k + 1)) (Fin j) ℂ) (S : Matrix (Fin j) (Fin j) ℂ) (hS : Sᴴ = -S) :
     Rn k j ρ (Matrix.of.symm c, skewCoords S) = blk3 1 (-(G.wMat j * cᴴ * Hpk k ρ))
@@ -652,7 +644,7 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
     have h0 : G.wMat j * (Ci * ((G33 * G.wMat j * G31ᴴ + ContDiffOnLocalExtension * Hpk k ρ * ContDiffOnLocalExtensionᴴ + G31 * G.wMat j * G33ᴴ) *
         (Ciᴴ * G.wMat j))) = 0 := by rw [f33]; simp
     rw [← h0, hS'_def, hb', hc', ha']
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, hCi, hCiH]
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, hCi, hCiH]
     have h2 : star (1 / 2 : ℂ) = 1 / 2 := by simp
     rw [h2]
     module
@@ -660,7 +652,7 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
     rw [rn_of c' S' hS']
     congr 1
     · rw [hc']
-      simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul]
+      simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul]
     · rw [hS'_def]
       simp only [Matrix.mul_add, Matrix.mul_smul, wMat_mul_wMat_mul]
       module
@@ -678,7 +670,7 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
     have h0 : -(Ciᴴ * ((G31ᴴ * G.wMat j * FourierUniquenessMirabolic + G21ᴴ * Hpk k ρ * G21 + FourierUniquenessMirabolicᴴ * G.wMat j * G31) * Ci)) = 0 := by
       rw [e11]; simp
     rw [← h0, hS_def, hb, ha, hc]
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi, hCiH, hCi', hCiH', hC1, hC2, hC3, hC4]
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi, hCiH, hCi', hCiH', hC1, hC2, hC3, hC4]
     have h2 : star (1 / 2 : ℂ) = 1 / 2 := by simp
     rw [h2]
     module
@@ -706,19 +698,19 @@ theorem bigCell_exists (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD :
   simp at h11 h21 h31 h32 h33
   have hP11 : product_first_partition = 0 := by
     rw [← h11, hb, hc]
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hC1]
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hC1]
     abel
   have hP21 : placeRankTwoOne = 0 := by
     rw [← h21, hc]
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hC1]
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hC1]
     abel
   have hP32 : SumRepresentations = 0 := by
     rw [← h32, ha']
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi']
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi']
     abel
   have hP33 : ArithmeticCylinders = 0 := by
     rw [← h33, ha', hb']
-    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi']
+    simp only [Matrix.conjTranspose_add, Matrix.conjTranspose_smul, Matrix.conjTranspose_mul, Matrix.conjTranspose_neg, Matrix.conjTranspose_conjTranspose, wMat_conjTranspose, hpk_herm, Matrix.mul_add, Matrix.add_mul, Matrix.mul_assoc, Matrix.neg_mul, Matrix.mul_neg, neg_neg, Matrix.smul_mul, Matrix.mul_smul, wMat_mul_wMat_mul, hpk_mul_hpk_mul, wMat_mul_self, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.mul_one, Matrix.one_mul, Matrix.mul_sub, Matrix.sub_mul, Matrix.conjTranspose_sub, hCi']
     abel
   subst hP11 hP21 hP32 hP33 h31
   have hmU2 := hmU

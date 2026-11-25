@@ -124,7 +124,7 @@ theorem itgSwap : ItgSwap := by
   have sN := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite hN
   have sb := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite hb
   have hinv : νN.map Formalism.FourierDecayAlt.B2.invM = νN :=
-    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (Nset k r) νN (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hN
+    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (Nset k r) νN (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hN
   have hA := hf.comp (meas_fA (k := k) (r := r) g)
   have hB := hf.comp (meas_fB (k := k) (r := r) g)
   have e0 : (fun p : (Mt k r × Mt k r) × Mt k r => f ((Matrix.of p.1.1)⁻¹ * g * Matrix.of p.2 * Matrix.of p.1.2)) =
@@ -162,12 +162,12 @@ open Formalism.QuantumDeterminants Formalism.L2.SG.Pf Formalism.L2.SG.Pf.BH
 
 theorem rhsHaar : RhsHaar := by
   intro k r μb hμb
-  obtain ⟨νG, hG⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
+  obtain ⟨νG, hG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   obtain ⟨νN, hN⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
-  obtain ⟨νb, hb⟩ := Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r
+  obtain ⟨νb, hb⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
   obtain ⟨C, hC, hI⟩ := Formalism.FourierDecayAlt.P.iterated_integration_formula k r νG νN νb hG hN hb
-  obtain ⟨cb, cb0, cbt, hμB⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r) hb hμb.1
-  obtain ⟨cN, cN0, cNt, hμN⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hN
+  obtain ⟨cb, cb0, cbt, hμB⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r) hb hμb.1
+  obtain ⟨cN, cN0, cNt, hμN⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hN
     (Formalism.MainNotions.BridgeCSB.haarLieN k r 1 one_ne_zero ENNReal.one_ne_top)
   set D : ℝ≥0∞ := cN * cb * cN with hD
   have hD0 : D ≠ 0 := by simp [hD, cN0, cb0]

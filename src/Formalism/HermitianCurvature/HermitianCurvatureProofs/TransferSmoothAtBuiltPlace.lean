@@ -359,8 +359,6 @@ noncomputable section
 
 variable {k r : ℕ}
 
-lemma Hpk_inv (k r : ℕ) : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv (Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
-
 lemma Hb_sq (k : ℕ) : Hb k * Hb k = 1 := by
   unfold Formalism.QuantumDeterminants.Hb
   rw [Matrix.diagonal_mul_diagonal, ← Matrix.diagonal_one]
@@ -425,12 +423,12 @@ lemma embed_zero : e0 k r (0 : Mb k) = 0 := by
 lemma hermitian_real_part_embed (X : Mb k) :
     hpart1 (Hpk k r) (e0 k r X) = e0 k r ((1 / 2 : ℂ) • (X - Hb k * Xᴴ * Hb k)) := by
   unfold Formalism.QuantumDeterminants.hpart1
-  rw [Hpk_inv, embed_conj_transpose, Hpk_mulVec_e0, embed_mul_hermitian_form, embed_smul, embed_sub]
+  rw [_root_.Formalism.FourierDecayAlt.P.JFxE.Hinv, embed_conj_transpose, Hpk_mulVec_e0, embed_mul_hermitian_form, embed_smul, embed_sub]
 
 lemma hermitian_imag_part_embed (X : Mb k) :
     hpart2 (Hpk k r) (e0 k r X) = e0 k r ((1 / (2 * Complex.I) : ℂ) • (X + Hb k * Xᴴ * Hb k)) := by
   unfold Formalism.QuantumDeterminants.hpart2
-  rw [Hpk_inv, embed_conj_transpose, Hpk_mulVec_e0, embed_mul_hermitian_form, embed_smul, embed_add]
+  rw [_root_.Formalism.FourierDecayAlt.P.JFxE.Hinv, embed_conj_transpose, Hpk_mulVec_e0, embed_mul_hermitian_form, embed_smul, embed_add]
 
 lemma embed_mul_vec (Y : Mb k) (v : Fin (2 * r + k + 1) → ℂ) :
     e0 k r Y *ᵥ v = Em k r *ᵥ (Y *ᵥ ((Em k r)ᵀ *ᵥ v)) := by
@@ -769,7 +767,7 @@ def Kl (Z : Q.Mx k r) : Prop :=
 
 theorem skew_ct {X : Q.Mx k r} (hX : Xᴴ * Hpk k r + Hpk k r * X = 0) : Xᴴ = -(Hpk k r * X * Hpk k r) := by
   have h1 : Xᴴ * Hpk k r = -(Hpk k r * X) := eq_neg_of_add_eq_zero_left hX
-  calc Xᴴ = Xᴴ * Hpk k r * Hpk k r := by rw [Matrix.mul_assoc, Qx2.hpk_sq', Matrix.mul_one]
+  calc Xᴴ = Xᴴ * Hpk k r * Hpk k r := by rw [Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.mul_one]
     _ = -(Hpk k r * X * Hpk k r) := by rw [h1, Matrix.neg_mul]
 
 theorem kl_of_lev {X : Q.Mx k r} (hX : Q.inLieLev k r (Fin.last r) X) : Kl X := by
@@ -777,9 +775,9 @@ theorem kl_of_lev {X : Q.Mx k r} (hX : Q.inLieLev k r (Fin.last r) X) : Kl X := 
   have ha : a.val < (Fin.last r).val := a.isLt
   obtain ⟨h1, h2⟩ := hX.2 a ha
   refine ⟨h1, h2, ?_, ?_⟩
-  · rw [skew_ct hX.1, Matrix.neg_mulVec, ← Matrix.mulVec_mulVec, Qx8.hpk_e, ← Matrix.mulVec_mulVec, h2,
+  · rw [skew_ct hX.1, Matrix.neg_mulVec, ← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, ← Matrix.mulVec_mulVec, h2,
       Matrix.mulVec_zero, neg_zero]
-  · rw [skew_ct hX.1, Matrix.neg_mulVec, ← Matrix.mulVec_mulVec, Qx8.hpk_es, ← Matrix.mulVec_mulVec, h1,
+  · rw [skew_ct hX.1, Matrix.neg_mulVec, ← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, ← Matrix.mulVec_mulVec, h1,
       Matrix.mulVec_zero, neg_zero]
 
 theorem kl_add {Z Z' : Q.Mx k r} (h : Kl Z) (h' : Kl Z') : Kl (Z + Z') := by
@@ -822,9 +820,9 @@ theorem kl_sum {ι : Type*} (s : Finset ι) (Z : ι → Q.Mx k r) (h : ∀ i ∈
 
 theorem glc_of_kl {Z : Q.Mx k r} (h : Kl Z) : GLc k r Z := by
   have e1 : ∀ a : Fin r, ((Hpk k r)⁻¹ * Zᴴ * Hpk k r) *ᵥ bvec (eI k r a) = 0 := fun a => by
-    rw [← Matrix.mulVec_mulVec, Qx8.hpk_e, ← Matrix.mulVec_mulVec, (h a).2.2.2, Matrix.mulVec_zero]
+    rw [← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, ← Matrix.mulVec_mulVec, (h a).2.2.2, Matrix.mulVec_zero]
   have e2 : ∀ a : Fin r, ((Hpk k r)⁻¹ * Zᴴ * Hpk k r) *ᵥ bvec (esI k r a) = 0 := fun a => by
-    rw [← Matrix.mulVec_mulVec, Qx8.hpk_es, ← Matrix.mulVec_mulVec, (h a).2.2.1, Matrix.mulVec_zero]
+    rw [← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, ← Matrix.mulVec_mulVec, (h a).2.2.1, Matrix.mulVec_zero]
   refine ⟨⟨Qx2.hpart1_lie Z, fun a _ => ⟨?_, ?_⟩⟩, ⟨Qx2.hpart2_lie Z, fun a _ => ⟨?_, ?_⟩⟩⟩
   · unfold hpart1; rw [Matrix.smul_mulVec, Matrix.sub_mulVec, (h a).1, e1, sub_zero, smul_zero]
   · unfold hpart1; rw [Matrix.smul_mulVec, Matrix.sub_mulVec, (h a).2.1, e2, sub_zero, smul_zero]
@@ -853,25 +851,22 @@ theorem idx_cases (p : Fin (2 * r + k + 1)) :
     · refine Or.inr (Or.inr ⟨⟨2 * r + k - p.val, by have := p.isLt; omega⟩, Fin.ext ?_⟩)
       simp [esI]; have := p.isLt; omega
 
-theorem mulVec_bvec_apply (Z : Q.Mx k r) (p q : Fin (2 * r + k + 1)) : (Z *ᵥ bvec q) p = Z p q := by
-  simp [bvec, Matrix.mulVec, dotProduct, Pi.single_apply]
-
 theorem kl_entry_col {Z : Q.Mx k r} (h : Kl Z) (p : Fin (2 * r + k + 1)) (a : Fin r) :
     Z p (eI k r a) = 0 ∧ Z p (esI k r a) = 0 := by
   constructor
   · have e := congrFun (h a).1 p
-    rwa [mulVec_bvec_apply] at e
+    rwa [_root_.Formalism.FourierDecayAlt.P.Qx6.cell_mulVec_bvec] at e
   · have e := congrFun (h a).2.1 p
-    rwa [mulVec_bvec_apply] at e
+    rwa [_root_.Formalism.FourierDecayAlt.P.Qx6.cell_mulVec_bvec] at e
 
 theorem kl_entry_row {Z : Q.Mx k r} (h : Kl Z) (q : Fin (2 * r + k + 1)) (a : Fin r) :
     Z (eI k r a) q = 0 ∧ Z (esI k r a) q = 0 := by
   constructor
   · have e := congrFun (h a).2.2.1 q
-    rw [mulVec_bvec_apply, Matrix.conjTranspose_apply] at e
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx6.cell_mulVec_bvec, Matrix.conjTranspose_apply] at e
     simpa using e
   · have e := congrFun (h a).2.2.2 q
-    rw [mulVec_bvec_apply, Matrix.conjTranspose_apply] at e
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx6.cell_mulVec_bvec, Matrix.conjTranspose_apply] at e
     simpa using e
 
 theorem wI_ne_eI (j : Fin (k + 1)) (a : Fin r) : wI k r j ≠ eI k r a := by
@@ -1187,13 +1182,13 @@ theorem word_polynomial_vector_holds : WordPSVOfCut := by
     rw [e]; ext v; simp
   have hDl : ∀ h ∈ UWset P.k P.r Bs.z, ∀ g ∈ Dp P.k P.r Bs.z Bs.z', h * g ∈ Dp P.k P.r Bs.z Bs.z' := by
     intro h hh g hg
-    have e := Qx5.GG_inv hh (Qx8.uw_one Bs.z') g
+    have e := _root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv hh (Qx8.uw_one Bs.z') g
     rw [Matrix.mul_one] at e
     show 0 < Q.GGl P.k P.r Bs.z Bs.z' (h * g)
     rw [e]; exact hg
   have hDr : ∀ h ∈ UWset P.k P.r Bs.z', ∀ g ∈ Dp P.k P.r Bs.z Bs.z', g * h ∈ Dp P.k P.r Bs.z Bs.z' := by
     intro h hh g hg
-    have e := Qx5.GG_inv (Qx8.uw_one Bs.z) hh g
+    have e := _root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv (Qx8.uw_one Bs.z) hh g
     rw [Matrix.one_mul] at e
     show 0 < Q.GGl P.k P.r Bs.z Bs.z' (g * h)
     rw [e]; exact hg

@@ -132,7 +132,7 @@ theorem norm_gI_le (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) (Ψ : B.Ma
   unfold gI
   split_ifs with hx
   · refine (ContinuousLinearMap.opNorm_comp_le _ _).trans ?_
-    have := _root_.Formalism.FourierDecayAlt.P.SmoothExtensionClosedSet.norm_pi_le_one Bj hx.1
+    have := _root_.Formalism.FourierDecayAlt.P.B7.norm_pi_le Bj hx.1
     exact (mul_le_of_le_one_left (norm_nonneg _) this)
   · simp
 
@@ -254,9 +254,9 @@ theorem rdV_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat k 
   have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
   obtain ⟨V, hVo, hyV, K, hK, hvan⟩ := hv y hyU
   have hΨ1 : CkOn 1 (GV k n) Ψ := Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top hΨ
-  have hΨc : ContinuousOn Ψ (GV k n) := Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hΨ
+  have hΨc : ContinuousOn Ψ (GV k n) := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hΨ
   have hRΨ : CkOn ⊤ (GV k n) (RdV X Ψ) := Formalism.FourierDecayAlt.P.B5.ckOn_RdV hX (by simpa using hΨ)
-  have hRc : ContinuousOn (RdV X Ψ) (GV k n) := Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hRΨ
+  have hRc : ContinuousOn (RdV X Ψ) (GV k n) := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hRΨ
   obtain ⟨ε, hε, hball⟩ : ∃ ε > 0, ∀ t ∈ Metric.ball (0 : ℝ) ε, cv false X t y ∈ V := by
     have ho : IsOpen ((fun t : ℝ => cv false X t y) ⁻¹' V) := hVo.preimage (cv_continuous false X y)
     have h0 : (0 : ℝ) ∈ (fun t : ℝ => cv false X t y) ⁻¹' V := by
@@ -427,7 +427,7 @@ theorem foldT_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat 
     refine ⟨by rw [e0]; exact ckOn_top hc _ _ _, by rw [e0]; exact vanish_top Bj e hvv _ _ _, fun y hyU hy => ?_⟩
     have hA := rdV_TI Bj e hc hvv (Xa_unit t.2.1 t.2.2).1 hyU hy
     have hB := rdV_TI Bj e hc hvv (Xb_unit t.2.1 t.2.2).1 hyU hy
-    have hI0 := int_gI Bj e (Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hc) hvv hyU hy
+    have hI0 := int_gI Bj e (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hc) hvv hyU hy
     have hL : foldT (t :: ts) (TI Bj e Ψ) y = (if t.2.1 = t.2.2 then t.1 • TI Bj e (foldT ts Ψ) y else 0) +
         (TI Bj e (RdV (Xa k n t.2.1 t.2.2) (foldT ts Ψ)) y +
           Complex.I • TI Bj e (RdV (Xb k n t.2.1 t.2.2) (foldT ts Ψ)) y) := by
@@ -543,7 +543,7 @@ theorem qminor_TI (Bj : B.RealPlaceData k ρ Wp Wq) (e : p + ρ = n) {Ψ : B.Mat
   have hF := fun σ => foldT_TI Bj e hΨ hU hv (ts σ)
   have hI : ∀ σ ∈ (Finset.univ : Finset (Equiv.Perm (Fin t))),
       Integrable (fun x => PBQ.cP Bj x • gI Bj e (foldT (ts σ) Ψ) x y) (PBQ.muXP Bj) :=
-    fun σ _ => int_gI Bj e (Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (hF σ).1) (hF σ).2.1 hyU hy
+    fun σ _ => int_gI Bj e (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (hF σ).1) (hF σ).2.1 hyU hy
   have hfun : (fun x => PBQ.cP Bj x • gI Bj e (qminorOp (EabH (Hpk k n)) a b u Ψ) x y) = fun x =>
       (1 : ℂ) • ∑ σ, ((Equiv.Perm.sign σ : ℤ) : ℂ) • (PBQ.cP Bj x • gI Bj e (foldT (ts σ) Ψ) x y) := by
     funext x

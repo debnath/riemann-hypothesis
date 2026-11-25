@@ -151,7 +151,7 @@ theorem plusPosOfParts : CutHL.PlusPosOfParts := by
       psi k r z cStd (nL k r (m + 1) hj a) • (v₀ : Q.Mx k r → E) g := by
     intro g hg a
     have hng : nL k r (m + 1) hj a * g ∈ Q.Glev k r 0 ∩ Dm :=
-      ⟨Formalism.FourierDecayAlt.P.Qx3.glev_mul (HeadLetterLemmas.nL_glev0 hj a) hg.1, (hLe g hg a).1⟩
+      ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (HeadLetterLemmas.nL_glev0 hj a) hg.1, (hLe g hg a).1⟩
     show cut k r 0 Dm Φ _ = _ • cut k r 0 Dm Φ g
     rw [cut_of_mem Φ hng, cut_of_mem Φ hg, (hLe g hg a).2]
   have hxEq : ∀ x : SB E hD, ∀ a : Fin (m + 1) → ℂ,

@@ -112,7 +112,7 @@ theorem heis_meas_conj_inv (ρ : ℕ) {g : B.Mat k ρ} (hg : g ∈ B.GV k ρ) :
     (B2.μHeis k ρ).map (conjM ((ιLev k 1 ρ g)⁻¹)) = B2.μHeis k ρ := by
   have hu : IsUnit g.det := HermitianFormFactor.UH_unit (Ux3.hpk_det k ρ) hg
   have hgi : g⁻¹ ∈ B.GV k ρ := HermitianFormFactor.UH_inv (Ux3.hpk_det k ρ) hg
-  have h := Formalism.FourierDecayAlt.P.heisenberg_levi_conjugation_measure k ρ g⁻¹ hgi
+  have h := _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLevMeas k ρ g⁻¹ hgi
   rwa [LongWeylElement.lev_inv _ hu] at h
 
 end Formalism.FourierDecayAlt.P.PBH

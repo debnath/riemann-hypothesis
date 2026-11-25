@@ -43,7 +43,7 @@ theorem conv0 (D : B.RealPlaceData k r Wp Wq) (γ : B.Mat k r) (w : Equiv.Perm (
 theorem cpt_bound (D : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[ℂ] Wp)) (hF : KB.CptCoef D F) (A : ℝ)
     (hA : 0 ≤ A) : ∃ c : ℝ, ∀ g ∈ B.GV k r, B.gN g ^ A * ‖F g‖ ≤ c := by
   obtain ⟨hCk, ⟨R, hR⟩, -⟩ := hF
-  have hFc : ContinuousOn F (B.GV k r) := P.B5.ckOn_continuousOn hCk
+  have hFc : ContinuousOn F (B.GV k r) := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hCk
   set K : Set (B.Mat k r) := B.GV k r ∩ {g | B.gN g ≤ R} with hK
   have hgNc : Continuous (fun g : B.Mat k r => B.gN g) := by
     unfold B.gN
@@ -54,7 +54,7 @@ theorem cpt_bound (D : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[�
     have hbox : IsCompact (Set.univ.pi fun _ : Fin (2 * r + k + 1) =>
         Set.univ.pi fun _ : Fin (2 * r + k + 1) => Metric.closedBall (0 : ℂ) (max R 0)) :=
       isCompact_univ_pi fun _ => isCompact_univ_pi fun _ => isCompact_closedBall _ _
-    refine hbox.of_isClosed_subset ((P.unitary_group_closed k r).closed.inter
+    refine hbox.of_isClosed_subset ((_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).closed.inter
       (isClosed_le hgNc continuous_const)) ?_
     intro g hg
     simp only [Set.mem_pi, Set.mem_univ, true_implies, Metric.mem_closedBall, dist_zero_right]
@@ -81,6 +81,6 @@ theorem orbJConv_cpt (S : B.RealPlaceData k r Wp Wq) (γ : B.Mat k r) (w : Equiv
   set A : ℝ := 16 * ((c₁ : ℝ) + 1) * ((r : ℝ) + 1) ^ 2 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1) with hAdef
   have hA0 : 0 ≤ A := by positivity
   obtain ⟨c, hc⟩ := cpt_bound S F hF A hA0
-  exact conv0 S γ w d A F c₁ hPP hγ hd hZ hpos le_rfl (P.B5.ckOn_continuousOn hF.1) c hc
+  exact conv0 S γ w d A F c₁ hPP hγ hd hZ hpos le_rfl (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hF.1) c hc
 
 end Formalism.FourierDecayAlt.P.StabilizerDisintegration.CV

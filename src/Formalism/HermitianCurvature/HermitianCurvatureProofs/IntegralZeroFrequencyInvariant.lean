@@ -370,12 +370,6 @@ end Formalism.FourierDecayAlt.P.B1
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem bilinear_form_continuity : Formalism.FourierDecayAlt.B.FormCoreC := B1.coreC
-
-theorem fatou_lemma_in_parameter : Formalism.FourierDecayAlt.B.FatouParam := B1.fatou
-
-theorem integration_by_parts_regularised : Formalism.FourierDecayAlt.B.RegIBP := B1.ibp
-
 theorem test_function_decay : Formalism.FourierDecayAlt.B.TestDecay := B1.decay B1.ibp
 
 end Formalism.FourierDecayAlt.P

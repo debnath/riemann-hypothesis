@@ -47,7 +47,7 @@ theorem orbJ_one_eq (S : B.RealPlaceData k ρ Wp Wq) {γ : B.Mat k ρ} (hγ : γ
     split_ifs with hex
     · have h1mem : (1 : B.Mat k ρ) ∈ C6.Rset γ := by
         refine ⟨WeylGroupFacts.mem_n_one, ?_⟩
-        rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ)]
+        rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ)]
         exact WeylGroupFacts.mem_n_one
       exact Formalism.FourierDecayAlt.P.Dx2.Rad.u_inj S hγ hpos hd hZ hex.choose_spec.1 h1mem
         (hex.choose_spec.2.trans (Formalism.FourierDecayAlt.P.Dx2.Rad.uMap_one S.z ⟨S.z_mem, S.T_pos⟩).symm)
@@ -63,7 +63,7 @@ theorem orbJ_one_eq (S : B.RealPlaceData k ρ Wp Wq) {γ : B.Mat k ρ} (hγ : γ
   have hact : ∀ p, C6.actR γ 1 p = p := by
     intro p
     unfold C6.actR
-    rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ), Matrix.one_mul,
+    rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ), Matrix.one_mul,
       Matrix.one_mul]
     rfl
   have hθ : ∀ θ, D.IsNormCut S γ (D.muR S γ 1) θ → ∀ p, S.inSS p → θ p = 1 := by
@@ -133,15 +133,15 @@ theorem exists_frame_level_zero (hρ : ρ = 0) (B0 : B.RealPlaceData k ρ Wp Wq)
   have hζ0 : ζ ≠ 0 := by
     intro h; rw [h, Complex.normSq_zero] at hζ; linarith
   have hG : 0 < D.ptG (Tz k 0 B0.z * Tz k 0 B0.z') 0 [(1, ζ)] := by rw [ptG_one]; linarith
-  exact Formalism.FourierDecayAlt.P.exists_isotropic_frame k 0 Wp Wq B0 ν m [(1, ζ)] hb (isLocPt_one hζ0) hG
+  exact _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists k 0 Wp Wq B0 ν m [(1, ζ)] hb (isLocPt_one hζ0) hG
 
 theorem jacquet_integral_level_zero (hρ : ρ = 0) (B0 : B.RealPlaceData k ρ Wp Wq) (hN : B0.μN = D.muN k ρ)
     (Φ : B.Mat k ρ → (Wq →L[ℂ] Wp)) (γ : B.Mat k ρ) :
     B.JF B0 Φ γ = ∫ p : Mt k ρ × Mt k ρ, (B0.π (Matrix.of p.1)).comp
       ((Φ ((Matrix.of p.1)⁻¹ * γ * Matrix.of p.2)).comp (B0.π' (Matrix.of p.2)⁻¹)) ∂(B0.μW.prod B0.μW') := by
   subst hρ
-  have : SigmaFinite B0.μW := Formalism.FourierDecayAlt.P.Dx2.MN.sigma_of_haar B0.haarW
-  have : SigmaFinite B0.μW' := Formalism.FourierDecayAlt.P.Dx2.MN.sigma_of_haar B0.haarW'
+  have : SigmaFinite B0.μW := _root_.Formalism.FourierDecayAlt.P.B7.sf B0.haarW
+  have : SigmaFinite B0.μW' := _root_.Formalism.FourierDecayAlt.P.B7.sf B0.haarW'
   have hN0 : B0.μN = Measure.dirac (Matrix.of.symm (1 : B.Mat k 0)) := hN
   have hmeas : (B0.μW.prod B0.μN).prod (B0.μW'.prod B0.μN) = (B0.μW.prod B0.μW').map
       (fun p : Mt k 0 × Mt k 0 => ((p.1, Matrix.of.symm (1 : B.Mat k 0)), (p.2, Matrix.of.symm (1 : B.Mat k 0)))) := by

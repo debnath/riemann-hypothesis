@@ -271,7 +271,7 @@ theorem chart_spec (g : B.Mat k (j + ρ)) (hg : g ∈ B.GV k (j + ρ)) (hD : DjU
   have hu : IsUnit (G.wMat j * Z).det := by
     rw [Matrix.det_mul]; exact (wMat_det j).mul (isUnit_iff_ne_zero.mpr hZ)
   have hWW : G.wMat j * G.wMat j = 1 := wMat_mul_self j
-  have hHH : Hpk k ρ * Hpk k ρ = 1 := hpk_sq k ρ
+  have hHH : Hpk k ρ * Hpk k ρ = 1 := _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k ρ
   have i1 : (G.wMat j * Z) * (G.wMat j * Z)⁻¹ = 1 := Matrix.mul_nonsing_inv _ hu
   have i2 : (G.wMat j * Z)⁻¹ * (G.wMat j * Z) = 1 := Matrix.nonsing_inv_mul _ hu
   have e31 : bk31 g = G.wMat j * Z := by rw [hb, block_three_bottom_left]

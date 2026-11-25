@@ -86,12 +86,6 @@ theorem W_fix (c : Fin r → ℂ) (v : Fin (2 * r + k + 1) → ℂ) (hv : ∀ b,
     Q.wCell k r (Fin.last r) c *ᵥ v = v := by
   rw [wc_list, wl_fixv c _ v hv]
 
-theorem herm_uh {W : Q.Mx k r} (hW : W ∈ UH (Hpk k r)) (x y : Fin (2 * r + k + 1) → ℂ) :
-    herm (Hpk k r) (W *ᵥ x) (W *ᵥ y) = herm (Hpk k r) x y := by
-  have hW' : Wᴴ * Hpk k r * W = Hpk k r := hW
-  unfold herm
-  rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hW']
-
 theorem herm_smul_right (x w : Fin (2 * r + k + 1) → ℂ) (s : ℂ) :
     herm (Hpk k r) x (s • w) = star s * herm (Hpk k r) x w := by
   unfold herm
@@ -118,7 +112,7 @@ theorem herm_wCell_last_mul_mulVec_eq_of_inWb (hc : c ∈ OmX r) {z : Fin (2 * r
   have hzf : Q.wCell k r (Fin.last r) c *ᵥ z = z := W_fix c z fun b =>
     ⟨hz _ (Or.inl (by simp [eI])), hz _ (Or.inr (by simp [esI]; have := b.isLt; omega))⟩
   conv_lhs => rw [← hzf]
-  rw [← Matrix.mulVec_mulVec, herm_uh hW]
+  rw [← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.Qx4.uh_herm hW]
 
 theorem row_z_e (hg : g ∈ Q.Glev k r (Fin.last r)) {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (a : Fin r) :
     herm (Hpk k r) (g *ᵥ bvec (eI k r a)) z = 0 ∧ herm (Hpk k r) (g *ᵥ bvec (esI k r a)) z = 0 := by

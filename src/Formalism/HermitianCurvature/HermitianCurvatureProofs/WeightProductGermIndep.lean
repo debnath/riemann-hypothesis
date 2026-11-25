@@ -102,18 +102,6 @@ theorem betaZ_succ' (κ : ℝ) (hκ : κ ≠ 0) (n : ℕ) :
     betaZ κ ((n : ℤ) + 1) = betaZ κ n * (κ ^ (-((n : ℤ) ^ 2)) / Real.pi ^ n) := by
   rw [betaZ_succ κ hκ, prod_c κ hκ]
 
-theorem weight_product_nonneg (k r : ℕ) (fr : ℕ → ℕ → ℝ) (hfr : ∀ b s, 0 ≤ fr b s) :
-    ∀ (b : ℕ) (P : C.LPt), 0 ≤ C.nAux k r 0 fr b P
-  | _, [] => by simp [C.nAux]
-  | b, (s, t) :: rest => by
-    simp only [C.nAux]
-    refine mul_nonneg ?_ (weight_product_nonneg k r fr hfr (b + s) rest)
-    split_ifs
-    · rcases Nat.eq_zero_or_pos (k - 1) with h | h
-      · rw [h]; simp
-      · rw [zero_pow h.ne']
-    · exact zpow_nonneg (mul_nonneg (hfr _ _) (norm_nonneg _)) _
-
 theorem betaZ_pos (κ : ℝ) (hκ : 0 < κ) (N : ℤ) : 0 < betaZ κ N :=
   Finset.prod_pos fun _ _ => zpow_pos (div_pos (zpow_pos hκ _) Real.pi_pos) _
 
@@ -188,7 +176,7 @@ theorem const_match (S : C.HidaSetting E Wp Wq) (hg : 0 < S.g) (b s : ℕ) (hb :
   have hdG0 : 0 < dG := by rw [hdG]; unfold D.deG; positivity
   have hfr : ∀ b s, 0 ≤ S.fr b s := fun b s => by unfold C.HidaSetting.fr; exact Real.rpow_nonneg hR.le _
   set nh := C.nAux S.G.k S.G.r 0 S.fr 1 h with hnh
-  have hnh0 : 0 ≤ nh := weight_product_nonneg _ _ _ hfr _ _
+  have hnh0 : 0 ≤ nh := _root_.Formalism.FourierDecayAlt.P.FormNormSumIdentities.weight_product_nonneg _ _ _ hfr _ _
   set bh := D.bSt κ h with hbh
   have hbh0 : 0 < bh := PBD.bSt_pos' κ hκ0 h
   set βn := betaZ κ (n : ℤ) with hβn

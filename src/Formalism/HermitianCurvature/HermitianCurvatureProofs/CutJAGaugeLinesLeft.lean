@@ -27,7 +27,7 @@ theorem gauge_left_line_holds : GLLeft := by
   have hm := NFRadRedA.muZ_uwb Bs.sec hζ'
   have hG := NFRadRedA.uwb_glev hm
   have hU : μ ∈ UH (Hpk P.k P.r) := hG.1
-  have hGi := FrameEntries.glev_inv hG
+  have hGi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hG
   have hUi : μ⁻¹ ∈ UH (Hpk P.k P.r) := hGi.1
   have hT := Bs.T_pos
 
@@ -36,7 +36,7 @@ theorem gauge_left_line_holds : GLLeft := by
   have hyz : herm (Hpk P.k P.r) y Bs.z = ζ := by
     rw [← NFRadRedA.zeta_eq]; exact NFRadRedA.zeta_muZ hz hz' Bs.sec hζ'
   have hyy : herm (Hpk P.k P.r) y y = -((Tz P.k P.r Bs.z' : ℝ) : ℂ) := by
-    rw [Qx2.herm_uh hU, FrameEntries.herm_self]
+    rw [Qx2.herm_uh hU, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
   have hpos : 0 < Complex.normSq ζ / Tz P.k P.r Bs.z - Tz P.k P.r Bs.z' := by
     rw [sub_pos, lt_div_iff₀ hT]; linarith
   set p := SSn.prWv P.k P.r Bs.z y with hpdef
@@ -63,8 +63,8 @@ theorem gauge_left_line_holds : GLLeft := by
       · exact h
     rw [hpdef, DU.prWv_of hy, DU.hadd_r, DU.hsmul_r, hFz a, mul_zero, add_zero] at h2
     exact h2
-  have hmi : μ⁻¹ * μ = 1 := Gauge.GC.KLAM.inv_mul_uh hU
-  have hmm : μ * μ⁻¹ = 1 := Gauge.GC.KLAM.mul_inv_uh hU
+  have hmi : μ⁻¹ * μ = 1 := _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hU
+  have hmm : μ * μ⁻¹ = 1 := _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hU
   have hz'e : Bs.z' = μ⁻¹ *ᵥ y := by
     rw [hydef, Matrix.mulVec_mulVec, hmi, Matrix.one_mulVec]
   have hF' : Q.IsFrameOf P.k P.r [μ⁻¹ *ᵥ Bs.z, Bs.z'] (fun a => μ⁻¹ *ᵥ Fr a) := by

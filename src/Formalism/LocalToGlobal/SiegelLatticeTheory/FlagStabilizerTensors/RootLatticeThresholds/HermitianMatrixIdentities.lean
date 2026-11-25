@@ -22,7 +22,7 @@ namespace Formalism.L2.SG.HermitianMatrixIdentities
 variable {k r : ℕ}
 
 theorem hpk_isUnit : IsUnit (Hpk k r).det := by
-  exact Formalism.FourierDecayAlt.P.B2x5.isUnit_det_Hpk k r
+  exact _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_unit k r
 
 theorem star_dot_conjT' {n m : Type*} [Fintype n] [Fintype m] (Q : Matrix n m ℂ) (x : m → ℂ) (y : n → ℂ) :
     star x ⬝ᵥ (Qᴴ *ᵥ y) = star (Q *ᵥ x) ⬝ᵥ y := by

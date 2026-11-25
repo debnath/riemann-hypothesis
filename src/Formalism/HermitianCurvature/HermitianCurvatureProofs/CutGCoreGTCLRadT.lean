@@ -541,9 +541,6 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 namespace RJR
 
-theorem le_inf (n : ℕ) : (n : WithTop ℕ∞) ≤ ∞ := by
-  exact_mod_cast (le_top : ((n : ℕ∞)) ≤ ⊤)
-
 theorem zero_bilin {D E F G : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D] [NormedAddCommGroup E]
     [NormedSpace ℝ E] [NormedAddCommGroup F] [NormedSpace ℝ F] [NormedAddCommGroup G] [NormedSpace ℝ G]
     (B : E →L[ℝ] F →L[ℝ] G) {u : D → E} {v : D → F} {s : Set D} {x : D} (hs : IsOpen s) (hx : x ∈ s)
@@ -551,7 +548,7 @@ theorem zero_bilin {D E F G : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D] 
     ∀ j ≤ n, iteratedFDeriv ℝ j (fun y => B (u y) (v y)) x = 0 := by
   intro j hj
   have hus : UniqueDiffOn ℝ s := hs.uniqueDiffOn
-  have key := B.norm_iteratedFDerivWithin_le_of_bilinear hu hv hus hx (n := j) (RJR.le_inf j)
+  have key := B.norm_iteratedFDerivWithin_le_of_bilinear hu hv hus hx (n := j) (_root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.jetT_le j)
   rw [← norm_le_zero_iff, ← iteratedFDerivWithin_of_isOpen j hs hx]
   refine key.trans (le_of_eq ?_)
   rw [Finset.sum_eq_zero, mul_zero]
@@ -572,7 +569,7 @@ theorem zero_comp {D G : Type*} [NormedAddCommGroup D] [NormedSpace ℝ D] [Norm
     have : 0 ≤ ∑ i ∈ Finset.range (j + 1), ‖iteratedFDerivWithin ℝ i ζ s x‖ :=
       Finset.sum_nonneg (fun _ _ => norm_nonneg _)
     linarith
-  have key := norm_iteratedFDerivWithin_comp_le (n := j) hψ hζ (RJR.le_inf j) hut hus hmap hx
+  have key := norm_iteratedFDerivWithin_comp_le (n := j) hψ hζ (_root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.jetT_le j) hut hus hmap hx
     (C := 0) (D := Dd)
     (fun i hi => by
       rw [iteratedFDerivWithin_of_isOpen i ht (hmap hx), hz i (le_trans hi hj), norm_zero])

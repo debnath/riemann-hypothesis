@@ -142,17 +142,12 @@ lemma freeOf2_of_four_entries {a : S} {x y z w : SlopeTestRemainingChoices S A} 
   intro i j
   fin_cases i <;> fin_cases j <;> first | exact hx | exact hy | exact hz | exact hw
 
-private lemma d0_eq_diagonal (b : SlopeTestRemainingChoices S A) : d0 b = !![b, 0; 0, b] := by
-  first
-  | (refine Matrix.ext fun i j => ?_
-     fin_cases i <;> fin_cases j <;> rfl)
-
 lemma gauss_entries (Fs dd ls l p t F : SlopeTestRemainingChoices S A) :
     d0 Fs * !![1, ls; 0, 1] * d0 dd * !![p, 0; 0, t] * !![1, 0; l, 1] * d0 F =
       !![Fs * (dd * p + ls * (dd * t) * l) * F, Fs * (ls * (dd * t)) * F;
         Fs * (dd * t * l) * F, Fs * (dd * t) * F] := by
   first
-  | (simp only [d0_eq_diagonal, Matrix.mul_fin_two, mul_one, mul_zero, zero_mul, add_zero, zero_add,
+  | (simp only [_root_.Formalism.FourierDecayAlt.P.Fr9.d0_eq, Matrix.mul_fin_two, mul_one, mul_zero, zero_mul, add_zero, zero_add,
       mul_add, add_mul, mul_assoc]; done)
 
 lemma lam_conj (l : SlopeTestRemainingChoices S A) : (!![1, 0; l, 1] : M2 (SlopeTestRemainingChoices S A))ᴴ = !![1, star l; 0, 1] := by
@@ -338,7 +333,7 @@ lemma diag_entries (p1 p2 w c1 c2 e1 e2 : SlopeTestRemainingChoices S A) :
     !![p1, 0; 0, p2] * d0 w * !![c1, 0; 0, c2] * !![e1, 0; 0, e2] =
       !![p1 * w * c1 * e1, 0; 0, p2 * w * c2 * e2] := by
   first
-  | (simp only [d0_eq_diagonal, Matrix.mul_fin_two, mul_zero, zero_mul, add_zero, zero_add,
+  | (simp only [_root_.Formalism.FourierDecayAlt.P.Fr9.d0_eq, Matrix.mul_fin_two, mul_zero, zero_mul, add_zero, zero_add,
       mul_assoc]; done)
 
 theorem plusForm (L : LevelData A r) (f : FrameData S A) (a : S) (Ya : ℂ) (H : PlusHyp L f a Ya) :
@@ -393,7 +388,7 @@ theorem plusForm (L : LevelData A r) (f : FrameData S A) (a : S) (Ya : ℂ) (H :
   have fd : FreeOf a (f.d L) := free_d L f hfree
   have fX : FreeOf a ((wt L : SlopeTestRemainingChoices S A) ^ (f.N + 1) * f.c) := free_mul (free_pow (free_wt L a) _) fc
   have fd0 : ∀ X : SlopeTestRemainingChoices S A, FreeOf a X → FreeOf2 a (d0 X) := fun X hX => by
-    rw [d0_eq_diagonal]; exact freeOf2_of_four_entries hX (free_zero a) (free_zero a) hX
+    rw [_root_.Formalism.FourierDecayAlt.P.Fr9.d0_eq]; exact freeOf2_of_four_entries hX (free_zero a) (free_zero a) hX
   have fZ2 : FreeOf2 a !![(io L.ζi : SlopeTestRemainingChoices S A), 0; 0, io L.ζbi * io L.GG] :=
     freeOf2_of_four_entries (free_io a _) (free_zero a) (free_zero a) (free_mul (free_io a _) (free_io a _))
   have fZh : FreeOf2 a !![(io L.ζbi : SlopeTestRemainingChoices S A), 0; 0, io L.GG * io L.ζi] :=
@@ -411,7 +406,7 @@ theorem plusForm (L : LevelData A r) (f : FrameData S A) (a : S) (Ya : ℂ) (H :
       ← Wd1.ins_mul a _ _ (fd0 _ fd)]
     congr 1
     simp only [← mul_assoc]
-    rw [diag_entries, d0_eq_diagonal, Matrix.mul_fin_two]
+    rw [diag_entries, _root_.Formalism.FourierDecayAlt.P.Fr9.d0_eq, Matrix.mul_fin_two]
     simp only [mul_zero, zero_mul, add_zero, zero_add]
     rw [E1, E2]
   have key' : ∀ Y : SlopeTestRemainingChoices S A, ins a !![(io L.ζbi : SlopeTestRemainingChoices S A), 0; 0, io L.GG * io L.ζi] *
@@ -484,11 +479,6 @@ theorem mon3 {z zi w wi g gi : M} (hz : zi * z = 1) (hw : wi * w = 1) (hg : g * 
 
 end Mon
 
-theorem star_inv {R : Type} [Ring R] [StarRing R] {a b a' b' : R} (h1 : a * b = 1) (h : star a = a')
-    (h2 : a' * b' = 1) : star b = b' := by
-  calc star b = star b * (a' * b') := by rw [h2, mul_one]
-    _ = b' := by rw [← mul_assoc, ← h, ← star_mul, h1, star_one, one_mul]
-
 section Slots
 
 variable {A S : Type} [Ring A] [Fintype S] [DecidableEq S]
@@ -501,25 +491,6 @@ theorem io_one : (io (1 : A) : SlopeTestRemainingChoices S A) = 1 := by
 
 theorem io_star [StarRing A] (x : A) : star (io x : SlopeTestRemainingChoices S A) = io (star x) := by
   apply _root_.Formalism.FourierDecayAlt.P.Wd11.io_star <;> assumption
-
-theorem free_io (c : S) (x : A) : FreeOf c (io x : SlopeTestRemainingChoices S A) := by
-  apply _root_.Formalism.FourierDecayAlt.P.Wd11.free_io <;> assumption
-
-theorem free_one (c : S) : FreeOf c (1 : SlopeTestRemainingChoices S A) := by
-  unfold FreeOf
-  exact fun i j => Commute.one_right _
-
-theorem free_zero (c : S) : FreeOf c (0 : SlopeTestRemainingChoices S A) := by
-  unfold FreeOf
-  exact fun i j => Commute.zero_right _
-
-theorem free_mul {c : S} {b b' : SlopeTestRemainingChoices S A} (h : FreeOf c b) (h' : FreeOf c b') : FreeOf c (b * b') := by
-  unfold FreeOf at h h' ⊢
-  exact fun i j => (h i j).mul_right (h' i j)
-
-
-
-
 
 theorem free2 {c : S} {p q r s : SlopeTestRemainingChoices S A} (hp : FreeOf c p) (hq : FreeOf c q) (hr : FreeOf c r)
     (hs : FreeOf c s) : FreeOf2 c !![p, q; r, s] := by
@@ -565,15 +536,6 @@ theorem mGGi (L : LevelData A r) : L.GGi ∈ zfns L := by
   simp [Formalism.FourierDecayAlt.Fr.zfns]
 
 
-
-
-theorem star_ζi {L : LevelData A r} (h : IsStarLevel L) : star L.ζi = L.ζbi := by
-  exact star_inv L.ζ_ζi h.1 L.ζb_ζbi
-
-theorem star_ζbi {L : LevelData A r} (h : IsStarLevel L) : star L.ζbi = L.ζi := star_inv L.ζb_ζbi (star_ζb h) L.ζ_ζi
-
-theorem wt_eq (L : LevelData A r) : (wt L : SlopeTestRemainingChoices S A) = io L.ζ * io L.ζb * io L.GGi := by
-  simp only [Formalism.FourierDecayAlt.Fr.wt, io_mul]
 
 
 theorem wt_fn (L : LevelData A r) {g : A} (hg : g ∈ zfns L) : Commute (wt L : SlopeTestRemainingChoices S A) (io g) := by
@@ -657,15 +619,15 @@ theorem gaussFormMinus : GaussFormMinus := by
     calc f.TT Yb j i = (f.Fi * f.F) * f.TT Yb j i * (f.Fi * f.F) := by rw [h.Fi_F, one_mul, mul_one]
       _ = _ := by simp only [mul_assoc]
 
-  have fd : FreeOf b (f.d L) := free_mul (free_pow (free_io b _) _) fc
-  have fdi : FreeOf b (f.di L) := free_mul fci (free_pow (free_io b _) _)
-  have fl : FreeOf b (f.l L (Yb - 1)) := free_add (free_io b _) (free_mul (free_io b _) (fee _))
-  have fm : FreeOf b (f.m L Yb) := free_mul (free_mul fdi (free_star fl)) fd
-  have fU : FreeOf2 b !![1, f.l L (Yb - 1); 0, 1] := free2 (free_one b) fl (free_zero b) (free_one b)
+  have fd : FreeOf b (f.d L) := _root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (free_pow (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) _) fc
+  have fdi : FreeOf b (f.di L) := _root_.Formalism.FourierDecayAlt.P.Wd11.free_mul fci (free_pow (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) _)
+  have fl : FreeOf b (f.l L (Yb - 1)) := free_add (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (fee _))
+  have fm : FreeOf b (f.m L Yb) := _root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul fdi (free_star fl)) fd
+  have fU : FreeOf2 b !![1, f.l L (Yb - 1); 0, 1] := free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_one b) fl (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_one b)
   have fD : FreeOf2 b !![f.q (Yb - 1) • (io L.GGi * f.xi (Yb - 1)), 0; 0, io L.GG * f.x Yb] :=
-    free2 (free_smul _ (free_mul (free_io b _) (fxi _))) (free_zero b) (free_zero b)
-      (free_mul (free_io b _) (fx _))
-  have fΛ : FreeOf2 b !![1, 0; f.m L Yb, 1] := free2 (free_one b) (free_zero b) fm (free_one b)
+    free2 (free_smul _ (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (fxi _))) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b)
+      (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (fx _))
+  have fΛ : FreeOf2 b !![1, 0; f.m L Yb, 1] := free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_one b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) fm (_root_.Formalism.FourierDecayAlt.P.Wd11.free_one b)
   have fUD : FreeOf2 b (!![1, f.l L (Yb - 1); 0, 1] *
       !![f.q (Yb - 1) • (io L.GGi * f.xi (Yb - 1)), 0; 0, io L.GG * f.x Yb]) := by
     intro i j k l
@@ -704,14 +666,14 @@ theorem minusForm : MinusForm := by
     refine Matrix.ext fun i j => ?_
     fin_cases i <;> fin_cases j <;> simp [Matrix.mul_apply, Fin.sum_univ_two, mul_assoc]
   have fE : FreeOf2 b (!![io L.ζbi, 0; 0, io L.ζi * io L.GG] : M2 (SlopeTestRemainingChoices S A)) :=
-    free2 (free_io b _) (free_zero b) (free_zero b) (free_mul (free_io b _) (free_io b _))
+    free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _))
   have fEH : FreeOf2 b (!![io L.ζi, 0; 0, io L.GG * io L.ζbi] : M2 (SlopeTestRemainingChoices S A)) :=
-    free2 (free_io b _) (free_zero b) (free_zero b) (free_mul (free_io b _) (free_io b _))
+    free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _))
   have fW : FreeOf2 b (!![wt L, 0; 0, wt L] : M2 (SlopeTestRemainingChoices S A)) :=
-    free2 (free_io b _) (free_zero b) (free_zero b) (free_io b _)
+    free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _)
   have hEH : (!![io L.ζbi, 0; 0, io L.ζi * io L.GG] : M2 (SlopeTestRemainingChoices S A))ᴴ =
       !![io L.ζi, 0; 0, io L.GG * io L.ζbi] := by
-    rw [ct2, star_zero, star_mul, io_star, io_star, io_star, star_ζbi hS, star_ζi hS, star_GG hS]
+    rw [ct2, star_zero, star_mul, io_star, io_star, io_star, _root_.Formalism.FourierDecayAlt.P.Fr5.star_ζbi hS, _root_.Formalism.FourierDecayAlt.P.Fr5.star_ζi hS, star_GG hS]
   have hW : ins b (!![wt L, 0; 0, wt L] : M2 (SlopeTestRemainingChoices S A)) = wt L := by
     have e : (!![wt L, 0; 0, wt L] : M2 (SlopeTestRemainingChoices S A)) = d0 (wt L) := by
       refine Matrix.ext fun i j => ?_
@@ -721,7 +683,7 @@ theorem minusForm : MinusForm := by
   have dg : ∀ g ∈ zfns L, Commute (wt L ^ (f.N + 1) * f.c) (io g) := fun g hg =>
     ((wt_fn L hg).pow_left _).mul_left (h.c_fn g hg)
   have cE : Commute (wt L ^ (f.N + 1) * f.c) (ins b (!![io L.ζi, 0; 0, io L.GG * io L.ζbi] : M2 (SlopeTestRemainingChoices S A))) := by
-    refine Wd1.ins_comm b _ _ (free_mul (free_pow (free_io b _) _) fc) ?_
+    refine Wd1.ins_comm b _ _ (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (free_pow (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) _) fc) ?_
     intro i j
     fin_cases i <;> fin_cases j
     · exact dg _ (mζi L)
@@ -736,10 +698,10 @@ theorem minusForm : MinusForm := by
   have e00 : wt L * io L.ζi * (f.q (Yb - 1) • f.xi (Yb - 1)) * io L.ζbi =
       f.q (Yb - 1) • (io L.GGi * f.xi (Yb - 1)) := by
     rw [mul_smul_comm, smul_mul_assoc, mul_assoc, (comm_inv x1 x2 (h.x_fn _ _ (mζbi L))).eq, ← mul_assoc,
-      wt_eq, mon1 iz iw (io_comm (fcomm L (mGGi L) (mζi L))) (io_comm (fcomm L (mζb L) (mζi L)))
+      _root_.Formalism.FourierDecayAlt.P.Fr5.wt_eq, mon1 iz iw (io_comm (fcomm L (mGGi L) (mζi L))) (io_comm (fcomm L (mζb L) (mζi L)))
         (io_comm (fcomm L (mGGi L) (mζbi L)))]
   have e11 : wt L * (io L.GG * io L.ζbi) * f.x Yb * (io L.ζi * io L.GG) = io L.GG * f.x Yb := by
-    rw [mul_assoc, ((h.x_fn Yb _ (mζi L)).mul_right (h.x_fn Yb _ (mGG L))).eq, ← mul_assoc, wt_eq,
+    rw [mul_assoc, ((h.x_fn Yb _ (mζi L)).mul_right (h.x_fn Yb _ (mGG L))).eq, ← mul_assoc, _root_.Formalism.FourierDecayAlt.P.Fr5.wt_eq,
       mon2 iz iw ig]
   have key : f.d L * ins b !![f.q (Yb - 1) • (io L.GGi * f.xi (Yb - 1)), 0; 0, io L.GG * f.x Yb] =
       star (ins b !![io L.ζbi, 0; 0, io L.ζi * io L.GG]) *
@@ -748,13 +710,13 @@ theorem minusForm : MinusForm := by
     rw [Wd1.ins_star b _ fE, hEH, ← e00, ← e11, ← diag_mul, ← diag_mul, ← diag_mul]
     have f1 : FreeOf2 b (!![wt L, 0; 0, wt L] * !![io L.ζi, 0; 0, io L.GG * io L.ζbi] : M2 (SlopeTestRemainingChoices S A)) := by
       rw [diag_mul]
-      exact free2 (free_mul (free_io b _) (free_io b _)) (free_zero b) (free_zero b)
-        (free_mul (free_io b _) (free_mul (free_io b _) (free_io b _)))
+      exact free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _)) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b)
+        (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _)))
     have f2 : FreeOf2 b (!![wt L, 0; 0, wt L] * !![io L.ζi, 0; 0, io L.GG * io L.ζbi] *
         !![f.q (Yb - 1) • f.xi (Yb - 1), 0; 0, f.x Yb] : M2 (SlopeTestRemainingChoices S A)) := by
       rw [diag_mul, diag_mul]
-      exact free2 (free_mul (free_mul (free_io b _) (free_io b _)) (free_smul _ (fxi _))) (free_zero b)
-        (free_zero b) (free_mul (free_mul (free_io b _) (free_mul (free_io b _) (free_io b _))) (fx _))
+      exact free2 (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _)) (free_smul _ (fxi _))) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b)
+        (_root_.Formalism.FourierDecayAlt.P.Wd11.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_mul (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Wd11.free_io b _))) (fx _))
     rw [Wd1.ins_mul b _ _ f2, Wd1.ins_mul b _ _ f1, Wd1.ins_mul b _ _ fW, hW]
     unfold FrameData.d
     generalize ins b (!![io L.ζi, 0; 0, io L.GG * io L.ζbi] : M2 (SlopeTestRemainingChoices S A)) = EH at cE ⊢
@@ -771,11 +733,6 @@ theorem minusForm : MinusForm := by
 
 end Formalism.FourierDecayAlt.P.Fr8
 
-namespace Formalism.FourierDecayAlt.P
-
-theorem minus_letter_form : Formalism.FourierDecayAlt.Fr.MinusForm := Formalism.FourierDecayAlt.P.Fr8.minusForm
-
-end Formalism.FourierDecayAlt.P
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.GaussFormMinusLetter =====
@@ -820,25 +777,6 @@ variable {A S : Type} [Ring A] [StarRing A] [Algebra ℂ A] [StarModule ℂ A] [
 lemma io_mul (x y : A) : (io (x * y) : SlopeTestRemainingChoices S A) = io x * io y := (Matrix.scalar (Ix S)).map_mul x y
 
 lemma io_one : (io (1 : A) : SlopeTestRemainingChoices S A) = 1 := (Matrix.scalar (Ix S)).map_one
-
-
-lemma free_io (c : S) (x : A) : FreeOf c (io x : SlopeTestRemainingChoices S A) := by
-  intro i j
-  show (eU c i j : SlopeTestRemainingChoices S A) * io x = io x * eU c i j
-  ext u v
-  simp only [io, Matrix.scalar_apply, Matrix.mul_diagonal, Matrix.diagonal_mul, eU, Matrix.of_apply]
-  split_ifs <;> simp
-
-lemma free_one (c : S) : FreeOf c (1 : SlopeTestRemainingChoices S A) := fun _ _ => Commute.one_right _
-
-lemma free_zero (c : S) : FreeOf c (0 : SlopeTestRemainingChoices S A) := fun _ _ => Commute.zero_right _
-
-lemma free_mul {c : S} {b b' : SlopeTestRemainingChoices S A} (h : FreeOf c b) (h' : FreeOf c b') : FreeOf c (b * b') :=
-  fun i j => (h i j).mul_right (h' i j)
-
-
-
-
 
 
 lemma freeOf2_of_entries {c : S} {p q r s : SlopeTestRemainingChoices S A} (hp : FreeOf c p) (hq : FreeOf c q) (hr : FreeOf c r)
@@ -889,10 +827,6 @@ lemma diag_mul (p s p' s' : SlopeTestRemainingChoices S A) :
     (!![p, 0; 0, s] * !![p', 0; 0, s'] : M2 (SlopeTestRemainingChoices S A)) = !![p * p', 0; 0, s * s'] := by
   simp
 
-lemma diag_star (p s : SlopeTestRemainingChoices S A) : (!![p, 0; 0, s] : M2 (SlopeTestRemainingChoices S A))ᴴ = !![star p, 0; 0, star s] := by
-  ext i j
-  fin_cases i <;> fin_cases j <;> simp [Matrix.conjTranspose_apply]
-
 lemma diag_one : (!![1, 0; 0, 1] : M2 (SlopeTestRemainingChoices S A)) = 1 := Matrix.one_fin_two.symm
 
 lemma Rht0_mul_10 (b : S) (d : ℂ) (M : M2 (SlopeTestRemainingChoices S A)) :
@@ -936,7 +870,7 @@ lemma tri_mul' (m : SlopeTestRemainingChoices S A) :
 end Frame
 
 lemma freeOf2_diag_scalar (b : S) (α : ℂ) : FreeOf2 b (!![α • 1, 0; 0, 1] : M2 (SlopeTestRemainingChoices S A)) :=
-  freeOf2_of_entries (free_smul _ (free_one b)) (free_zero b) (free_zero b) (free_one b)
+  freeOf2_of_entries (free_smul _ (_root_.Formalism.FourierDecayAlt.P.Fr5.free_one b)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_one b)
 
 lemma comm_sc (w : SlopeTestRemainingChoices S A) (α : ℂ) : ∀ i j, Commute w ((!![α • 1, 0; 0, 1] : M2 (SlopeTestRemainingChoices S A)) i j) :=
   comm_lit ((Commute.one_right w).smul_right α) (Commute.zero_right w) (Commute.zero_right w)
@@ -967,9 +901,9 @@ theorem minusStep_of (hLM : LetterMinus) (hRTT : RTTEntries) (hForm : MinusForm)
   have hYm : star (Yb - 1) = Yb - 1 := by rw [star_sub, hYb, star_one]
 
   have fC : FreeOf2 b (!![f.q (Yb - 1) • f.xi (Yb - 1), 0; 0, f.x Yb] : M2 (SlopeTestRemainingChoices S A)) :=
-    freeOf2_of_entries (free_smul _ (fxi _)) (free_zero b) (free_zero b) (fx _)
+    freeOf2_of_entries (free_smul _ (fxi _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (fx _)
   have fCi : FreeOf2 b (!![(f.q (Yb - 1))⁻¹ • f.x (Yb - 1), 0; 0, f.xi Yb] : M2 (SlopeTestRemainingChoices S A)) :=
-    freeOf2_of_entries (free_smul _ (fx _)) (free_zero b) (free_zero b) (fxi _)
+    freeOf2_of_entries (free_smul _ (fx _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (fxi _)
   have cC : ∀ w : SlopeTestRemainingChoices S A, (∀ Y, Commute (f.x Y) w) →
       ∀ i j, Commute w ((!![f.q (Yb - 1) • f.xi (Yb - 1), 0; 0, f.x Yb] : M2 (SlopeTestRemainingChoices S A)) i j) := fun w hw =>
     comm_lit ((comm_inv xm1 xm2 (hw _)).symm.smul_right _) (Commute.zero_right w) (Commute.zero_right w)
@@ -980,11 +914,11 @@ theorem minusStep_of (hLM : LetterMinus) (hRTT : RTTEntries) (hForm : MinusForm)
       (comm_inv xb1 xb2 (hw _)).symm
   have x_ci : ∀ Y, Commute (f.x Y) f.ci := fun Y => (comm_inv hF.c_ci.1 hF.c_ci.2 (hF.x_c Y).symm).symm
   have fE : FreeOf2 b (!![io L.ζbi, 0; 0, io L.ζi] * !![1, 0; io L.GG * f.m L Yb, io L.GG] : M2 (SlopeTestRemainingChoices S A)) :=
-    freeOf2_mul (freeOf2_of_entries (free_io b _) (free_zero b) (free_zero b) (free_io b _))
-      (freeOf2_of_entries (free_one b) (free_zero b) (free_mul (free_io b _) (free_m hFree' _)) (free_io b _))
+    freeOf2_mul (freeOf2_of_entries (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _))
+      (freeOf2_of_entries (_root_.Formalism.FourierDecayAlt.P.Fr5.free_one b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_mul (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _) (free_m hFree' _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _))
   have fEi : FreeOf2 b (!![1, 0; -f.m L Yb, io L.GGi] * !![io L.ζb, 0; 0, io L.ζ] : M2 (SlopeTestRemainingChoices S A)) :=
-    freeOf2_mul (freeOf2_of_entries (free_one b) (free_zero b) (free_neg (free_m hFree' _)) (free_io b _))
-      (freeOf2_of_entries (free_io b _) (free_zero b) (free_zero b) (free_io b _))
+    freeOf2_mul (freeOf2_of_entries (_root_.Formalism.FourierDecayAlt.P.Fr5.free_one b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (free_neg (free_m hFree' _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _))
+      (freeOf2_of_entries (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _))
   refine
     { module := hLM ℂ A S f.reg f.RR f.TT f.q b Yb hF.module fRR fTT (hF.inv_reg hb) hYb
       lowerLeftEntry_commute := ?_
@@ -1015,8 +949,8 @@ theorem minusStep_of (hLM : LetterMinus) (hRTT : RTTEntries) (hForm : MinusForm)
     have r1 := hRTT ℂ (SlopeTestRemainingChoices S A) f.TT Y' Y (hF.module.rtt Y' hY'.1 Y hY.1) 0 0 1 0
     have r2 := hRTT ℂ (SlopeTestRemainingChoices S A) f.TT Y Y' (hF.module.rtt Y hY.1 Y' hY'.1) 0 0 1 0
     refine ins_comm_ins
-      (freeOf2_of_entries (free_smul _ (fTT _ _ _)) (free_zero b) (free_neg (fTT _ _ _)) (free_smul _ (fTT _ _ _)))
-      (freeOf2_of_entries (free_smul _ (fTT _ _ _)) (free_zero b) (free_neg (fTT _ _ _)) (free_smul _ (fTT _ _ _))) ?_
+      (freeOf2_of_entries (free_smul _ (fTT _ _ _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (free_neg (fTT _ _ _)) (free_smul _ (fTT _ _ _)))
+      (freeOf2_of_entries (free_smul _ (fTT _ _ _)) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_zero b) (free_neg (fTT _ _ _)) (free_smul _ (fTT _ _ _))) ?_
     rw [Matrix.mul_fin_two, Matrix.mul_fin_two]
     have e10 := t21_commutator_identity (f.TT Y 0 0) (f.TT Y 1 0) (f.TT Y' 0 0) (f.TT Y' 1 0) Y Y' Yb hne r1 r2
     refine lit_congr ?_ (by simp) e10 ?_
@@ -1050,16 +984,16 @@ theorem minusStep_of (hLM : LetterMinus) (hRTT : RTTEntries) (hForm : MinusForm)
     exact comm_mul_ins (fx Y) fc (freeOf2_diag_scalar b _) fC (hF.x_c Y) (cC (f.x Y) (fun Y' => hF.x_commute Y' Y)) (comm_sc _ _)
       (sc_comm_diag _ _ _)
   · intro Y g hg
-    exact comm_mul_ins_one (free_io b g) (hF.x_fn Y g hg) (comm_sc _ _)
+    exact comm_mul_ins_one (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b g) (hF.x_fn Y g hg) (comm_sc _ _)
   · intro Y
-    exact comm_mul_ins_one (free_io b _) (hF.x_nab Y) (comm_sc _ _)
+    exact comm_mul_ins_one (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b _) (hF.x_nab Y) (comm_sc _ _)
   · intro g hg
-    exact comm_mul_ins_one (free_io b g) (hF.c_fn g hg) (cC (io g) (fun Y => hF.x_fn Y g hg))
+    exact comm_mul_ins_one (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b g) (hF.c_fn g hg) (cC (io g) (fun Y => hF.x_fn Y g hg))
   · intro Y hY
     refine star_mul_ins (fx Y) (freeOf2_diag_scalar b _) (hF.x_star Y hY) (comm_sc _ _) ?_
-    rw [diag_star, star_smul, star_one, star_div₀, star_sub, star_sub, star_sub, hY, hYb, star_one]
+    rw [_root_.Formalism.FourierDecayAlt.P.Fr5.diag_conj, star_smul, star_one, star_div₀, star_sub, star_sub, star_sub, hY, hYb, star_one]
   · refine star_mul_ins fc fC hF.c_star (cC f.c hF.x_c) ?_
-    rw [diag_star, star_smul, hF.module.q_real _ hYm, star_inv xm1 (hF.x_star _ hYm), hF.x_star _ hYb]
+    rw [_root_.Formalism.FourierDecayAlt.P.Fr5.diag_conj, star_smul, hF.module.q_real _ hYm, star_inv xm1 (hF.x_star _ hYm), hF.x_star _ hYb]
   · intro Y g hg
     have gx : ∀ Y, Commute (io g) (f.x Y) := fun Y => (hF.x_fn Y g hg).symm
     have gb : Commute (io g) (f.xi Yb) := (comm_inv xb1 xb2 (hF.x_fn Yb g hg)).symm
@@ -1070,7 +1004,7 @@ theorem minusStep_of (hLM : LetterMinus) (hRTT : RTTEntries) (hForm : MinusForm)
       have hz : L.ζbi ∈ zfns L := by simp [zfns]
       refine io_comm ?_
       rw [mul_smul_comm, smul_mul_assoc, L.fns_comm g (Or.inr hg) L.ζbi (Or.inr hz)]
-    exact (ins_comm b _ (io g) (free_io b g) (comm_lit (ge Y) (Commute.zero_right _)
+    exact (ins_comm b _ (io g) (_root_.Formalism.FourierDecayAlt.P.Fr5.free_io b g) (comm_lit (ge Y) (Commute.zero_right _)
       ((gb.mul_right gm).smul_right _).neg_right
       ((((gb.mul_right (ge Y)).mul_right (gx Yb)).sub_right gD).add_right gt))).symm
 
@@ -1454,18 +1388,18 @@ namespace Formalism.FourierDecayAlt.P
 
 theorem plus_letter_maps_frames : Formalism.FourierDecayAlt.Fr.PlusStep :=
   plus_letter_frame_of_data position_insertion_mul_compat position_insertion_star_compat position_insertion_diagonal_compat position_insertion_free_compat letter_module_plus
-    rtt_relation_entries plus_letter_form plus_letter_tau plus_letter_l
+    rtt_relation_entries plus_letter_form _root_.Formalism.FourierDecayAlt.P.Fr6.plusTau _root_.Formalism.FourierDecayAlt.P.Fr6.plusL
 
 theorem minus_letter_maps_frames : Formalism.FourierDecayAlt.Fr.MinusStep :=
   minus_letter_frame_of_data position_insertion_mul_compat position_insertion_star_compat position_insertion_diagonal_compat position_insertion_free_compat letter_module_minus
-    rtt_relation_entries minus_letter_form minus_letter_tau minus_letter_l
+    rtt_relation_entries _root_.Formalism.FourierDecayAlt.P.Fr8.minusForm _root_.Formalism.FourierDecayAlt.P.Fr9.minusTau _root_.Formalism.FourierDecayAlt.P.Fr9.minusL
 
 theorem frame_of_admissible_word : Formalism.FourierDecayAlt.Fr.FrameAll :=
-  (frame_of_steps start_is_frame initial_module_structure plus_letter_maps_frames minus_letter_maps_frames
+  (_root_.Formalism.FourierDecayAlt.P.Fr2.frameAssemble start_is_frame initial_module_structure plus_letter_maps_frames minus_letter_maps_frames
     frame_free_of_new_position frame_module_of_word).1
 
 theorem frame_eq_word_module : Formalism.FourierDecayAlt.Fr.FrameWord :=
-  (frame_of_steps start_is_frame initial_module_structure plus_letter_maps_frames minus_letter_maps_frames
+  (_root_.Formalism.FourierDecayAlt.P.Fr2.frameAssemble start_is_frame initial_module_structure plus_letter_maps_frames minus_letter_maps_frames
     frame_free_of_new_position frame_module_of_word).2
 
 theorem frame_of_recursive_word : Formalism.FourierDecayAlt.Fr.FrameAllRec :=

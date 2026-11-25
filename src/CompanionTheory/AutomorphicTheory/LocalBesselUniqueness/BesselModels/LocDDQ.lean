@@ -43,7 +43,7 @@ theorem locDDQ (hI : CompanionTheory.Lime.BM.Inputs2) (hRT : ReproTr) (hL2 : L2R
       (zB X (C.Qi τ) u τ) (cS D) (fun i => ((D.hcW u τ).u i : ℝ)) (piB X (C.Q τ) (C.Qi τ) u τ) (C.muW u τ) (muNB D θ)
       (muGB X (C.Q τ) (C.Qi τ) τ) (C.nuS u τ) :=
     ⟨hHC, hDS', hgap, hok, hlow, hz, hT, hc, hty, hμW, hμN, hμG, hq⟩
-  obtain ⟨x0, hx0, y0, hy0, hbe⟩ := CompanionTheory.D.Upq.BesselFunctionalConstruction.bessel_nonvanishing_L2 CompanionTheory.Lime.BM.inputs Formalism.FourierDecayAlt.P.schur_hermitian D.R.k D.R.rS
+  obtain ⟨x0, hx0, y0, hy0, hbe⟩ := CompanionTheory.D.Upq.BesselFunctionalConstruction.bessel_nonvanishing_L2 CompanionTheory.Lime.BM.inputs _root_.PI.WBL.NIS.schurH D.R.k D.R.rS
     (epsSH D.R) (lamD D τ) h _ _ (v0Of C τ) _ _ (cS D) _ _ _ _ _ _ hSide _ hWc hWe hWr (pos_iff_ne_zero.mpr hne) hfin
   obtain ⟨l, hl, ⟨x1, hx1, hlx1⟩, hbel⟩ := CompanionTheory.Lime.BM.shape hI.2.2.2 CompanionTheory.Lime.BM.inputs D.R.k D.R.rS (epsSH D.R) (lamD D τ) h _ _
     (v0Of C τ) _ _ (cS D) _ _ _ _ _ _ hSide ⟨x0, hx0, y0, hy0, hbe⟩

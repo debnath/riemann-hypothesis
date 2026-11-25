@@ -222,7 +222,7 @@ theorem slice_bound (hp : 1 ≤ p) (σ : Equiv.Perm (Fin p)) (d : Fin p → ℂ)
     with hKdef
   have hK : IsCompact K := by
     refine ((Formalism.FourierDecayAlt.P.PBE.isCompact_gN_le k (p + 0 + ρ) R).inter_left
-      (Formalism.FourierDecayAlt.P.unitary_group_closed k (p + 0 + ρ)).closed).inter_right ?_
+      (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k (p + 0 + ρ)).closed).inter_right ?_
     exact isClosed_eq (Formalism.FourierDecayAlt.P.JCTx6.Pos.cont_DjU k (p + 0) ρ) continuous_const
   have hKsub : K ⊆ {x | x ∈ B.GV k (p + 0 + ρ) ∧ U.DjU k (p + 0) ρ x ≠ 0} := by
     rintro x ⟨⟨hx1, -⟩, hx3⟩

@@ -223,8 +223,8 @@ theorem muN_fwd (j : ℕ) : D.muN k (j + 0) = ((U.muRC k j 0).prod (volume : Mea
 theorem muN_rev (j : ℕ) : D.muN k (j + 0) = ((U.muRC k j 0).prod (volume : Measure (G.UT j → ℂ))).map (psiR k j) := by
   have : SigmaFinite (U.muRC k j 0) := Dx2.SplitF.sf_RC j 0
   have hinv := Formalism.FourierDecayAlt.P.haar_measure_inversion k (j + 0) (Nset k (j + 0)) (D.muN k (j + 0))
-    (Formalism.FourierDecayAlt.P.unipotent_radical_closed k (j + 0)) (Dx2.MN.haar (k := k) (j + 0))
-  rw [← hinv, muN_fwd j, Measure.map_map (Formalism.FourierDecayAlt.P.TwoByOneBlock.invM_meas) (psiF_meas j)]
+    (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k (j + 0)) (Dx2.MN.haar (k := k) (j + 0))
+  rw [← hinv, muN_fwd j, Measure.map_map (_root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas) (psiF_meas j)]
   have hmp : MeasurePreserving (fun p : U.RC k j 0 × (G.UT j → ℂ) => (-p.1, utInv j p.2))
       ((U.muRC k j 0).prod volume) ((U.muRC k j 0).prod volume) :=
     negRC_mp.prod (utInv_mp j)

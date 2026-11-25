@@ -200,9 +200,9 @@ theorem psi_conj {φ : Mt k r → ℝ≥0∞} (hφ : Measurable φ) {z z' : Fin 
   have hd := unit_of_UH hH.1
   have hd' := unit_of_UH hH'.1
   have hc : bigCell k r c 1 * H = H * bigCell k r c 1 :=
-    ((Formalism.FourierDecayAlt.P.unipotent_weyl_properties k r).2.2 c H ((Formalism.FourierDecayAlt.P.unipotent_weyl_properties k r).2.1 z hH)).symm
+    ((_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r).2.2 c H ((_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r).2.1 z hH)).symm
   have hbig : bigCell k r c M = bigCell k r c 1 * Formalism.FourierDecayAlt.B2.embWb k r M :=
-    (Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c M).1
+    (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c M).1
   have hG : Measurable fun n : Mt k r => ∫⁻ n', φ (fun i j => (Matrix.of n * bigCell k r c 1 *
       (H * Formalism.FourierDecayAlt.B2.embWb k r M * H'⁻¹) * (Matrix.of n')⁻¹) i j) ∂(N1 k r) := by
     have : Measurable fun p : Mt k r × Mt k r => φ (fun i j => (Matrix.of p.1 * bigCell k r c 1 *
@@ -366,7 +366,7 @@ theorem jacGauge_of (hB : BruhatHaar) (hW : WbHaar) (hE : GaugeExists) : JacGaug
   have hcw := cWeight_nonneg (k := k) c
   have hzw := zWeight_nonneg (k := k) T T' ζ
   have hwf : bcWeight k r T T' (c, ζ) = Formalism.FourierDecayAlt.B2.cWeight k r c * Formalism.FourierDecayAlt.B2.zWeight k T T' ζ :=
-    Formalism.FourierDecayAlt.P.weight_factorization k r T T' (c, ζ)
+    _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor k r T T' (c, ζ)
   have key : ENNReal.ofReal (2 ^ r) * ENNReal.ofReal (wbConst k T T' a a') =
       ENNReal.ofReal (jacConst k r T T' a a' κ) * (ENNReal.ofReal κ * ENNReal.ofReal κ) := by
     rw [← ENNReal.ofReal_mul (by positivity), ← ENNReal.ofReal_mul hκ.le,

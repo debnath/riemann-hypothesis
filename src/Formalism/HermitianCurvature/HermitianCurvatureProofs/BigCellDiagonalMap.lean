@@ -46,7 +46,7 @@ theorem leviElement_nset (p : Matrix (Fin j) (Fin j) ℂ) (hp : Formalism.Double
     simp only [eI] at hv
     rw [← hv] at hai
     rcases x with ((x | x) | x) <;> rcases y with ((y | y) | y) <;>
-      simp only [Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val] at hv hai
+      simp only [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] at hv hai
     all_goals first
       | (exfalso; have := x.isLt; have := y.isLt; omega)
       | (simp [Matrix.one_apply, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
@@ -67,7 +67,7 @@ theorem leviElement_nset (p : Matrix (Fin j) (Fin j) ℂ) (hp : Formalism.Double
     rw [Ux3.block3_apply]
     simp only [(eB k j ρ).apply_eq_iff_eq]
     rcases x with ((x | x) | x) <;> rcases y with ((y | y) | y) <;>
-      simp only [Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val] at hc1 hc2 hi <;>
+      simp only [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] at hc1 hc2 hi <;>
       first
       | (simp [Matrix.one_apply, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,
           Matrix.fromCols_apply_inr]; done)
@@ -104,9 +104,9 @@ theorem mMap_diag (r : ℕ) (d : Fin r → ℂ) (hd : ∀ a, d a ≠ 0) (γ : B.
   obtain ⟨y, rfl⟩ := (eB k r 0).surjective l
   unfold mMap
   rw [Matrix.diagonal_conjTranspose, inv_diag (star d) (fun a => by simpa [Pi.star_apply] using hd a), Ux3.block3_apply]
-  have v1 := @Ux3.block_index_first_val k r 0
-  have v2 := @Ux3.block_index_middle_val k r 0
-  have v3 := @Ux3.block_index_last_val k r 0
+  have v1 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll k r 0
+  have v2 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr k r 0
+  have v3 := @_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r k r 0
   rcases x with ((x | x) | x) <;> rcases y with ((y | y) | y) <;>
     simp only [bigCell, v1, v2, v3, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁,
       Matrix.fromBlocks_apply₂₂, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl,

@@ -1167,7 +1167,7 @@ theorem pinAt_oneG (hJ : CompanionTheory.Lime.BM.UniqGap) (large₂ : SizeData�
     (hTT : HypTT D u u') (hW : GoodW D τ u u' θ (locW C u u' τ)) (hA : GoodS D (lamD D τ) (locS hB u u' τ))
     (hT : 0 < Tr D u) (hT' : 0 < Tr D u') (a b : X.B.H (vOf X τ)) (ξ : X.Vloc u (vOf X τ)) (ξ' : X.Vloc u' (vOf X τ))
     (hpin1 : CoefPin hB u u' τ a b ξ ξ' 1) (hscl : sclOf hB u u' τ ≠ 0) (hcO : cOf hB u τ ≠ 0) (A₀ : ℝ)
-    (hA₀ : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
+    (hA₀ : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ A₀)
     (hCC : Formalism.FourierDecayAlt.B.InCC A₀ 1
       (fcAt C u u' τ a b ξ ξ' (ccOneG C hB hJ large₂ hCl hH0 u u' τ hTT hW hA hT hT' a b ξ ξ' hpin1 hscl)))
@@ -1238,7 +1238,7 @@ theorem pinCov_ccOneG (hJ : CompanionTheory.Lime.BM.UniqGap) (large₂ : SizeDat
     (Θ : ∀ j : Fin (nfE D), Formalism.FourierDecayAlt.Top.TopLift D.R.k D.R.rS (X.Vloc u (tauE X e j)) (X.Vloc u' (tauE X e j)))
     (TP : ∀ j : Fin (nfE D), Formalism.FourierDecayAlt.Top.TypeProj (parE e u u' de de' j)
       (towersOf X C u u' e j).base.π (towersOf X C u u' e j).base.z (m₀ j *ᵥ ν' j)) (A₀ : ℝ)
-    (Ac : ℝ) (hAc : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
+    (Ac : ℝ) (hAc : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ Ac)
     (hCC : ∀ j, Formalism.FourierDecayAlt.B.InCC Ac 1 (fcAt C u u' (e (plE D j)) (a j) (b j) (ξ j) (ξ' j)
       (ccOneG C hB hJ large₂ hCl hH0 u u' (e (plE D j)) hTT (hW j) (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j) (hpin1 j) (hscl j)))) :
@@ -1283,7 +1283,7 @@ theorem xLeafAt_of_pinsG {D : D7} (X : Formalism.L2.SG.HidaSetting.HidaSetting D
     (h : Fin (nfE D) → ℝ) (hlam : ∀ j, Formalism.QuantumDeterminants.IsHCParam (lamD D (e (plE D j))))
     (hgap : ∀ j, Formalism.QuantumDeterminants.GapAtLeast (epsSH D.R) (lamD D (e (plE D j))) (h j))
     (hok : ∀ j, Formalism.FourierDecayAlt.ThreeDimData.GapOK D.R.k D.R.rS (h j))
-    (Ac : ℝ) (hAc : Formalism.FourierDecayAlt.P.orbital_integral_converges.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
+    (Ac : ℝ) (hAc : _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose * ((D.R.rS : ℝ) + 1) ^ 2 *
       ((D.R.rS : ℝ) * ((2 * D.R.rS + D.R.k + 1 : ℕ) : ℝ) + 1) ≤ Ac)
     (hAc0 : 0 ≤ Ac) (hAch : ∀ j, Ac ≤ h j / 2)
     (cc : Fin (nfE D) → ℂ)
@@ -1319,7 +1319,7 @@ theorem xLeavesP_of_pinsPG (hJ : CompanionTheory.Lime.BM.UniqGap) (hP : XPinsP) 
   obtain ⟨θ, Ch, hB, a, b, ξ, ξ', hTT, hT, hT', hW, hA, hpin1, hscl, hcO⟩ :=
     hP CA C0 CG CDel cT Cb' Cg cb Cw cTf CT C0f C' Cl D L T u u' e τ Cp Th' i0 i0' νq hne hcb hcT hTies hC' hClp hk18 hH0 hPl hSz
       hi hPt hNu
-  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose); linarith
+  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose); linarith
   have hS0 := hH0.1
   have hrS : 2 * D.R.rS + 2 = D.R.m := Ranks.rS_two D.R
   have hr : D.R.r = 2 * D.R.rS + D.R.k + 1 := by unfold Ranks.r; omega
@@ -1351,7 +1351,7 @@ theorem xLeavesP_of_pinsPG (hJ : CompanionTheory.Lime.BM.UniqGap) (hP : XPinsP) 
     rw [hrr]
     have h1 : 1 * (D.R.r : ℝ) ^ 19 ≤ Cl * (D.R.r : ℝ) ^ 19 := mul_le_mul_of_nonneg_right (by linarith) hn19
     linarith
-  have hAch := le_of_le_of_eq (ac_le (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose) Cl L.sc.L D.R.rS D.R.k D.R.f hClp hf hL) (by rw [hrr])
+  have hAch := le_of_le_of_eq (ac_le (_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose) Cl L.sc.L D.R.rS D.R.k D.R.f hClp hf hL) (by rw [hrr])
   refine ⟨θ, Ch, a, b, ξ, ξ', fun j => ccOneG Ch hB hJ L hCl hH0 u u' (e (plE D j)) hTT (hW j)
     (hA j) hT hT' (a j) (b j) (ξ j) (ξ' j) (hpin1 j) (hscl j), ?_⟩
   exact xLeafAt_of_pinsG T.X Ch hB hJ L hCl hH0 u u' e hPl (host_v D) CA (deOf D τ u) (deOf D τ u')
@@ -1364,7 +1364,7 @@ theorem xPinsP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) : XPins
   intro CA C0 CG CDel cT Cb' Cg cb Cw cTf CT C0f C' Cl D L T u u' e τ Cp Th' i0 i0' νq hne hcb hcT hTies hC' hClp hk18
     hH0 hPl hSz hi hPt hNu
   haveI : Nonempty D.what₂.Word := ⟨u⟩
-  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose); linarith
+  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose); linarith
   have hG : Formalism.L2.SG.ConcreteSettingExists.GapHyp D :=
     Formalism.L2.SG.ThmSOwn.gap_hypothesis_of_hypotheses hH0.1 (by linarith) hC'
   obtain ⟨Ch⟩ := Formalism.L2.SG.Pf.choiceExists T.X 1 one_pos
@@ -1421,10 +1421,10 @@ namespace GlobalTheory.CarrierGap
 variable [Fact Formalism.FourierDecayAlt.ThreeDimData.DecLow] [Fact Formalism.L2.SG.LitS.PfNVG.BesselNVG] [Fact Formalism.L2.SG.Pf.CarrierT.CoefCapAll] [Fact Formalism.L2.SG.SplitPrimeNormLemmas.CoefWeightedLoc] in
 theorem vIndepAtAllP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) : Formalism.L2.SG.PoincareAmplitudeLowerBounds.VIndepAtAllP := by
   intro Cg cb Cw cTf CT C0f hcb hcT
-  refine ⟨29, 1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose|, ?_⟩
+  refine ⟨29, 1000 + |_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose|, ?_⟩
   intro C' Cl hC' hClp D L T u u' i0 i0' νq hTies hne hSt hCT hi hNu hPt hH0
   haveI : Nonempty D.what₂.Word := ⟨u⟩
-  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose); linarith
+  have hCl : (1000 : ℝ) ≤ Cl := by have := abs_nonneg (_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose); linarith
   have hS0 := hH0.1
   have hk18 := rootLatticeThresholds_k_of_fact hS0 hC'
   have hG : Formalism.L2.SG.ConcreteSettingExists.GapHyp D := Formalism.L2.SG.ThmSOwn.gap_hypothesis_of_hypotheses hS0 (by linarith) hC'
@@ -1505,7 +1505,7 @@ theorem vIndepAtAllP_ofG (hJ : CompanionTheory.Lime.BM.UniqGap) (hNZ : KFinNZ) :
     rw [hrr]
     have h1 : 1 * (D.R.r : ℝ) ^ 19 ≤ Cl * (D.R.r : ℝ) ^ 19 := mul_le_mul_of_nonneg_right (by linarith) hn19
     linarith
-  have hAch := le_of_le_of_eq (ac_le (Formalism.FourierDecayAlt.P.orbital_integral_converges.choose) Cl L.sc.L D.R.rS D.R.k D.R.f hClp hf hL) (by rw [hrr])
+  have hAch := le_of_le_of_eq (ac_le (_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose) Cl L.sc.L D.R.rS D.R.k D.R.f hClp hf hL) (by rw [hrr])
   have h5 := Formalism.MainNotions.BridgeLemma.last_shifted_parameter_eq hH0.2.1
   have hDel : (D.s.Del : ℝ) ≠ 0 := by
     have := (Formalism.MainNotions.BridgeLemma.cfg_ok hH0.2.1 hS0 τ).hDel

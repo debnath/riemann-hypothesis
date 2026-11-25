@@ -45,10 +45,6 @@ theorem ins_smul (a : S) (c : K) (M : M2 (SlopeTestRemainingChoices S A)) : ins 
 theorem ins_neg (a : S) (M : M2 (SlopeTestRemainingChoices S A)) : ins a (-M) = -ins a M := by
   simp only [ins, Matrix.neg_apply, mul_neg, Finset.sum_neg_distrib]
 
-theorem free_one (a : S) : FreeOf a (1 : SlopeTestRemainingChoices S A) := fun _ _ => Commute.one_right _
-
-theorem free_zero (a : S) : FreeOf a (0 : SlopeTestRemainingChoices S A) := fun _ _ => Commute.zero_right _
-
 theorem free_neg {a : S} {b : SlopeTestRemainingChoices S A} (h : FreeOf a b) : FreeOf a (-b) := fun i j => (h i j).neg_right
 
 theorem free_smul {a : S} {b : SlopeTestRemainingChoices S A} (c : K) (h : FreeOf a b) : FreeOf a (c • b) := fun i j => (h i j).smul_right c
@@ -56,7 +52,7 @@ theorem free_smul {a : S} {b : SlopeTestRemainingChoices S A} (c : K) (h : FreeO
 theorem freeOf_J_matrix (a : S) : FreeOf2 a JJ := by
   intro i j
   fin_cases i <;> fin_cases j <;> simp [Formalism.YangianSpanCharacter.T.J] <;>
-    first | exact free_zero a | exact free_one a | exact free_neg (free_one a)
+    first | exact _root_.Formalism.FourierDecayAlt.P.Wd11.free_zero a | exact _root_.Formalism.FourierDecayAlt.P.Wd11.free_one a | exact free_neg (_root_.Formalism.FourierDecayAlt.P.Wd11.free_one a)
 
 theorem freeOf2_mul {a : S} {M N : M2 (SlopeTestRemainingChoices S A)} (hM : FreeOf2 a M) (hN : FreeOf2 a N) :
     FreeOf2 a (M * N) := by
@@ -73,7 +69,7 @@ theorem freeOf_diagScalar {a : S} {b : SlopeTestRemainingChoices S A} (h : FreeO
   intro i j
   by_cases hij : i = j
   · simpa [d0, hij] using h
-  · simpa [d0, hij] using free_zero (A := A) a
+  · simpa [d0, hij] using _root_.Formalism.FourierDecayAlt.P.Wd11.free_zero (A := A) a
 
 theorem J_mul_J : JJ * JJ = -1 := by
   refine Matrix.ext fun i j => ?_

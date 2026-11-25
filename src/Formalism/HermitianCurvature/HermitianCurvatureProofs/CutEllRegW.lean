@@ -167,9 +167,6 @@ namespace Dec
 
 variable {d : ℕ}
 
-lemma contDiff_dw {f : E d → ℂ} (hf : ContDiff ℝ ∞ f) (w : List (Fin d)) : ContDiff ℝ ∞ (dw w f) := by
-  apply _root_.ZetaZeros.D.EllReg.WF.contDiff_dw <;> assumption
-
 lemma dw_add {f g : E d → ℂ} (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ ∞ g) (w : List (Fin d)) :
     dw w (fun y => f y + g y) = fun y => dw w f y + dw w g y := by
   induction w with
@@ -178,8 +175,8 @@ lemma dw_add {f g : E d → ℂ} (hf : ContDiff ℝ ∞ f) (hg : ContDiff ℝ �
     funext x
     show fderiv ℝ (dw w (fun y => f y + g y)) x (ev j) =
       fderiv ℝ (dw w f) x (ev j) + fderiv ℝ (dw w g) x (ev j)
-    have h1 := (contDiff_dw hf w).differentiable (by simp) x
-    have h2 := (contDiff_dw hg w).differentiable (by simp) x
+    have h1 := (_root_.ZetaZeros.D.EllReg.WF.contDiff_dw hf w).differentiable (by simp) x
+    have h2 := (_root_.ZetaZeros.D.EllReg.WF.contDiff_dw hg w).differentiable (by simp) x
     rw [ih]
     first
       | rw [show (fun y => dw w f y + dw w g y) = dw w f + dw w g from rfl, fderiv_add h1 h2]; rfl
@@ -201,7 +198,7 @@ lemma dw_const_mul {f : E d → ℂ} (hf : ContDiff ℝ ∞ f) (c : ℂ) (w : Li
   | cons j w ih =>
     funext x
     show fderiv ℝ (dw w (fun y => c * f y)) x (ev j) = c * fderiv ℝ (dw w f) x (ev j)
-    have h1 := (contDiff_dw hf w).differentiable (by simp) x
+    have h1 := (_root_.ZetaZeros.D.EllReg.WF.contDiff_dw hf w).differentiable (by simp) x
     rw [ih]
     first
       | rw [fderiv_const_mul h1]; simp
@@ -227,7 +224,7 @@ lemma continuous_trOp (m : ℕ) (b : (n : ℕ) → (Fin n → Fin d) → E d →
   show Continuous (fun x => ∑ n ∈ Finset.range (m + 1), ∑ w : Fin n → Fin d,
     (-1 : ℂ) ^ n * dw (List.ofFn w) (fun y => b n w y * φ y) x)
   refine continuous_finsetSum _ fun n _ => continuous_finsetSum _ fun w _ => continuous_const.mul ?_
-  exact (contDiff_dw ((hb n w).mul hφ) _).continuous
+  exact (_root_.ZetaZeros.D.EllReg.WF.contDiff_dw ((hb n w).mul hφ) _).continuous
 
 lemma contDiff_mul_of_tsupport {U : Set (E d)} (hU : IsOpen U) {g f : E d → ℂ} (hg : ContDiff ℝ ∞ g)
     (hgU : tsupport g ⊆ U) (hf : ContDiffOn ℝ ∞ f U) : ContDiff ℝ ∞ (fun x => g x * f x) := by

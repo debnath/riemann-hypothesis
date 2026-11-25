@@ -130,13 +130,13 @@ theorem big_bound (hk : 1 ≤ k) (L : LocBessel k r) (c : Fin r → ℂ) (μ : M
   have m1 := P.TwoByOneBlock.emb_mem_UWb (r := r) hμ₁
   have w0 : B2.embWb k r μ ∈ UWset k r 0 := ⟨m0.1, m0.2, by simp⟩
   have w1 : B2.embWb k r μ₁ ∈ UWset k r 0 := ⟨m1.1, m1.2, by simp⟩
-  have hW := P.weyl_subgroup_closed k r 0
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r 0
   set ρ := (B2.embWb k r μ₁)⁻¹ * B2.embWb k r μ with hρ
   have hρW : ρ ∈ UWset k r 0 := hW.mul_mem _ (hW.inv_mem _ w1) _ w0
   have hρU : ρ ∈ UH (Hpk k r) := hρW.1
   have hρu := uh_isUnit hρU
   have hfac : γ = γ₁ * ρ := by
-    rw [hγ, hγ₁, (P.bruhat_big_cell_factorization k r c μ).1, (P.bruhat_big_cell_factorization k r c μ₁).1, hρ, Matrix.mul_assoc,
+    rw [hγ, hγ₁, (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ).1, (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ₁).1, hρ, Matrix.mul_assoc,
       ← Matrix.mul_assoc (B2.embWb k r μ₁), Matrix.mul_nonsing_inv _ (uh_isUnit w1.1), Matrix.one_mul]
   obtain ⟨cW, hcW1, hcW⟩ := P.WeakDominationMajorants.Asm.uw_bound L.z' L.hz'.1 L.hz'.2
   set Γ := B.gN ρ with hΓ
@@ -156,7 +156,7 @@ theorem big_bound (hk : 1 ≤ k) (L : LocBessel k r) (c : Fin r → ℂ) (μ : M
   set h' := Matrix.of x.2.1
   set m := ρ * n' * ρ⁻¹ with hm
   have hmN : m ∈ Nset k r := PI.QuotSetU.UnitaryGroupMassFormula.SW.uw_conj_N hρW hn'
-  have h1W : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ UWset k r L.z' := (P.weyl_subgroup_closed k r L.z').one_mem
+  have h1W : (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) ∈ UWset k r L.z' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r L.z').one_mem
   have hb1 := hbd (x.1, ((1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ), m)) ⟨hn, hmN, hh, h1W⟩ (hET _ hn)
   have hb2 : B.gN (h⁻¹ * n⁻¹ * γ₁ * m * 1) ^ (-b) ≤ K * (B.gN (n * h) ^ (-β) * B.gN (m * 1) ^ (-β)) := hb1
   rw [Matrix.mul_one, Matrix.mul_one] at hb2
@@ -173,7 +173,7 @@ theorem big_bound (hk : 1 ≤ k) (L : LocBessel k r) (c : Fin r → ℂ) (μ : M
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc ρ⁻¹ ρ h', Matrix.nonsing_inv_mul _ hρu, Matrix.one_mul, ← Matrix.mul_assoc ρ⁻¹ ρ,
       Matrix.nonsing_inv_mul _ hρu, Matrix.one_mul]
-  have g0 : ∀ y : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ, 0 ≤ B.gN y := fun y => P.gN_nonneg_bessel_integrability y
+  have g0 : ∀ y : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ, 0 ≤ B.gN y := fun y => _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg y
   have hh'c : B.gN h' ≤ cW := hcW h' hh'
   have i1 : B.gN (h⁻¹ * n⁻¹ * γ₁ * m) ≤ (cW * Γ) * B.gN (h⁻¹ * n⁻¹ * γ * n' * h') := by
     rw [e1]
@@ -232,7 +232,7 @@ theorem big_int (hk : 1 ≤ k) (L : LocBessel k r) (h0 : L.κN ≠ 0) (h1 : L.κ
       ENNReal.ofReal K * (ENNReal.ofReal (B.gN (Matrix.of x.1.2 * Matrix.of x.1.1) ^ (-β)) *
         ENNReal.ofReal (B.gN (Matrix.of x.2.2 * Matrix.of x.2.1) ^ (-β))) := by
     refine hPgood.mono fun x hx => ?_
-    rw [← ENNReal.ofReal_mul (Real.rpow_nonneg (P.gN_nonneg_bessel_integrability _) _), ← ENNReal.ofReal_mul hK.le]
+    rw [← ENNReal.ofReal_mul (Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _), ← ENNReal.ofReal_mul hK.le]
     exact ENNReal.ofReal_le_ofReal (hbound x hx)
   refine (lintegral_mono_ae hpt).trans_lt ?_
   rw [lintegral_const_mul _ hfm]
@@ -339,7 +339,7 @@ theorem quot_exists {γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ
         rw [← Matrix.mul_assoc γ⁻¹ γ, Matrix.nonsing_inv_mul _ hu, Matrix.one_mul]
       show (μR.map e).map (lmulM s) = μR.map e
       rw [Measure.map_map (hm s) e.measurable, e1, ← Measure.map_map e.measurable (hm _), hR.2.2.2 _ hs]
-  exact Formalism.L2.SG.Pf.QuotMeasExists.quotM_exists (matGroup_of (P.unitary_group_closed k r)) hSm hSG hG hH
+  exact Formalism.L2.SG.Pf.QuotMeasExists.quotM_exists (matGroup_of (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r)) hSm hSG hG hH
 
 def oneM (k r : ℕ) : Mt k r := fun i j => (1 : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) i j
 
@@ -419,7 +419,7 @@ theorem cell_small (L : LocBessel k r) (hc : L.c ≠ 0) (h1 : L.κN ≠ ⊤) {h 
   have hpos : 0 < Gf k r L.z L.z' g := by
     refine lt_of_le_of_ne (gNonneg k r L.z L.z' L.hz.1 L.hz'.1 L.hz.2 L.hz'.2 g hrep.1) fun h0 => hG ?_
     rw [← Formalism.MainNotions.BigCellDensity.gTie k r L.z L.z' γ g hrep.1 hrep.2, ← h0]
-  obtain ⟨μG, hμG⟩ := P.unitary_group_haar_exists k r
+  obtain ⟨μG, hμG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   have hGsk : IsHaarOn (UH (Hpk k r)) μG := ⟨P.B5.haar_sigmaFinite hμG, hμG.ne_zero, hμG.conc, hμG.left⟩
   obtain ⟨νR, hν⟩ := quot_exists hrep.1 hGsk hR
   exact ⟨hrep.1, hrel, hR, hq, ⟨P.B7.measurable_invM, rStabInv_of_k k r hO.1 L g μR hrep.1 hmono hR⟩,

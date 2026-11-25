@@ -12,23 +12,9 @@ open Formalism.FourierDecayAlt.G Matrix MeasureTheory Finset
 
 namespace Formalism.FourierDecayAlt.P.StandardCharacterExists
 
-theorem blk_cc {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (b a : Fin n → ℂ) (e : ℂ) (i j : Fin n) :
-    blk A b a e i.castSucc j.castSucc = A i j := Formalism.FourierDecayAlt.P.G5.blk_cc A b a e i j
-
 theorem blk_cl {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (b a : Fin n → ℂ) (e : ℂ) (i : Fin n) :
     blk A b a e i.castSucc (Fin.last n) = b i := by
   apply _root_.Formalism.FourierDecayAlt.P.G5.blk_cl <;> assumption
-
-theorem blk_lc {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (b a : Fin n → ℂ) (e : ℂ) (j : Fin n) :
-    blk A b a e (Fin.last n) j.castSucc = a j := by
-  apply _root_.Formalism.FourierDecayAlt.P.G5.blk_lc <;> assumption
-
-theorem blk_ll {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (b a : Fin n → ℂ) (e : ℂ) :
-    blk A b a e (Fin.last n) (Fin.last n) = e := Formalism.FourierDecayAlt.P.G5.blk_ll A b a e
-
-theorem wMat_mul_apply {d : ℕ} (M : Matrix (Fin d) (Fin d) ℂ) (i j : Fin d) :
-    (wMat d * M) i j = M i.rev j := by
-  simp [Matrix.mul_apply, wMat]
 
 theorem wMat_mulVec_apply {d : ℕ} (b : Fin d → ℂ) (i : Fin d) : (wMat d *ᵥ b) i = b i.rev := by
   simp [Matrix.mulVec, dotProduct, wMat]
@@ -36,18 +22,18 @@ theorem wMat_mulVec_apply {d : ℕ} (b : Fin d → ℂ) (i : Fin d) : (wMat d *�
 theorem wM_succ {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (B ρ : Fin n → ℂ) (σ : ℂ) (i : Fin n)
     (j : Fin (n + 1)) :
     (wMat (n + 1) * Mcoord 0 X B ρ σ) i.succ j = blk X B 0 0 i.castSucc j := by
-  rw [wMat_mul_apply, Fin.rev_succ, Mcoord]
+  rw [_root_.Formalism.FourierDecayAlt.P.G5.wMat_mul_apply, Fin.rev_succ, Mcoord]
   refine Fin.lastCases ?_ (fun j => ?_) j
   · rw [blk_cl, blk_cl, wMat_mulVec_apply, Fin.rev_rev]
-  · rw [blk_cc, blk_cc, wMat_mul_apply, Fin.rev_rev]; simp
+  · rw [_root_.Formalism.FourierDecayAlt.P.G5.blk_cc, _root_.Formalism.FourierDecayAlt.P.G5.blk_cc, _root_.Formalism.FourierDecayAlt.P.G5.wMat_mul_apply, Fin.rev_rev]; simp
 
 theorem wM_zero_cast {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (B ρ : Fin n → ℂ) (σ : ℂ) (j : Fin n) :
     (wMat (n + 1) * Mcoord 0 X B ρ σ) 0 j.castSucc = ρ j := by
-  rw [wMat_mul_apply, Fin.rev_zero, Mcoord, blk_lc]
+  rw [_root_.Formalism.FourierDecayAlt.P.G5.wMat_mul_apply, Fin.rev_zero, Mcoord, _root_.Formalism.FourierDecayAlt.P.G5.blk_lc]
 
 theorem wM_zero_last {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (B ρ : Fin n → ℂ) (σ : ℂ) :
     (wMat (n + 1) * Mcoord 0 X B ρ σ) 0 (Fin.last n) = σ := by
-  rw [wMat_mul_apply, Fin.rev_zero, Mcoord, blk_ll]
+  rw [_root_.Formalism.FourierDecayAlt.P.G5.wMat_mul_apply, Fin.rev_zero, Mcoord, _root_.Formalism.FourierDecayAlt.P.G5.blk_ll]
 
 def ex {d : ℕ} (N : Matrix (Fin d) (Fin d) ℂ) (a b : ℕ) : ℂ :=
   if h : a < d ∧ b < d then N ⟨a, h.1⟩ ⟨b, h.2⟩ else 0
@@ -58,7 +44,7 @@ theorem ex_fin {d : ℕ} (N : Matrix (Fin d) (Fin d) ℂ) (i j : Fin d) : ex N i
 theorem X_eq_ex {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (B : Fin n → ℂ) (i k : Fin n) :
     X i k = ex (blk X B 0 0) i k := by
   have := ex_fin (blk X B 0 0) i.castSucc k.castSucc
-  rw [blk_cc] at this
+  rw [_root_.Formalism.FourierDecayAlt.P.G5.blk_cc] at this
   simpa using this.symm
 
 theorem B_eq_ex {n : ℕ} (X : Matrix (Fin n) (Fin n) ℂ) (B : Fin n → ℂ) (i : Fin n) :

@@ -250,7 +250,7 @@ theorem phase_section_holds : PhaseSec := by
         embWb k r (PS.hA k (wbPart k r z) (Tz k r z) θ) * embWb k r (PS.eP θ • (1 : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ)) *
           embWb k r (theSecB k (wbPart k r z) (wbPart k r z') (Tz k r z) (Tz k r z') ζ) *
           embWb k r (PS.hB k (wbPart k r z') (Tz k r z') θ)
-      rw [← emb_mul, ← emb_mul, ← emb_mul, ← PS.secB_rot hk hT hT' ha hb]
+      rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← PS.secB_rot hk hT hT' ha hb]
   · intro v hv hvz
     rw [DC.herm_of hv hz'] at hvz
     rw [DC.emb_mulVec_of _ hv, PS.hB_perp hT' hb θ hvz, DC.jV_smul, jV_wbPart hv]

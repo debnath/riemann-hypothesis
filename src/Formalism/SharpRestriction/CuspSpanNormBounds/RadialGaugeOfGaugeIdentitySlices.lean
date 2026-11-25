@@ -496,7 +496,7 @@ open Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.MainNotions
 
 theorem lb_haarG : Formalism.FourierDecayAlt.B2.HaarGExists :=
   (Formalism.FourierDecayAlt.P.group_measure_from_diagonal Formalism.REAL.uJEmb Formalism.REAL.unimodular Formalism.REAL.ballFinite Formalism.REAL.volGrowth
-    Formalism.QuantumDeterminants.hpkFacts Formalism.QuantumDeterminants.uHConj Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar Formalism.FourierDecayAlt.P.unitary_group_closed).1
+    Formalism.QuantumDeterminants.hpkFacts Formalism.QuantumDeterminants.uHConj _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique _root_.Formalism.FourierDecayAlt.P.B2x2.closedG).1
 
 def lbHaarUp : Prop :=
   (∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (μ : Measure (Mt k r)), inWb k r z → 0 < Tz k r z →

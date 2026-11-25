@@ -160,10 +160,10 @@ theorem haarW_B (hF : IsFrameJ ε e f wf z0) {zB : Fin (2 * r + k + 1) → ℂ} 
     Formalism.FourierDecayAlt.B.IsHaarOn (UWset k r zB) (μH.map (cM (ε := ε) (Qi ε e f wf z0) (Qm e f wf z0))) := by
   have emb := embQ hF
   have hW := measW_of hF hH
-  obtain ⟨μ0, h0⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r zB hz hT
+  obtain ⟨μ0, h0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r zB hz hT
   have hνfin : ∀ K, (μH.map (cM (ε := ε) (Qi ε e f wf z0) (Qm e f wf z0))) K < ⊤ := fun K =>
     lt_of_le_of_lt (measure_mono (Set.subset_univ K)) (by rw [emb.map_apply, Set.preimage_univ]; exact hfin.lt_top)
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r (UWset k r zB) μ0 _ (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r zB) h0
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r (UWset k r zB) μ0 _ (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r zB) h0
     hW.2.2.1 hW.2.2.2 (fun K _ => hνfin K)
   exact ⟨hW.2.2.1, hW.2.2.2, fun a ha => by rw [hc, Measure.map_smul _ (JL.RI.meas_rmul a).aemeasurable, h0.right a ha], fun K _ => hνfin K, hW.2.1⟩
 

@@ -94,7 +94,7 @@ theorem isHaarOn_iff {k r : ℕ} {U : Set (B.Mat k r)} (hU : B2.IsClosedSubgroup
   · rintro ⟨hσ, h0, hc, hl⟩
     obtain ⟨ν, hν⟩ := hex
     have hfin := finite_compact_of_sigmaFinite hU μ hc hl
-    obtain ⟨c, hcν⟩ := P.haar_measure_unique_up_to_scalar k r U ν μ hU hν hc hl hfin
+    obtain ⟨c, hcν⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r U ν μ hU hν hc hl hfin
     refine { ne_zero := h0, conc := hc, left := hl, right := ?_, finite_compact := hfin }
     intro a ha
     rw [hcν, Measure.map_smul, hν.right a ha]
@@ -107,8 +107,8 @@ theorem isHaarOn_iff {k r : ℕ} {U : Set (B.Mat k r)} (hU : B2.IsClosedSubgroup
 
 theorem isHaarOn_iff_groups : ∀ (k r : ℕ) (μ : Measure (Formalism.QuantumDeterminants.Mt k r)), (PI.BesselPeriodGGP.IsHaarOn (GG k r) μ ↔ B.IsHaarOn (GG k r) μ) ∧ (PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.Nset k r) μ ↔ B.IsHaarOn (Formalism.QuantumDeterminants.Nset k r) μ) ∧ ∀ z, Formalism.QuantumDeterminants.inWb k r z → 0 < Formalism.QuantumDeterminants.Tz k r z → 1 ≤ k → (PI.BesselPeriodGGP.IsHaarOn (Formalism.QuantumDeterminants.UWset k r z) μ ↔ B.IsHaarOn (Formalism.QuantumDeterminants.UWset k r z) μ) :=
   fun k r μ =>
-    ⟨isHaarOn_iff (P.unitary_group_closed k r) (P.unitary_group_haar_exists k r) μ,
-      isHaarOn_iff (P.unipotent_radical_closed k r) (P.unipotent_haar_exists k r) μ,
-      fun z hz hT _ => isHaarOn_iff (P.weyl_subgroup_closed k r z) (P.weyl_haar_exists k r z hz hT) μ⟩
+    ⟨isHaarOn_iff (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) (_root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r) μ,
+      isHaarOn_iff (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) (P.unipotent_haar_exists k r) μ,
+      fun z hz hT _ => isHaarOn_iff (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) (_root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hz hT) μ⟩
 
 end GlobalTheory.HaarNotions

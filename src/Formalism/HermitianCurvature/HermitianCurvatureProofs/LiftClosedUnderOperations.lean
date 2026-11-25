@@ -198,7 +198,7 @@ theorem wCell_om {Pa : M.Par} (Bs : B.RealPlaceData Pa.k Pa.r Wp Wq) {x : (Fin P
   have h1 : Q.wCell Pa.k Pa.r (Fin.last Pa.r) x.1 ∈ Q.Glev Pa.k Pa.r 0 := by
     unfold Q.wCell
     exact Qx3.wlist_glev hx.1 _
-  exact (Qx5.Glev_mul h1 (Qx4.glev0 hx.2.1.1)).1
+  exact (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul h1 (Qx4.glev0 hx.2.1.1)).1
 
 theorem wCell_gv {Pa : M.Par} (Bs : B.RealPlaceData Pa.k Pa.r Wp Wq) {x : (Fin Pa.r → ℂ) × Q.Mx Pa.k Pa.r}
     (hx : x ∈ Q.DomR Pa.k Pa.r Bs.z Bs.z') :

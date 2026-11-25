@@ -162,8 +162,8 @@ theorem jacExGoodN_of_hpkEx_of_pFrame_of_haarCorr (hH : HpkEx) (hP : PFrame) (hH
     rw [he0, (hZB r k ε e z z' zH zH' P sc hPJ hPdet hPe hzH hzH' hPz hPz' hsc μs hμs (qOf r sc c) hq1 hζ).2,
       coordSc_qOf r hsc]
   · intro μS μS' hS hS'
-    obtain ⟨μW0, hW0⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r zH hzH hT
-    obtain ⟨μW0', hW0'⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r zH' hzH' hT'
+    obtain ⟨μW0, hW0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r zH hzH hT
+    obtain ⟨μW0', hW0'⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r zH' hzH' hT'
     obtain ⟨μN0, hN0⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
     have hWs := haarOn_sk_of_b hW0
     have hWs' := haarOn_sk_of_b hW0'

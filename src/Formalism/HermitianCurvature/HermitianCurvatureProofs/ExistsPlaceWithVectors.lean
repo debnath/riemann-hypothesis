@@ -110,9 +110,9 @@ theorem frame_of (Bs : B.RealPlaceData k r Wp Wq) : ∃ (ν' : Fin (2 * r + k + 
   have hcc : c * c = T' / T := Real.mul_self_sqrt (div_pos hT' hT).le
   have hcw : inWb k r ((c : ℂ) • Bs.z) := Formalism.FourierDecayAlt.P.Qx8.inWb_smul Bs.z_mem _
   have hz' : herm (Hpk k r) Bs.z' Bs.z' = ((-T' : ℝ) : ℂ) := by
-    rw [Formalism.FourierDecayAlt.P.Qx8.herm_self']; push_cast; rfl
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]; push_cast; rfl
   have hcz : herm (Hpk k r) ((c : ℂ) • Bs.z) ((c : ℂ) • Bs.z) = ((-T' : ℝ) : ℂ) := by
-    rw [Formalism.FourierDecayAlt.P.Qx8.herm_smul_left', Formalism.FourierDecayAlt.P.Qx8.herm_smul_right', Formalism.FourierDecayAlt.P.Qx8.herm_self']
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
     have hs : star (c : ℂ) = c := Complex.conj_ofReal c
     rw [hs, ← hTdef]
     have hTne : (T : ℂ) ≠ 0 := by exact_mod_cast hT.ne'

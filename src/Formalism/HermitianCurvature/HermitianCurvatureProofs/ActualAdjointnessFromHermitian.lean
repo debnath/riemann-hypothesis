@@ -56,11 +56,6 @@ section Rad
 variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp]
   [NormedAddCommGroup Wq] [NormedSpace ℂ Wq] {π : Mx k r → (Wp →L[ℂ] Wp)} {π' : Mx k r → (Wq →L[ℂ] Wq)}
 
-theorem isOpen_OmX (m : ℕ) : IsOpen (OmX m) := by
-  rw [show OmX m = ⋂ l : Fin m, {x : Fin m → ℂ | x l ≠ 0} from by
-    ext x; simp [OmX]]
-  exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
-
 def zetaLin (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (i : Fin (r + 1)) : Mx k r →ₗ[ℂ] ℂ where
   toFun := zetaL k r z z' i
   map_add' a b := by simp [zetaL, herm, Matrix.add_mulVec, Matrix.mulVec_add, dotProduct_add]
@@ -76,16 +71,12 @@ theorem GGl_cast (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) (g : Mx k r) :
   unfold GGl
   rw [Complex.ofReal_sub, Complex.star_def, Complex.mul_conj]
 
-theorem GGl_continuous (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : Continuous (GGl k r z z') := by
-  unfold GGl
-  exact (Complex.continuous_normSq.comp (zetaL_contDiff k r z z' (Fin.last r)).continuous).sub continuous_const
-
 def OpR (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : Set ((Fin r → ℂ) × Mx k r) :=
   {x | x.1 ∈ OmX r ∧ 0 < GGl k r z z' x.2}
 
 theorem isOpen_OpR (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : IsOpen (OpR k r z z') :=
-  ((isOpen_OmX r).preimage continuous_fst).inter
-    (isOpen_lt continuous_const ((GGl_continuous k r z z').comp continuous_snd))
+  ((_root_.Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX r).preimage continuous_fst).inter
+    (isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z').comp continuous_snd))
 
 theorem DomR_sub_OpR : DomR k r z z' ⊆ OpR k r z z' := fun _ hx => ⟨hx.1, hx.2.2⟩
 
@@ -129,7 +120,7 @@ theorem dirD_mem (v : Fin r → ℂ) {Φ : Fn k r (Wq →L[ℂ] Wp)} (hΦ : Φ �
       simp
     · rfl
   · obtain ⟨U, F, hU, hxU, hF, hΦF⟩ := hΦ.2.1 x₀ hx₀
-    refine ⟨U ∩ {x | x.1 ∈ OmX r}, fun x => partialFDerivFst F x v, hU.inter ((isOpen_OmX r).preimage continuous_fst),
+    refine ⟨U ∩ {x | x.1 ∈ OmX r}, fun x => partialFDerivFst F x v, hU.inter ((_root_.Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX r).preimage continuous_fst),
       ⟨hxU, hx₀.1⟩, ?_, fun x hx hg => ?_⟩
     · exact (contDiffOn_partial_fderiv_fst hU hF v).mono Set.inter_subset_left
     · unfold dirD
@@ -137,7 +128,7 @@ theorem dirD_mem (v : Fin r → ℂ) {Φ : Fn k r (Wq →L[ℂ] Wp)} (hΦ : Φ �
   · unfold dirD
     rw [ite_eq_left hx.1, ite_eq_left hx.1]
     have he : (fun c' => Φ c' (h * x.2 * h')) =ᶠ[nhds x.1] fun c' => sandCLM (π h) (π' h') (Φ c' x.2) := by
-      filter_upwards [(isOpen_OmX r).mem_nhds hx.1] with c' hc'
+      filter_upwards [(_root_.Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX r).mem_nhds hx.1] with c' hc'
       exact hΦ.2.2 (c', x.2) ⟨hc', hx.2⟩ h hh h' hh'
     rw [he.fderiv_eq]
     have hd := (slice_diff hΦ hx.1 x.2).hasFDerivAt
@@ -181,45 +172,13 @@ section Rad2
 variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp]
   [NormedAddCommGroup Wq] [NormedSpace ℂ Wq] {π : Mx k r → (Wp →L[ℂ] Wp)} {π' : Mx k r → (Wq →L[ℂ] Wq)}
 
-theorem herm_UH {ι : Type*} [Fintype ι] [DecidableEq ι] {H g : Matrix ι ι ℂ} (hg : g ∈ UH H) (x w : ι → ℂ) :
-    herm H (g *ᵥ x) (g *ᵥ w) = herm H x w := by
-  unfold herm
-  rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, show gᴴ * H * g = H from hg]
-
-theorem fvec_last (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : fvec k r z (Fin.last r) = z := by
-  simp [fvec]
-
-theorem UH_mul {ι : Type*} [Fintype ι] [DecidableEq ι] {H a b : Matrix ι ι ℂ} (ha : a ∈ UH H) (hb : b ∈ UH H) :
-    a * b ∈ UH H := by
-  change (a * b)ᴴ * H * (a * b) = H
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * H * (a * b) = bᴴ * (aᴴ * H * a) * b := by simp only [Matrix.mul_assoc]
-    _ = H := by rw [show aᴴ * H * a = H from ha, show bᴴ * H * b = H from hb]
-
-theorem Glev_mul {i : Fin (r + 1)} {a b : Mx k r} (ha : a ∈ Glev k r i) (hb : b ∈ Glev k r i) :
-    a * b ∈ Glev k r i := by
-  refine ⟨UH_mul ha.1 hb.1, fun l hl => ?_⟩
-  simpa only [← Matrix.mulVec_mulVec, (hb.2 l hl).1, (hb.2 l hl).2] using ha.2 l hl
-
 theorem UW_Glev {h : Mx k r} (hh : h ∈ UWset k r z) (i : Fin (r + 1)) : h ∈ Glev k r i :=
   ⟨hh.1, fun a _ => hh.2.1 a⟩
 
-theorem zeta_inv {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') (g : Mx k r) :
-    zetaL k r z z' (Fin.last r) (h * g * h') = zetaL k r z z' (Fin.last r) g := by
-  unfold zetaL
-  rw [fvec_last, fvec_last, ← Matrix.mulVec_mulVec, hh'.2.2, ← Matrix.mulVec_mulVec]
-  conv_lhs => rw [← hh.2.2]
-  exact herm_UH hh.1 _ _
-
-theorem GG_inv {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') (g : Mx k r) :
-    GGl k r z z' (h * g * h') = GGl k r z z' g := by
-  unfold GGl
-  rw [zeta_inv hh hh']
-
 theorem DomR_inv {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') {x : (Fin r → ℂ) × Mx k r}
     (hx : x ∈ DomR k r z z') : (x.1, h * x.2 * h') ∈ DomR k r z z' :=
-  ⟨hx.1, Glev_mul (Glev_mul (UW_Glev hh _) hx.2.1) (UW_Glev hh' _), by
-    change 0 < GGl k r z z' (h * x.2 * h'); rw [GG_inv hh hh']; exact hx.2.2⟩
+  ⟨hx.1, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (UW_Glev hh _) hx.2.1) (UW_Glev hh' _), by
+    change 0 < GGl k r z z' (h * x.2 * h'); rw [_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv hh hh']; exact hx.2.2⟩
 
 theorem zeta_ne (hT : 0 ≤ Tz k r z * Tz k r z') {g : Mx k r} (hg : 0 < GGl k r z z' g) :
     zetaL k r z z' (Fin.last r) g ≠ 0 := by
@@ -323,7 +282,7 @@ theorem fnVal_contDiffOn (hT : 0 ≤ Tz k r z * Tz k r z') (j : Fin 6) :
 
 theorem fnVal_inv {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') (j : Fin 6) (g : Mx k r) :
     fnVal k r z z' j (h * g * h') = fnVal k r z z' j g := by
-  fin_cases j <;> simp only [fnVal, zeta_inv hh hh', GG_inv hh hh']
+  fin_cases j <;> simp only [fnVal, _root_.Formalism.FourierDecayAlt.P.Qx8.zetaL_equiv hh hh', _root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv hh hh']
 
 theorem fn_ind (j : Fin 6) {Φ : Fn k r (Wq →L[ℂ] Wp)} (hΦ : Φ ∈ RadSp k r z z' π π') :
     (fun c g => (DomR k r z z').indicator (fun x => fnVal k r z z' j x.2 • Φ x.1 x.2) (c, g)) =
@@ -348,30 +307,13 @@ theorem place_alt_alt {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ W
 
 section Geo
 
-theorem herm_bvec_right {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (v : Fin m → ℂ) (p : Fin m) :
-    herm H v (bvec p) = (H *ᵥ v) p := by
-  simp [herm, bvec, dotProduct, Pi.single_apply]
-
 theorem Nlev_last {k r : ℕ} {n : Mx k r} (hn : n ∈ Nlev k r (Fin.last r)) : n = 1 := by
   apply Formalism.FourierDecayAlt.P.Qx8.Nlev_last <;> assumption
-
-theorem psi_one {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (c : ℂ) : psi k r z c 1 = 1 := by
-  have : ell k r z 1 = 0 := by
-    unfold ell
-    refine Finset.sum_eq_zero fun a _ => ?_
-    split_ifs with h
-    · rw [Matrix.one_apply, ite_eq_right]
-      intro e
-      have := congrArg Fin.val e
-      simp [eI] at this
-    · rw [Matrix.one_mulVec]
-      exact hz _ (Or.inl a.isLt)
-  simp [psi, this]
 
 def Dp (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : Set (Mx k r) := {g | 0 < GGl k r z z' g}
 
 theorem Dp_open (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : IsOpen (Dp k r z z') :=
-  isOpen_lt continuous_const (GGl_continuous k r z z')
+  isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')
 
 theorem Slev_last {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {s : Mx k r} (hs : s ∈ Slev k r z (Fin.last r)) :
     s ∈ UWset k r z := by
@@ -382,7 +324,7 @@ theorem Dp_dom (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : IsDom k r z z'
   refine ⟨Dp_open k r z z', ?_⟩
   rintro g ⟨-, hg⟩ s hs s' hs'
   show 0 < GGl k r z z' (s * g * s')
-  rw [GG_inv (Slev_last hs) (Slev_last hs')]
+  rw [_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv (Slev_last hs) (Slev_last hs')]
   exact hg
 
 variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp]
@@ -400,9 +342,9 @@ theorem slice_FF (hz : inWb k r z) (hz' : inWb k r z') {Φ : Fn k r (Wq →L[ℂ
     {c : Fin r → ℂ} (hc : c ∈ OmX r) : Φ c ∈ FFl k r z z' π π' (Fin.last r) (Dp k r z z') := by
   refine ⟨slice_smooth hΦ hc, ?_, ?_, ?_⟩
   · intro g _ n hn
-    rw [Nlev_last hn, one_mul, psi_one hz, one_smul]
+    rw [Nlev_last hn, one_mul, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz, one_smul]
   · intro g _ n hn
-    rw [Nlev_last hn, mul_one, psi_one hz', one_smul]
+    rw [Nlev_last hn, mul_one, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz', one_smul]
   · rintro g ⟨hg, hD⟩ h hh h' hh'
     exact hΦ.2.2 (c, g) ⟨hc, hg, hD⟩ h hh h' hh'
 
@@ -637,7 +579,7 @@ theorem integrable_cpt {i : Fin (r + 1)} {μ : Measure (Mt k r)} (hμ : B.IsHaar
     hp.mono fun x hx => ⟨hx.1, hKD hx.2⟩
   have hi := hc.integrableOn_compact (μ := μ) hS'
   refine hi.integrable_of_ae_notMem_eq_zero ?_
-  filter_upwards [B5.haar_ae hμ] with x hx hxS
+  filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ] with x hx hxS
   exact h0 _ hx fun hxK => hxS ⟨hx, hxK⟩
 
 variable {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
@@ -1237,7 +1179,7 @@ theorem hpart_sum (Z : Mx k r) : hpart1 (Hpk k r) Z + Complex.I • hpart2 (Hpk 
 
 theorem lie_HXH {X : Mx k r} (hX : inLieLev k r i X) : Hpk k r * Xᴴ * Hpk k r = -X := by
   have hX' : Xᴴ * Hpk k r = -(Hpk k r * X) := eq_neg_of_add_eq_zero_left hX.1
-  rw [Matrix.mul_assoc, hX', Matrix.mul_neg, ← Matrix.mul_assoc, hpk_sq', Matrix.one_mul]
+  rw [Matrix.mul_assoc, hX', Matrix.mul_neg, ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
 
 theorem hpart_unique {P Q : Mx k r} (hP : inLieLev k r i P) (hQ : inLieLev k r i Q) :
     hpart1 (Hpk k r) (P + Complex.I • Q) = P ∧ hpart2 (Hpk k r) (P + Complex.I • Q) = Q := by
@@ -1409,7 +1351,7 @@ theorem eh_inv (Λ : (Fin (2 * r + k + 1) → ℂ) →ₗ[ℂ] ℂ) (v : Fin (2 
 theorem uh_inv_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
   apply Matrix.inv_eq_left_inv
   calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg, hpk_sq']
+    _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
 
 theorem smooth_inv (Λ : (Fin (2 * r + k + 1) → ℂ) →ₗ[ℂ] ℂ) (v : Fin (2 * r + k + 1) → ℂ) :
     SmoothLev k r i D (fun y => Λ (y⁻¹ *ᵥ v)) := by
@@ -1653,14 +1595,14 @@ theorem zb_eq {g : Mx k r} (hg : g ∈ Glev k r i) : star (zetaL k r z z' i g) =
   have h1 : g⁻¹ * g = 1 := by
     rw [uh_inv_eq hg.1]
     calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg.1, hpk_sq']
+      _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg.1, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   have h2 : g * g⁻¹ = 1 := mul_eq_one_comm.1 h1
   have hs : ∀ u w : Fin (2 * r + k + 1) → ℂ, star (herm (Hpk k r) u w) = herm (Hpk k r) w u := by
     intro u w
     unfold herm
     rw [← Matrix.star_dotProduct_star, star_star, Matrix.star_mulVec, hpk_h, ← Matrix.dotProduct_mulVec]
   unfold zetaL zbF
-  rw [hs, ← herm_UH hg.1 (g⁻¹ *ᵥ fvec k r z i), Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
+  rw [hs, ← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_UH hg.1 (g⁻¹ *ᵥ fvec k r z i), Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
 
 theorem cov_rel (hD : IsOpen D) : CovRel (Eh (E := E) hD) (fun c => Mh hD (fun g => ybv k r z i g c) (sm_eta z c))
     (xv k r z' i) (Mh hD (zetaL k r z z' i) (sm_zeta z z')) := by

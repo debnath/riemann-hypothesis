@@ -404,9 +404,6 @@ theorem haar_right_of_compact {G : Type*} [Group G] [TopologicalSpace G] [IsTopo
   have h3 : Measure.haarScalarFactor (μ.map (· * g)) μ = 1 := by exact_mod_cast h1
   rw [h, h3, one_smul]
 
-theorem compactHaarExists : CompactHaarExists := by
-  apply Formalism.FourierDecayAlt.P.B2x3.compactHaar
-
 theorem mulM_cont {k r : ℕ} : Continuous (mulM : Mt k r × Mt k r → Mt k r) := by
   have h1 : Continuous (fun p : Mt k r × Mt k r => (Matrix.of p.1 : Mat k r)) := continuous_fst
   have h2 : Continuous (fun p : Mt k r × Mt k r => (Matrix.of p.2 : Mat k r)) := continuous_snd
@@ -576,19 +573,3 @@ theorem semiHaar : SemiHaar := by
     · exact hμB.ne_zero (Measure.measure_univ_eq_zero.mp h)
 
 end Formalism.FourierDecayAlt.P.B2x2
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem semidirect_product_haar : Formalism.FourierDecayAlt.B2.SemiHaar := Formalism.FourierDecayAlt.P.B2x2.semiHaar
-
-theorem levi_haar_measure_exists : Formalism.FourierDecayAlt.B2.LevHaar := Formalism.FourierDecayAlt.P.B2x2.levHaar
-
-theorem compact_group_haar_exists : Formalism.FourierDecayAlt.B2.CompactHaarExists := Formalism.FourierDecayAlt.P.B2x2.compactHaarExists
-
-theorem spherical_shell_integral : Formalism.FourierDecayAlt.B2.ShellInt := Formalism.FourierDecayAlt.P.B2x2.shellInt
-
-theorem unitary_group_closed : Formalism.FourierDecayAlt.B2.ClosedG := Formalism.FourierDecayAlt.P.B2x2.closedG
-
-theorem unipotent_radical_closed : Formalism.FourierDecayAlt.B2.ClosedN := Formalism.FourierDecayAlt.P.B2x2.closedN
-
-end Formalism.FourierDecayAlt.P

@@ -118,15 +118,12 @@ theorem uwset_eq (z : Fin (2 * r + k + 1) → ℂ) : Formalism.QuantumDeterminan
 
 theorem uh_eq : Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) = PI.UpqRep.UH (PI.UpqRep.Hpk k r) := rfl
 
-private theorem hpk_sq_lemma (k r : ℕ) : Formalism.QuantumDeterminants.Hpk k r * Formalism.QuantumDeterminants.Hpk k r = 1 := by
-  apply _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq <;> assumption
-
 private theorem inv_mem_UH_Hpk_and_mul_inv_of_mem {k r : ℕ} {g : Formalism.FourierDecayAlt.ThreeDimData.Mx k r} (hg : g ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r)) :
     g⁻¹ ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk k r) ∧ g * g⁻¹ = 1 ∧ g⁻¹ * g = 1 := by
   have hg' : gᴴ * Formalism.QuantumDeterminants.Hpk k r * g = Formalism.QuantumDeterminants.Hpk k r := hg
   have hH : (Formalism.QuantumDeterminants.Hpk k r).det ≠ 0 := by
     intro h0
-    have h3 := congrArg Matrix.det (hpk_sq_lemma k r)
+    have h3 := congrArg Matrix.det (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq k r)
     rw [Matrix.det_mul, h0, zero_mul, Matrix.det_one] at h3
     exact zero_ne_one h3
   have hdet : IsUnit g.det := by

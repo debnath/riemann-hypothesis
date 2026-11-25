@@ -571,11 +571,3 @@ theorem plusL : PlusL := by
 end Main2
 
 end Formalism.FourierDecayAlt.P.Fr6
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem plus_letter_tau : Formalism.FourierDecayAlt.Fr.PlusTau := Fr6.plusTau
-
-theorem plus_letter_l : Formalism.FourierDecayAlt.Fr.PlusL := Fr6.plusL
-
-end Formalism.FourierDecayAlt.P

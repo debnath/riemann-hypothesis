@@ -130,7 +130,7 @@ private theorem x0_esI_apply_eq_dite_Z {k r j : ℕ} (hj : j + 1 ≤ r) (Z : Mat
   all_goals rw [Equiv.symm_apply_eq] at hq
   all_goals have hv := congrArg Fin.val hq
   all_goals simp [U.eB] at hv
-  · rw [fromBlocks_apply₂₁, fromCols_apply_inl, StandardCharacterExists.wMat_mul_apply]
+  · rw [fromBlocks_apply₂₁, fromCols_apply_inl, _root_.Formalism.FourierDecayAlt.P.G5.wMat_mul_apply]
     have hr : (⟨j - a.val, by omega⟩ : Fin (j + 1)).rev = Fin.castAdd 1 ⟨a.val, ha⟩ := by
       ext
       simp
@@ -185,7 +185,7 @@ private theorem sgn_sig_mul_y0_eq_star_esI_apply_of_mem_GV {k r : ℕ} (g : B.Ma
     have := a.isLt
     ext
     simp [GBasic.sig, eI, esI]
-  have hu := B2x5.isUnit_det_GV hg
+  have hu := _root_.Formalism.FourierDecayAlt.P.B2x8.al_unit hg
   have h1 : Hpk k r * g⁻¹ = gᴴ * Hpk k r := by
     have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
     calc Hpk k r * g⁻¹ = gᴴ * Hpk k r * g * g⁻¹ := by rw [hg']

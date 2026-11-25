@@ -114,7 +114,7 @@ theorem capelli_representation_holds : JDACapRep := by
     rfl
   · rw [hOv] at hF
     rw [hEv {g} F hF g rfl hg, Finset.sum_filter]
-    have hinv : g⁻¹ = Hpk k r * gᴴ * Hpk k r := Formalism.FourierDecayAlt.P.Qx3.uh_inv_eq hg
+    have hinv : g⁻¹ = Hpk k r * gᴴ * Hpk k r := _root_.Formalism.FourierDecayAlt.P.Qx8.uh_inv_eq hg
     simp only [capAv, C3.AAvop, capAlphaV, hinv]
 
 end

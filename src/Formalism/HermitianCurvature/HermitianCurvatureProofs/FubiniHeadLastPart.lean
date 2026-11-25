@@ -463,7 +463,7 @@ theorem cont_shF : Continuous (fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) 
   · exact (continuous_const.matrix_mul (continuous_snd.fst : Continuous fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) ×
       ((Fin s → Fin p → ℂ) × (Fin p → Fin s → ℂ)) => (Matrix.of q.2.1 : Matrix _ _ ℂ))).matrix_mul
       (((Dx2.SL.cont_lowW σh).comp continuous_fst.fst).matrix_adjugate.matrix_mul continuous_const)
-  · exact ((Dx2.SL.cont_upper.comp continuous_fst.snd).matrix_adjugate).matrix_mul
+  · exact ((_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst.snd).matrix_adjugate).matrix_mul
       (continuous_snd.snd : Continuous fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) ×
       ((Fin s → Fin p → ℂ) × (Fin p → Fin s → ℂ)) => (Matrix.of q.2.2 : Matrix _ _ ℂ))
 
@@ -473,7 +473,7 @@ theorem cont_shG : Continuous (fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) 
   · exact (continuous_const.matrix_mul (continuous_snd.fst : Continuous fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) ×
       ((Fin s → Fin p → ℂ) × (Fin p → Fin s → ℂ)) => (Matrix.of q.2.1 : Matrix _ _ ℂ))).matrix_mul
       (continuous_const.matrix_mul ((Dx2.SL.cont_lowW σh).comp continuous_fst.fst))
-  · exact (Dx2.SL.cont_upper.comp continuous_fst.snd).matrix_mul
+  · exact (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst.snd).matrix_mul
       (continuous_snd.snd : Continuous fun q : ((U.LW σh → ℂ) × (G.UT p → ℂ)) ×
       ((Fin s → Fin p → ℂ) × (Fin p → Fin s → ℂ)) => (Matrix.of q.2.2 : Matrix _ _ ℂ))
 

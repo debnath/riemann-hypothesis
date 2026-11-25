@@ -33,7 +33,7 @@ theorem growth_side {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 
     ∫⁻ p, ENNReal.ofReal (Formalism.FourierDecayAlt.B.gN (Matrix.of p.2 * Matrix.of p.1) ^ (-β))
       ∂(μW.prod (haarLie (Nset k r) κ)) < ⊤ := by
   set μN := haarLie (Nset k r) κ with hμN
-  obtain ⟨μG, hμG⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
+  obtain ⟨μG, hμG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   have hGsk : Formalism.MainNotions.S.IsHaarOn (UH (Hpk k r)) μG :=
     ⟨Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite hμG, hμG.ne_zero, hμG.conc, hμG.left⟩
   have hS := Formalism.L2.SG.Pf.Choice.isHaarOn_muS hz hT hW hW1 hκ0 hκt
@@ -43,9 +43,9 @@ theorem growth_side {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 
   have hβ0 : 0 < β := lt_of_le_of_lt (by unfold Formalism.FourierDecayAlt.ThreeDimData.AG; positivity) hβ
   have hI : ∫⁻ p, ENNReal.ofReal (Formalism.FourierDecayAlt.B.gN (Matrix.of p.1 * Matrix.of p.2) ^ (-β)) ∂(μW.prod μN) < ⊤ :=
     (hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun p =>
-      Real.rpow_nonneg (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _) _)).1 hgr.2
+      Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)).1 hgr.2
 
-  obtain ⟨CW0, hCW0⟩ := (Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r z hz hT).exists_bound_of_continuousOn
+  obtain ⟨CW0, hCW0⟩ := (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT).exists_bound_of_continuousOn
     (f := fun x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ => Formalism.FourierDecayAlt.B.gN x)
     Formalism.FourierDecayAlt.P.s3dx1S_gNc.continuousOn
   set CW := max CW0 1 with hCW
@@ -69,7 +69,7 @@ theorem growth_side {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 
     have h1 : 1 ≤ Formalism.FourierDecayAlt.B.gN (h * n) := (hNI.2 _ hhn).2
     have hgh : Formalism.FourierDecayAlt.B.gN h ≤ CW := by
       have := hCW0 h hp.1
-      rw [Real.norm_of_nonneg (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _)] at this
+      rw [Real.norm_of_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)] at this
       exact this.trans (le_max_left _ _)
     have hghi : Formalism.FourierDecayAlt.B.gN h⁻¹ ≤ CW := by rw [(hNI.2 h hhU).1]; exact hgh
     have hle : Formalism.FourierDecayAlt.B.gN (h * n) ≤ CW * CW * Formalism.FourierDecayAlt.B.gN (n * h) := by
@@ -78,10 +78,10 @@ theorem growth_side {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 
       rw [e]
       calc Formalism.FourierDecayAlt.B.gN (h * (n * h) * h⁻¹) ≤ Formalism.FourierDecayAlt.B.gN (h * (n * h)) * Formalism.FourierDecayAlt.B.gN h⁻¹ := hNI.1 _ _
         _ ≤ (Formalism.FourierDecayAlt.B.gN h * Formalism.FourierDecayAlt.B.gN (n * h)) * CW :=
-            mul_le_mul (hNI.1 _ _) hghi (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _)
-              (mul_nonneg (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _) (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _))
+            mul_le_mul (hNI.1 _ _) hghi (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)
+              (mul_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _))
         _ ≤ (CW * Formalism.FourierDecayAlt.B.gN (n * h)) * CW :=
-            mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hgh (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _))
+            mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right hgh (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _))
               (by linarith)
         _ = CW * CW * Formalism.FourierDecayAlt.B.gN (n * h) := by ring
     have hpos : 0 < Formalism.FourierDecayAlt.B.gN (h * n) / (CW * CW) := div_pos (by linarith) (by positivity)

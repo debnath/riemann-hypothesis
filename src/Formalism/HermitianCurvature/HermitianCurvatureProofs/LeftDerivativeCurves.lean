@@ -261,7 +261,7 @@ variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] {i :
 theorem uh_inv_mul {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ * g = 1 := by
   have hl : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     rw [show Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) by simp only [Matrix.mul_assoc], hg,
-      Qx2.hpk_sq']
+      _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   rw [Matrix.inv_eq_left_inv hl, hl]
 
 theorem uh_mul_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 := by
@@ -270,27 +270,27 @@ theorem uh_mul_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 := by
 theorem unitary_hermitian_inv {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : Hpk k r * g⁻¹ = gᴴ * Hpk k r := by
   have hl : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     rw [show Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) by simp only [Matrix.mul_assoc], hg,
-      Qx2.hpk_sq']
+      _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   rw [Matrix.inv_eq_left_inv hl]
-  simp only [← Matrix.mul_assoc, Qx2.hpk_sq', Matrix.one_mul]
+  simp only [← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
 
 theorem unitary_inv_conjTranspose_hermitian {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : (g⁻¹)ᴴ * Hpk k r = Hpk k r * g := by
   have hl : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     rw [show Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) by simp only [Matrix.mul_assoc], hg,
-      Qx2.hpk_sq']
+      _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   rw [Matrix.inv_eq_left_inv hl]
-  simp only [conjTranspose_mul, conjTranspose_conjTranspose, Qx2.hpk_h, Matrix.mul_assoc, Qx2.hpk_sq', Matrix.mul_one]
+  simp only [conjTranspose_mul, conjTranspose_conjTranspose, Qx2.hpk_h, Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.mul_one]
 
 theorem unitary_hermitian_conjTranspose {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : Hpk k r * gᴴ = g⁻¹ * Hpk k r := by
   have hl : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     rw [show Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) by simp only [Matrix.mul_assoc], hg,
-      Qx2.hpk_sq']
+      _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   rw [Matrix.inv_eq_left_inv hl]
-  simp only [Matrix.mul_assoc, Qx2.hpk_sq', Matrix.mul_one]
+  simp only [Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.mul_one]
 
 theorem adj_conj {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (Z : Mx k r) :
     (Hpk k r)⁻¹ * (g⁻¹ * Z * g)ᴴ * Hpk k r = g⁻¹ * ((Hpk k r)⁻¹ * Zᴴ * Hpk k r) * g := by
-  rw [Matrix.inv_eq_left_inv Qx2.hpk_sq', conjTranspose_mul, conjTranspose_mul]
+  rw [Matrix.inv_eq_left_inv _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, conjTranspose_mul, conjTranspose_mul]
   simp only [Matrix.mul_assoc]
   rw [unitary_inv_conjTranspose_hermitian hg, ← Matrix.mul_assoc (Hpk k r) gᴴ, unitary_hermitian_conjTranspose hg]
   simp only [Matrix.mul_assoc]
@@ -343,9 +343,9 @@ theorem RZ_conj {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (Z : Mx k r) (F : Mx k r 
 private theorem inLieLev_herm_components_of_mulVec_bvec_eq_zero {k r : ℕ} {i : Fin (r + 1)} {Z : Mx k r}
     (hZ : ∀ p, ¬ Qx2.inV k r i p → Z *ᵥ bvec p = 0 ∧ (Hpk k r * Zᴴ * Hpk k r) *ᵥ bvec p = 0) :
     inLieLev k r i (hpart1 (Hpk k r) Z) ∧ inLieLev k r i (hpart2 (Hpk k r) Z) := by
-  have hinv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv Qx2.hpk_sq'
+  have hinv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
   have hh : (Hpk k r)ᴴ = Hpk k r := Qx2.hpk_h
-  have hsq : Hpk k r * Hpk k r = 1 := Qx2.hpk_sq'
+  have hsq : Hpk k r * Hpk k r = 1 := _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
   have hsq' : ∀ X : Mx k r, Hpk k r * (Hpk k r * X) = X := by
     intro X
     rw [← Matrix.mul_assoc, hsq, Matrix.one_mul]

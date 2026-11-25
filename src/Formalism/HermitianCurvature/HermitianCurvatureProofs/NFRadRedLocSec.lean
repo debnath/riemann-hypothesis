@@ -76,7 +76,7 @@ theorem trans_expl (hH : Hᴴ = H) (a b : Fin m → ℂ) (q : ℝ) (hq : q ≠ 0
       ring
     rw [e, hθ, sub_self, zero_div]
   have hD : herm H (a + (-θ) • b) (a + (-θ) • b) = 2 * ((q : ℂ) - t) := by
-    rw [TwoByOneBlock.herm_add_left, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_left,
+    rw [TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_left,
       TwoByOneBlock.herm_smul_left, TwoByOneBlock.herm_smul_right, TwoByOneBlock.herm_smul_right, ha, hb, star_neg]
     linear_combination (-1 : ℂ) * ht + (-1 : ℂ) * ht' + (q : ℂ) * hθ
   have hc2 : -1 / ((q : ℂ) - t) + star (-1 / ((q : ℂ) - t)) +
@@ -87,7 +87,7 @@ theorem trans_expl (hH : Hᴴ = H) (a b : Fin m → ℂ) (q : ℝ) (hq : q ≠ 0
     field_simp
     ring
   have hA : herm H a (a + (-θ) • b) = (q : ℂ) - t := by
-    rw [TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_right, ha, ← ht, star_neg]
+    rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_right, ha, ← ht, star_neg]
     ring
   have h2a : TwoByOneBlock.qrefl H (a + (-θ) • b) (-1 / ((q : ℂ) - t)) *ᵥ a = θ • b := by
     rw [TwoByOneBlock.qrefl_mulVec, hA, div_mul_cancel₀ _ hqt']
@@ -107,7 +107,7 @@ theorem trans_expl (hH : Hᴴ = H) (a b : Fin m → ℂ) (q : ℝ) (hq : q ≠ 0
   · rw [← Matrix.mulVec_mulVec, h2a, h1b]
   · intro x hxa hxb
     have hxd : herm H x (a + (-θ) • b) = 0 := by
-      rw [TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_right, hxa, hxb]
+      rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_right, hxa, hxb]
       ring
     rw [← Matrix.mulVec_mulVec, TwoByOneBlock.qrefl_mulVec H (a + (-θ) • b) _ x, hxd, mul_zero, zero_smul, add_zero,
       TwoByOneBlock.qrefl_mulVec, hxb, mul_zero, zero_smul, add_zero]
@@ -309,13 +309,13 @@ theorem key {z v : Fin (2 * r + k + 1) → ℂ} {ζ : ℂ} {T T' : ℝ} (hT : T 
   have hsT : star (T : ℂ) = T := Complex.conj_ofReal T
   have hn : ((Complex.normSq ζ : ℝ) : ℂ) = ζ * star ζ := (Complex.mul_conj ζ).symm
   constructor
-  · rw [TwoByOneBlock.herm_add_left, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_left,
+  · rw [TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_left,
       TwoByOneBlock.herm_smul_left, TwoByOneBlock.herm_smul_right, TwoByOneBlock.herm_smul_right, hz, hvz, hvv, hzv, star_div₀, hsT]
     push_cast
     rw [hn]
     field_simp
     ring
-  · rw [TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_right, hz, hzv, star_div₀, hsT]
+  · rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_right, hz, hzv, star_div₀, hsT]
     field_simp
     ring
 
@@ -353,15 +353,6 @@ private lemma hpk_conjTranspose_hpk_mul_eq_one_of_mem_uh {X : Q.Mx k r} (hX : X 
     calc Hpk k r * Xᴴ * Hpk k r * X = Hpk k r * (Xᴴ * Hpk k r * X) := by simp only [Matrix.mul_assoc]
       _ = 1 := by rw [hX', GBasic.Hpk_sq]
   exact ⟨h1, mul_eq_one_comm.mp h1⟩
-
-private lemma mul_mem_UH_of_mem_of_mem {X Y : Q.Mx k r} (hX : X ∈ UH (Hpk k r)) (hY : Y ∈ UH (Hpk k r)) :
-    X * Y ∈ UH (Hpk k r) := by
-  have hX' : Xᴴ * Hpk k r * X = Hpk k r := hX
-  have hY' : Yᴴ * Hpk k r * Y = Hpk k r := hY
-  show (X * Y)ᴴ * Hpk k r * (X * Y) = Hpk k r
-  calc (X * Y)ᴴ * Hpk k r * (X * Y) = Yᴴ * (Xᴴ * Hpk k r * X) * Y := by
-        rw [Matrix.conjTranspose_mul]; simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [hX', hY']
 
 theorem second_section_hermitian_facts (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) {a₀ : Q.Mx k r}
     (ha₀ : a₀ ∈ UWset k r z) {g : Q.Mx k r} (hg : g ∈ Glev k r (Fin.last r)) :
@@ -421,7 +412,7 @@ theorem pt (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hsec : IsS
     fun i hi => hTx _ (herm_out h1w hi) (herm_out h2w hi)
   have hTz := hTx z h1z h2z
 
-  have hafU : af k r z z' μsec a₀ g ∈ UH (Hpk k r) := mul_mem_UH_of_mem_of_mem ha'.1 hTU
+  have hafU : af k r z z' μsec a₀ g ∈ UH (Hpk k r) := _root_.Formalism.FourierDecayAlt.P.Qx4.uh_mul ha'.1 hTU
   have hafe : ∀ a : Fin r, af k r z z' μsec a₀ g *ᵥ bvec (eI k r a) = bvec (eI k r a) ∧
       af k r z z' μsec a₀ g *ᵥ bvec (esI k r a) = bvec (esI k r a) := by
     intro a
@@ -432,7 +423,7 @@ theorem pt (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hsec : IsS
     unfold af
     rw [← Matrix.mulVec_mulVec, hTz, ha'.2.2]
 
-  have hXU : af k r z z' μsec a₀ g * muZ k r μsec (zetaL k r z z' (Fin.last r) g) ∈ UH (Hpk k r) := mul_mem_UH_of_mem_of_mem hafU hμ.1
+  have hXU : af k r z z' μsec a₀ g * muZ k r μsec (zetaL k r z z' (Fin.last r) g) ∈ UH (Hpk k r) := _root_.Formalism.FourierDecayAlt.P.Qx4.uh_mul hafU hμ.1
   have hXe : ∀ a : Fin r, (af k r z z' μsec a₀ g * muZ k r μsec (zetaL k r z z' (Fin.last r) g)) *ᵥ bvec (eI k r a) = bvec (eI k r a) ∧
       (af k r z z' μsec a₀ g * muZ k r μsec (zetaL k r z z' (Fin.last r) g)) *ᵥ bvec (esI k r a) = bvec (esI k r a) := by
     intro a
@@ -456,7 +447,7 @@ theorem pt (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hsec : IsS
     unfold af
     rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hμz, Matrix.mulVec_sub, Matrix.mulVec_smul, hTu, hTz,
       hu2z, Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv_cancel_left _ _ hd0]
-  refine ⟨⟨hafU, hafe, hafz⟩, ⟨mul_mem_UH_of_mem_of_mem hYU hg'.1, fun a => ⟨?_, ?_⟩, ?_⟩, ?_⟩
+  refine ⟨⟨hafU, hafe, hafz⟩, ⟨_root_.Formalism.FourierDecayAlt.P.Qx4.uh_mul hYU hg'.1, fun a => ⟨?_, ?_⟩, ?_⟩, ?_⟩
   · unfold bf
     rw [← Matrix.mulVec_mulVec, (hg'.2 a a.isLt).1, hYfix _ (hXe a).1]
   · unfold bf
@@ -522,7 +513,7 @@ theorem locSec : NFRadRedS.LocSec := by
       have hsq : star ((qf k r z z' g₀ : ℝ) : ℂ) = qf k r z z' g₀ := Complex.conj_ofReal _
       have hdd : herm (Hpk k r) (u1 k r z z' μsec g₀ + (-1 : ℂ) • u2 k r z z' 1 g₀) (u1 k r z z' μsec g₀ + (-1 : ℂ) • u2 k r z z' 1 g₀) =
           2 * ((qf k r z z' g₀ : ℝ) : ℂ) := by
-        rw [TwoByOneBlock.herm_add_left, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_left,
+        rw [TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_left,
           TwoByOneBlock.herm_smul_left, TwoByOneBlock.herm_smul_right, TwoByOneBlock.herm_smul_right, h1q, h2q, h0, h21, star_neg, star_one]
         ring
       have hcond : -1 / ((qf k r z z' g₀ : ℝ) : ℂ) + star (-1 / ((qf k r z z' g₀ : ℝ) : ℂ)) +
@@ -541,12 +532,12 @@ theorem locSec : NFRadRedS.LocSec := by
         rw [hRdef, TwoByOneBlock.qrefl_mulVec, hx, mul_zero, zero_smul, add_zero]
       have hdW : inWb k r (u1 k r z z' μsec g₀ + (-1 : ℂ) • u2 k r z z' 1 g₀) := inWb_add h1w (inWb_smul _ h2w)
       have hzd : herm (Hpk k r) z (u1 k r z z' μsec g₀ + (-1 : ℂ) • u2 k r z z' 1 g₀) = 0 := by
-        rw [TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_right, h1z, h2z]
+        rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_right, h1z, h2z]
         ring
       have hR : R ∈ UWset k r z :=
         ⟨hRmem, fun a => ⟨hRfix _ (herm_out hdW (hmI a)), hRfix _ (herm_out hdW (hmS a))⟩, hRfix _ hzd⟩
       have hv1d : herm (Hpk k r) (u1 k r z z' μsec g₀) (u1 k r z z' μsec g₀ + (-1 : ℂ) • u2 k r z z' 1 g₀) = ((qf k r z z' g₀ : ℝ) : ℂ) := by
-        rw [TwoByOneBlock.herm_add_right, TwoByOneBlock.herm_smul_right, h1q, h0]
+        rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, TwoByOneBlock.herm_smul_right, h1q, h0]
         ring
       have hRv1 : R *ᵥ u1 k r z z' μsec g₀ = u2 k r z z' 1 g₀ := by
         rw [hRdef, TwoByOneBlock.qrefl_mulVec, hv1d, div_mul_cancel₀ _ hqc]

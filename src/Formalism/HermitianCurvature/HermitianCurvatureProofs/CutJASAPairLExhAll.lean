@@ -38,11 +38,6 @@ namespace Formalism.FourierDecayAlt.P.CutMP.JA.SA
 
 attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
-theorem gv_isClosed (k r : ℕ) : IsClosed (B.GV k r) := by
-  show IsClosed {g : B.Mat k r | Matrix.conjTranspose g * Hpk k r * g = Hpk k r}
-  exact isClosed_eq ((continuous_id.matrix_conjTranspose.matrix_mul continuous_const).matrix_mul continuous_id)
-    continuous_const
-
 theorem sgs_continuousAt_oneP {k r : ℕ} (g : B.Mat k r) :
     ContinuousAt (fun p : B.SS k r => B.sgs p g) oneP := by
   have hinv : ContinuousAt (fun A : B.Mat k r => A⁻¹) 1 := by
@@ -136,7 +131,7 @@ theorem avgCutoff_of_parts (hB : ACBump) (hI : ACInv) (hN : ACInt) (hP : ACHaarP
     intro g hg
     have : φ₀ g = 0 := image_eq_zero_of_notMem_tsupport hg
     simp [φ, this]
-  refine ⟨φ, ?_, ⟨tsupport φ₀ ∩ B.GV k r, hφ₀c.isCompact.inter_right (gv_isClosed k r),
+  refine ⟨φ, ?_, ⟨tsupport φ₀ ∩ B.GV k r, hφ₀c.isCompact.inter_right (_root_.Formalism.FourierDecayAlt.P.B6.isClosed_GV k r),
     fun g hg => ⟨hg.2, hφ₀O hg.1⟩, fun g hg => ?_⟩, ?_⟩
   ·
     intro g₀ hg₀

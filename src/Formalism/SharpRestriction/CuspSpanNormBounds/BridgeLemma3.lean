@@ -111,15 +111,15 @@ theorem hu_haarUp :
       Formalism.MainNotions.S.IsHaarOn (UWset k r z) μ → Formalism.FourierDecayAlt.B.IsHaarOn (UWset k r z) μ) ∧
     ∀ (k r : ℕ) (μ : Measure (Mt k r)), Formalism.MainNotions.S.IsHaarOn (Nset k r) μ → Formalism.FourierDecayAlt.B.IsHaarOn (Nset k r) μ := by
   refine ⟨fun k r z μ hz hT hμ => ?_, fun k r μ hμ => ?_⟩
-  · obtain ⟨ν, hν⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r z hz hT
-    exact hu_general (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hν hμ
+  · obtain ⟨ν, hν⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hz hT
+    exact hu_general (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hν hμ
   · obtain ⟨ν, hν⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
-    exact hu_general (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hν hμ
+    exact hu_general (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hν hμ
 
 theorem hu_haarG (k r : ℕ) (μ : Measure (Mt k r)) (hμ : Formalism.MainNotions.S.IsHaarOn (UH (Hpk k r)) μ) :
     Formalism.FourierDecayAlt.B.IsHaarOn (GV k r) μ := by
-  obtain ⟨ν, hν⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
-  exact hu_general (Formalism.FourierDecayAlt.P.unitary_group_closed k r) hν hμ
+  obtain ⟨ν, hν⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
+  exact hu_general (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) hν hμ
 
 end Formalism.MainNotions.BridgeLemma₃
 

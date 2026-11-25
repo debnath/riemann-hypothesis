@@ -368,11 +368,6 @@ def inX (k r : ℕ) (v : Fin (2 * r + k + 1) → ℂ) : Prop := ∀ i : Fin (2 *
 
 def Lk (k r : ℕ) : Fin (2 * r + k + 1) := ⟨r + k, by omega⟩
 
-lemma mulVec_bvec {m : ℕ} (A : Matrix (Fin m) (Fin m) ℂ) (j : Fin m) :
-    A *ᵥ bvec j = fun i => A i j := by
-  funext i
-  simp [bvec, Matrix.mulVec]
-
 lemma sig_gt {k r : ℕ} (i : Fin (2 * r + k + 1)) (h : i.val < r) : r + k < (sig k r i).val := by
   unfold sig
   rw [ite_eq_left (Or.inl h)]
@@ -717,7 +712,7 @@ theorem unipotent_nilpotent_radical : UnipN := by
       simp only [bvec, Pi.single_apply]
       rw [ite_eq_right]; intro h; subst h; omega
     have h := hkey (bvec j) hbp (by rw [hp, zero_mulVec]) i hir
-    rw [Pi.sub_apply, sub_eq_zero, mulVec_bvec] at h
+    rw [Pi.sub_apply, sub_eq_zero, _root_.PI.StabSplit.FixW.mulVec_bvec] at h
     have h' : (u * m) i j = bvec j i := h
     rw [h']; simp [bvec, Pi.single_apply]
 

@@ -62,7 +62,7 @@ theorem cap_econj {W : Type} [NormedAddCommGroup W] [NormedSpace ℂ W] [FiniteD
       rw [h3, HermitianFormSums.herm_rsum]
       apply Finset.sum_congr rfl
       intro d _
-      simp only [hP, hQ, Matrix.of_apply, Qx2.herm_star]
+      simp only [hP, hQ, Matrix.of_apply, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj]
     simp only [Matrix.sum_apply, Matrix.smul_apply, unitB, Matrix.of_apply, smul_eq_mul]
     rw [h1, h2, Finset.sum_mul_sum]
     apply Finset.sum_congr rfl
@@ -107,7 +107,7 @@ theorem capelli_vector_frame : TL.CapVFrame := by
   have hCl : C (Fin.last n) = e := by rw [hCdef, Fin.snoc_last]
   have hBe : ∀ a, herm (Hpk (n + 1) r) (Bs a) e = 0 := fun a => hBs.2.2 a e (by simp)
   have heB : ∀ a, herm (Hpk (n + 1) r) e (Bs a) = 0 := fun a => by
-    rw [← Qx2.herm_star, hBe, star_zero]
+    rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, hBe, star_zero]
   have hC : IsFrameOf (n + 1) r [z'] C := by
     refine ⟨fun a => ?_, fun a b => ?_, fun a v hv => ?_⟩
     · refine Fin.lastCases ?_ (fun a => ?_) a

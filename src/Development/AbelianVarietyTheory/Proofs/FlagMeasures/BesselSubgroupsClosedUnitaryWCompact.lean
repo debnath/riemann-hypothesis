@@ -68,6 +68,6 @@ theorem closedSub_groups : ∀ (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ), in
   exact ⟨isClosedSub_of_closedSubgroup subset_rfl cG, isClosedSub_of_closedSubgroup sN cN,
     isClosedSub_of_closedSubgroup sW cW,
     isClosedSub_of_closedSubgroup sS (GlobalTheory.BesselPeriodCompare.closedS hz),
-    Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r z hz hT⟩
+    _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT⟩
 
 end GlobalTheory.SgInf

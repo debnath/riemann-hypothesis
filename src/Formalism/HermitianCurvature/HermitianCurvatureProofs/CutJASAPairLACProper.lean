@@ -14,8 +14,8 @@ namespace Formalism.FourierDecayAlt.P.CutMP.JA.SA
 
 theorem averaging_properness_holds : ACProper := by
   intro k r Wp Wq _ _ _ _ D C C' hC hC' hC'O
-  have hW : IsCompact (UWset k r D.z) := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r D.z D.z_mem D.T_pos
-  have hW' : IsCompact (UWset k r D.z') := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r D.z' D.z'_mem D.T'_pos
+  have hW : IsCompact (UWset k r D.z) := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z D.z_mem D.T_pos
+  have hW' : IsCompact (UWset k r D.z') := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z' D.z'_mem D.T'_pos
   have hgc : Continuous (B.gN : B.Mat k r → ℝ) := Formalism.FourierDecayAlt.P.B6.gN_continuous
   obtain ⟨MW, hMW⟩ := hW.exists_bound_of_continuousOn hgc.continuousOn
   obtain ⟨MW', hMW'⟩ := hW'.exists_bound_of_continuousOn hgc.continuousOn

@@ -12,8 +12,6 @@ public import Formalism.HermitianCurvature.HermitianCurvatureProofs.BesselDecayB
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem schur_hermitian : Formalism.FourierDecayAlt.ThreeDimData.SchurH := PI.WBL.NIS.schurH
-
 theorem psi_constant : Formalism.FourierDecayAlt.ThreeDimData.PsiConst := PI.WBL.S5.psiConst
 
 end Formalism.FourierDecayAlt.P

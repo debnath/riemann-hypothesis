@@ -400,7 +400,7 @@ theorem haar_lie_measure_on_nilpotent (hL : NLeft) (κ : ℝ≥0∞) (h0 : κ �
   have hleft := hL k r κ h0 hκ
   have hfin := haarLie_finite_compact (k := k) (r := r) κ hκ
   obtain ⟨μ0, hμ0⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r (Nset k r) μ0 _ (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hμ0
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r (Nset k r) μ0 _ (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hμ0
     hconc hleft hfin
   refine ⟨hconc, hleft, fun a ha => ?_, hfin, haarLie_ne_zero κ h0⟩
   rw [hc, Measure.map_smul, hμ0.right a ha]
@@ -412,7 +412,7 @@ theorem measPresN_conj_of {z : Fin (2 * r + k + 1) → ℂ} {μN : Measure (Mt k
       MeasurePreserving (fun x : Mt k r => fun i j => (h⁻¹ * Matrix.of x * h * m) i j) μN μN := by
   intro h hh m hm
   have hdet : IsUnit h.det := PI.WUN.UH_det hh.1
-  have hhi : h⁻¹ ∈ UWset k r z := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z).inv_mem h hh
+  have hhi : h⁻¹ ∈ UWset k r z := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z).inv_mem h hh
   have hC : MeasurePreserving (conjM (k := k) (r := r) h⁻¹) μN μN :=
     ⟨conj_meas h⁻¹, Formalism.FourierDecayAlt.P.b2_conjInvRaw_proof k r z _ hz hT hN h⁻¹ hhi⟩
   have hR : MeasurePreserving (Formalism.FourierDecayAlt.B.rmulF m : Mt k r → Mt k r) μN μN :=
@@ -434,7 +434,7 @@ theorem measPresN_inv_of {z : Fin (2 * r + k + 1) → ℂ} {μN : Measure (Mt k 
     ⟨conj_meas h, Formalism.FourierDecayAlt.P.b2_conjInvRaw_proof k r z _ hz hT hN h hh⟩
   have hI : MeasurePreserving (Formalism.FourierDecayAlt.B2.invM (k := k) (r := r)) μN μN :=
     ⟨PI.WBL.Cv.measurable_matInv, Formalism.FourierDecayAlt.P.haar_measure_inversion k r (Nset k r) _
-      (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hN⟩
+      (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hN⟩
   exact hC.comp hI
 
 theorem measF_side {z : Fin (2 * r + k + 1) → ℂ} {u : Fin k → ℝ} {Wp : Type} [NormedAddCommGroup Wp]
@@ -450,7 +450,7 @@ theorem measF_side {z : Fin (2 * r + k + 1) → ℂ} {u : Fin k → ℝ} {Wp : T
   haveI : SigmaFinite μW := hW.1
   haveI : SigmaFinite μN := hN.1
   exact PI.WBL.Cv.measF_of (fun h hh => ⟨rmul_meas h, hWc.right h hh⟩)
-    ⟨PI.WBL.Cv.measurable_matInv, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μW (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hWc⟩
+    ⟨PI.WBL.Cv.measurable_matInv, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μW (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hWc⟩
     hW.2.2.1 hN.2.2.1 (measPresN_conj_of hNc hz hT) (measPresN_inv_of hNc hz hT)
     (PI.WBL.Cv.piContAll k r z u Wp π hz hT hπ)
 

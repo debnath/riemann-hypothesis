@@ -318,8 +318,8 @@ theorem bigCell_coords_unique : ∀ (k r : ℕ) (x y : Fin r → ℂ), (∀ a, x
     rw [(Formalism.FourierDecayAlt.P.TwoByOneBlock.bigCellFactor k r x μ₁).1, Matrix.det_mul]
     exact (Matrix.isUnit_det_of_right_inverse (bigCell_mul_bigCell_star k r x hx)).mul
       (Matrix.isUnit_det_of_right_inverse (B := Formalism.FourierDecayAlt.B2.embWb k r μ₁⁻¹) (by
-        rw [← Formalism.FourierDecayAlt.P.TwoByOneBlock.emb_mul, Matrix.mul_nonsing_inv μ₁ (Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_inv hμ₁).1,
-          Formalism.FourierDecayAlt.P.TwoByOneBlock.emb_one]))
+        rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, Matrix.mul_nonsing_inv μ₁ (Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_inv hμ₁).1,
+          _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]))
   have key : (n₂ * n₁⁻¹) * bigCell k r x μ₁ = bigCell k r y μ₂ * (n₂' * n₁'⁻¹) := by
     calc (n₂ * n₁⁻¹) * bigCell k r x μ₁
         = n₂ * (n₁⁻¹ * bigCell k r x μ₁ * n₁') * n₁'⁻¹ := by
@@ -1376,7 +1376,7 @@ theorem one_add_ne {x : Fin r → ℂ} (hx : ‖x‖ < 1) (a : Fin r) : 1 + x a 
   linarith
 
 theorem chart_mem {v : EE k r} (hv : v ∈ Metric.ball (0 : EE k r) 1) : chart k r v ∈ GG k r := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have hx : ‖v.2.1‖ < 1 := lt_of_le_of_lt ((norm_fst_le _).trans (norm_snd_le _)) (mem_ball_zero_iff.1 hv)
   unfold chart
   rw [Matrix.exp_neg]
@@ -1393,7 +1393,7 @@ theorem mem_UU {ρ : ℝ} (hρ : ρ ≤ 1) {x : Fin r → ℂ} (hx : ∀ a, x a 
     lmulM (wC k r) ((Matrix.of n)⁻¹ * bigCell k r x 1 * Matrix.of m * Matrix.of n') ∈ UU k r ρ ↔
       x ∈ Metric.ball (fun _ => 1 : Fin r → ℂ) ρ ∧ ((n, n'), m) ∈ (expSet (Nset k r) (Metric.ball 0 ρ) ×ˢ
         expSet (Nset k r) (Metric.ball 0 ρ)) ×ˢ expSet (Formalism.FourierDecayAlt.B2.UWb k r) (Metric.ball 0 ρ) := by
-  have hw : IsUnit (wC k r).det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ wC_mem
+  have hw : IsUnit (wC k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ wC_mem
   constructor
   · rintro ⟨v, hv, h⟩
     have hv' := hv
@@ -1509,9 +1509,9 @@ theorem bigCell_integral : ∀ (k r : ℕ) (μG μb : Measure (Mt k r)) (c cb : 
   obtain ⟨C, -, hC⟩ := Formalism.FourierDecayAlt.P.iterated_integration_formula k r μG (haarLie (Nset k r) 1) μb
     ((GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μG).1.1 hG)
     ((GlobalTheory.HaarNotions.isHaarOn_iff_groups k r _).2.1.1 hN)
-    ((GlobalTheory.HaarNotions.isHaarOn_iff (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r) (Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r) μb).1 hb)
+    ((GlobalTheory.HaarNotions.isHaarOn_iff (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r) (_root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r) μb).1 hb)
   suffices h : (C : ℝ≥0∞) = ENNReal.ofReal (c / cb * 2 ^ r) by rw [← h]; exact hC
-  have t1 := _root_.GlobalTheory.ChartDensity.density_in_chart _ (GG k r) μG _ (matGroup_of (Formalism.FourierDecayAlt.P.unitary_group_closed k r)) hG hdG (EE k r)
+  have t1 := _root_.GlobalTheory.ChartDensity.density_in_chart _ (GG k r) μG _ (matGroup_of (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r)) hG hdG (EE k r)
     (chart k r) (dE k r) (_root_.GlobalTheory.CellDens.Deriv.chart_strict k r).1
     (Filter.mem_of_superset (Metric.ball_mem_nhds 0 one_pos) fun v hv => chart_mem hv) (fun i j => by
       obtain ⟨D, h1, h2⟩ := (_root_.GlobalTheory.CellDens.Deriv.chart_strict k r).2.2 i j

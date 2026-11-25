@@ -655,10 +655,6 @@ theorem quad_conj (P H : Matrix (Fin m) (Fin m) K) (v : Fin m → K) :
   rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, Matrix.dotProduct_mulVec v Pᵀ,
     Matrix.vecMul_transpose]
 
-theorem inverse_eq {a b : K} (h : a * b = 1) : Ring.inverse a = b := by
-  have h1 : a * Ring.inverse a = 1 := Ring.mul_inverse_cancel _ (IsUnit.of_mul_eq_one _ h)
-  linear_combination b * h1 - Ring.inverse a * h
-
 end Lip
 
 section Main
@@ -834,7 +830,7 @@ theorem Adic.morse_local (h : Adic R ϖ) (h2 : IsUnit (2 : K)) (m : ℕ) (c z : 
       obtain ⟨S, hS⟩ : ∃ S, S = ∑ k, (c : K) * v k := ⟨_, rfl⟩
       have i1 : (z : K) ^ m * (((z⁻¹ : Kˣ) : K)) ^ m = 1 := by rw [← mul_pow, i0, one_pow]
       have e2 : Ring.inverse (∏ k, (z : K) * (1 + (c : K) * v k)) = (((z⁻¹ : Kˣ) : K)) ^ m * W :=
-        inverse_eq (by
+        _root_.Formalism.FourierDecayAlt.P.AdicNeighbourhood.inverse_eq (by
           rw [Finset.prod_mul_distrib, Finset.prod_const, Finset.card_univ, Fintype.card_fin, hW]
           have hp : (∏ k, (1 + (c : K) * v k)) * ∏ k, wv (c : K) v k = 1 := by
             rw [← Finset.prod_mul_distrib]; exact Finset.prod_eq_one fun k _ => hw k

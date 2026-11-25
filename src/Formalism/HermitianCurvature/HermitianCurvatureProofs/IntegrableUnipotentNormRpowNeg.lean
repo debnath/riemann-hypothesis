@@ -112,8 +112,6 @@ section norms
 
 variable {k r : ℕ}
 
-private theorem gN_nonneg_lemma_2 (g : B.Mat k r) : 0 ≤ B.gN g := Real.sqrt_nonneg _
-
 theorem entry_le_gN (g : B.Mat k r) (i j : Fin (2 * r + k + 1)) : ‖g i j‖ ≤ B.gN g := by
   have h1 : Complex.normSq (g i j) ≤ ∑ j', Complex.normSq (g i j') :=
     Finset.single_le_sum (f := fun j' => Complex.normSq (g i j')) (fun j' _ => Complex.normSq_nonneg _)
@@ -176,14 +174,14 @@ theorem uMap_le (z : Fin (2 * r + k + 1) → ℂ) :
   choose C hC hb using fun a b => uMap_entry_le_matrix_norm (k := k) (r := r) z a b
   refine ⟨∑ a, ∑ b, C a b, Finset.sum_nonneg fun a _ => Finset.sum_nonneg fun b _ => hC a b,
     fun g a b => (hb a b g).trans ?_⟩
-  refine mul_le_mul_of_nonneg_right ?_ (gN_nonneg_lemma_2 g)
+  refine mul_le_mul_of_nonneg_right ?_ (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg g)
   exact (Finset.single_le_sum (f := fun b => C a b) (fun b _ => hC a b) (Finset.mem_univ b)).trans
     (Finset.single_le_sum (f := fun a => ∑ b, C a b)
       (fun a _ => Finset.sum_nonneg fun b _ => hC a b) (Finset.mem_univ a))
 
 theorem UW_bound (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hT : 0 < Tz k r z) :
     ∃ K : ℝ, 1 ≤ K ∧ ∀ h ∈ UWset k r z, B.gN h ≤ K := by
-  obtain ⟨C, hC⟩ := (P.weyl_subgroup_compact k r z hz hT).exists_bound_of_continuousOn
+  obtain ⟨C, hC⟩ := (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT).exists_bound_of_continuousOn
     (P.B6.gN_continuous (k := k) (r := r)).continuousOn
   refine ⟨max C 1, le_max_right _ _, fun h hh => ?_⟩
   simpa only [Real.norm_of_nonneg (P.B6.gN_nonneg h)] using (hC h hh).trans (le_max_left _ _)
@@ -220,7 +218,7 @@ theorem integrable_unipotent_norm_rpow_neg {μN : Measure (Mt k r)} (hN : B.IsHa
       linarith
     refine Integrable.mono' (integrable_const (1 : ℝ))
       (((P.HaarUniquenessConjugation.gN_meas k 0).pow_const _).aestronglyMeasurable) ?_
-    filter_upwards [P.Dx2.OrbJ.ae_mem hN] with x hx
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hN] with x hx
     have h1 : 1 ≤ B.gN (Matrix.of x : B.Mat k 0) := P.BetaSesquilinearity.gN_ge_one hx.1
     rw [Real.norm_of_nonneg (Real.rpow_nonneg (by linarith) _)]
     exact Real.rpow_le_one_of_one_le_of_nonpos h1 (by linarith)
@@ -238,11 +236,11 @@ theorem maj_int (D : B.RealPlaceData k r Wp Wq) (a b : ℝ)
     (ha : 4 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1) ≤ a)
     (hb : 4 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1) ≤ b) :
     Integrable (fun p : B.SS k r => B.gN (Matrix.of p.1.2) ^ (-a) * B.gN (Matrix.of p.2.2) ^ (-b)) D.μSS := by
-  have := P.Dx2.OrbJ.sigmaF D.haarW
-  have := P.Dx2.OrbJ.sigmaF D.haarN
-  have := P.Dx2.OrbJ.sigmaF D.haarW'
-  have : IsFiniteMeasure D.μW := b_fin D.haarW (P.weyl_subgroup_compact k r D.z D.z_mem D.T_pos)
-  have : IsFiniteMeasure D.μW' := b_fin D.haarW' (P.weyl_subgroup_compact k r D.z' D.z'_mem D.T'_pos)
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW'
+  have : IsFiniteMeasure D.μW := b_fin D.haarW (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z D.z_mem D.T_pos)
+  have : IsFiniteMeasure D.μW' := b_fin D.haarW' (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z' D.z'_mem D.T'_pos)
   have i1 : Integrable (fun q : Mt k r × Mt k r => (1 : ℝ) * B.gN (Matrix.of q.2) ^ (-a)) (D.μW.prod D.μN) :=
     (integrable_const (1 : ℝ)).mul_prod (integrable_unipotent_norm_rpow_neg D.haarN a ha)
   have i2 : Integrable (fun q : Mt k r × Mt k r => (1 : ℝ) * B.gN (Matrix.of q.2) ^ (-b)) (D.μW'.prod D.μN) :=
@@ -255,9 +253,9 @@ theorem integrand_aesm (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : �
     {F : B.Mat k r → (Wq →L[ℂ] Wp)} (hF : ContinuousOn F (B.GV k r)) :
     AEStronglyMeasurable (Formalism.FourierDecayAlt.D.orbIntegrand D γ F) D.μSS := by
   set S : Set (B.SS k r) := {p | D.inSS p} with hS
-  have hWc := (P.weyl_subgroup_closed k r D.z).closed
-  have hWc' := (P.weyl_subgroup_closed k r D.z').closed
-  have hNc := (P.unipotent_radical_closed k r).closed
+  have hWc := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z).closed
+  have hWc' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   have hSc : IsClosed S := by
     have e : S = (fun p : B.SS k r => (p.1.1 : B.Mat k r)) ⁻¹' (UWset k r D.z) ∩
         ((fun p : B.SS k r => (p.1.2 : B.Mat k r)) ⁻¹' (Nset k r) ∩
@@ -390,7 +388,7 @@ theorem om_int (hR : B.IsHaarOn (C6.Rset γ) μR) {M : ℝ} (hM : 0 ≤ M)
     Integrable (fun x : Mt k r => B.gN (Matrix.of x * Matrix.of n) ^ (-M)) μR := by
   refine (hI.const_mul (B.gN (Matrix.of n)⁻¹ ^ M)).mono' (om_meas_int M n).aestronglyMeasurable ?_
   filter_upwards [om_bound hR hM hn] with x hx
-  simpa only [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg (gN_nonneg_lemma_2 _) _)] using hx
+  simpa only [Real.norm_eq_abs, abs_of_nonneg (Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)] using hx
 
 private theorem gv_mul_lemma_5 {a b : B.Mat k r} (ha : a ∈ B.GV k r) (hb : b ∈ B.GV k r) :
     a * b ∈ B.GV k r := by
@@ -406,7 +404,7 @@ theorem om_pos (hR : B.IsHaarOn (C6.Rset γ) μR) {M : ℝ} (hM : 0 ≤ M)
     (hn : Matrix.of n ∈ B.GV k r) : 0 < Om μR M n := by
   unfold Om
   have hint := om_int hR hM hI hn
-  have hnn : ∀ x, 0 ≤ B.gN (Matrix.of x * Matrix.of n) ^ (-M) := fun x => Real.rpow_nonneg (gN_nonneg_lemma_2 _) _
+  have hnn : ∀ x, 0 ≤ B.gN (Matrix.of x * Matrix.of n) ^ (-M) := fun x => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _
   rw [integral_pos_iff_support_of_nonneg hnn hint]
   have hsub : @id (Set (Mt k r)) (C6.Rset γ) ⊆
       Function.support (fun x : Mt k r => B.gN (Matrix.of x * Matrix.of n) ^ (-M)) := by
@@ -476,8 +474,8 @@ theorem cut_meas [SFinite μR] (M : ℝ) : Measurable (cut μR M) := by
 
 theorem cut_nonneg (μR : Measure (Mt k r)) (M : ℝ) (p : B.SS k r) : 0 ≤ cut μR M p := by
   unfold cut Om
-  exact div_nonneg (Real.rpow_nonneg (gN_nonneg_lemma_2 _) _)
-    (integral_nonneg fun x => Real.rpow_nonneg (gN_nonneg_lemma_2 _) _)
+  exact div_nonneg (Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)
+    (integral_nonneg fun x => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)
 
 theorem cut_norm (hR : B.IsHaarOn (C6.Rset γ) μR) {M : ℝ} (hM : 0 ≤ M)
     (hI : Integrable (fun x : Mt k r => B.gN (Matrix.of x) ^ (-M)) μR) (p : B.SS k r)
@@ -512,9 +510,9 @@ theorem geom (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ ∈ B.GV
     (P.Dx2.Rad.N_sub_S D.z hn)
   simp only at hρ hσSg hnρσ
   rw [← P.Dx2.Rad.rset_eq D hγ hpos] at hρ
-  have hγu : IsUnit γ.det := (P.unitary_group_closed k r).unit γ hγ
+  have hγu : IsUnit γ.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit γ hγ
   have hRg := P.Dx2.OrbJ.closedR hγu
-  have hNg := P.unipotent_radical_closed k r
+  have hNg := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hρu : IsUnit ρ.det := hRg.unit ρ hρ
   have hρi : ρ⁻¹ ∈ C6.Rset γ := hRg.inv_mem ρ hρ
   have hσe : σ = ρ⁻¹ * n := by rw [hnρσ, ← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hρu, Matrix.one_mul]
@@ -617,13 +615,13 @@ theorem conv0 {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
   have hG : P.Dx2.Rad.Good D γ w d := ⟨P.Dx2.Rad.exists_rho D hγ hpos hd hZ, P.Dx2.Rad.u_inj D hγ hpos hd hZ,
     fun ρ hρ => P.Dx2.Rad.u_lstg D hγ hpos hd hZ hρ⟩
   have hR := P.Dx2.Rad.haar_good D hγ hd hG
-  have := P.Dx2.OrbJ.sigmaF hR
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hR
   have hI := intR D hγ hd hG hMR
   set μR := Formalism.FourierDecayAlt.D.muR D γ w with hμR
   set cR : ℝ := ∫ x, B.gN (Matrix.of x) ^ (-M) ∂μR with hcRdef
   have hone : Matrix.of (Matrix.of.symm (1 : B.Mat k r)) ∈ B.GV k r := by
     rw [Equiv.apply_symm_apply]
-    exact (P.unitary_group_closed k r).one_mem
+    exact (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).one_mem
   have hcR : 0 < cR := by
     have := om_pos hR hM0 hI hone
     simpa only [Om, Equiv.apply_symm_apply, Matrix.mul_one, ← hcRdef] using this
@@ -662,8 +660,8 @@ theorem conv0 {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
   have hsgs := P.B7.sgs_mem D ⟨h1, h2, h3, h4⟩ hγ
   have hGg : 0 < B.gN (B.sgs p γ) := by linarith [P.BetaSesquilinearity.gN_ge_one hsgs]
   have hYG : B.gN ((Matrix.of p.1.2 : B.Mat k r)⁻¹ * γ * Matrix.of p.2.2) ≤ K1 * B.gN (B.sgs p γ) := by
-    have hhu : IsUnit (Matrix.of p.1.1 : B.Mat k r).det := (P.unitary_group_closed k r).unit _ h1.1
-    have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (P.unitary_group_closed k r).unit _ h3.1
+    have hhu : IsUnit (Matrix.of p.1.1 : B.Mat k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ h1.1
+    have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ h3.1
     have e : (Matrix.of p.1.2 : B.Mat k r)⁻¹ * γ * Matrix.of p.2.2 =
         (Matrix.of p.1.1 : B.Mat k r) * B.sgs p γ * (Matrix.of p.2.1 : B.Mat k r)⁻¹ := by
       simp only [B.sgs, Matrix.mul_assoc]
@@ -718,9 +716,7 @@ theorem d_orbJConv : Formalism.FourierDecayAlt.D.OrbJConv := by
   refine ⟨16 * ((c₁ : ℝ) + 1), ?_⟩
   intro k r Wp Wq _ _ _ _ D γ w d A F hγ _hrel hd hZ hpos hA hF
   obtain ⟨sharpFunctionalExponent, hCC⟩ := hF
-  exact conv0 D γ w d A F c₁ hPP hγ hd hZ hpos hA (P.B5.ckOn_continuousOn hCC.1) sharpFunctionalExponent
+  exact conv0 D γ w d A F c₁ hPP hγ hd hZ hpos hA (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hCC.1) sharpFunctionalExponent
     fun g hg => hCC.2 [] [] (by simp) (by simp) (by simp) g hg
 
 end Formalism.FourierDecayAlt.P.Dx3
-
-theorem Formalism.FourierDecayAlt.P.orbital_integral_converges : Formalism.FourierDecayAlt.D.OrbJConv := Formalism.FourierDecayAlt.P.Dx3.d_orbJConv

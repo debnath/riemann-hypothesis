@@ -211,7 +211,7 @@ theorem pt_facts (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' 
     SSn.prWv k r z' (SSn.nu0' k r z z' μsec ζ) = SSn.nu0' k r z z' μsec ζ := by
   obtain ⟨h1, h2, h3, h4⟩ := DU.base hz hz' hT hT' hsec hζ
   have hG := NFRadRedA.uwb_glev (NFRadRedA.muZ_uwb hsec hζ)
-  have hGi := FrameEntries.glev_inv hG
+  have hGi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hG
   have hy : inWb k r (NF.muZ k r μsec ζ *ᵥ z') := Qx8.inWb_mulVec hG hz'
   have hyi : inWb k r ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) := Qx8.inWb_mulVec hGi hz
   have hνW : inWb k r (SSn.nu0 k r z z' μsec ζ) := by
@@ -238,7 +238,7 @@ theorem mu_frame (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z) (hT' 
   set μ := NF.muZ k r μsec ζ with hμ
   have hG := NFRadRedA.uwb_glev (NFRadRedA.muZ_uwb hsec hζ)
   have hU : μ ∈ UH (Hpk k r) := hG.1
-  have hGi := FrameEntries.glev_inv hG
+  have hGi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hG
   have hy : inWb k r (μ *ᵥ z') := Qx8.inWb_mulVec hG hz'
   have hyi : inWb k r (μ⁻¹ *ᵥ z) := Qx8.inWb_mulVec hGi hz
   have hFz' : ∀ j, herm (Hpk k r) (Fr j) z' = 0 := fun j => hFr.2.2 j z' (by simp)
@@ -420,7 +420,7 @@ theorem prWv_bvec_out (z' : Fin (2 * r + k + 1) → ℂ) {i : Fin (2 * r + k + 1
 
 theorem prWv_self {z' : Fin (2 * r + k + 1) → ℂ} (hz' : inWb k r z') (hT' : 0 < Tz k r z') :
     SSn.prWv k r z' z' = 0 := by
-  rw [DU.prWv_of hz', FrameEntries.herm_self]
+  rw [DU.prWv_of hz', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
   have hT0 : ((Tz k r z' : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT'.ne'
   rw [neg_div, div_self hT0, neg_smul, one_smul, add_neg_cancel]
 
@@ -461,7 +461,7 @@ theorem cz_facts {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
     (((Real.sqrt (Tz k r z))⁻¹ : ℝ) : ℂ) ≠ 0 := by
   have hs : 0 < Real.sqrt (Tz k r z) := Real.sqrt_pos.2 hT
   refine ⟨Qx8.inWb_smul hz _, ?_, by exact_mod_cast (inv_pos.2 hs).ne'⟩
-  rw [DU.hsmul_l, DU.hsmul_r, FrameEntries.herm_self, Complex.conj_ofReal]
+  rw [DU.hsmul_l, DU.hsmul_r, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, Complex.conj_ofReal]
   have hsq : Real.sqrt (Tz k r z) ^ 2 = Tz k r z := Real.sq_sqrt hT.le
   have hsq' : ((Real.sqrt (Tz k r z) : ℝ) : ℂ) ^ 2 = ((Tz k r z : ℝ) : ℂ) := by exact_mod_cast hsq
   have hne : ((Real.sqrt (Tz k r z) : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hs.ne'
@@ -649,7 +649,7 @@ theorem core {z z' ν₁ ν₂ ν₁' ν₂' : Fin (2 * r + k + 1) → ℂ} {μ�
   have hai : a⁻¹ * a = 1 := NFRadRedS.uw_inv_mul ha
   have hhi : h⁻¹ * h = 1 := NFRadRedS.uw_inv_mul hh
   have hh'i : h'⁻¹ * h' = 1 := NFRadRedS.uw_inv_mul hh'
-  have hμ₂i : μ₂⁻¹ * μ₂ = 1 := FrameEntries.inv_mul_uh hμ₂.1
+  have hμ₂i : μ₂⁻¹ * μ₂ = 1 := _root_.Formalism.FourierDecayAlt.P.Qx8.inv_mul_uh hμ₂.1
   have hμ₂m : μ₂ * μ₂⁻¹ = 1 := FrameEntries.mul_inv_uh hμ₂.1
   have hμ₁m : μ₁ * μ₁⁻¹ = 1 := FrameEntries.mul_inv_uh hμ₁.1
   have hi' : h'⁻¹ ∈ UWset k r z' := LieBracketMultiplication.uw_inv hh'
@@ -743,7 +743,7 @@ theorem first_vector_normal_form {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : �
 theorem nu0'_form {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ}
     (hz : inWb k r z) (hsec : IsSection k r z z' μsec) {ζ : ℂ} (hζ : Tz k r z * Tz k r z' < Complex.normSq ζ) :
     ∃ s c : ℂ, SSn.nu0' k r z z' μsec ζ = s • ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z + c • z') := by
-  have hG := FrameEntries.glev_inv (NFRadRedA.uwb_glev (NFRadRedA.muZ_uwb hsec hζ))
+  have hG := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv (NFRadRedA.uwb_glev (NFRadRedA.muZ_uwb hsec hζ))
   have hy : inWb k r ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) := Qx8.inWb_mulVec hG hz
   refine ⟨(((Real.sqrt (herm (Hpk k r) (SSn.prWv k r z' ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z))
         (SSn.prWv k r z' ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z))).re)⁻¹ : ℝ) : ℂ),

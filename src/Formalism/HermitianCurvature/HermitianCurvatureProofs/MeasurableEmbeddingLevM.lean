@@ -25,7 +25,7 @@ theorem projM_levM (x : Mt k ρ) : projM (B2.levM k ρ x) = x := by
   rfl
 
 theorem continuous_levM : Continuous (B2.levM k ρ) := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.levM_cont k ρ
+  exact _root_.Formalism.FourierDecayAlt.P.B2x2.levM_cont k ρ
 
 theorem continuous_projM : Continuous (projM (k := k) (ρ := ρ)) := by
   unfold projM

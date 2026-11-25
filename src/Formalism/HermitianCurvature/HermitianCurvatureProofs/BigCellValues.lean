@@ -27,9 +27,9 @@ theorem big_cell_values : TL.CellVals := by
     have h1 : wCell k r (Fin.last r) x.1 ∈ Glev k r 0 := by
       unfold wCell
       exact Qx3.wlist_glev hc _
-    exact (Qx5.Glev_mul h1 (Qx4.glev0 hg.1)).1
+    exact (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul h1 (Qx4.glev0 hg.1)).1
   have hM : wCell k r (Fin.last r) x.1 * x.2 = bigCell k r x.1 μ := by
-    rw [P5.Rad.wCell_last_eq, hμ, ← (bruhat_big_cell_factorization k r x.1 μ).1]
+    rw [P5.Rad.wCell_last_eq, hμ, ← (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r x.1 μ).1]
   rw [hM] at hGV ⊢
   set ζ := zetaL k r Bs.z Bs.z' (Fin.last r) x.2 with hζdef
   have hz : ζ = herm (Hb k) (μ *ᵥ wbPart k r Bs.z') (wbPart k r Bs.z) := by

@@ -152,14 +152,6 @@ lemma ep_sg (i : Fin (2 * r + k + 1)) : ep k r (sg k r i) = ep k r i := by
 lemma norm_ep (i : Fin (2 * r + k + 1)) : ‖ep k r i‖ = 1 := by
   unfold ep; split_ifs <;> simp
 
-lemma hsq : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
-
-lemma inv_eq {y : Mat k r} (hy : y ∈ GV k r) : y⁻¹ = Hpk k r * yᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  have h : yᴴ * Hpk k r * y = Hpk k r := hy
-  calc Hpk k r * yᴴ * Hpk k r * y = Hpk k r * (yᴴ * Hpk k r * y) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [h, hsq]
-
 lemma hy_apply (y : Mat k r) (i l : Fin (2 * r + k + 1)) :
     (Hpk k r * yᴴ) i l = ep k r i * star (y l (sg k r i)) := by
   simp only [Matrix.mul_apply, hpk_apply, ite_mul, zero_mul, Matrix.conjTranspose_apply,
@@ -168,7 +160,7 @@ lemma hy_apply (y : Mat k r) (i l : Fin (2 * r + k + 1)) :
 
 lemma inv_apply {y : Mat k r} (hy : y ∈ GV k r) (i j : Fin (2 * r + k + 1)) :
     y⁻¹ i j = ep k r i * star (y (sg k r j) (sg k r i)) * ep k r j := by
-  rw [inv_eq hy, Matrix.mul_apply]
+  rw [_root_.Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose hy, Matrix.mul_apply]
   simp only [hy_apply, hpk_apply]
   have : ∀ l : Fin (2 * r + k + 1), (ep k r i * star (y l (sg k r i)) *
       if j = sg k r l then ep k r l else 0) =
@@ -183,7 +175,7 @@ lemma norm_inv_apply {y : Mat k r} (hy : y ∈ GV k r) (i j : Fin (2 * r + k + 1
     ‖y⁻¹ i j‖ = ‖y (sg k r j) (sg k r i)‖ := by
   rw [inv_apply hy, norm_mul, norm_mul, norm_ep, norm_ep, norm_star]; ring
 
-lemma closedN : Formalism.FourierDecayAlt.B2.IsClosedSubgroup (Nset k r) := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+lemma closedN : Formalism.FourierDecayAlt.B2.IsClosedSubgroup (Nset k r) := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
 
 lemma n_mem_G {n : Mat k r} (hn : n ∈ Nset k r) : n ∈ GV k r := hn.1
 
@@ -625,10 +617,6 @@ open Formalism.FourierDecayAlt.P.WeakDominationMajorants.LU
 
 variable {k r : ℕ}
 
-lemma gN_nonneg (y : Mat k r) : 0 ≤ gN y := Real.sqrt_nonneg _
-
-lemma ent_le (y : Mat k r) (i j : Fin (2 * r + k + 1)) : ‖y i j‖ ≤ gN y := Formalism.FourierDecayAlt.P.Ux6.entry_le_gN y i j
-
 lemma gN_le_of_ent (y : Mat k r) (B : ℝ) (hB : 0 ≤ B) (h : ∀ i j, ‖y i j‖ ≤ B) :
     gN y ≤ ((2 * r + k + 1 : ℕ) : ℝ) * B := by
   unfold gN
@@ -650,7 +638,7 @@ lemma isLU_Lm {n : Mat k r} (hn : n ∈ Nset k r) : IsLU (Lm n) := ⟨fun i j h 
 
 lemma isUU_Um {n : Mat k r} (hn : n ∈ Nset k r) : IsUU (Um n) := ⟨fun i j h => Um_lower hn i j h, Um_diag hn⟩
 
-lemma Zm_ent (y : Mat k r) (a b : Fin r) : ‖Zm y a b‖ ≤ gN y := ent_le y _ _
+lemma Zm_ent (y : Mat k r) (a b : Fin r) : ‖Zm y a b‖ ≤ gN y := _root_.Formalism.FourierDecayAlt.P.Ux6.entry_le_gN y _ _
 
 def lowerFactorEntryConstant (r : ℕ) (Γ δ : ℝ) : ℝ := 1 + (r.factorial : ℝ) * Γ ^ r / δ
 
@@ -782,7 +770,7 @@ lemma Linv_bd (hΓ : 1 ≤ Γ) (hδ : 0 < δ) (hg : g ∈ GV k r) (hgΓ : gN g �
       (fun a b => (Zm_ent g a b).trans hgΓ) (Um_bd hΓ hδ hg hgΓ hld hn hn') i j
     simpa using this
   have h2 := norm_mul_entry (Zm g * Um n') (Zm (n⁻¹ * g * n'))⁻¹ _ _
-    (by have := cL_nonneg r hΓ hδ; have : 0 ≤ X := gN_nonneg _; positivity) h1
+    (by have := cL_nonneg r hΓ hδ; have : 0 ≤ X := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _; positivity) h1
     (Zxinv_bd hδ hg hdet hn hn') a b
   refine h2.trans (le_of_eq ?_)
   simp only [Fintype.card_fin, c5]
@@ -838,8 +826,8 @@ variable {Γ δ : ℝ} {g n n' : Mat k r}
 lemma Pmx_bd (hδ : 0 < δ) (hg : g ∈ GV k r) (hdet : δ ≤ ‖(Zm g).det‖)
     (hn : n ∈ Nset k r) (hn' : n' ∈ Nset k r) (i : Fin (2 * r + k + 1)) (a : Fin r) :
     ‖Pm (n⁻¹ * g * n') i a‖ ≤ c8 r δ * gN (n⁻¹ * g * n') ^ (r + 1) := by
-  have h := norm_mul_entry (cE (n⁻¹ * g * n')) (Zm (n⁻¹ * g * n'))⁻¹ _ _ (gN_nonneg _)
-    (fun i b => by simp only [cE, Matrix.of_apply]; exact ent_le _ _ _) (Zxinv_bd hδ hg hdet hn hn') i a
+  have h := norm_mul_entry (cE (n⁻¹ * g * n')) (Zm (n⁻¹ * g * n'))⁻¹ _ _ (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)
+    (fun i b => by simp only [cE, Matrix.of_apply]; exact _root_.Formalism.FourierDecayAlt.P.Ux6.entry_le_gN _ _ _) (Zxinv_bd hδ hg hdet hn hn') i a
   refine h.trans (le_of_eq ?_)
   simp only [Fintype.card_fin, c8]; ring
 
@@ -849,13 +837,13 @@ lemma Pmg_bd (hΓ : 1 ≤ Γ) (hδ : 0 < δ) (hgΓ : gN g ≤ Γ) (hdet : δ ≤
     have := norm_inv_le (Zm g) Γ δ hΓ hδ (fun a b => (Zm_ent g a b).trans hgΓ) hdet a b
     simpa [cZi, div_mul_eq_mul_div] using this
   have h := norm_mul_entry (cE g) (Zm g)⁻¹ Γ (cZi r δ * Γ ^ r) (by linarith)
-    (fun i b => by simp only [cE, Matrix.of_apply]; exact (ent_le g _ _).trans hgΓ) hinv i a
+    (fun i b => by simp only [cE, Matrix.of_apply]; exact (_root_.Formalism.FourierDecayAlt.P.Ux6.entry_le_gN g _ _).trans hgΓ) hinv i a
   rw [Pm]; simpa [cPg] using h
 
 lemma Q_bd (hΓ : 1 ≤ Γ) (hδ : 0 < δ) (hg : g ∈ GV k r) (hgΓ : gN g ≤ Γ) (hld : ∀ b, δ ≤ ‖ld (Zm g) b‖)
     (hdet : δ ≤ ‖(Zm g).det‖) (hn : n ∈ Nset k r) (hn' : n' ∈ Nset k r) (i : Fin (2 * r + k + 1)) (a : Fin r) :
     ‖(Pm (n⁻¹ * g * n') * Lm n) i a‖ ≤ c9 r Γ δ * gN (n⁻¹ * g * n') ^ (2 * r + 1) := by
-  refine (norm_mul_entry _ _ _ _ (by have := orbit_constant_eight_nonneg (r := r) hΓ hδ; have := gN_nonneg (n⁻¹ * g * n'); positivity)
+  refine (norm_mul_entry _ _ _ _ (by have := orbit_constant_eight_nonneg (r := r) hΓ hδ; have := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (n⁻¹ * g * n'); positivity)
     (Pmx_bd hδ hg hdet hn hn') (Lm_bd hΓ hδ hg hgΓ hld hn hn') i a).trans (le_of_eq ?_)
   simp only [Fintype.card_fin, c9]; ring
 
@@ -1004,7 +992,7 @@ lemma gN_n_bd (hΓ : 1 ≤ Γ) (hδ : 0 < δ) (hg : g ∈ GV k r) (hgΓ : gN g �
     gN n ≤ ((2 * r + k + 1 : ℕ) : ℝ) * c13 k r Γ δ * gN (n⁻¹ * g * n') ^ (2 * r + 1) := by
   have hinvG : n⁻¹ ∈ GV k r := n_mem_G (n_inv_mem hn)
   have hnn : n = (n⁻¹)⁻¹ := (Matrix.nonsing_inv_nonsing_inv n (closedN.unit n hn)).symm
-  have hX : 0 ≤ gN (n⁻¹ * g * n') ^ (2 * r + 1) := by have := gN_nonneg (n⁻¹ * g * n'); positivity
+  have hX : 0 ≤ gN (n⁻¹ * g * n') ^ (2 * r + 1) := by have := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (n⁻¹ * g * n'); positivity
   have := orbit_constant_thirteen_nonneg (k := k) (r := r) hΓ hδ
   have h := gN_le_of_ent n (c13 k r Γ δ * gN (n⁻¹ * g * n') ^ (2 * r + 1)) (by positivity) (fun i j => by
     conv_lhs => rw [hnn]
@@ -1362,7 +1350,7 @@ theorem lint_gN_fin (k r : ℕ) (μ : Measure (Mt k r)) (hμ : IsHaarOn (Nset k 
     have ha0 : 0 < a := by nlinarith
     obtain ⟨μ', hμ'⟩ := unipotent_haar_exists k r'
     have := sigmaFinite_haar hμ'
-    obtain ⟨c, hc⟩ := haar_measure_unique_up_to_scalar k (1 + r') (Nset k (1 + r')) _ μ (unipotent_radical_closed k (1 + r'))
+    obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k (1 + r') (Nset k (1 + r')) _ μ (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k (1 + r'))
       (unipotent_haar_recursion k r' μ' hμ') hμ.conc hμ.left hμ.finite_compact
     have hf : Measurable (fun x : Mt k (1 + r') => ENNReal.ofReal (gN (Matrix.of x : Mat k (1 + r')) ^ (-a))) :=
       ENNReal.measurable_ofReal.comp ((gN_cont k (1 + r')).measurable.pow_const _)
@@ -1445,7 +1433,7 @@ lemma orbit3 (z z' : Fin (2 * r + k + 1) → ℂ) (K : Set (Mat k r)) (hK : IsCo
     ∃ C : ℝ, 0 ≤ C ∧ ∀ g ∈ K, ∀ n ∈ Nset k r, ∀ n' ∈ Nset k r,
       gN n ≤ C * gN (n⁻¹ * g * n') ^ (3 * r) ∧ gN n' ≤ C * gN (n⁻¹ * g * n') ^ (3 * r) := by
   rcases Nat.eq_zero_or_pos r with rfl | hr
-  · refine ⟨gN (1 : Mat k 0), Orb.gN_nonneg _, fun g _ n hn n' hn' => ?_⟩
+  · refine ⟨gN (1 : Mat k 0), _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _, fun g _ n hn n' hn' => ?_⟩
     rw [Formalism.FourierDecayAlt.P.unipotent_haar_base_case k, Set.mem_singleton_iff] at hn hn'
     simp [hn, hn']
   · obtain ⟨C, hC, h⟩ := Orb.orbit z z' K hK hKO
@@ -1458,12 +1446,12 @@ lemma orbit3 (z z' : Fin (2 * r + k + 1) → ℂ) (K : Set (Mat k r)) (hK : IsCo
 
 lemma uw_bound (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (hT : 0 < Tz k r z) :
     ∃ c : ℝ, 1 ≤ c ∧ ∀ h ∈ UWset k r z, gN h ≤ c := by
-  have hc := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r z hz hT
+  have hc := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT
   obtain ⟨M, hM⟩ := (hc.image_of_continuousOn Orb.continuous_gN.continuousOn).bddAbove
   exact ⟨max 1 M, le_max_left _ _, fun h hh => (hM (Set.mem_image_of_mem _ hh)).trans (le_max_right _ _)⟩
 
 lemma sup_le_gN (M : Mat k r) : ‖M‖ ≤ gN M :=
-  (Matrix.norm_le_iff (Orb.gN_nonneg M)).2 fun i j => Orb.ent_le M i j
+  (Matrix.norm_le_iff (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg M)).2 fun i j => _root_.Formalism.FourierDecayAlt.P.Ux6.entry_le_gN M i j
 
 lemma gN_unit {X : Mat k r} (hX : unitLie k r X) : gN X ≤ ((2 * r + k + 1 : ℕ) : ℝ) := by
   simpa using Orb.gN_le_of_ent X 1 zero_le_one (fun i j => hX.2 i j)
@@ -1475,7 +1463,7 @@ lemma ad_bd {s X : Mat k r} (hs : s ∈ GV k r) (hX : unitLie k r X) :
   have h2 := Formalism.FourierDecayAlt.P.B6.gN_mul_le s⁻¹ X
   rw [Orb.gN_inv hs] at h2
   have h3 := gN_unit hX
-  have hs0 := Orb.gN_nonneg s
+  have hs0 := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg s
   calc gN (s⁻¹ * X * s) ≤ gN (s⁻¹ * X) * gN s := h1
     _ ≤ (gN s * gN X) * gN s := mul_le_mul_of_nonneg_right h2 hs0
     _ ≤ (gN s * ((2 * r + k + 1 : ℕ) : ℝ)) * gN s := by gcongr
@@ -1569,12 +1557,12 @@ theorem nnMaj_core (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProd
   refine ⟨fun p => Λ1 ^ m * (C4 ^ β) ^ 2 * (f p.1.2 * f p.2.2), ?_, ?_⟩
   ·
     have : SigmaFinite D.μN := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarN
-    have : IsFiniteMeasure D.μW := haar_finite D.haarW (Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r D.z D.z_mem D.T_pos)
+    have : IsFiniteMeasure D.μW := haar_finite D.haarW (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z D.z_mem D.T_pos)
     have : IsFiniteMeasure D.μW' :=
-      haar_finite D.haarW' (Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r D.z' D.z'_mem D.T'_pos)
+      haar_finite D.haarW' (_root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r D.z' D.z'_mem D.T'_pos)
     have hfi : Integrable f D.μN := by
       refine ⟨((NInt.gN_cont k r).measurable.pow_const (-β)).aestronglyMeasurable, ?_⟩
-      rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun x => Real.rpow_nonneg (Orb.gN_nonneg _) _)]
+      rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun x => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)]
       exact NInt.lint_gN_fin k r D.μN D.haarN β hthr
     have h1 : Integrable (fun q : Mt k r × Mt k r => (1 : ℝ) * f q.2) (D.μW.prod D.μN) :=
       (integrable_const (1 : ℝ)).mul_prod hfi
@@ -1610,15 +1598,15 @@ theorem nnMaj_core (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProd
       have e1 := Formalism.FourierDecayAlt.P.B6.gN_mul_le (Matrix.of p.1.1 * sgs p g) (Matrix.of p.2.1)⁻¹
       have e2 := Formalism.FourierDecayAlt.P.B6.gN_mul_le (Matrix.of p.1.1) (sgs p g)
       rw [Orb.gN_inv hh'] at e1
-      have := Orb.gN_nonneg (sgs p g); have := Orb.gN_nonneg (Matrix.of p.1.1)
+      have := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (sgs p g); have := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (Matrix.of p.1.1)
       calc _ ≤ gN (Matrix.of p.1.1 * sgs p g) * gN (Matrix.of p.2.1) := e1
         _ ≤ (c * X) * c := by
             have e3 : gN (Matrix.of p.1.1 * sgs p g) ≤ c * X :=
-              e2.trans (mul_le_mul_of_nonneg_right hgh (Orb.gN_nonneg _))
-            exact mul_le_mul e3 hgh' (Orb.gN_nonneg _) (by positivity)
+              e2.trans (mul_le_mul_of_nonneg_right hgh (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _))
+            exact mul_le_mul e3 hgh' (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (by positivity)
         _ = c ^ 2 * X := by ring
     have hYX : gN ((Matrix.of p.1.2)⁻¹ * g * Matrix.of p.2.2) ^ (3 * r) ≤ c ^ (6 * r) * X ^ (3 * r) := by
-      calc _ ≤ (c ^ 2 * X) ^ (3 * r) := pow_le_pow_left₀ (Orb.gN_nonneg _) hYb _
+      calc _ ≤ (c ^ 2 * X) ^ (3 * r) := pow_le_pow_left₀ (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) hYb _
         _ = c ^ (6 * r) * X ^ (3 * r) := by rw [mul_pow, ← pow_mul]; ring_nf
     obtain ⟨hb1, hb2⟩ := horb g hg _ hn _ hn'
     have hXr : 0 ≤ X ^ (3 * r) := by positivity
@@ -1638,11 +1626,11 @@ theorem nnMaj_core (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProd
       intro s _ hs hsG Y hYu
       have hsb : gN s ≤ C4 * X ^ (3 * r) * c := by
         rcases hs with rfl | rfl
-        · exact (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _).trans (mul_le_mul hG1 hgh (Orb.gN_nonneg _) (by positivity))
-        · exact (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _).trans (mul_le_mul hG2 hgh' (Orb.gN_nonneg _) (by positivity))
+        · exact (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _).trans (mul_le_mul hG1 hgh (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (by positivity))
+        · exact (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _).trans (mul_le_mul hG2 hgh' (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (by positivity))
       refine (ad_bd hsG hYu).trans ?_
       calc NN * gN s ^ 2 ≤ NN * (C4 * X ^ (3 * r) * c) ^ 2 := by
-            gcongr; exact Orb.gN_nonneg _
+            gcongr; exact _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _
         _ = (NN * c ^ 2 * C4 ^ 2) * X ^ (6 * r) := by ring_nf
         _ ≤ Λ1 * X ^ (6 * r) := mul_le_mul_of_nonneg_right (le_max_right _ _) (by positivity)
     have hΛX : 1 ≤ Λ1 * X ^ (6 * r) := one_le_mul_of_one_le_of_one_le hΛ1 (one_le_pow₀ hX1)

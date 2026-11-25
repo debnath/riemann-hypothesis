@@ -242,7 +242,7 @@ theorem hermitian_curvature_adjoint_integral : AdjIntAsm := by
   have hcomm : II D (B.opApply Θ (B.rho D p' φ)) f = II D (B.rho D p' (B.opApply Θ φ)) f := by
     unfold II
     refine integral_congr_ae ?_
-    filter_upwards [Formalism.FourierDecayAlt.P.B5.haar_ae D.haarG] with x hx
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with x hx
     by_cases hxp : Matrix.of x ∈ B.GPos D
     · rw [hc p' hp' φ (Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top hφ) _ hxp]
     · have h0 : f (Matrix.of x) = 0 := by
@@ -326,7 +326,7 @@ theorem integrable_nn {μ : Measure (Mt k r)} (hμ : B.IsHaarOn (B.GV k r) μ) {
   have hKm : IsCompact (Matrix.of ⁻¹' K : Set (Mt k r)) := hK
   refine Integrable.mono' ((integrableOn_const hKm.measure_lt_top.ne).integrable_indicator
     hKm.isClosed.measurableSet) hmeas ?_
-  filter_upwards [Formalism.FourierDecayAlt.P.B5.haar_ae hμ] with g hg
+  filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ] with g hg
   by_cases hgK : Matrix.of g ∈ K
   · have hg' : g ∈ (Matrix.of ⁻¹' K : Set (Mt k r)) := hgK
     rw [Set.indicator_of_mem hg']
@@ -366,9 +366,9 @@ theorem form_adjoint_holds : FormAdj := by
       IsCompact.of_isClosed_subset hF'c (isClosed_tsupport _)
         (closure_mono fun x hx h0 => hx (by show T.coefAdj x (F' x) = 0; rw [h0, map_zero]))
     exact integrable_nn D.haarG
-      (Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (Formalism.FourierDecayAlt.P.JFxI.ckOn_Rw_top' hcA _ fun X hX =>
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (Formalism.FourierDecayAlt.P.JFxI.ckOn_Rw_top' hcA _ fun X hX =>
         T.word_lie X (List.mem_of_mem_take (List.mem_reverse.1 hX))))
-      (Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (Formalism.FourierDecayAlt.P.JFxI.ckOn_Rw_top' (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp hF) _
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (Formalism.FourierDecayAlt.P.JFxI.ckOn_Rw_top' (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp hF) _
         fun X hX => T.word_lie X (List.mem_of_mem_drop hX)))
       hK (fun x hx => rw_eq_zero_of_not_mem _ _ x hx)
   have key := Formalism.FourierDecayAlt.P.phase_function_adjoint k r Wp Wq D (B.GPos D) Θ (Formalism.FourierDecayAlt.P.BetaSesquilinearity.gPos_stable D) hs hc F F'

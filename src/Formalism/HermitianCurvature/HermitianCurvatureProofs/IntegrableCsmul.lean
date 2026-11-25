@@ -51,21 +51,6 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {k r : ℕ}
 
-lemma norm_le_gN (M : Mat k r) : ‖M‖ ≤ gN M := by
-  have hg : gN M = Real.sqrt (∑ i, ∑ j, Complex.normSq (M i j)) := rfl
-  rw [hg, Matrix.norm_le_iff (Real.sqrt_nonneg _)]
-  intro i j
-  have h2 : ‖M i j‖ ^ 2 ≤ ∑ i, ∑ j, Complex.normSq (M i j) := by
-    rw [← Complex.normSq_eq_norm_sq]
-    calc Complex.normSq (M i j) ≤ ∑ j', Complex.normSq (M i j') :=
-          Finset.single_le_sum (f := fun j' => Complex.normSq (M i j'))
-            (fun _ _ => Complex.normSq_nonneg _) (Finset.mem_univ j)
-      _ ≤ ∑ i', ∑ j', Complex.normSq (M i' j') :=
-          Finset.single_le_sum (f := fun i' => ∑ j', Complex.normSq (M i' j'))
-            (fun _ _ => Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
-  calc ‖M i j‖ = |‖M i j‖| := (abs_of_nonneg (norm_nonneg _)).symm
-    _ ≤ _ := Real.abs_le_sqrt h2
-
 lemma gN_unit {X : Mat k r} (hX : ∀ i j, ‖X i j‖ ≤ 1) : gN X ≤ ((2 * r + k + 1 : ℕ) : ℝ) := by
   have hg : gN X = Real.sqrt (∑ i, ∑ j, Complex.normSq (X i j)) := rfl
   have h1 : ∀ i j, Complex.normSq (X i j) ≤ 1 := fun i j => by
@@ -200,9 +185,9 @@ theorem ae_inR (Bs : RealPlaceData k r Wp Wq) : ∀ᵐ ξ ∂(Bs.μW'.prod Bs.μ
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarW'
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarN
   have h1 : ∀ᵐ ξ ∂(Bs.μW'.prod Bs.μN), (Matrix.of ξ.1 : Mat k r) ∈ UWset k r Bs.z' :=
-    Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bs.haarW')
+    Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW')
   have h2 : ∀ᵐ ξ ∂(Bs.μW'.prod Bs.μN), (Matrix.of ξ.2 : Mat k r) ∈ Nset k r :=
-    Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bs.haarN)
+    Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarN)
   filter_upwards [h1, h2] with ξ a b
   exact ⟨a, b⟩
 
@@ -280,7 +265,7 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
     have := hc.2 u [] hu (by simp) (by simpa using hl) g hg
     rwa [Real.rpow_zero, one_mul] at this
 
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r Bs.z' Bs.z'_mem Bs.T'_pos
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r Bs.z' Bs.z'_mem Bs.T'_pos
   set φ : Mat k r × Mat k r × Mat k r → Mat k r :=
     fun t => (Hpk k r * t.1ᴴ * Hpk k r) * t.2.1 * (Hpk k r * t.2.2ᴴ * Hpk k r) with hφ
   have hφc : Continuous φ :=
@@ -350,7 +335,7 @@ theorem kr_ck (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)}
     have hy : y ∈ GV k r := hKG (hmemK Y hY)
     have hd : ContinuousOn (dLR (w.map Formalism.FourierDecayAlt.P.Ux1.Lt) [] F) (GV k r) := by
       rw [Formalism.FourierDecayAlt.P.B4.dLR_eq]
-      refine Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (m := ((0 : ℕ) : ℕ∞)) ?_
+      refine _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (m := ((0 : ℕ) : ℕ∞)) ?_
       exact smooth_on_of_word_derivatives _ (allLie_lr (hunit w) (by simp)) 0 (Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top hF)
     have hf1 : Continuous (fun ξ : Mt k r × Mt k r => y * (Matrix.of ξ.2 : Mat k r) * (Matrix.of ξ.1 : Mat k r)) :=
       (continuous_const.matrix_mul continuous_snd).matrix_mul continuous_fst
@@ -507,13 +492,6 @@ section words
 variable [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
 
 
-open Formalism.FourierDecayAlt.P.JFxDs3 in
-theorem rhoW_cont (D : RealPlaceData k r Wp Wq) {A c : ℝ} {m : ℕ} {F : Mat k r → (Wq →L[ℂ] Wp)} (hc : CCle A m F c)
-    (hA : 0 ≤ A) (u v : List (Mat k r)) (hu : ∀ X ∈ u, unitLie k r X) (hv : ∀ X ∈ v, unitLie k r X)
-    (hl : u.length + v.length ≤ m) {g : Mat k r} (hgG : g ∈ GV k r) :
-    ContinuousOn (fun p => rho D p (dLR (u.map (AdL p)) (v.map (AdR p)) F) g) {p : SS k r | D.inSS p} :=
-  Formalism.FourierDecayAlt.P.JFxDs3.continuousOn_rho_dLR D hc hA u v hu hv hl hgG
-
 theorem rw_rho_bound (D : RealPlaceData k r Wp Wq) {m : ℕ} {F : Mat k r → (Wq →L[ℂ] Wp)} {c : ℝ} (hc : CCle 0 m F c)
     {p : SS k r} (hp : D.inSS p) {B : ℝ} (hB : ∀ X, unitLie k r X → ‖AdR p X‖ ≤ B) (v : List (Mat k r))
     (hv : ∀ X ∈ v, unitLie k r X) (hl : v.length ≤ m) {q : Mat k r} (hq : q ∈ GV k r) :
@@ -582,7 +560,7 @@ theorem kr_maj (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarW'
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarN
   set μ := Bs.μW'.prod Bs.μN with hμ
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r Bs.z' Bs.z'_mem Bs.T'_pos
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r Bs.z' Bs.z'_mem Bs.T'_pos
   set φ : Mat k r × Mat k r × Mat k r → Mat k r :=
     fun t => (Hpk k r * t.1ᴴ * Hpk k r) * t.2.1 * (Hpk k r * t.2.2ᴴ * Hpk k r) with hφ
   have hφc : Continuous φ :=
@@ -657,7 +635,7 @@ theorem kr_maj (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)
       have gi : gN s⁻¹ ≤ gN (Hpk k r) ^ 2 * gN s := Formalism.FourierDecayAlt.P.HeisenbergLevelMinors.gN_inv_le hsG
       have gX : gN X ≤ ((2 * r + k + 1 : ℕ) : ℝ) := Formalism.FourierDecayAlt.P.HeisenbergLevelMinors.gN_unit hX.2
       have h0 := Formalism.FourierDecayAlt.P.B6.gN_nonneg s
-      calc ‖s⁻¹ * X * s‖ ≤ gN (s⁻¹ * X * s) := Formalism.FourierDecayAlt.P.HeisenbergLevelMinors.norm_le_gN _
+      calc ‖s⁻¹ * X * s‖ ≤ gN (s⁻¹ * X * s) := _root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN _
         _ ≤ gN (s⁻¹ * X) * gN s := Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _
         _ ≤ (gN s⁻¹ * gN X) * gN s :=
             mul_le_mul_of_nonneg_right (Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _) h0
@@ -677,7 +655,7 @@ theorem kr_meas (Bs : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp
   have hpRc : Continuous (fun ξ : Mt k r × Mt k r => pR ξ) := continuous_const.prodMk continuous_id
   have hpR : Set.MapsTo pR {ξ | InR Bs ξ} {p | Bs.inSS p} := fun _ hξ => inSS_pR Bs hξ
   have hcont :=
-    (rhoW_cont Bs hc le_rfl [] v (by simp) hv (by simpa using hl) hq).comp' hpRc.continuousOn hpR
+    (_root_.Formalism.FourierDecayAlt.P.JFxDs3.continuousOn_rho_dLR Bs hc le_rfl [] v (by simp) hv (by simpa using hl) hq).comp' hpRc.continuousOn hpR
   have hm := hcont.aestronglyMeasurable (μ := Bs.μW'.prod Bs.μN) (isClosed_InR Bs).measurableSet
   rw [Measure.restrict_eq_self_of_ae_mem (ae_inR Bs)] at hm
   refine hm.congr ?_

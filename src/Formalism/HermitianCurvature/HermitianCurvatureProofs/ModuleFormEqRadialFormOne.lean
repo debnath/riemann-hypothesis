@@ -89,7 +89,7 @@ theorem rbP_map_zeta (Bs : B.RealPlaceData k r Wp Wq) :
       rw [rb_Psi_eq h]
       have hi := Formalism.FourierDecayAlt.P.BigCellInversePair.uw_inv hp.1
       show ψ (Q.zetaL k r Bs.z Bs.z' (Fin.last r) ((Matrix.of p.1)⁻¹ * B2.embWb k r (Bs.μsec ζ) * Matrix.of p.2)) = ψ ζ
-      rw [Formalism.FourierDecayAlt.P.Qx5.zeta_inv hi hp.2, zeta_sec Bs h]
+      rw [_root_.Formalism.FourierDecayAlt.P.Qx8.zetaL_equiv hi hp.2, zeta_sec Bs h]
     rw [hin, lintegral_const, ← Set.univ_prod_univ, Measure.prod_prod]
     ring
   · have h0 : rbW k (Tz k r Bs.z) (Tz k r Bs.z') ζ = 0 := by
@@ -216,7 +216,7 @@ theorem haar_smul {k r : ℕ} {U : Set (B.Mat k r)} {μ : Measure (Mt k r)} (h :
 
 theorem zetaNormExists : Formalism.FourierDecayAlt.P.PBO.ZetaNormExists := by
   intro k r Wp Wq _ _ _ _ Bs
-  obtain ⟨μb, hb⟩ := Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r
+  obtain ⟨μb, hb⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
   obtain ⟨C, hC, hmap⟩ := rb_map Bs.k_pos Bs.z_mem Bs.z'_mem Bs.T_pos Bs.T'_pos Bs.sec hb Bs.haarW Bs.haarW'
   have hfW : IsFiniteMeasure Bs.μW := RankOneEmbeddings.R1.haar_finite B2x3.compactW Bs.z_mem Bs.T_pos Bs.haarW
   have hfW' : IsFiniteMeasure Bs.μW' := RankOneEmbeddings.R1.haar_finite B2x3.compactW Bs.z'_mem Bs.T'_pos Bs.haarW'

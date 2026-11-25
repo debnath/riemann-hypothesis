@@ -136,9 +136,9 @@ theorem sup_sum {ι : Type*} (s : Finset ι) (Z : ι → Mx k r) (h : ∀ j ∈ 
 
 theorem Sup.lie {Z : Mx k r} (hZ : Sup k r i Z) :
     inLieLev k r i (hpart1 (Hpk k r) Z) ∧ inLieLev k r i (hpart2 (Hpk k r) Z) := by
-  have hinv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv Qx2.hpk_sq'
+  have hinv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
   have hh : (Hpk k r)ᴴ = Hpk k r := Qx2.hpk_h
-  have hsq : Hpk k r * Hpk k r = 1 := Qx2.hpk_sq'
+  have hsq : Hpk k r * Hpk k r = 1 := _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
   have hsq' : ∀ X : Mx k r, Hpk k r * (Hpk k r * X) = X := by
     intro X
     rw [← Matrix.mul_assoc, hsq, Matrix.one_mul]

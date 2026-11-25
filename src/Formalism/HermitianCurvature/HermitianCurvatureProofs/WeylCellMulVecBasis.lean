@@ -64,7 +64,7 @@ theorem zero_le' (i : Fin (r + 1)) : (0 : Fin (r + 1)) ≤ i := by
 
 theorem glev0 {g : Mx k r} (hg : g ∈ Glev k r 0) {i : Fin (r + 1)} {x : Mx k r} (hx : x ∈ Glev k r i) :
     g * x ∈ Glev k r 0 :=
-  glev_mul hg (glev_mono (zero_le' i) hx)
+  _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hg (glev_mono (zero_le' i) hx)
 
 theorem weyl_cell_mulVec_basis (l : Fin r) (c : ℂ) (q : Fin (2 * r + k + 1)) :
     w1 k r l c *ᵥ bvec q = dd k l c q • bvec (sw k l q) := by
@@ -81,7 +81,7 @@ theorem head_comm (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) : ∀ n : ℕ, ∀
     have : i = 0 := Fin.ext (by simp [hi])
     subst this
     rw [Formalism.FourierDecayAlt.P.Qx6.wCell_zero]
-    exact ⟨glev_one _, fun _ _ x _ => by simp⟩
+    exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun _ _ x _ => by simp⟩
   | succ n ih =>
     intro i hi
     have hl : n < r := by have := i.isLt; omega
@@ -91,7 +91,7 @@ theorem head_comm (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) : ∀ n : ℕ, ∀
     obtain ⟨ih0, ihc⟩ := ih l.castSucc (by simp [l])
     have hw := Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hc l)
     rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ]
-    refine ⟨glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
+    refine ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
     have hx1 : x ∈ Glev k r l.succ := glev_mono hj hx
     have hxc : x ∈ Glev k r j := hx
     have hcj : l.castSucc ≤ j := le_trans (by rw [Fin.le_def]; simp) hj
@@ -109,7 +109,7 @@ theorem tail (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (b : Fin r) : ∀ n : �
     intro i hi
     have : i = b.succ := Fin.ext (by simp [hi])
     subst this
-    refine ⟨1, by simp, glev_one _, fun a ha => ?_, fun a _ => by simp, fun c' _ => by simp⟩
+    refine ⟨1, by simp, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun a ha => ?_, fun a _ => by simp, fun c' _ => by simp⟩
     rw [ite_eq_right (by simp; omega)]
     simp
   | succ n ih =>
@@ -122,7 +122,7 @@ theorem tail (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (b : Fin r) : ∀ n : �
     have hw := (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hc l)).1
     refine ⟨T * w1 k r l (c l), ?_, ?_, ?_, ?_, ?_⟩
     · rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ, hT, Matrix.mul_assoc]
-    · exact glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
+    · exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
     · intro a ha
       rw [← Matrix.mulVec_mulVec, weyl_cell_mulVec_basis]
       by_cases hal : a = l
@@ -159,7 +159,7 @@ theorem cd_wCell : ∀ n : ℕ, ∀ i : Fin (r + 1), i.val = n →
     have hil : i = l.succ := Fin.ext (by simp [l, hi])
     subst hil
     simp only [Formalism.FourierDecayAlt.P.Qx6.wCell_succ]
-    exact Formalism.FourierDecayAlt.P.Qx6.cd_matmul (cd_wCell n l.castSucc (by simp [l])) (Formalism.FourierDecayAlt.P.Qx6.contDiffOn_weyl_cell l)
+    exact Formalism.FourierDecayAlt.P.Qx6.cd_matmul (cd_wCell n l.castSucc (by simp [l])) (_root_.Formalism.FourierDecayAlt.P.Qx3.weyl_cell_contDiffOn l)
 
 section diff
 
@@ -219,7 +219,7 @@ theorem right_rule_derivative : PBN.RightRuleE := by
     have := hR (g * x) ⟨glev0 hg.1 hx.1, hx.2⟩ n (nlev_mono (zero_le' _) hn)
     simpa [Matrix.mul_assoc] using this
   have h1 : (1 : Mx k r) ∈ Glev k r a.castSucc ∩ {x | g * x ∈ D} :=
-    ⟨glev_one _, by simpa using hg.2⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, by simpa using hg.2⟩
   have hrule := (Formalism.FourierDecayAlt.P.right_action_rule E k r z' a {x | g * x ∈ D} (fun x => f (g * x)) hz' hD' hS' hR'
     1 h1).1
   have hjlt : b.val - a.val - 1 < mdim k r a.succ := by simp [mdim]; omega
@@ -240,7 +240,7 @@ theorem left_rule_cell : PBN.LeftRuleCell := by
   have hcne : ∀ l, c l ≠ 0 := hc
   obtain ⟨hW0, hWcomm⟩ := head_comm (k := k) c hcne b.val b.castSucc (by simp)
   obtain ⟨T, hT, hTG, hTe, -, -⟩ := tail (k := k) c hcne b (r - b.val - 1) (Fin.last r) (by simp; omega)
-  have hg₁ : T * g ∈ Glev k r b.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r b.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r b.castSucc c * (w1 k r b (c b) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r b.castSucc, wCell k r b.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -293,7 +293,7 @@ theorem torus_cell : PBN.TorusCell := by
   have hl := l.isLt
   obtain ⟨hW0, -⟩ := head_comm (k := k) c hcne l.val l.castSucc (by simp)
   obtain ⟨T, hT, hTG, -, -, hTc⟩ := tail (k := k) c hcne l (r - l.val - 1) (Fin.last r) (by simp; omega)
-  have hg₁ : T * g ∈ Glev k r l.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r l.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r l.castSucc c * (w1 k r l (c l) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r l.castSucc, wCell k r l.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -311,12 +311,12 @@ theorem torus_cell : PBN.TorusCell := by
   have hd₂ : DifferentiableAt ℝ (fun c' => f (wCell k r (Fin.last r) c' * g)) c := by
     refine diff_comp hS (φ := fun c' => wCell k r (Fin.last r) c' * g)
       (Formalism.FourierDecayAlt.P.Qx6.cd_matmul (cd_wCell r (Fin.last r) (by simp)) contDiffOn_const)
-      (fun c' hc' => glev_mul (hG c' hc') (glev_mono (zero_le' _) hg)) hc hWD
+      (fun c' hc' => _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hG c' hc') (glev_mono (zero_le' _) hg)) hc hWD
   have hd₁ : DifferentiableAt ℝ (fun c' => f (wCell k r l.castSucc c * (w1 k r l (c' l) * (T * g)))) c := by
     refine diff_comp hS (φ := fun c' => wCell k r l.castSucc c * (w1 k r l (c' l) * (T * g)))
       (Formalism.FourierDecayAlt.P.Qx6.cd_matmul contDiffOn_const
-        (Formalism.FourierDecayAlt.P.Qx6.cd_matmul (Formalism.FourierDecayAlt.P.Qx6.contDiffOn_weyl_cell l) contDiffOn_const)) (fun c' hc' => ?_) hc ?_
-    · refine glev_mul hW0 (glev_mul (glev_mono (zero_le' _) (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c' l) (hc' l)).1)
+        (Formalism.FourierDecayAlt.P.Qx6.cd_matmul (_root_.Formalism.FourierDecayAlt.P.Qx3.weyl_cell_contDiffOn l) contDiffOn_const)) (fun c' hc' => ?_) hc ?_
+    · refine _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hW0 (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (glev_mono (zero_le' _) (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c' l) (hc' l)).1)
         (glev_mono (zero_le' _) hg₁))
     · rw [← hsplit]; exact hWD
   refine pOp_line l hd₁ hd₂ fun c' hc' => ?_

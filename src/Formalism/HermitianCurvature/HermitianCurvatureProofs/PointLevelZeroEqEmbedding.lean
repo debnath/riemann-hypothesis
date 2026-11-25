@@ -44,9 +44,9 @@ theorem block_three_zero_size_eq {n : ℕ} (e : 0 + ρ = n) (A11 : Matrix (Fin 0
   ext p q
   rw [LeftFubiniLemmas.castM_apply', LeftFubiniLemmas.castM_apply']
   have hp : (Fin.cast (by omega) p : Fin (2 * (0 + ρ) + k + 1)) = U.eB k 0 ρ (Sum.inl (Sum.inr (Fin.cast (by omega) p))) := by
-    ext; rw [Ux3.block_index_middle_val]; simp
+    ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; simp
   have hq : (Fin.cast (by omega) q : Fin (2 * (0 + ρ) + k + 1)) = U.eB k 0 ρ (Sum.inl (Sum.inr (Fin.cast (by omega) q))) := by
-    ext; rw [Ux3.block_index_middle_val]; simp
+    ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; simp
   rw [hp, hq, Ux3.block3_apply]
   simp
 
@@ -76,9 +76,9 @@ theorem jf_left {r : ℕ} (Bs : B.RealPlaceData k r Wp Wq) (H : B.Mat k r → (W
     (hI : Integrable (JF.integrand Bs H g) Bs.μSS) :
     B.JF Bs H g = ∫ x, psi k r Bs.z cStd (Matrix.of x.2) •
       (Bs.π (Matrix.of x.1)).comp (PBG.Kr Bs H ((Matrix.of x.1)⁻¹ * (Matrix.of x.2)⁻¹ * g)) ∂(Bs.μW.prod Bs.μN) := by
-  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
-  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
   have hint : ∀ P, JF.integrand Bs H g P = (1 : ℝ) • D.orbIntegrand Bs g H P := by
     intro P
     rw [one_smul]
@@ -94,9 +94,9 @@ theorem jf_left {r : ℕ} (Bs : B.RealPlaceData k r Wp Wq) (H : B.Mat k r → (W
     have hgood : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z ∧
         (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r := by
       have a1 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z :=
-        Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarW)
+        Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW)
       have a2 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r :=
-        Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarN)
+        Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarN)
       filter_upwards [a1, a2] with x h1 h2 using ⟨h1, h2⟩
     filter_upwards [hI'.prod_right_ae, hgood] with x hx hxg
     have hx0 : (Matrix.of x.1 : B.Mat k r)⁻¹ * (Matrix.of x.2)⁻¹ * g ∈ B.GV k r :=

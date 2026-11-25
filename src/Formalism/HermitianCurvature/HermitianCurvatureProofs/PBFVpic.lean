@@ -38,16 +38,6 @@ section Lift
 
 variable {A : Type} [Ring A] {n : ℕ}
 
-theorem sum_ix_succ {M : Type*} [AddCommMonoid M] (f : Ix (Fin (n + 1)) → M) :
-    ∑ z, f z = ∑ i : Fin 2, ∑ e : Ix (Fin n), f (Fin.cons i e) := by
-  apply _root_.Formalism.FourierDecayAlt.P.PBF.sum_ix_succ <;> assumption
-
-theorem ix_ext_iff (z z' : Ix (Fin (n + 1))) : z = z' ↔ z 0 = z' 0 ∧ Fin.tail z = Fin.tail z' := by
-  constructor
-  · rintro rfl; exact ⟨rfl, rfl⟩
-  · rintro ⟨h0, ht⟩
-    rw [← Fin.cons_self_tail z, ← Fin.cons_self_tail z', h0, ht]
-
 def liftM (M : SlopeTestRemainingChoices (Fin n) A) : SlopeTestRemainingChoices (Fin (n + 1)) A :=
   Matrix.of fun z z' => if z 0 = z' 0 then M (Fin.tail z) (Fin.tail z') else 0
 
@@ -59,9 +49,9 @@ theorem liftM_one : liftM (1 : SlopeTestRemainingChoices (Fin n) A) = 1 := by
   rw [liftM_apply, Matrix.one_apply, Matrix.one_apply]
   by_cases h0 : z 0 = z' 0
   · by_cases ht : Fin.tail z = Fin.tail z'
-    · rw [ite_eq_left h0, ite_eq_left ht, ite_eq_left ((ix_ext_iff z z').2 ⟨h0, ht⟩)]
-    · rw [ite_eq_left h0, ite_eq_right ht, ite_eq_right (fun h => ht ((ix_ext_iff z z').1 h).2)]
-  · rw [ite_eq_right h0, ite_eq_right (fun h => h0 ((ix_ext_iff z z').1 h).1)]
+    · rw [ite_eq_left h0, ite_eq_left ht, ite_eq_left ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').2 ⟨h0, ht⟩)]
+    · rw [ite_eq_left h0, ite_eq_right ht, ite_eq_right (fun h => ht ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').1 h).2)]
+  · rw [ite_eq_right h0, ite_eq_right (fun h => h0 ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').1 h).1)]
 
 theorem liftM_zero : liftM (0 : SlopeTestRemainingChoices (Fin n) A) = 0 := by
   ext z z'; simp [liftM_apply]
@@ -71,7 +61,7 @@ theorem liftM_add (M N : SlopeTestRemainingChoices (Fin n) A) : liftM (M + N) = 
 
 theorem liftM_mul (M N : SlopeTestRemainingChoices (Fin n) A) : liftM (M * N) = liftM M * liftM N := by
   ext z z''
-  rw [Matrix.mul_apply, sum_ix_succ]
+  rw [Matrix.mul_apply, _root_.Formalism.FourierDecayAlt.P.PBF.sum_ix_succ]
   simp only [liftM_apply, Fin.cons_zero, Fin.tail_cons, Matrix.mul_apply, ite_mul, zero_mul, mul_ite, mul_zero]
   rw [Fin.sum_univ_two]
   by_cases h0 : z 0 = 0 <;> by_cases h1 : z'' 0 = 0
@@ -119,9 +109,9 @@ theorem io_succ (x : A) : (io x : SlopeTestRemainingChoices (Fin (n + 1)) A) = l
   simp only [io, Matrix.scalar_apply, Matrix.diagonal_apply]
   by_cases h0 : z 0 = z' 0
   · by_cases ht : Fin.tail z = Fin.tail z'
-    · rw [ite_eq_left h0, ite_eq_left ht, ite_eq_left ((ix_ext_iff z z').2 ⟨h0, ht⟩)]
-    · rw [ite_eq_left h0, ite_eq_right ht, ite_eq_right (fun h => ht ((ix_ext_iff z z').1 h).2)]
-  · rw [ite_eq_right h0, ite_eq_right (fun h => h0 ((ix_ext_iff z z').1 h).1)]
+    · rw [ite_eq_left h0, ite_eq_left ht, ite_eq_left ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').2 ⟨h0, ht⟩)]
+    · rw [ite_eq_left h0, ite_eq_right ht, ite_eq_right (fun h => ht ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').1 h).2)]
+  · rw [ite_eq_right h0, ite_eq_right (fun h => h0 ((_root_.Formalism.FourierDecayAlt.P.PBF.ix_ext_iff z z').1 h).1)]
 
 theorem liftZero_succ_eq_map (M : M2 A) : (lift0 M : M2 (SlopeTestRemainingChoices (Fin (n + 1)) A)) = (lift0 M).map liftM := by
   ext i j; simp [lift0, io_succ]
@@ -171,24 +161,10 @@ theorem act_liftM (M : SlopeTestRemainingChoices (Fin n) (Pr (RadSp k r z z' π 
     rw [liftM_apply, Fin.cons_zero, Fin.cons_zero, Fin.tail_cons, Fin.tail_cons]
     split_ifs <;> rfl
   simp only [act]
-  rw [sum_ix_succ]
+  rw [_root_.Formalism.FourierDecayAlt.P.PBF.sum_ix_succ]
   simp only [key]
   rw [Fin.sum_univ_two]
   fin_cases i <;> simp
-
-theorem cons_ne_zero_iff (i0 i' : Fin 2) (e e' : Ix (Fin n)) :
-    (∀ b : Fin (n + 1), b ≠ 0 → (Fin.cons i0 e : Ix (Fin (n + 1))) b = (Fin.cons i' e' : Ix (Fin (n + 1))) b) ↔
-      e = e' := by
-  constructor
-  · intro h; funext t; exact h t.succ (Fin.succ_ne_zero t)
-  · rintro rfl b hb
-    obtain ⟨s, rfl⟩ := Fin.exists_succ_eq.2 hb
-    simp only [Fin.cons_succ]
-
-theorem insert_unit_matrix_zero_apply {B : Type} [Ring B] (i j i0 : Fin 2) (e : Ix (Fin n)) (z' : Ix (Fin (n + 1))) :
-    (eU (0 : Fin (n + 1)) i j : SlopeTestRemainingChoices (Fin (n + 1)) B) (Fin.cons i0 e) z' =
-      if i0 = i ∧ z' = Fin.cons j e then 1 else 0 := by
-  apply _root_.Formalism.FourierDecayAlt.P.PBF.insert_unit_matrix_zero_apply <;> assumption
 
 theorem act_addM (M N : SlopeTestRemainingChoices (Fin (n + 1)) (Pr (RadSp k r z z' π π'))) (X : Ix (Fin (n + 1)) → RadSp k r z z' π π') :
     act (M + N) X = act M X + act N X := by
@@ -212,7 +188,7 @@ theorem act_sumM {ι : Type} (s : Finset ι) (M : ι → SlopeTestRemainingChoic
 theorem act_unit_matrix_zero_radial (i j i0 : Fin 2) (W : Ix (Fin (n + 1)) → RadSp k r z z' π π') (e : Ix (Fin n)) :
     act (eU (0 : Fin (n + 1)) i j : SlopeTestRemainingChoices (Fin (n + 1)) (Pr (RadSp k r z z' π π'))) W (Fin.cons i0 e) =
       if i0 = i then W (Fin.cons j e) else 0 := by
-  simp only [act, insert_unit_matrix_zero_apply]
+  simp only [act, _root_.Formalism.FourierDecayAlt.P.PBF.insert_unit_matrix_zero_apply]
   have key : ∀ q : Ix (Fin (n + 1)),
       ((if i0 = i ∧ q = Fin.cons j e then (1 : Pr (RadSp k r z z' π π')) else 0).1) (W q) =
       if q = Fin.cons j e then (if i0 = i then W q else 0) else 0 := by
@@ -350,7 +326,7 @@ theorem first_minor_cell_eq_coord {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inW
     Dmin k r z z' (wCell k r (Fin.last r) c * g) ⟨1, h1⟩ = c ⟨0, hr⟩ := by
   obtain ⟨μ, _, rfl⟩ := (Formalism.FourierDecayAlt.P.TwoByOneBlock.UWb_iff g).1 (Rad.glev_last_uwb hg)
   have e : wCell k r (Fin.last r) c * B2.embWb k r μ = bigCell k r c μ := by
-    rw [Rad.wCell_last_eq, ← (Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c μ).1]
+    rw [Rad.wCell_last_eq, ← (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ).1]
   rw [e]
   have hmin := (big_cell_minors_holds k r z z' c μ hz hz').1 ⟨1, by omega⟩
   have hl : (⟨(⟨1, by omega⟩ : Fin (r + 1)).val, by omega⟩ : Fin (r + 2)) = ⟨1, h1⟩ := Fin.ext rfl

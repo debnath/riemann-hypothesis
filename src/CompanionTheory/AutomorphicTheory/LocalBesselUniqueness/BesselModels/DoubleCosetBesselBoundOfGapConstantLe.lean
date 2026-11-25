@@ -441,7 +441,7 @@ variable {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 * r + k + 1) → ℝ}
 
 theorem dDForm_scale (hS : Side k r ε lam h σ w0 z c u π μW μN μG νq) :
     DDForm z c π μW μN μG νq σ w0 :=
-  DDSmoothness.GC.discrete_form_one_side psi_constant schur_hermitian norm_inverse_bound
+  DDSmoothness.GC.discrete_form_one_side psi_constant _root_.PI.WBL.NIS.schurH norm_inverse_bound
     growth_spherical_bound growth_group_bound decDD beConv normIdSm beBessel shapeC inputs_holds
     k r ε lam h H σ w0 Wp z c u π μW μN μG νq hS
 

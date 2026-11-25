@@ -79,7 +79,7 @@ theorem rds_DomRt_meas : MeasurableSet (DomRt k r z z') := by
     rw [this]; exact isOpen_iInter_of_finite fun l => isOpen_ne_fun (continuous_apply l) continuous_const
   have hG : IsClosed {x : Mt k r | (Matrix.of x : Mx k r) ∈ Glev k r (Fin.last r)} := Qx5.Glev_closed _
   have hD : IsOpen {x : Mt k r | 0 < GGl k r z z' (Matrix.of x)} :=
-    isOpen_lt continuous_const (Qx5.GGl_continuous k r z z')
+    isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')
   have e : DomRt k r z z' = (Prod.fst ⁻¹' {c : Fin r → ℂ | c ∈ OmX r}) ∩
       ((Prod.snd ⁻¹' {x : Mt k r | (Matrix.of x : Mx k r) ∈ Glev k r (Fin.last r)}) ∩
         (Prod.snd ⁻¹' {x : Mt k r | 0 < GGl k r z z' (Matrix.of x)})) := by

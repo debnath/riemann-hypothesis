@@ -118,7 +118,7 @@ theorem types_of_grpInt {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpac
   have he : inWb P.k P.r (m₀ *ᵥ ν') := hmW ν' hν
   have hee : herm (Hpk P.k P.r) (m₀ *ᵥ ν') (m₀ *ᵥ ν') = 1 := by rw [Dx2.DF.herm_m0_mulVec_invariant m₀ hmU]; exact hνν
   have hez : herm (Hpk P.k P.r) (m₀ *ᵥ ν') S.z = 0 := by
-    rw [hzeq, Qx8.herm_smul_right', Dx2.DF.herm_m0_mulVec_invariant m₀ hmU, hνz, mul_zero]
+    rw [hzeq, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, Dx2.DF.herm_m0_mulVec_invariant m₀ hmU, hνz, mul_zero]
   obtain ⟨Bs₀', hB₀'⟩ := vecw_frame_exists P.k P.r hOK.k_pos S.z' ν' hz' S.T'_pos hν hνz hνν
   have hB₀ := vecw_frame_fwd S hbase hB₀'
   obtain ⟨S', hInt', -, heig⟩ := branching_proof Wq (parametersUPrimeForU P) (parameters_u_prime_for_u_ok hOK) rfl S.z' ν' S.π' hz'

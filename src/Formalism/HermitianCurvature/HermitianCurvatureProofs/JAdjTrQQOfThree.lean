@@ -897,11 +897,7 @@ def PI (U V : M.Ty P → MA.SmQ P.r P.TT) : Prop :=
 
 variable {P}
 
-theorem ipA_eq (U V : M.Ty P → MA.SmQ P.r P.TT) :
-    MA.ipA P U V = ∑ π, ∫ q, MA.evQ P (U π) q * conj (MA.evQ P (V π) q) ∂MA.mu0 P.r P.TT := rfl
-
 theorem evQ_add (a b : MA.SmQ P.r P.TT) (q : MA.Qp P.r P.TT) : MA.evQ P (a + b) q = MA.evQ P a q + MA.evQ P b q := rfl
-theorem evQ_smul (c : ℂ) (a : MA.SmQ P.r P.TT) (q : MA.Qp P.r P.TT) : MA.evQ P (c • a) q = c * MA.evQ P a q := rfl
 theorem evQ_zero (q : MA.Qp P.r P.TT) : MA.evQ P (0 : MA.SmQ P.r P.TT) q = 0 := rfl
 
 theorem PI_add_left {U U' V : M.Ty P → MA.SmQ P.r P.TT} (h : PI P U V) (h' : PI P U' V) : PI P (U + U') V := by
@@ -915,7 +911,7 @@ theorem PI_smul_left {U V : M.Ty P → MA.SmQ P.r P.TT} (c : ℂ) (h : PI P U V)
   intro π
   have e : (fun q => MA.evQ P ((c • U) π) q * conj (MA.evQ P (V π) q)) =
       fun q => c * (MA.evQ P (U π) q * conj (MA.evQ P (V π) q)) := by
-    funext q; simp only [Pi.smul_apply, evQ_smul]; ring
+    funext q; simp only [Pi.smul_apply, _root_.Formalism.FourierDecayAlt.P.MAx3.I4.evQ_smul']; ring
   rw [e]; exact (h π).const_mul c
 
 theorem PI_zero_left (V : M.Ty P → MA.SmQ P.r P.TT) : PI P 0 V := by
@@ -935,7 +931,7 @@ theorem PI_smul_right {U V : M.Ty P → MA.SmQ P.r P.TT} (c : ℂ) (h : PI P U V
   intro π
   have e : (fun q => MA.evQ P (U π) q * conj (MA.evQ P ((c • V) π) q)) =
       fun q => conj c * (MA.evQ P (U π) q * conj (MA.evQ P (V π) q)) := by
-    funext q; simp only [Pi.smul_apply, evQ_smul, map_mul]; ring
+    funext q; simp only [Pi.smul_apply, _root_.Formalism.FourierDecayAlt.P.MAx3.I4.evQ_smul', map_mul]; ring
   rw [e]; exact (h π).const_mul _
 
 theorem PI_zero_right (U : M.Ty P → MA.SmQ P.r P.TT) : PI P U 0 := by
@@ -946,30 +942,30 @@ theorem PI_zero_right (U : M.Ty P → MA.SmQ P.r P.TT) : PI P U 0 := by
 
 theorem ipA_add_left {U U' V : M.Ty P → MA.SmQ P.r P.TT} (h : PI P U V) (h' : PI P U' V) :
     MA.ipA P (U + U') V = MA.ipA P U V + MA.ipA P U' V := by
-  simp only [ipA_eq, ← Finset.sum_add_distrib]
+  simp only [_root_.Formalism.FourierDecayAlt.P.MAx3.AD.ipA_eq, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [← integral_add (h π) (h' π)]
   congr 1; funext q; simp only [Pi.add_apply, evQ_add]; ring
 
 theorem ipA_smul_left (c : ℂ) (U V : M.Ty P → MA.SmQ P.r P.TT) : MA.ipA P (c • U) V = c * MA.ipA P U V := by
-  simp only [ipA_eq, Finset.mul_sum]
+  simp only [_root_.Formalism.FourierDecayAlt.P.MAx3.AD.ipA_eq, Finset.mul_sum]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [← integral_const_mul]
-  congr 1; funext q; simp only [Pi.smul_apply, evQ_smul]; ring
+  congr 1; funext q; simp only [Pi.smul_apply, _root_.Formalism.FourierDecayAlt.P.MAx3.I4.evQ_smul']; ring
 
 theorem ipA_add_right {U V V' : M.Ty P → MA.SmQ P.r P.TT} (h : PI P U V) (h' : PI P U V') :
     MA.ipA P U (V + V') = MA.ipA P U V + MA.ipA P U V' := by
-  simp only [ipA_eq, ← Finset.sum_add_distrib]
+  simp only [_root_.Formalism.FourierDecayAlt.P.MAx3.AD.ipA_eq, ← Finset.sum_add_distrib]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [← integral_add (h π) (h' π)]
   congr 1; funext q; simp only [Pi.add_apply, evQ_add, map_add (f := _)]; ring
 
 theorem ipA_smul_right (c : ℂ) (U V : M.Ty P → MA.SmQ P.r P.TT) :
     MA.ipA P U (c • V) = conj c * MA.ipA P U V := by
-  simp only [ipA_eq, Finset.mul_sum]
+  simp only [_root_.Formalism.FourierDecayAlt.P.MAx3.AD.ipA_eq, Finset.mul_sum]
   refine Finset.sum_congr rfl fun π _ => ?_
   rw [← integral_const_mul]
-  congr 1; funext q; simp only [Pi.smul_apply, evQ_smul, map_mul]; ring
+  congr 1; funext q; simp only [Pi.smul_apply, _root_.Formalism.FourierDecayAlt.P.MAx3.I4.evQ_smul', map_mul]; ring
 
 theorem ipA_sum_left {ι : Type} (l : List ι) (c : ι → ℂ) (u : ι → M.Ty P → MA.SmQ P.r P.TT)
     (V : M.Ty P → MA.SmQ P.r P.TT) (h : ∀ i ∈ l, PI P (u i) V) :

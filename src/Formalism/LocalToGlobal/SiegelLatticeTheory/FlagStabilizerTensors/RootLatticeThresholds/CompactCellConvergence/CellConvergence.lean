@@ -127,7 +127,7 @@ theorem gProxy_eq (L : LocBessel k r) (γ : Matrix (Fin (2 * r + k + 1)) (Fin (2
 private theorem gProxy_nonneg (γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (b : ℝ) (x : PairSp k r) :
     0 ≤ gProxy γ b x := by
   unfold gProxy
-  exact Real.rpow_nonneg (Formalism.FourierDecayAlt.P.gN_nonneg_bessel_integrability _) _
+  exact Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _
 
 theorem cell_convergence : Formalism.MainNotions.S.Pv.AmpDD.CellConv := by
   intro k r L h μG γ μR νR ν hκ hgap hcell hdata hmono

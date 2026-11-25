@@ -60,7 +60,7 @@ private lemma prj_eq_self_of_inLie {X : B.Mat k r} (hX : B.inLie k r X) : prj X 
   have hX' : Xᴴ * Hpk k r + Hpk k r * X = 0 := hX
   have h1 : Xᴴ * Hpk k r = -(Hpk k r * X) := eq_neg_of_add_eq_zero_left hX'
   have h2 : Hpk k r * Xᴴ * Hpk k r = -X := by
-    rw [Matrix.mul_assoc, h1, Matrix.mul_neg, ← Matrix.mul_assoc, Formalism.FourierDecayAlt.P.Ux1.hpk_sq', Matrix.one_mul]
+    rw [Matrix.mul_assoc, h1, Matrix.mul_neg, ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
   unfold prj
   rw [h2, sub_neg_eq_add, ← two_smul ℂ X, smul_smul]
   norm_num
@@ -71,10 +71,10 @@ lemma ret_self {g₀ : B.Mat k r} (hg₀ : g₀ ∈ B.GV k r) {Y : B.Mat k r} (h
   obtain ⟨hl, -, hk⟩ := iot_facts hh hu
   show g₀ * kap (prj (iot (g₀⁻¹ * Y))) = Y
   rw [prj_eq_self_of_inLie hl, hk, ← Matrix.mul_assoc,
-    Matrix.mul_nonsing_inv _ (Formalism.FourierDecayAlt.P.B2x5.isUnit_det_GV hg₀), Matrix.one_mul]
+    Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.B2x8.al_unit hg₀), Matrix.one_mul]
 
 lemma self_mem_retDom {g₀ : B.Mat k r} (hg₀ : g₀ ∈ B.GV k r) : g₀ ∈ retDom g₀ := by
-  have e : g₀⁻¹ * g₀ = 1 := Matrix.nonsing_inv_mul _ (Formalism.FourierDecayAlt.P.B2x5.isUnit_det_GV hg₀)
+  have e : g₀⁻¹ * g₀ = 1 := Matrix.nonsing_inv_mul _ (_root_.Formalism.FourierDecayAlt.P.B2x8.al_unit hg₀)
   refine ⟨?_, ?_⟩
   · show IsUnit (g₀⁻¹ * g₀ + 1).det
     rw [e, ← two_smul ℂ (1 : B.Mat k r), Matrix.det_smul, Matrix.det_one, mul_one]

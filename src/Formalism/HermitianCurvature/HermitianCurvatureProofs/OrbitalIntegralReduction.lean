@@ -1606,15 +1606,6 @@ section E2
 variable {K : Type} [CommRing K] [TopologicalSpace K] [IsTopologicalRing K] {R : Subring K}
   {ψ : AddChar K ℂ} {ϖ : Kˣ} {L₀ Λ₀ : AddSubgroup K} {Q : Set K} {a b : ℕ}
 
-theorem near_product_closed {ι : Type} {a0 : K} (ha : a0 ∈ R) (S : Finset ι) (f : ι → K)
-    (hf : ∀ i ∈ S, Near R a0 (f i)) : Near R a0 (∏ i ∈ S, f i) := by
-  classical
-  induction S using Finset.induction_on with
-  | empty => simpa using near_one a0
-  | insert i S hi ih =>
-    rw [Finset.prod_insert hi]
-    exact (hf i (Finset.mem_insert_self _ _)).mul ha (ih fun k hk => hf k (Finset.mem_insert_of_mem hk))
-
 theorem near_element_integral {a0 x : K} (ha : a0 ∈ R) (hx : Near R a0 x) : x ∈ R := by
   obtain ⟨r, hr, rfl⟩ := hx
   exact R.add_mem R.one_mem (R.mul_mem ha hr)
@@ -1790,8 +1781,8 @@ theorem orbital_integral_change_estimate (hD : LocalDatum K R ψ) (hC : Cst R ϖ
   rw [← hP, ← hE] at hPE
   rw [← hN, ← hW] at hNW
   rw [← hP, ← hN] at hP'
-  have hNn : Near R a0 N := by rw [hN]; exact near_product_closed ha0R _ _ fun k _ => hν k
-  have hWn : Near R a0 W := by rw [hW]; exact near_product_closed ha0R _ _ fun k _ => (hw k).2.1
+  have hNn : Near R a0 N := by rw [hN]; exact _root_.Formalism.FourierDecayAlt.P.AdicNeighbourhood.Near.prod ha0R _ _ fun k _ => hν k
+  have hWn : Near R a0 W := by rw [hW]; exact _root_.Formalism.FourierDecayAlt.P.AdicNeighbourhood.Near.prod ha0R _ _ fun k _ => (hw k).2.1
   have hNR := near_element_integral ha0R hNn
   have hWR := near_element_integral ha0R hWn
   have hPNEW : P * N * (E * W) = 1 := by linear_combination (N * W) * hPE + hNW

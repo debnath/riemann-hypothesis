@@ -192,9 +192,9 @@ theorem gaugeExists_of (hR : RhsHaar) (hRW : RhsWHaar) (hD : WbDataEx) (hU : Exi
 theorem iterGauge_of (hR : RhsHaar) : IterGauge := by
   intro k r μ μb hμ hμb
   obtain ⟨ν, hν, hνφ⟩ := hR k r μb hμb
-  obtain ⟨ν0, h0⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
-  obtain ⟨c1, hc1, hc1', e1⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.unitary_group_closed k r) h0 hμ.1
-  obtain ⟨c2, hc2, hc2', e2⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.unitary_group_closed k r) h0 hν
+  obtain ⟨ν0, h0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
+  obtain ⟨c1, hc1, hc1', e1⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) h0 hμ.1
+  obtain ⟨c2, hc2, hc2', e2⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) h0 hν
   have hne : c1 / c2 ≠ ∞ := (ENNReal.div_lt_top hc1' hc2).ne
   refine ⟨(c1 / c2).toNNReal, ENNReal.toNNReal_pos (ENNReal.div_pos_iff.2 ⟨hc1, hc2'⟩).ne' hne,
     fun φ hφ => ?_⟩
@@ -204,9 +204,9 @@ theorem iterGauge_of (hR : RhsHaar) : IterGauge := by
 theorem rankGauge_of (hRW : RhsWHaar) : RankGauge := by
   intro k r z z' μb μW μW' a a' μsec D hμb
   obtain ⟨ν, hν, hνφ⟩ := hRW k r z z' μW μW' a a' μsec D
-  obtain ⟨ν0, h0⟩ := Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r
-  obtain ⟨c1, hc1, hc1', e1⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r) h0 hμb.1
-  obtain ⟨c2, hc2, hc2', e2⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r) h0 hν
+  obtain ⟨ν0, h0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
+  obtain ⟨c1, hc1, hc1', e1⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r) h0 hμb.1
+  obtain ⟨c2, hc2, hc2', e2⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r) h0 hν
   have hne : c1 / c2 ≠ ∞ := (ENNReal.div_lt_top hc1' hc2).ne
   refine ⟨(c1 / c2).toNNReal, ENNReal.toNNReal_pos (ENNReal.div_pos_iff.2 ⟨hc1, hc2'⟩).ne' hne,
     fun φ hφ => ?_⟩

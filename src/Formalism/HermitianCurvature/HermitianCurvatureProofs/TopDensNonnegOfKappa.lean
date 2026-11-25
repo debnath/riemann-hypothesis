@@ -138,7 +138,7 @@ theorem topDensNonnegOfKappa : TopDensNonnegOfKappa := by
     intro e ρ
     have h := _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
       _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos S P.k P.u P.u' (M.rho P ρ) l0 P.T P.T' w hl1 hlk
-      (Formalism.FourierDecayAlt.P.types_interlace P hPl.1 ρ) hPl.1.T_pos hPl.1.T'_pos hw.2.1 hw.2.2 e
+      (_root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hPl.1 ρ) hPl.1.T_pos hPl.1.T'_pos hw.2.1 hw.2.2 e
     rw [Complex.lt_def]
     exact ⟨h.1, h.2.symm⟩
   unfold topDens

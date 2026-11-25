@@ -222,7 +222,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
     have h1 : Continuous fun v : G.UT (n + 1) → ℂ => G.superSum (G.upper v) := by
       unfold G.superSum
       exact continuous_finsetSum _ fun i _ =>
-        (continuous_apply _).comp ((continuous_apply _).comp Dx2.SL.cont_upper)
+        (continuous_apply _).comp ((continuous_apply _).comp _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper)
     unfold G.psi
     exact Complex.continuous_exp.comp (continuous_const.mul
       (Complex.continuous_ofReal.comp (Complex.continuous_re.comp (continuous_const.mul h1))))
@@ -231,7 +231,7 @@ theorem posCoreCont : ∃ Cc : ℝ, 0 ≤ Cc ∧
     have hZc : Continuous (fun v : G.UT (n + 1) → ℂ => Zv n t v) := by
       show Continuous (fun v : G.UT (n + 1) → ℂ =>
         (G.ptLong (n + 1) t * G.upper v : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ))
-      exact continuous_const.matrix_mul Dx2.SL.cont_upper
+      exact continuous_const.matrix_mul _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper
     exact continuous_iff_continuousAt.2 fun v => ((hΦreg _ (hZne t ht v)).1.continuousAt).comp hZc.continuousAt
   have hCc : 0 ≤ C * c := by
     have h := (hΦreg _ (hZne t0 ht0 0)).2 0 (Nat.zero_le _)

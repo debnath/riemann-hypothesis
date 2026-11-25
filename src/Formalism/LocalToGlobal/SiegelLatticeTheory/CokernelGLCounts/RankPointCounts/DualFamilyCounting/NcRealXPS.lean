@@ -359,7 +359,7 @@ theorem compact_HLoc {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool
   have hemb := cM_closedEmb (ε := ε) (A := Qi ε e f wf (z0v T z)) (B := Qm e f wf (z0v T z))
     (A' := Qm e f wf (z0v T z)) (B' := Qi ε e f wf (z0v T z)) (Qm_mul_Qi hFJ) (Qm_mul_Qi hFJ)
   have hW : IsCompact (UWset k r (zBv k r T) : Set (Mt k r)) :=
-    Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r (zBv k r T) (inWb_zB T) (by rw [Tz_zB hT.le]; exact hT)
+    _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r (zBv k r T) (inWb_zB T) (by rw [Tz_zB hT.le]; exact hT)
   have hK := hemb.isCompact_preimage hW
   have hcl : IsClosed (Formalism.L2.SG.Pf.NcReal.HLoc ε e f z) := by
     rw [hLoc_eq]

@@ -302,9 +302,9 @@ theorem nu_inPair_gen {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hκ0 : L.κN ≠ 
     {μR : Measure (Mt (k0 + 1) r)} {ν : Measure (PairSp (k0 + 1) r)}
     (hconc : μR {x | Matrix.of x ∉ RStab (k0 + 1) r g} = 0) (hne : μR ≠ 0) (hq : IsOrbQuot L g μR ν) :
     ∀ᵐ x ∂ν, InPair L x := by
-  have hW := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed (k0 + 1) r L.z).closed
-  have hW' := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed (k0 + 1) r L.z').closed
-  have hNc := (Formalism.FourierDecayAlt.P.unipotent_radical_closed (k0 + 1) r).closed
+  have hW := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW (k0 + 1) r L.z).closed
+  have hW' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW (k0 + 1) r L.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN (k0 + 1) r).closed
   have hcl : IsClosed {p : PairSp (k0 + 1) r | InPair L p} := by
     have := ((hW.preimage (continuous_fst.comp continuous_fst)).inter
       (hNc.preimage (continuous_snd.comp continuous_fst))).inter
@@ -429,7 +429,7 @@ theorem integrand_eq {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (D : Formalism.Four
     ring
   simp only [besselIntg, Formalism.FourierDecayAlt.B.rho, Formalism.FourierDecayAlt.B.sgs, hxi, hπ, hπ']
 
-def c3 : ℝ := Classical.choose Formalism.FourierDecayAlt.P.orbital_integral_converges
+def c3 : ℝ := Classical.choose _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv
 
 def A0 (k r : ℕ) : ℝ := c3 * ((r : ℝ) + 1) ^ 2 * ((r : ℝ) * ((2 * r + k + 1 : ℕ) : ℝ) + 1)
 
@@ -970,7 +970,7 @@ theorem mp_stab {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (hκ0 : L.κN ≠ 0) (h�
   have hNH := Formalism.MainNotions.BridgeCSB.haarLieN (k0 + 1) r L.κN hκ0 hκ1
   have : SigmaFinite L.μN := hNH.1
   have hl : ∀ b ∈ Nset (k0 + 1) r, MeasurePreserving (lmulM (k := k0 + 1) (r := r) b) L.μN L.μN := fun b hb =>
-    ⟨Formalism.FourierDecayAlt.P.Dx2.OrbJ.contL b |>.measurable, hNH.2.2.2 b hb⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont b |>.measurable, hNH.2.2.2 b hb⟩
   have e : stabAct g a =
       Prod.map (Prod.map id (lmulM (k := k0 + 1) (r := r) a)) (Prod.map id (lmulM (k := k0 + 1) (r := r) (g⁻¹ * a * g))) := by
     funext p
@@ -1000,7 +1000,7 @@ theorem rootHaar_gen {k0 r : ℕ} (L : LocBessel (k0 + 1) r) (γ : Point ℂ (r 
 theorem quotient_exists : QuotExists := by
   intro k0 r L γ g μR hc hκ0 hκ1 hrep hrel hroot
   obtain ⟨hH, hI⟩ := rootHaar_gen L γ g μR hc hrep hroot
-  have : SigmaFinite μR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hH
+  have : SigmaFinite μR := _root_.Formalism.FourierDecayAlt.P.B7.sf hH
   have : SigmaFinite L.μW := L.hμW.1.1
   have : SigmaFinite L.μW' := L.hμW'.1.1
   have : SigmaFinite L.μN := (Formalism.MainNotions.BridgeCSB.haarLieN (k0 + 1) r L.κN hκ0 hκ1).1
@@ -1037,7 +1037,7 @@ theorem quotient_exists : QuotExists := by
     fun a y => ENNReal.ofReal (θ (stabAct g (Matrix.of (Formalism.FourierDecayAlt.B2.invM a)) y)) * f y with hGdef
   have e2 : ∀ᵐ a ∂μR, ∫⁻ x, ENNReal.ofReal (θ x) * f (stabAct g (Matrix.of a) x) ∂(pairMeas L) =
       ∫⁻ y, G a y ∂(pairMeas L) := by
-    filter_upwards [Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem hH] with a ha
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hH] with a ha
     have hmp := mp_stab L hκ0 hκ1 (g := g) (a := Matrix.of a) ha
     have hau : IsUnit (Matrix.of a : Matrix _ _ ℂ).det := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N ha.1
     have hGm : Measurable (G a) :=
@@ -1218,7 +1218,7 @@ theorem K_finite_decay : CutKFin := by
     rw [← Formalism.FourierDecayAlt.P.ptG_spec (k0 + 1) r Ds.z Ds.z' _ g hp hZ', ptG_eq_GPoint, hz, hz']
     exact hpos
   have hrel := Formalism.FourierDecayAlt.P.relevant_points_holds (k0 + 1) r L.Wp L.Wq Ds _ g hp hg hZ'
-  exact Classical.choose_spec Formalism.FourierDecayAlt.P.orbital_integral_converges (k0 + 1) r L.Wp L.Wq Ds g (wPt γ) (dPt γ) (A0 (k0 + 1) r) F hg
+  exact Classical.choose_spec _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv (k0 + 1) r L.Wp L.Wq Ds g (wPt γ) (dPt γ) (A0 (k0 + 1) r) F hg
     hrel (dPt_ne γ) hZ hG le_rfl hdec
 
 

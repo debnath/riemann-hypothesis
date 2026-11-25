@@ -44,10 +44,10 @@ theorem inner_sig {H : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ H] {�
 
 theorem measurePreserving_invM_of_isHaarOn {z : Fin (2 * r + k + 1) → ℂ} {μ : Measure (Mt k r)} (h : B.IsHaarOn (UWset k r z) μ) :
     MeasurePreserving (B7.invM (k := k) (r := r)) μ μ :=
-  ⟨B7.measurable_invM, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μ (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) h⟩
+  ⟨B7.measurable_invM, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μ (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) h⟩
 
 theorem mp_inv_N {μ : Measure (Mt k r)} (h : B.IsHaarOn (Nset k r) μ) :
     MeasurePreserving (B7.invM (k := k) (r := r)) μ μ :=
-  ⟨B7.measurable_invM, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μ (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) h⟩
+  ⟨B7.measurable_invM, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μ (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) h⟩
 
 end Formalism.FourierDecayAlt.P.S3dx6

@@ -33,7 +33,7 @@ theorem tailW (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (b : Fin r) : ∀ n : 
     intro i hi
     have : i = b.succ := Fin.ext (by simp [hi])
     subst this
-    exact ⟨1, by simp, glev_one _, fun v _ => by simp⟩
+    exact ⟨1, by simp, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun v _ => by simp⟩
   | succ n ih =>
     intro i hi
     have hl : b.val + 1 + n < r := by have := i.isLt; omega
@@ -44,12 +44,9 @@ theorem tailW (c : Fin r → ℂ) (hc : ∀ a, c a ≠ 0) (b : Fin r) : ∀ n : 
     have hw := (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hc l)).1
     refine ⟨T * w1 k r l (c l), ?_, ?_, ?_⟩
     · rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ, hT, Matrix.mul_assoc]
-    · exact glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
+    · exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (by rw [Fin.le_def]; simp [l]) hw)
     · intro v hv
       rw [← Matrix.mulVec_mulVec, Formalism.FourierDecayAlt.P.CutMP.unipotent_fixes_anisotropic_vector l _ v hv, hTv v hv]
-
-theorem bvec_wI_inWb (v : Fin (k + 1)) : inWb k r (bvec (wI k r v)) := by
-  apply _root_.Formalism.MainNotions.FrameBoundFromBesselTorus.inWb_bvec_wI <;> assumption
 
 section rules
 
@@ -67,7 +64,7 @@ theorem rightRuleB (z' : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : Mx
     have := hR (g * x) ⟨glev0 hg.1 hx.1, hx.2⟩ n (nlev_mono (zero_le' _) hn)
     simpa [Matrix.mul_assoc] using this
   have h1 : (1 : Mx k r) ∈ Glev k r a.castSucc ∩ {x | g * x ∈ D} :=
-    ⟨glev_one _, by simpa using hg.2⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, by simpa using hg.2⟩
   have hrule := (Formalism.FourierDecayAlt.P.right_action_rule E k r z' a {x | g * x ∈ D} (fun x => f (g * x)) hz' hD' hS' hR'
     1 h1).1
   have hjlt : r + w.val - a.val - 1 < mdim k r a.succ := by simp [mdim]; omega
@@ -100,18 +97,18 @@ theorem leftRuleB (z : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : Mx k
     induction i using Fin.induction with
     | zero =>
       rw [Formalism.FourierDecayAlt.P.Qx6.wCell_zero]
-      exact ⟨glev_one _, fun _ _ x _ => by simp⟩
+      exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun _ _ x _ => by simp⟩
     | succ l ih =>
       obtain ⟨ih0, ihc⟩ := ih
       have hw := Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c l) (hcne l)
       rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ]
-      refine ⟨glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
+      refine ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul ih0 (glev_mono (zero_le' _) hw.1), fun j hj x hx => ?_⟩
       have hx1 : x ∈ Glev k r l.succ := glev_mono hj hx
       have hcj : l.castSucc ≤ j := le_trans (by rw [Fin.le_def]; simp) hj
       rw [Matrix.mul_assoc, (hw.2 x hx1).2.1, ← Matrix.mul_assoc, ihc j hcj x hx, Matrix.mul_assoc]
   obtain ⟨hW0, hWcomm⟩ := head_comm b.castSucc
   obtain ⟨T, hT, hTG, hTv⟩ := tailW (k := k) c hcne b (r - b.val - 1) (Fin.last r) (by simp; omega)
-  have hg₁ : T * g ∈ Glev k r b.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r b.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r b.castSucc c * (w1 k r b (c b) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r b.castSucc, wCell k r b.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -146,7 +143,7 @@ theorem leftRuleB (z : Fin (2 * r + k + 1) → ℂ) (D : Set (Mx k r)) (f : Mx k
     simp only [ybv, hpos, fvec, dite_eq_left hb1]
     rw [Formalism.FourierDecayAlt.P.SignAntidiagonal.herm_bvec_eI, ← Matrix.mulVec_mulVec]
     have hgw : inWb k r (g *ᵥ bvec (wI k r v)) :=
-      Formalism.FourierDecayAlt.P.NFRadRedLocSec.inWb_uwb (Formalism.FourierDecayAlt.P5.Rad.glev_last_uwb hg) (bvec_wI_inWb v)
+      Formalism.FourierDecayAlt.P.NFRadRedLocSec.inWb_uwb (Formalism.FourierDecayAlt.P5.Rad.glev_last_uwb hg) (_root_.Formalism.FourierDecayAlt.P.Qx8.inWb_bvec_wI v)
     rw [hTv _ hgw]
     exact hgw _ (Or.inr (by simp [esI]; omega))
   rw [hy, mul_zero, zero_smul]

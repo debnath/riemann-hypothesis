@@ -46,13 +46,13 @@ theorem map_cjT_UW {κ τ : ℝ} (hκ : 0 < κ) (hτ : 0 < τ) {z : Fin (2 * r +
 theorem haarProb_unique {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z) {μ ν : Measure (Mt k r)}
     (hμ : IsHaarOn (UWset k r z) μ) (hμ1 : μ Set.univ = 1) (hν : IsHaarOn (UWset k r z) ν) (hν1 : ν Set.univ = 1) :
     μ = ν := by
-  obtain ⟨μ0, h0⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r z hz hT
-  have hC := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z
-  have hK := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r z hz hT
+  obtain ⟨μ0, h0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hz hT
+  have hC := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z
+  have hK := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT
   have fin : ∀ (m : Measure (Mt k r)), m Set.univ = 1 → ∀ K : Set (Mt k r), IsCompact K → m K < ⊤ :=
     fun m hm K _ => (measure_mono (Set.subset_univ K)).trans_lt (by rw [hm]; exact ENNReal.one_lt_top)
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ0 μ hC h0 hμ.2.2.1 hμ.2.2.2 (fin μ hμ1)
-  obtain ⟨d, hd⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ0 ν hC h0 hν.2.2.1 hν.2.2.2 (fin ν hν1)
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r _ μ0 μ hC h0 hμ.2.2.1 hμ.2.2.2 (fin μ hμ1)
+  obtain ⟨d, hd⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r _ μ0 ν hC h0 hν.2.2.1 hν.2.2.2 (fin ν hν1)
   have hfin : μ0 Set.univ ≠ ⊤ := by
     have hle := measure_univ_le_add_compl (μ := μ0) (UWset k r z : Set (Mt k r))
     have hc0 : μ0 (UWset k r z : Set (Mt k r))ᶜ < ⊤ := (le_of_eq h0.conc).trans_lt ENNReal.zero_lt_top

@@ -28,29 +28,16 @@ open scoped ComplexConjugate ENNReal NNReal
 
 noncomputable section
 
-namespace Formalism.FourierDecayAlt.P.NormBallVolumes
-
-open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
-
-theorem gnLower : GNLower := fun _ _ _ hg => Formalism.FourierDecayAlt.P.BetaSesquilinearity.gN_ge_one hg
-
-theorem ae_mem {k r : ℕ} {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
-    ∀ᵐ g ∂μ, Matrix.of g ∈ U := by
-  rw [ae_iff]
-  exact h.conc
-
-end Formalism.FourierDecayAlt.P.NormBallVolumes
-
 namespace Formalism.FourierDecayAlt.P
 
-open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2 Formalism.FourierDecayAlt.P.NormBallVolumes
+open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
 
 theorem matrix_coefficient_bound_by_norm : Formalism.FourierDecayAlt.B2.CCFromGN := by
   intro k r Wp Wq _ _ _ _ D A h F c _ hb
   have hae : ∀ᵐ g ∂D.μG, ‖F (Matrix.of g)‖ₑ ≤ ENNReal.ofReal |c| * ENNReal.ofReal (gN (Matrix.of g) ^ (-A)) := by
-    filter_upwards [ae_mem D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     have h1 := hb _ hg
-    have hpos : 0 < gN (Matrix.of g) := lt_of_lt_of_le one_pos (gnLower k r _ hg)
+    have hpos : 0 < gN (Matrix.of g) := lt_of_lt_of_le one_pos (_root_.Formalism.FourierDecayAlt.P.matrix_norm_ge_one k r _ hg)
     have hp : 0 < gN (Matrix.of g) ^ A := Real.rpow_pos_of_pos hpos A
     rw [← ENNReal.ofReal_mul (abs_nonneg c), ← ofReal_norm]
     apply ENNReal.ofReal_le_ofReal
@@ -88,8 +75,8 @@ section -- clump:auto
 namespace Formalism.FourierDecayAlt.P
 
 theorem integration_formula_constant : Formalism.FourierDecayAlt.B2.IntConst :=
-  integration_formula_of_parts iterated_integration_formula rank_one_integration_formula b2_conjInvRaw_proof opposite_weyl_haar_exists
-    bruhat_big_cell_factorization unipotent_weyl_properties weight_factorization
+  integration_formula_of_parts iterated_integration_formula rank_one_integration_formula b2_conjInvRaw_proof _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb
+    _root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor
 
 theorem integration_formula_normalisation_unique : Formalism.FourierDecayAlt.B2.IntNorm :=
   integral_normalisation_from_constant integration_formula_constant
@@ -98,7 +85,7 @@ theorem normalisation_unique_every_setting : Formalism.FourierDecayAlt.B2.IntNor
   normalisation_every_setting integration_formula_normalisation_unique
 
 theorem norm_power_integrable_sharp : Formalism.FourierDecayAlt.B2.GNIntSharp :=
-  norm_power_integrable_sharp_of_volume spherical_shell_integral matrix_norm_ge_one norm_ball_volume_sharp
+  norm_power_integrable_sharp_of_volume _root_.Formalism.FourierDecayAlt.P.B2x2.shellInt matrix_norm_ge_one _root_.Formalism.FourierDecayAlt.P.HermitianFormFactor.volSharp
 
 theorem matrix_coefficient_integrable_all : Formalism.FourierDecayAlt.B2.CCIntAll :=
   matrix_coefficient_integrable_of_parts matrix_coefficient_bound_by_norm norm_power_integrable_sharp
@@ -106,7 +93,7 @@ theorem matrix_coefficient_integrable_all : Formalism.FourierDecayAlt.B2.CCIntAl
 namespace IntegrationFormulaNormalisation
 
 theorem exists_both : Formalism.FourierDecayAlt.B2.RealPlaceDataExists ∧ Formalism.FourierDecayAlt.B2.RealPlaceDataNonempty :=
-  Formalism.FourierDecayAlt.P.SettingConstruction.setting_exists_of_haar_normalisation Formalism.FourierDecayAlt.P.unitary_group_haar_exists Formalism.FourierDecayAlt.P.weyl_haar_exists
+  Formalism.FourierDecayAlt.P.SettingConstruction.setting_exists_of_haar_normalisation _root_.Formalism.FourierDecayAlt.P.B2x3.haarG _root_.Formalism.FourierDecayAlt.P.B2x3.haarW
     Formalism.FourierDecayAlt.P.unipotent_haar_exists Formalism.FourierDecayAlt.P.integration_formula_normalisation_unique
 
 end IntegrationFormulaNormalisation

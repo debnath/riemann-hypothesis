@@ -35,21 +35,21 @@ theorem norm_psiStar (σ : Equiv.Perm (Fin p)) (z z' : Fin (2 * (p + 0 + ρ) + k
 theorem norm_pi_comp (Bs : B.RealPlaceData k ρ Wp Wq) {h : B.Mat k ρ} (hh : h ∈ UWset k ρ Bs.z) (A : Wq →L[ℂ] Wp) :
     ‖(Bs.π h).comp A‖ = ‖A‖ := by
   refine le_antisymm ((ContinuousLinearMap.opNorm_comp_le _ _).trans
-    (by simpa using mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.SmoothExtensionClosedSet.norm_pi_le_one Bs hh) (norm_nonneg A))) ?_
-  have hi : h⁻¹ ∈ UWset k ρ Bs.z := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bs.z).inv_mem h hh
-  have hu : IsUnit h.det := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bs.z).unit h hh
+    (by simpa using mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.B7.norm_pi_le Bs hh) (norm_nonneg A))) ?_
+  have hi : h⁻¹ ∈ UWset k ρ Bs.z := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bs.z).inv_mem h hh
+  have hu : IsUnit h.det := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bs.z).unit h hh
   have e : A = (Bs.π h⁻¹).comp ((Bs.π h).comp A) := by
     rw [← ContinuousLinearMap.comp_assoc, ← Bs.π_rep.2 _ hi _ hh, Matrix.nonsing_inv_mul _ hu, Bs.π_rep.1]
     rfl
   calc ‖A‖ = ‖(Bs.π h⁻¹).comp ((Bs.π h).comp A)‖ := by rw [← e]
     _ ≤ ‖Bs.π h⁻¹‖ * ‖(Bs.π h).comp A‖ := ContinuousLinearMap.opNorm_comp_le _ _
-    _ ≤ 1 * ‖(Bs.π h).comp A‖ := mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.SmoothExtensionClosedSet.norm_pi_le_one Bs hi) (norm_nonneg _)
+    _ ≤ 1 * ‖(Bs.π h).comp A‖ := mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.B7.norm_pi_le Bs hi) (norm_nonneg _)
     _ = ‖(Bs.π h).comp A‖ := one_mul _
 
 theorem sgs_mem {P : B.SS k ρ} (Bs : B.RealPlaceData k ρ Wp Wq) (hP : Bs.inSS P) {g : B.Mat k ρ} (hg : g ∈ B.GV k ρ) :
     B.sgs P g ∈ B.GV k ρ := by
   obtain ⟨h1, h2, h3, h4⟩ := hP
-  have cG := Formalism.FourierDecayAlt.P.unitary_group_closed k ρ
+  have cG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k ρ
   unfold B.sgs
   have g1 : (Matrix.of P.1.1 : B.Mat k ρ) ∈ B.GV k ρ := h1.1
   have g2 : (Matrix.of P.1.2 : B.Mat k ρ) ∈ B.GV k ρ := h2.1
@@ -64,10 +64,10 @@ theorem norm_fl_le (Bj : B.RealPlaceData k ρ Wp Wq) (z0 z0' : Fin (2 * (p + ρ)
   unfold FL
   rw [norm_smul, norm_xiP, one_mul, norm_pi_comp Bj hq.1]
   have hi : (Matrix.of q.1.2.1 : B.Mat k ρ)⁻¹ ∈ UWset k ρ Bj.z' :=
-    (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z').inv_mem _ hq.2.2.1
+    (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z').inv_mem _ hq.2.2.1
   refine (ContinuousLinearMap.opNorm_comp_le _ _).trans ?_
   rw [norm_smul, norm_psiStar, one_mul]
-  simpa using mul_le_mul_of_nonneg_left (_root_.Formalism.FourierDecayAlt.P.SmoothExtensionClosedSet.norm_pi'_le_one Bj hi) (norm_nonneg (H _))
+  simpa using mul_le_mul_of_nonneg_left (_root_.Formalism.FourierDecayAlt.P.B7.norm_pi'_le Bj hi) (norm_nonneg (H _))
 
 end norms
 
@@ -82,8 +82,8 @@ theorem ae_goodL (Bj : B.RealPlaceData k ρ Wp Wq) (σ : Equiv.Perm (Fin p)) : �
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
-  have w1 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarW
-  have w2 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarN
+  have w1 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarW
+  have w2 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarN
   unfold muL
   filter_upwards [Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_fst.ae w1),
     Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_snd.ae w2)] with x a b
@@ -93,8 +93,8 @@ theorem ae_goodR (Bj : B.RealPlaceData k ρ Wp Wq) : ∀ᵐ y ∂(muR (p := p) B
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW'
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
-  have w1 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarW'
-  have w2 := Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarN
+  have w1 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarW'
+  have w2 := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarN
   unfold muR
   filter_upwards [Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_fst.ae w1),
     Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_snd.ae w2)] with x a b

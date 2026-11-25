@@ -113,7 +113,7 @@ theorem omLong_continuousOn (β : ℂ) (m : ℕ) (Ψ : G.Mat (m + 1) → V) (hΨ
     have h1 : Continuous fun v : G.UT (m + 1) → ℂ => G.superSum (G.upper v) := by
       unfold G.superSum
       exact continuous_finsetSum _ fun i _ =>
-        (continuous_apply _).comp ((continuous_apply _).comp Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper)
+        (continuous_apply _).comp ((continuous_apply _).comp _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper)
     unfold G.psi
     exact Complex.continuous_exp.comp (continuous_const.mul
       (Complex.continuous_ofReal.comp (Complex.continuous_re.comp (continuous_const.mul h1))))
@@ -122,7 +122,7 @@ theorem omLong_continuousOn (β : ℂ) (m : ℕ) (Ψ : G.Mat (m + 1) → V) (hΨ
     refine (hψc.comp continuous_snd).smul (hΨc.comp ?_)
     show Continuous fun q : ℂ × (G.UT (m + 1) → ℂ) => G.ptLong (m + 1) q.1 * G.upper q.2
     unfold G.ptLong
-    exact (continuous_fst.smul continuous_const).matrix_mul (Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper.comp continuous_snd)
+    exact (continuous_fst.smul continuous_const).matrix_mul (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_snd)
   have hint : Integrable (fun v : G.UT (m + 1) → ℂ => |K| * L * (1 + ‖v‖) ^ (-a)) μ := by
     rw [hμ, PBJ.Om.muPi_eq]
     apply Integrable.smul_measure_nnreal

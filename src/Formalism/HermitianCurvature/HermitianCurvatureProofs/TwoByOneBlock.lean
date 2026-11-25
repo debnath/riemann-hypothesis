@@ -46,11 +46,6 @@ lemma emb_out_row (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * 
   change (if q = j ∧ ¬ mid k r q then 1 else 0) = if q = j then 1 else 0
   simp [hq]
 
-lemma emb_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (q j : Fin (2 * r + k + 1)) (hq : mid k r q) (hj : mid k r j) :
-    embWb k r μ q j = μ ⟨q.val - r, by have := hq; omega⟩ ⟨j.val - r, by have := hj; omega⟩ := by
-  unfold embWb
-  rw [dite_eq_left ⟨hq, hj⟩]
-
 lemma bc_mid_col (c : Fin r → ℂ) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i j : Fin (2 * r + k + 1)) (hj : mid k r j) :
     bigCell k r c μ i j = if hi : mid k r i then μ ⟨i.val - r, by have := hi; omega⟩ ⟨j.val - r, by have := hj; omega⟩
       else 0 := by
@@ -87,7 +82,7 @@ lemma bc_one_mid (c : Fin r → ℂ) (i j : Fin (2 * r + k + 1)) (hi : mid k r i
   · rw [ite_eq_right (by omega), ite_eq_right h]
 
 theorem bigCellFactor : BigCellFactor := by
-  apply Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization
+  apply _root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor
 
 lemma mid_wI (a : Fin (k + 1)) : mid k r (wI k r a) := by
   have := a.isLt
@@ -113,11 +108,6 @@ lemma sum_mid (f : Fin (2 * r + k + 1) → ℂ) (hf : ∀ i, ¬ mid k r i → f 
     exact hi ⟨a, Finset.mem_coe.2 (Finset.mem_univ _), rfl⟩
   · intro i _; rfl
 
-lemma emb_wI (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (a b : Fin (k + 1)) :
-    embWb k r μ (wI k r a) (wI k r b) = μ a b := by
-  rw [emb_mid μ _ _ (mid_wI a) (mid_wI b)]
-  congr 1 <;> (apply Fin.ext; simp [wI])
-
 lemma jV_wI (u : Fin (k + 1) → ℂ) (a : Fin (k + 1)) : jV k r u (wI k r a) = u a := by
   unfold jV
   rw [dite_eq_left (mid_wI a)]
@@ -139,7 +129,7 @@ lemma mul_emb_out (M : Mat k r) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i
 lemma mul_emb_mid (M : Mat k r) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i : Fin (2 * r + k + 1))
     (b : Fin (k + 1)) : (M * embWb k r μ) i (wI k r b) = ∑ c, M i (wI k r c) * μ c b := by
   rw [Matrix.mul_apply, sum_mid]
-  · simp only [emb_wI]
+  · simp only [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_wI]
   · intro q hq
     rw [emb_out_row μ q _ hq, ite_eq_right (show ¬ (q = wI k r b) from fun h => hq (h ▸ mid_wI b)), mul_zero]
 
@@ -153,7 +143,7 @@ lemma emb_mul_out (M : Mat k r) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (i
 lemma emb_mul_mid (M : Mat k r) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (a : Fin (k + 1))
     (j : Fin (2 * r + k + 1)) : (embWb k r μ * M) (wI k r a) j = ∑ c, μ a c * M (wI k r c) j := by
   rw [Matrix.mul_apply, sum_mid]
-  · simp only [emb_wI]
+  · simp only [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_wI]
   · intro q hq
     rw [emb_out_col μ _ q hq, ite_eq_right (show ¬ (wI k r a = q) from fun h => hq (h ▸ mid_wI a)), zero_mul]
 
@@ -179,7 +169,7 @@ lemma emb_mulVec_jV (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (u : Fin (k + 
   rw [sum_mid _ (fun j hj => by rw [jV_out u hj, mul_zero])]
   by_cases hi : mid k r i
   · obtain ⟨a, rfl⟩ := mid_exists hi
-    simp only [emb_wI, jV_wI]
+    simp only [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_wI, jV_wI]
     rfl
   · rw [jV_out _ hi]
     apply Finset.sum_eq_zero
@@ -217,15 +207,6 @@ lemma herm_jV (u u' : Fin (k + 1) → ℂ) : herm (Hpk k r) (jV k r u) (jV k r u
   intro a _
   rw [sum_mid _ (fun j hj => by rw [jV_out u hj, mul_zero])]
   simp only [Pi.star_apply, jV_wI, Hpk_wI]
-
-lemma emb_mul (a b : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : embWb k r (a * b) = embWb k r a * embWb k r b := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x3.emb_mul <;> assumption
-
-lemma emb_one : embWb k r 1 = 1 := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one <;> assumption
-
-lemma Hb_herm : (Hb k)ᴴ = Hb k := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x3.Hb_conjT <;> assumption
 
 lemma Hb_sq : Hb k * Hb k = 1 := by
   unfold Hb
@@ -266,26 +247,11 @@ lemma UHb_det {a : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (ha : a ∈ UH (Hb k)
 lemma emb_inv {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hμ : μ ∈ UH (Hb k)) :
     (embWb k r μ)⁻¹ = embWb k r μ⁻¹ := by
   apply Matrix.inv_eq_right_inv
-  rw [← emb_mul, Matrix.mul_nonsing_inv _ (UHb_inv hμ).1, emb_one]
-
-lemma emb_conjTranspose (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : (embWb k r μ)ᴴ = embWb k r μᴴ := by
-  ext i j
-  rw [Matrix.conjTranspose_apply]
-  by_cases hi : mid k r i
-  · by_cases hj : mid k r j
-    · obtain ⟨x, rfl⟩ := mid_exists hi
-      obtain ⟨y, rfl⟩ := mid_exists hj
-      rw [emb_wI, emb_wI, Matrix.conjTranspose_apply]
-    · rw [emb_out_row _ _ _ hj, emb_out_col _ _ _ hj]
-      simp only [show i = j ↔ j = i from eq_comm]
-      by_cases h : j = i <;> simp [h]
-  · rw [emb_out_col _ _ _ hi, emb_out_row _ _ _ hi]
-    simp only [show i = j ↔ j = i from eq_comm]
-    by_cases h : j = i <;> simp [h]
+  rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, Matrix.mul_nonsing_inv _ (UHb_inv hμ).1, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
 
 lemma emb_form_mid (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (a b : Fin (k + 1)) :
     ((embWb k r μ)ᴴ * Hpk k r * embWb k r μ) (wI k r a) (wI k r b) = (μᴴ * Hb k * μ) a b := by
-  rw [emb_conjTranspose, mul_emb_mid, Matrix.mul_apply]
+  rw [_root_.Formalism.FourierDecayAlt.P.B2x3.emb_conjT, mul_emb_mid, Matrix.mul_apply]
   apply Finset.sum_congr rfl
   intro c _
   rw [emb_mul_mid, Matrix.mul_apply]
@@ -309,7 +275,7 @@ lemma emb_form (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
         obtain ⟨y, rfl⟩ := mid_exists hj
         rw [emb_form_mid, h', Hpk_wI]
       · obtain ⟨x, rfl⟩ := mid_exists hi
-        rw [mul_emb_out _ _ _ _ hj, emb_conjTranspose, emb_mul_mid, Hpk_mid_out hi hj]
+        rw [mul_emb_out _ _ _ _ hj, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_conjT, emb_mul_mid, Hpk_mid_out hi hj]
         apply Finset.sum_eq_zero
         intro c _
         rw [Hpk_mid_out (mid_wI c) hj, mul_zero]
@@ -318,8 +284,8 @@ lemma emb_form (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) :
         rw [mul_emb_mid, Hpk_out_mid hi hj]
         apply Finset.sum_eq_zero
         intro c _
-        rw [emb_conjTranspose, emb_mul_out _ _ _ _ hi, Hpk_out_mid hi (mid_wI c), zero_mul]
-      · rw [mul_emb_out _ _ _ _ hj, emb_conjTranspose, emb_mul_out _ _ _ _ hi]
+        rw [_root_.Formalism.FourierDecayAlt.P.B2x3.emb_conjT, emb_mul_out _ _ _ _ hi, Hpk_out_mid hi (mid_wI c), zero_mul]
+      · rw [mul_emb_out _ _ _ _ hj, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_conjT, emb_mul_out _ _ _ _ hi]
 
 lemma emb_fix_out (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) {j : Fin (2 * r + k + 1)} (hj : ¬ mid k r j) :
     embWb k r μ *ᵥ bvec j = bvec j := by
@@ -397,7 +363,7 @@ lemma UWb_iff (g : Mat k r) : g ∈ UWb k r ↔ ∃ μ ∈ UH (Hb k), g = embWb 
       · by_cases hi : mid k r i
         · obtain ⟨x, rfl⟩ := mid_exists hi
           obtain ⟨y, rfl⟩ := mid_exists hj
-          rw [emb_wI, Matrix.of_apply]
+          rw [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_wI, Matrix.of_apply]
         · rw [hrow i j hi hj, emb_out_row _ _ _ hi, ite_eq_right (show ¬ (i = j) from fun h => hi (h ▸ hj))]
       · rw [hcol i j hj, emb_out_col _ _ _ hj]
     refine ⟨_, ?_, hge⟩
@@ -448,9 +414,6 @@ lemma herm_add_left (x y w : Fin m → ℂ) : herm H (x + y) w = herm H x w + he
 
 lemma herm_smul_left (c : ℂ) (x w : Fin m → ℂ) : herm H (c • x) w = c * herm H x w := by
   simp [herm, mulVec_smul, dotProduct_smul]
-
-lemma herm_add_right (x w w' : Fin m → ℂ) : herm H x (w + w') = herm H x w + herm H x w' := by
-  simp [herm, add_dotProduct]
 
 lemma herm_smul_right (c : ℂ) (x w : Fin m → ℂ) : herm H x (c • w) = star c * herm H x w := by
   simp [herm, smul_dotProduct]
@@ -503,7 +466,7 @@ lemma qrefl_mem {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (hH : Hᴴ = H) (d : 
   apply mem_UH_of_herm
   intro x y
   rw [qrefl_mulVec, qrefl_mulVec]
-  simp only [herm_add_left, herm_add_right, herm_smul_left, herm_smul_right, star_mul]
+  simp only [herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_left, herm_smul_right, star_mul]
   rw [herm_symm H hH y d]
   linear_combination (herm H x d * star (herm H y d)) * hc
 
@@ -561,10 +524,10 @@ theorem trans {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (hH : Hᴴ = H) (a b : 
     simpa using this
   set d : Fin m → ℂ := a + (-θ) • b with hd
   have had : herm H a d = (q : ℂ) - t := by
-    rw [hd, herm_add_right, herm_smul_right, ha, star_neg]
+    rw [hd, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_right, ha, star_neg]
     linear_combination -ht
   have hdd : herm H d d = 2 * ((q : ℂ) - t) := by
-    rw [hd, herm_add_left, herm_smul_left, ← hd, had, hd, herm_add_right, herm_smul_right, hb, hba, star_neg]
+    rw [hd, herm_add_left, herm_smul_left, ← hd, had, hd, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_right, hb, hba, star_neg]
     linear_combination (q : ℂ) * hθ - ht'
   have hR : qrefl H d (-1 / ((q : ℂ) - t)) ∈ UH H := by
     apply qrefl_mem H hH
@@ -592,7 +555,7 @@ theorem trans {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (hH : Hᴴ = H) (a b : 
     rw [h2, one_smul]
   · intro x hxa hxb
     have hxd : herm H x d = 0 := by
-      rw [hd, herm_add_right, herm_smul_right, hxa, hxb]; simp
+      rw [hd, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_right, hxa, hxb]; simp
     rw [← Matrix.mulVec_mulVec, qrefl_mulVec H d, hxd, mul_zero, zero_smul, add_zero, qrefl_mulVec, hxb, mul_zero,
       zero_smul, add_zero]
 
@@ -612,13 +575,13 @@ theorem trans_fix {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (hH : Hᴴ = H) (z 
     have hns : (Complex.normSq ζ : ℂ) = ζ * star ζ := by
       rw [Complex.star_def, Complex.mul_conj]
     constructor
-    · simp only [herm_add_left, herm_add_right, herm_smul_left, herm_smul_right, hv, hzv, hz, hvv, hst]
+    · simp only [herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_left, herm_smul_right, hv, hzv, hz, hvv, hst]
       rw [herm_self_real H hH v₁, hqdef]
       push_cast
       rw [hns]
       field_simp
       ring
-    · simp only [herm_add_right, herm_smul_right, hzv, hz, hst]
+    · simp only [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, herm_smul_right, hzv, hz, hst]
       field_simp
       ring
   obtain ⟨h1a, h1b⟩ := key v₁ rfl rfl
@@ -664,7 +627,7 @@ lemma orbit {z v₁ v₂ : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hv₁
   rw [← jV_wbPart hv₂] at h12 hζ
   simp only [herm_jV] at hzz h12 hζ hne
   rw [jV_wbPart hz] at hzz hne
-  obtain ⟨g, hg, hgz, hgv⟩ := trans_fix (Hb k) Hb_herm (wbPart k r z) (wbPart k r v₁) (wbPart k r v₂) (Tz k r z) hT
+  obtain ⟨g, hg, hgz, hgv⟩ := trans_fix (Hb k) _root_.Formalism.FourierDecayAlt.P.B2x3.Hb_conjT (wbPart k r z) (wbPart k r v₁) (wbPart k r v₂) (Tz k r z) hT
     hzz h12 hζ hne
   refine ⟨embWb k r g, (UWset_iff hz _).2 ⟨g, hg, hgz, rfl⟩, ?_⟩
   rw [← jV_wbPart hv₁, emb_mulVec_jV, hgv, jV_wbPart hv₂]
@@ -692,7 +655,7 @@ theorem rankOneMem : RankOneMem := by
   obtain ⟨hU, hval⟩ := hsec.2 ζ hζ
   obtain ⟨η, hη, hηz, rfl⟩ := (UWset_iff hz h).1 hh
   obtain ⟨η', hη', hηz', rfl⟩ := (UWset_iff hz' h').1 hh'
-  rw [emb_inv hη, ← emb_mul, ← emb_mul]
+  rw [emb_inv hη, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
   refine ⟨(UWb_iff _).2 ⟨_, UHb_mul (UHb_mul (UHb_inv hη).2 hU) hη', rfl⟩, ?_⟩
   conv_lhs => rw [← jV_wbPart hz', ← jV_wbPart hz]
   rw [emb_mulVec_jV, herm_jV, ← Matrix.mulVec_mulVec, hηz', ← Matrix.mulVec_mulVec]
@@ -729,7 +692,7 @@ theorem rankOneCoord : RankOneCoord := by
       Matrix.nonsing_inv_mul _ (UHb_inv hU).1, Matrix.one_mulVec]
   refine ⟨embWb k r η, hh, embWb k r ((μsec ζ)⁻¹ * η * ν),
     (UWset_iff hz' _).2 ⟨_, UHb_mul (UHb_mul (UHb_inv hU).2 hη) hν, hfix, rfl⟩, ?_⟩
-  rw [emb_inv hη, ← emb_mul, ← emb_mul]
+  rw [emb_inv hη, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
   congr 1
   rw [Matrix.mul_assoc (μsec ζ)⁻¹, ← Matrix.mul_assoc _ (μsec ζ)⁻¹, Matrix.mul_assoc η⁻¹,
     Matrix.mul_nonsing_inv _ (UHb_inv hU).1, Matrix.mul_one, ← Matrix.mul_assoc,
@@ -1165,7 +1128,7 @@ lemma σb_push (hk : 1 ≤ k) {T T' : ℝ} (hT : 0 < T) (hT' : 0 < T') (zb : Fin
   have hz₀z₀ : herm (Hb k) z₀ z₀ = ((-T : ℝ) : ℂ) := by
     rw [herm_Hb_self, hz₀, Nq_smul, Real.sq_sqrt hT.le]
     simp [Nq, bvec]
-  obtain ⟨g, hg, hgz, -⟩ := trans (Hb k) Hb_herm z₀ zb (-T) (neg_ne_zero.2 hT.ne') hz₀z₀ (by rw [hz]; push_cast; rfl)
+  obtain ⟨g, hg, hgz, -⟩ := trans (Hb k) _root_.Formalism.FourierDecayAlt.P.B2x3.Hb_conjT z₀ zb (-T) (neg_ne_zero.2 hT.ne') hz₀z₀ (by rw [hz]; push_cast; rfl)
   have hgi := UHb_inv hg
   have hf : (fun u => herm (Hb k) u zb) = (fun u => herm (Hb k) u z₀) ∘ (fun u => g⁻¹ *ᵥ u) := by
     funext u
@@ -1200,47 +1163,25 @@ lemma jV_meas : Measurable (jV k r) := by
   unfold jV
   split_ifs <;> (first | exact measurable_pi_apply _ | exact measurable_const)
 
-def adjF (x : Mt k r) : Mt k r := (Matrix.of x : Mat k r).adjugate
-
-def detF (x : Mt k r) : ℂ := (Matrix.of x : Mat k r).det
-
-theorem detF_cont : Continuous (detF (k := k) (r := r)) := Continuous.matrix_det (continuous_id (X := Mat k r))
-
-theorem adjF_cont : Continuous (adjF (k := k) (r := r)) := Continuous.matrix_adjugate (continuous_id (X := Mat k r))
-
-theorem invM_smul : (invM : Mt k r → Mt k r) = fun x => (detF x)⁻¹ • adjF x := by
-  funext x
-  show (Ring.inverse (Matrix.of x : Mat k r).det • (Matrix.of x : Mat k r).adjugate : Mat k r) = _
-  rw [Ring.inverse_eq_inv']; rfl
-
-theorem invM_meas : Measurable (invM : Mt k r → Mt k r) := by
-  rw [invM_smul]; exact detF_cont.measurable.inv.smul adjF_cont.measurable
-
 def act (h : Mt k r) (v : Fin (2 * r + k + 1) → ℂ) : Fin (2 * r + k + 1) → ℂ := ((Matrix.of h : Mat k r)⁻¹ : Mat k r) *ᵥ v
 
 lemma act_meas' : Measurable (fun p : (Fin (2 * r + k + 1) → ℂ) × Mt k r => act p.2 p.1) := by
   refine measurable_pi_iff.2 fun i => ?_
   show Measurable (fun p : (Fin (2 * r + k + 1) → ℂ) × Mt k r => ∑ j, invM p.2 i j * p.1 j)
   refine Finset.measurable_sum _ fun j _ => ?_
-  exact ((measurable_pi_apply j).comp ((measurable_pi_apply i).comp (invM_meas.comp measurable_snd))).mul
+  exact ((measurable_pi_apply j).comp ((measurable_pi_apply i).comp (_root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas.comp measurable_snd))).mul
     ((measurable_pi_apply j).comp measurable_fst)
 
 lemma act_meas_left (x : Fin (2 * r + k + 1) → ℂ) : Measurable (fun y : Mt k r => act y x) := by
   refine measurable_pi_iff.2 fun i => ?_
   show Measurable (fun y : Mt k r => ∑ j, invM y i j * x j)
   refine Finset.measurable_sum _ fun j _ => ?_
-  exact ((measurable_pi_apply j).comp ((measurable_pi_apply i).comp invM_meas)).mul_const _
+  exact ((measurable_pi_apply j).comp ((measurable_pi_apply i).comp _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas)).mul_const _
 
 lemma act_lmul {h₁ : Mat k r} (hunit : IsUnit h₁.det) (h : Mt k r) (v : Fin (2 * r + k + 1) → ℂ) :
     act (lmulM h₁ h) (h₁ *ᵥ v) = act h v := by
   show ((h₁ * (Matrix.of h : Mat k r) : Mat k r)⁻¹ : Mat k r) *ᵥ (h₁ *ᵥ v) = ((Matrix.of h : Mat k r)⁻¹ : Mat k r) *ᵥ v
   rw [Matrix.mul_inv_rev, Matrix.mulVec_mulVec, Matrix.mul_assoc, Matrix.nonsing_inv_mul _ hunit, Matrix.mul_one]
-
-lemma GV_unit {g : Mat k r} (hg : g ∈ GV k r) : IsUnit g.det := by
-  have hH : IsUnit (Hpk k r).det := by
-    have := (hpkFacts k r).2.1
-    exact (Matrix.isUnit_iff_isUnit_det _).1 (IsUnit.of_mul_eq_one _ this)
-  exact ((uHGroup _ (Hpk k r) hH).2.2 g hg).1
 
 instance (T' : ℝ) : SFinite (σb k T') := by unfold σb; infer_instance
 
@@ -1306,7 +1247,7 @@ lemma avg_orbit {z : Fin (2 * r + k + 1) → ℂ} {μW : Measure (Mt k r)}
   conv_rhs => rw [← hW.left h₁ hh₁]
   rw [lintegral_map hF2 hlc.measurable]
   refine lintegral_congr fun h => ?_
-  rw [act_lmul (GV_unit hh₁.1)]
+  rw [act_lmul (_root_.Formalism.FourierDecayAlt.P.B2x8.al_unit hh₁.1)]
 
 lemma herm_Hb_meas (zb : Fin (k + 1) → ℂ) : Measurable (fun u : Fin (k + 1) → ℂ => herm (Hb k) u zb) := by
   simp only [herm_Hb]
@@ -1395,18 +1336,8 @@ end Formalism.FourierDecayAlt.P.TwoByOneBlock
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem unipotent_weyl_properties : Formalism.FourierDecayAlt.B2.UWbFacts := TwoByOneBlock.uWbFacts
-
-theorem weight_factorization : Formalism.FourierDecayAlt.B2.WeightFactor := TwoByOneBlock.weightFactor
-
-theorem hyperbolic_element_inverse : Formalism.FourierDecayAlt.B2.HypInv := TwoByOneBlock.hypInv
-
-theorem b2_rank_one_mem : Formalism.FourierDecayAlt.B2.RankOneMem := TwoByOneBlock.rankOneMem
-
-theorem b2_rank_one_coord : Formalism.FourierDecayAlt.B2.RankOneCoord := TwoByOneBlock.rankOneCoord
-
 theorem rank_one_integration_formula : Formalism.FourierDecayAlt.B2.RankOneInt :=
-  rank_one_formula_of_parts haar_measure_unique_up_to_scalar opposite_weyl_subgroup_closed weyl_subgroup_closed weyl_subgroup_compact
-    unipotent_weyl_properties b2_rank_one_mem b2_rank_one_coord hyperbolic_element_inverse
+  rank_one_formula_of_parts _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb _root_.Formalism.FourierDecayAlt.P.B2x3.closedW _root_.Formalism.FourierDecayAlt.P.B2x3.compactW
+    _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneCoord _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.hypInv
 
 end Formalism.FourierDecayAlt.P

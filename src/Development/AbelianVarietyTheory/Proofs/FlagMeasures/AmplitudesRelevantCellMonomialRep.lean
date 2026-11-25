@@ -373,7 +373,7 @@ theorem exists_orbQuot (L : LocBessel k r) (hκ : L.κN ≠ ⊤) {g : MatKR k r}
     {μ : Measure (Mt k r)} (h : B.IsHaarOn (C6.Rset g⁻¹) μ) {M : ℝ} (hM : 0 ≤ M)
     (hI : Integrable (fun x => B.gN (Matrix.of x) ^ (-M)) μ) : ∃ ν, IsOrbQuot L g (μ.map (conjM g)) ν := by
   obtain ⟨cN, hN⟩ := _root_.GlobalTheory.ThA.exists_isRatioN k r
-  have := P.Dx2.OrbJ.sigmaF h
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf h
   have hu := unit_det hg
   have hθ : Measurable fun p : PairSp k r => P.Dx3.cut μ M p.swap := (P.Dx3.cut_meas M).comp measurable_swap
   refine ⟨_, GlobalTheory.ThA.QuotCut.isOrbQuot_withDensity k r L g _ (fun p => P.Dx3.cut μ M p.swap) cN hN hκ hg
@@ -461,7 +461,7 @@ theorem amp_at_monomial : ∀ (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : 
       (fun s hs x hx h => hx ((CutQuot.mul_mem_iff hs.1.1 (Matrix.of x)).1 h)) hG.2.2.1
   refine ⟨g, μ.map (conjM g), νR.map (lmulEquiv hn'.1), ν,
     (psiS D W.z n / psiS D W.z 1) * star (psiS D W.z' n'⁻¹ / psiS D W.z' 1),
-    ⟨hg, hpos, ⟨_, d, hd, hm⟩, relevant hz hz' hg hZ _, ⟨Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hR, hR.ne_zero, hR.conc, hR.left⟩,
+    ⟨hg, hpos, ⟨_, d, hd, hm⟩, relevant hz hz' hg hZ _, ⟨_root_.Formalism.FourierDecayAlt.P.B7.sf hR, hR.ne_zero, hR.conc, hR.left⟩,
       hν, ?_⟩, hconc, fun l => ?_, fun lam A hA => ?_⟩
   · have e1 : (fun x : Mt D.R.k D.R.rS => fun i j => (g⁻¹ * Matrix.of x * g) i j) = conjM g⁻¹ := by
       funext x

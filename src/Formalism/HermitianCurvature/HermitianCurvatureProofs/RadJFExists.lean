@@ -47,7 +47,7 @@ theorem radJFExists : RadJFExists := by
         ⟨hx₀.1, wCell_mem_omPlus D.z_mem D.z'_mem hx₀.1 hx₀.2.1 hx₀.2.2⟩ hx₀.2.1
       have hV : IsOpen {x : (Fin Pa.r → ℂ) × Mx Pa.k Pa.r | x.1 ∈ OmX Pa.r ∧ 0 < GGl Pa.k Pa.r D.z D.z' x.2} :=
         ((P.Qx3.isOpen_OmX Pa.r).preimage continuous_fst).inter
-          (isOpen_lt continuous_const ((P.Qx5.GGl_continuous Pa.k Pa.r D.z D.z').comp continuous_snd))
+          (isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont Pa.k Pa.r D.z D.z').comp continuous_snd))
       refine ⟨U ∩ {x | x.1 ∈ OmX Pa.r ∧ 0 < GGl Pa.k Pa.r D.z D.z' x.2}, Fe, hU.inter hV,
         ⟨hxU, hx₀.1, hx₀.2.2⟩, hFe.mono Set.inter_subset_left, fun x hx hxG => ?_⟩
       have hxD : (x.1, x.2) ∈ DomR Pa.k Pa.r D.z D.z' := ⟨hx.2.1, hxG, hx.2.2⟩
@@ -63,7 +63,7 @@ theorem radJFExists : RadJFExists := by
           h * (wCell Pa.k Pa.r (Fin.last Pa.r) x.1 * x.2) * h' := by
         have hc := P.Qx3.wlist_comm (k := Pa.k) (Fin.last Pa.r) x.1
           ((List.finRange Pa.r).filter fun a => a.val < (Fin.last Pa.r).val)
-          (fun a ha => by simpa using (List.mem_filter.1 ha).2) (P.Qx3.uw_glev (Fin.last Pa.r) hh)
+          (fun a ha => by simpa using (List.mem_filter.1 ha).2) (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev (Fin.last Pa.r) hh)
         change wCell Pa.k Pa.r (Fin.last Pa.r) x.1 * h = h * wCell Pa.k Pa.r (Fin.last Pa.r) x.1 at hc
         rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hc, Matrix.mul_assoc h]
       rw [e, jf_uEquiv D F _ hh hh']

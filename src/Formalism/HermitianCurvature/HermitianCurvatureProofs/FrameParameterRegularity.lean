@@ -188,7 +188,7 @@ theorem rdv_local {X : Q.Mx k ρ} (hX : Formalism.FourierDecayAlt.P.Qx3.LieLev (
   have hmem : ∀ᶠ t : ℝ in 𝓝 0, ((q.1, cur X q.2 t) : Par × Mt k ρ) ∈ U :=
     hγ.continuousAt.preimage_mem_nhds (by rw [hγ0]; exact hU.mem_nhds hq)
   filter_upwards [hmem] with t ht
-  exact hfF _ ht (Formalism.FourierDecayAlt.P.Qx3.glev_mul hqG (hX t))
+  exact hfF _ ht (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hqG (hX t))
 
 theorem parFam_contAt_comp {Y : Type} [TopologicalSpace Y] {U₀ : Set (Par × Mt k ρ)} {g : Par × Mt k ρ → E}
     (hg : PBI.ParFam k ρ U₀ g) {m : Y → Par × Mt k ρ} {y₀ : Y} (hm : ContinuousAt m y₀) (hU : m y₀ ∈ U₀)
@@ -240,10 +240,10 @@ theorem parOK_rdV {k ρ : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace �
       hγ.preimage_mem_nhds (by rw [hγ0]; exact hW.mem_nhds hqW)
     have hev : (fun t : ℝ => f q.1 (Matrix.of (cur X q.2 t))) =ᶠ[𝓝 0] (fun _ => (0 : E)) := by
       filter_upwards [hmem] with t ht
-      exact hz _ ht (Formalism.FourierDecayAlt.P.Qx3.glev_mul hG (hX t))
+      exact hz _ ht (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hG (hX t))
     rw [hev.deriv_eq, deriv_const]
   · have hGt : ∀ t : ℝ, Matrix.of (cur X y t) ∈ Q.Glev k ρ (Fin.last ρ) := fun t =>
-      Formalism.FourierDecayAlt.P.Qx3.glev_mul hyG (hX t)
+      _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hyG (hX t)
     have hpre : cur X y ⁻¹' V ∈ 𝓝 (0 : ℝ) :=
       (cur_hasDerivAt0 X y).continuousAt.preimage_mem_nhds (by rw [cur_zero]; exact hV.mem_nhds hyV)
     obtain ⟨ε, hε, hball⟩ := Metric.mem_nhds_iff.mp hpre
@@ -343,9 +343,9 @@ theorem smoothG_ybv (z : Fin (2 * ρ + k + 1) → ℂ) (j : Fin (mdim k ρ (Fin.
 
 theorem parOK_EH (a b : Fin (mdim k ρ (Fin.last ρ))) :
     ParOK k ρ (E := E) (EH k ρ (posL k ρ (Fin.last ρ) a) (posL k ρ (Fin.last ρ) b)) :=
-  parOK_congr (parOK_add (parOK_rdV (Formalism.FourierDecayAlt.P.Qx3.lieLev_of (Formalism.FourierDecayAlt.P.Qx3.hpart_lie (Fin.last ρ) a b).1))
+  parOK_congr (parOK_add (parOK_rdV (Formalism.FourierDecayAlt.P.Qx3.lieLev_of (_root_.Formalism.FourierDecayAlt.P.Qx8.hpart_lie (Fin.last ρ) a b).1))
     (parOK_csmul Complex.I
-      (parOK_rdV (Formalism.FourierDecayAlt.P.Qx3.lieLev_of (Formalism.FourierDecayAlt.P.Qx3.hpart_lie (Fin.last ρ) a b).2)))) (fun f g => rfl)
+      (parOK_rdV (Formalism.FourierDecayAlt.P.Qx3.lieLev_of (_root_.Formalism.FourierDecayAlt.P.Qx8.hpart_lie (Fin.last ρ) a b).2)))) (fun f g => rfl)
 
 theorem parOK_Top (u : ℂ) (a b : Fin (mdim k ρ (Fin.last ρ))) :
     ParOK k ρ (E := E) (Top (EH k ρ) u (posL k ρ (Fin.last ρ) a) (posL k ρ (Fin.last ρ) b)) := by

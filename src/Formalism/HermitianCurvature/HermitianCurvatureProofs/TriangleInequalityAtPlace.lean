@@ -37,11 +37,6 @@ theorem Gf_sgs {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductS
     Gf k r Ds.z Ds.z' (B.sgs q g) = Gf k r Ds.z Ds.z' g := by
   apply Formalism.FourierDecayAlt.P.JCx1.needs.gf_sgs <;> assumption
 
-theorem ae_inSS {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
-    [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] (Ds : B.RealPlaceData k r Wp Wq) :
-    ∀ᵐ q ∂Ds.μSS, Ds.inSS q := by
-  apply _root_.Formalism.FourierDecayAlt.P.B5.ae_inSS <;> assumption
-
 theorem Gf_of_Zhat {k r : ℕ} (z z' : Fin (2 * r + k + 1) → ℂ) (g : B.Mat k r) (pt : C.LPt)
     (h : Zhat k r z z' g = D.ptMatN pt (r + 1)) :
     Gf k r z z' g = D.ptG (Tz k r z * Tz k r z') r pt := by

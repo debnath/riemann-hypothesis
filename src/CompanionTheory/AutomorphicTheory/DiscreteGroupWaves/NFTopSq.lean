@@ -148,7 +148,7 @@ theorem V_bigPt_aesm (p : KB.Pl P Wp Wq) {H : B.Mat P.k P.r → (Wq →L[ℂ] Wp
       rw [e]
       unfold U.headH
       exact ((continuous_const.matrix_mul ((Dx2.SL.cont_lowW 1).comp continuous_snd.snd.fst)).matrix_mul
-        continuous_fst.matrix_diagonal).matrix_mul (Dx2.SL.cont_upper.comp continuous_snd.snd.snd)
+        continuous_fst.matrix_diagonal).matrix_mul (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_snd.snd.snd)
     exact ((Ux13.continuous_psiH U.betaU 1).comp continuous_snd).smul (hΦ.continuous.comp hZ)
   have hm : StronglyMeasurable (fun c : Fin (P.r + 1) → ℂ =>
       U.PhiTop (p := P.r + 1) (s := 0) U.betaU 1 c Φ0 fun x => x.elim0) := by

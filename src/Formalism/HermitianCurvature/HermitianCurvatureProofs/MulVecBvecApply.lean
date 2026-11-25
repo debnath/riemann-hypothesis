@@ -42,9 +42,6 @@ theorem liftVec_inj (o ρ : ℕ) {v w : Fin (2 * ρ + k + 1) → ℂ} (h : liftV
   have hp' : (p : ℕ) ≤ 2 * ρ + k := by omega
   simpa [liftVec, levPos, hp'] using h1
 
-theorem mulVec_bvec_apply {m : ℕ} (G : Matrix (Fin m) (Fin m) ℂ) (q p : Fin m) : (G *ᵥ bvec q) p = G p q := by
-  simp [bvec, Matrix.mulVec, dotProduct, Pi.single_apply]
-
 theorem herm_bvec_r {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (v : Fin m → ℂ) (p : Fin m) :
     herm H v (bvec p) = ∑ x, H p x * v x := by
   simp only [herm, bvec, Matrix.mulVec, dotProduct]
@@ -80,7 +77,7 @@ theorem uw_block (o ρ : ℕ) (z : Fin (2 * ρ + k + 1) → ℂ) (G : B.Mat k (o
       have eq : q = levPos k o ρ ⟨q.val - o, by omega⟩ := by ext; simp [levPos]; omega
       rw [ep, eq, lev_levPos]; rfl
     · rw [lev_out_row o ρ _ p q hp, ite_eq_right (by intro h; rw [h] at hp; exact hp hq)]
-      rw [show G p q = (G *ᵥ bvec q) p from (mulVec_bvec_apply G q p).symm]
+      rw [show G p q = (G *ᵥ bvec q) p from (_root_.PI.QnLevBasicsW.mulVec_bvec G q p).symm]
       have hqne : ∀ c : Fin (2 * (o + ρ) + k + 1), ¬ (o ≤ c.val ∧ c.val < 2 * ρ + k + 1 + o) → bvec q c = 0 := by
         intro c hc
         simp only [bvec, Pi.single_apply]
@@ -94,7 +91,7 @@ theorem uw_block (o ρ : ℕ) (z : Fin (2 * ρ + k + 1) → ℂ) (G : B.Mat k (o
         rw [e, ← _root_.PI.StabPairsW.herm_e (G *ᵥ bvec q), ← (hG.2.1 _).1, TwoByOneBlock.herm_UH hG.1, _root_.PI.StabPairsW.herm_e]
         refine (hqne _ ?_).symm
         simp [esI]; omega
-  · rw [lev_out_col o ρ _ p q hq, show G p q = (G *ᵥ bvec q) p from (mulVec_bvec_apply G q p).symm, hfix q hq]
+  · rw [lev_out_col o ρ _ p q hq, show G p q = (G *ᵥ bvec q) p from (_root_.PI.QnLevBasicsW.mulVec_bvec G q p).symm, hfix q hq]
     simp [bvec, Pi.single_apply]
 
 theorem uw_mid (o ρ : ℕ) (z : Fin (2 * ρ + k + 1) → ℂ) (G : B.Mat k (o + ρ))
@@ -162,7 +159,7 @@ theorem haar_lev {r : ℕ} (o ρ : ℕ) (h : o + ρ = r) (z : Fin (2 * ρ + k + 
     (hν1 : ν Set.univ = 1) : μ = ν.map (levMt o ρ h) := by
   subst hZ
   have hm : Measurable (levMt (k := k) o ρ h) := (levMt_cont o ρ h).measurable
-  have hcl := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r (D.castV h (liftVec k o ρ z))
+  have hcl := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r (D.castV h (liftVec k o ρ z))
   have hconc : (ν.map (levMt o ρ h)) (UWset k r (D.castV h (liftVec k o ρ z)))ᶜ = 0 := by
     have hms : @MeasurableSet (Mt k r) _ (UWset k r (D.castV h (liftVec k o ρ z))) :=
       IsClosed.measurableSet (α := Mt k r) hcl.closed
@@ -186,7 +183,7 @@ theorem haar_lev {r : ℕ} (o ρ : ℕ) (h : o + ρ = r) (z : Fin (2 * ρ + k + 
     calc (ν.map (levMt o ρ h)) K ≤ (ν.map (levMt o ρ h)) Set.univ := measure_mono (Set.subset_univ _)
       _ = 1 := by rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, hν1]
       _ < ⊤ := ENNReal.one_lt_top
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ (ν.map (levMt o ρ h)) hcl hμ hconc hleft hfin
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r _ μ (ν.map (levMt o ρ h)) hcl hμ hconc hleft hfin
   have h1 : (ν.map (levMt o ρ h)) Set.univ = 1 := by
     rw [Measure.map_apply hm MeasurableSet.univ, Set.preimage_univ, hν1]
   rw [hc, Measure.smul_apply, hμ1] at h1
@@ -293,7 +290,7 @@ theorem rnAct_mp (a : B.Mat k ρ) (ha : a ∈ B.GV k ρ) :
   exact h2
 
 theorem GV_inv_mem (y : B.Mat k ρ) (hy : y ∈ B.GV k ρ) : y⁻¹ ∈ B.GV k ρ :=
-  (Formalism.FourierDecayAlt.P.unitary_group_closed k ρ).inv_mem y hy
+  (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k ρ).inv_mem y hy
 
 theorem uw_inv_mulVec_eI {r : ℕ} (Z : Fin (2 * r + k + 1) → ℂ) (E : B.Mat k r) (hE : E ∈ UWset k r Z)
     (w : Fin (2 * r + k + 1) → ℂ) (a : Fin r) : (E⁻¹ *ᵥ w) (eI k r a) = w (eI k r a) := by
@@ -310,8 +307,8 @@ theorem ell_conj_UW {r : ℕ} (Z : Fin (2 * r + k + 1) → ℂ) (E : B.Mat k r) 
   refine Finset.sum_congr rfl fun a _ => ?_
   split_ifs with h
   · rw [show (E⁻¹ * g * E) (eI k r a) (eI k r ⟨a.val + 1, h⟩) =
-        ((E⁻¹ * g * E) *ᵥ bvec (eI k r ⟨a.val + 1, h⟩)) (eI k r a) from (mulVec_bvec_apply _ _ _).symm,
-      ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, (hE.2.1 _).1, uw_inv_mulVec_eI Z E hE, mulVec_bvec_apply]
+        ((E⁻¹ * g * E) *ᵥ bvec (eI k r ⟨a.val + 1, h⟩)) (eI k r a) from (_root_.PI.QnLevBasicsW.mulVec_bvec _ _ _).symm,
+      ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, (hE.2.1 _).1, uw_inv_mulVec_eI Z E hE, _root_.PI.QnLevBasicsW.mulVec_bvec]
   · rw [← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, hE.2.2, uw_inv_mulVec_eI Z E hE]
 
 theorem psi_conj_UW {r : ℕ} (Z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (E : B.Mat k r) (hE : E ∈ UWset k r Z)

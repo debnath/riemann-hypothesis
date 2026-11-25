@@ -32,7 +32,7 @@ theorem main : ∀ (n : ℕ) (g : Matrix.unitaryGroup (Fin n) ℂ),
   intro n g
   have hA : (g : Matrix (Fin n) (Fin n) ℂ)ᴴ * (g : Matrix (Fin n) (Fin n) ℂ) = 1 :=
     Matrix.mem_unitaryGroup_iff'.1 g.2
-  obtain ⟨B, h1, h2⟩ := Formalism.FourierDecayAlt.P.HermitianFormRankFour.unitary_log _ hA
+  obtain ⟨B, h1, h2⟩ := Formalism.FourierDecayAlt.P.HermitianFormRankFour.exists_skew_hermitian_log_unitary _ hA
   exact ⟨B, h1, h2.symm⟩
 
 end GlobalTheory.CompanionTheory.UnitaryLog

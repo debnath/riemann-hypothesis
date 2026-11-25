@@ -264,16 +264,11 @@ lemma matrix_ext_three_block {A B : Mat k (1 + r')} (h : ∀ a y b, A *ᵥ mk3 k
   have := congrFun (h' (Pi.single j 1)) i
   simpa [Matrix.mulVec, dotProduct, Pi.single_apply] using this
 
-lemma Hpk_herm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  ext i j
-  simp only [Matrix.conjTranspose_apply, Hpk, Fin.ext_iff]
-  split_ifs <;> first | omega | simp
-lemma Hpk_sq (k r : ℕ) : Hpk k r * Hpk k r = 1 := (Formalism.QuantumDeterminants.hpkFacts k r).2.1
 lemma Hpk_unit (k r : ℕ) : IsUnit (Hpk k r).det := by
-  have h : (Hpk k r).det * (Hpk k r).det = 1 := by rw [← Matrix.det_mul, Hpk_sq, Matrix.det_one]
+  have h : (Hpk k r).det * (Hpk k r).det = 1 := by rw [← Matrix.det_mul, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.det_one]
   exact isUnit_iff_ne_zero.mpr (fun h0 => by rw [h0, zero_mul] at h; exact zero_ne_one h)
 
-lemma herm_self_im (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) : (herm (Hpk k r) y y).im = 0 := (Complex.conj_eq_iff_im).mp (herm_conj (Hpk k r) (Hpk_herm k r) y y)
+lemma herm_self_im (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) : (herm (Hpk k r) y y).im = 0 := (Complex.conj_eq_iff_im).mp (herm_conj (Hpk k r) (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) y y)
 
 open scoped ComplexOrder in
 lemma herm_nondeg (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) (h : ∀ x, herm (Hpk k r) x y = 0) : y = 0 := by
@@ -285,7 +280,7 @@ lemma herm_nondeg (k r : ℕ) (y : Fin (2 * r + k + 1) → ℂ) (h : ∀ x, herm
     exact this
   have h2 : star y = 0 := by
     have := congrArg (fun v => v ᵥ* Hpk k r) h1
-    simp only [Matrix.vecMul_vecMul, Hpk_sq, Matrix.vecMul_one, Matrix.zero_vecMul] at this
+    simp only [Matrix.vecMul_vecMul, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.vecMul_one, Matrix.zero_vecMul] at this
     exact this
   simpa using congrArg star h2
 
@@ -880,7 +875,7 @@ lemma heis_mem (x : HPar k r') : heis0 k r' x ∈ GV k (1 + r') := by
   intro u v
   rw [← three_block_eta u, ← three_block_eta v, heisenberg_three_block, heisenberg_three_block, hermitian_three_block, hermitian_three_block]
   simp only [herm_add_left, herm_add_right, herm_smul_left, herm_smul_right]
-  have h1 := herm_conj (Hpk k r') (Hpk_herm k r') (mid v) x.1
+  have h1 := herm_conj (Hpk k r') (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r') (mid v) x.1
   have h2 := hb_add_conj (k := k) x.1 x.2
   simp only [map_add (f := _), map_sub, map_mul]
   linear_combination (-(cL u)) * h1 + (cL u * (starRingEnd ℂ) (cL v)) * h2
@@ -1178,14 +1173,6 @@ theorem gen_induction (P : Mat k (1 + r') → Prop) (hmul : ∀ a b, P a → P b
 
 end Formalism.FourierDecayAlt.P.B2x8
 
-namespace Formalism.FourierDecayAlt.P
-
-theorem stabilizer_one_parameter_mem : Formalism.FourierDecayAlt.B2.OneStepMem := Formalism.FourierDecayAlt.P.B2x8.al_oneStepMem
-theorem rank_one_coordinates_formula : Formalism.FourierDecayAlt.B2.OneStepCoord := Formalism.FourierDecayAlt.P.B2x8.al_oneStepCoord
-theorem stabilizer_factorization : Formalism.FourierDecayAlt.B2.StabDecomp := Formalism.FourierDecayAlt.P.B2x8.al_stabDecomp
-
-end Formalism.FourierDecayAlt.P
-
 namespace Formalism.FourierDecayAlt.P.B2x8
 
 open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.FourierDecayAlt.B2
@@ -1235,7 +1222,7 @@ lemma cf_heis_Ψt (x₀ : HPar k r') (p : ℂ × HPar k r') (h1 : p.1 ≠ 0) :
   have hsum : B + conj B = - herm (Hpk k r') (y + c • y₀) (y + c • y₀) := by
     have e1 := hb_add_conj (k := k) (r' := r') y s
     have e2 := hb_add_conj (k := k) (r' := r') y₀ s₀
-    have e3 : conj (herm (Hpk k r') y y₀) = herm (Hpk k r') y₀ y := herm_conj _ (Hpk_herm k r') _ _
+    have e3 : conj (herm (Hpk k r') y y₀) = herm (Hpk k r') y₀ y := herm_conj _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r') _ _
     simp only [herm_add_left, herm_add_right, herm_smul_left, herm_smul_right]
     rw [hB]
     simp only [map_add (f := _), map_sub, map_mul, Complex.conj_conj, Complex.conj_ofReal, e3]

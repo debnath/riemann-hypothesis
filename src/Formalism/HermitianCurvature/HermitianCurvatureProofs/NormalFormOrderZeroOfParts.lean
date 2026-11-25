@@ -49,7 +49,7 @@ theorem mulZ_mem {f : ℂ → ℂ} (hf : ContDiffOn ℝ ∞ f {ζ | Tz k r z * T
     {Φ : Fn k r (Wq →L[ℂ] Wp)} (hΦ : Φ ∈ RadSp k r z z' π π') : mulZ k r z z' f Φ ∈ RadSp k r z z' π π' := by
   rw [mulZ_eq f hΦ]
   refine Qx5.smul_mem (a := fun x => f (zetaL k r z z' (Fin.last r) x.2)) ?_
-    (fun x _ h hh h' hh' => by simp only [Qx5.zeta_inv hh hh']) hΦ
+    (fun x _ h hh h' hh' => by simp only [_root_.Formalism.FourierDecayAlt.P.Qx8.zetaL_equiv hh hh']) hΦ
   refine hf.comp ((Qx5.zetaL_contDiff k r z z' (Fin.last r)).comp contDiff_snd).contDiffOn ?_
   intro x hx
   have h2 : 0 < GGl k r z z' x.2 := hx.2
@@ -1013,9 +1013,6 @@ theorem dZb_smooth {g : ℂ → ℂ} {U : Set ℂ} (hU : IsOpen U) (hg : ContDif
   exact contDiffOn_const.mul ((fderiv_apply_smooth hU hg 1).add
     (contDiffOn_const.mul (fderiv_apply_smooth hU hg Complex.I)))
 
-theorem isOpen_U (t : ℝ) : IsOpen {ζ : ℂ | t < Complex.normSq ζ} :=
-  isOpen_lt continuous_const Complex.continuous_normSq
-
 section Pair
 
 variable {V : Type} [AddCommGroup V] [Module ℂ V]
@@ -1308,8 +1305,8 @@ theorem kcomm [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (hMZ : NF.Mu
     (g : ℂ → ℂ) (hg : ContDiffOn ℝ ∞ g {ζ | P.TT < Complex.normSq ζ})
     (V : Module.End ℂ (Q.RadSp P.k P.r z z' π π')) (hV : NF.IsMulZ V g) (h : M.Ty P → ℂ) :
     Commute (d.κ h).1 V := by
-  obtain ⟨V₁, hV₁⟩ := hMZ Wp Wq P z z' π π' hPl (NF.dZ g) (dZ_smooth (isOpen_U _) hg)
-  obtain ⟨V₂, hV₂⟩ := hMZ Wp Wq P z z' π π' hPl (NF.dZb g) (dZb_smooth (isOpen_U _) hg)
+  obtain ⟨V₁, hV₁⟩ := hMZ Wp Wq P z z' π π' hPl (NF.dZ g) (dZ_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hg)
+  obtain ⟨V₂, hV₂⟩ := hMZ Wp Wq P z z' π π' hPl (NF.dZb g) (dZb_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hg)
   have ht : ∀ Y, X.t Y 1 1 * V = V * X.t Y 1 1 := fun Y =>
     (hAZ Wp Wq P z z' π π' hPl X g hg V V₁ V₂ hV hV₁ hV₂ Y).2.1
   obtain ⟨-, -, -, -, -, -, -, -, -, -, hGG, hGGi, -⟩ := hL
@@ -1330,7 +1327,7 @@ theorem kcomm [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (hMZ : NF.Mu
 
 theorem nFOrder0OfParts : NF.NFOrder0OfParts := by
   intro hMZ hAZ Wp Wq _ _ _ _ _ _ P z z' π π' hPl X d hL hSL hRel hQQ f hf W W₁ W₂ hW hW1 hW2
-  have hU := isOpen_U P.TT
+  have hU := _root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt P.TT
   have hf1 := dZ_smooth hU hf
   have hf2 := dZb_smooth hU hf
   have kW := kcomm hMZ hAZ hPl X d hL hQQ f hf W hW
@@ -1656,7 +1653,7 @@ noncomputable section
 variable {P : M.Par} {A : Type} [Ring A] [StarRing A] [Algebra ℂ A]
 
 theorem rho_up {l : ℕ} {τ ρ : M.Ty P} (h : M.Up P l τ ρ) {i : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) :
-    M.rho P ρ i = M.rho P τ i + if i = l then 1 else 0 := Formalism.FourierDecayAlt.P.rho_raise P l τ ρ h i hi
+    M.rho P ρ i = M.rho P τ i + if i = l then 1 else 0 := _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P l τ ρ h i hi
 
 variable {d : Q.NFData P A} (hd : Hyp d)
 include hd
@@ -1699,7 +1696,7 @@ theorem box_up {δ : ℕ → ℤ} {ρ σ : M.Ty P} (h : Off δ ρ σ) {l : ℕ} 
 
 theorem gap1 (hP : P.OK) (π : M.Ty P) {i : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) (hi' : i + 1 ∈ Icc 1 (P.k - 1)) :
     M.rho P π (i + 1) + 1 ≤ M.rho P π i := by
-  have h := Formalism.FourierDecayAlt.P.types_interlace P hP π
+  have h := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hP π
   linarith [(h i hi).2.2.1, (h (i + 1) hi').1]
 
 theorem gap (hP : P.OK) (π : M.Ty P) {i i' : ℕ} (hi : i ∈ Icc 1 (P.k - 1)) (hi' : i' ∈ Icc 1 (P.k - 1)) (h : i < i') :

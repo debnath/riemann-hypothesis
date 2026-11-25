@@ -442,9 +442,6 @@ section dil
 
 variable {k r : ℕ}
 
-theorem d_sf {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  exact sf h
-
 def d_dg (k r : ℕ) (t : ℝ) (i : Fin (2 * r + k + 1)) : ℂ :=
   if i.val < r then ((t ^ (r - i.val) : ℝ) : ℂ)
     else if i.val ≤ r + k then 1 else (((t ^ (i.val - (r + k)))⁻¹ : ℝ) : ℂ)
@@ -539,9 +536,9 @@ theorem d_dilE_apply (t : ℝ × ℝ) (h1 : t.1 ≠ 0) (h2 : t.2 ≠ 0) (p : SS 
 theorem d_map_dil (D : RealPlaceData k r Wp Wq) (hJ : DilJac D) (t : ℝ × ℝ) (h1 : 0 < t.1) (h2 : 0 < t.2) :
     D.μSS.map (d_dilE t h1.ne' h2.ne') =
       (ENNReal.ofReal ((t.1 ^ kap k r)⁻¹) * ENNReal.ofReal ((t.2 ^ kap k r)⁻¹)) • D.μSS := by
-  have := d_sf D.haarW
-  have := d_sf D.haarW'
-  have := d_sf D.haarN
+  have := sf D.haarW
+  have := sf D.haarW'
+  have := sf D.haarN
   have e : ⇑(d_dilE (k := k) (r := r) t h1.ne' h2.ne') =
       Prod.map (Prod.map id (conjM (aDil k r t.1))) (Prod.map id (conjM (aDil k r t.2))) := rfl
   have m1 : Measurable (conjM (aDil k r t.1)) := (BesselUnitaryEquiv.continuous_conjM _).measurable
@@ -1125,10 +1122,6 @@ theorem u_meas_Om (D : RealPlaceData k r Wp Wq) {w₁ w₂ : ℝ → ℝ} (h₁ 
   exact ((u_continuous_om h₁).measurable.comp ((continuous_lam D.z).measurable.comp measurable_fst.snd)).mul
     ((u_continuous_om h₂).measurable.comp ((continuous_lam D.z').measurable.comp measurable_snd.snd).neg)
 
-theorem u_aesm_F (D : RealPlaceData k r Wp Wq) {F : Mat k r → (Wq →L[ℂ] Wp)} (hF : ContinuousOn F (GV k r)) :
-    AEStronglyMeasurable (fun g : Mt k r => F (Matrix.of g)) D.μG := by
-  exact jc_aesm_F D hF
-
 theorem u_KM_eq (D : RealPlaceData k r Wp Wq) (F : Mat k r → (Wq →L[ℂ] Wp)) {p : SS k r} (hp : D.inSS p)
     {x : Mt k r} (hx : Matrix.of x ∈ GV k r) :
     KM D F p x = hsInner (rho D p F (Matrix.of x)) (F (Matrix.of x)) := by
@@ -1171,7 +1164,7 @@ theorem u_lint_KM_le (D : RealPlaceData k r Wp Wq) (Ξ : Mat k r → NNReal) (A 
   have hcont := contOn_of_CkOn hc1
   have hb : ∀ g ∈ GV k r, gN g ^ A * ‖F g‖ ≤ c := fun g hg =>
     hc2 [] [] (by simp) (by simp) (by simp) g hg
-  have hm := u_aesm_F D hcont
+  have hm := jc_aesm_F D hcont
   refine ⟨ENNReal.ofReal (‖hsL (Wp := Wp) (Wq := Wq)‖ ^ 2) * ENNReal.ofReal (C * c * c),
     ENNReal.mul_ne_top ENNReal.ofReal_ne_top ENNReal.ofReal_ne_top, fun p hp => ?_⟩
   have hx : Matrix.of p.1.2 * Matrix.of p.1.1 ∈ GV k r := WeylGroupFacts.uh_mul hp.2.1.1 hp.1.1
@@ -1708,13 +1701,3 @@ theorem y_stepUnfold : Formalism.FourierDecayAlt.B.StepUnfold := by
   exact y_unfold D Ξ A hI hC hCC hCB hXi
 
 end Formalism.FourierDecayAlt.P.B7
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem unfolding_identity_of_integration_formula : Formalism.FourierDecayAlt.B.StepUnfold := B7.y_stepUnfold
-
-theorem orbital_integral_ae_convergence_continuity : Formalism.FourierDecayAlt.B.StepJCont := B7.jc_stepJCont
-
-theorem dilation_identity_of_jacobian : Formalism.FourierDecayAlt.B.StepDilBeta := B7.d_stepDilBeta
-
-end Formalism.FourierDecayAlt.P

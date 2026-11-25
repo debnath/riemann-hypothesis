@@ -46,10 +46,6 @@ section eq
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq]
 
-theorem sigmaFinite_of_haar {U : Set (B.Mat k r)} {μ : Measure (Mt k r)} (h : B.IsHaarOn U μ) : SigmaFinite μ := by
-  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
-  infer_instance
-
 theorem isUnit_det_of_UH {n : B.Mat k r} (hn : n ∈ UH (Hpk k r)) : IsUnit n.det := by
   have hH : IsUnit (Hpk k r).det := IsUnit.of_mul_eq_one (Hpk k r).det
     (by rw [← Matrix.det_mul, Formalism.QuantumDeterminants.GBasic.Hpk_sq, Matrix.det_one])
@@ -80,8 +76,8 @@ def lmulHomeo (n : B.Mat k r) (hn : IsUnit n.det) : Mt k r ≃ₜ Mt k r where
 theorem kr_rightEq (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[ℂ] Wp)) (x n : B.Mat k r)
     (hn : n ∈ QuantumDeterminants.Nset k r) : Kr Bs F (x * n) = psi k r Bs.z' cStd n • Kr Bs F x := by
   have hU : IsUnit n.det := isUnit_det_of_UH hn.1
-  haveI := sigmaFinite_of_haar Bs.haarN
-  haveI := sigmaFinite_of_haar Bs.haarW'
+  haveI := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarN
+  haveI := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarW'
   set e := (lmulHomeo n hU).toMeasurableEquiv with he
   set Φ : Mt k r × Mt k r ≃ᵐ Mt k r × Mt k r := MeasurableEquiv.prodCongr (MeasurableEquiv.refl _) e with hΦ
   have hmpN : MeasurePreserving e Bs.μN Bs.μN := by

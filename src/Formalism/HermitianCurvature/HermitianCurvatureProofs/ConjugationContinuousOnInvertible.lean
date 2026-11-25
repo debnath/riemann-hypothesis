@@ -267,11 +267,7 @@ end Formalism.FourierDecayAlt.P.B2x1
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem haar_measure_unique_up_to_scalar : Formalism.FourierDecayAlt.B2.HaarUnique := B2x1.haarUnique
-
 theorem haar_measure_inversion : Formalism.FourierDecayAlt.B2.HaarInv := B2x1.haarInvFromUnique B2x1.haarUnique
-
-theorem conjugation_preserves_haar : Formalism.FourierDecayAlt.B2.ConjHaar := B2x1.conjHaar
 
 theorem compact_subgroup_conjugation : Formalism.FourierDecayAlt.B2.CompactConj := B2x1.compactConjFromUnique B2x1.haarUnique B2x1.conjHaar
 

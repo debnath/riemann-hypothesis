@@ -42,7 +42,7 @@ theorem block_three_mul_apply_last (A11 : Matrix (Fin p) (Fin p) ℂ) (A12 : Mat
 
 theorem zh_row (a : Fin p) : (⟨2 * (p + ρ) + k - a.val, by omega⟩ : Fin (2 * (p + ρ) + k + 1)) =
     U.eB k p ρ (Sum.inr ⟨p - 1 - a.val, by omega⟩) := by
-  ext; rw [Ux3.block_index_last_val]; simp; omega
+  ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; simp; omega
 
 theorem corner_matrix_block_three_mul (A11 : Matrix (Fin p) (Fin p) ℂ) (A12 : Matrix (Fin p) (Fin (2 * ρ + k + 1)) ℂ)
     (A13 : Matrix (Fin p) (Fin p) ℂ) (A21 : Matrix (Fin (2 * ρ + k + 1)) (Fin p) ℂ) (A22 : B.Mat k ρ)
@@ -81,7 +81,7 @@ theorem zh_mul_UW (z : Fin (2 * (p + ρ) + k + 1) → ℂ) (g h : B.Mat k (p + �
     have h1 := congrFun (hh.2.1 ⟨b.val, by omega⟩).1 c
     have e : eI k (p + ρ) ⟨b.val, by omega⟩ = ⟨b.val, by omega⟩ := rfl
     rw [e] at h1
-    rw [← Formalism.FourierDecayAlt.P.PBM.mulVec_bvec_apply h ⟨b.val, by omega⟩ c, h1]
+    rw [← _root_.PI.QnLevBasicsW.mulVec_bvec h ⟨b.val, by omega⟩ c, h1]
     unfold bvec
     by_cases hcb : c.val = b.val
     · rw [ite_eq_left hcb, Pi.single_apply, ite_eq_left (Fin.ext hcb)]

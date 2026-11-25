@@ -141,8 +141,8 @@ theorem head_types_of_types_at : PBI.HeadTypesAt → PBI.HeadTypes := by
   obtain ⟨⟨h1, hh1, m1, hm1, rfl⟩, -⟩ := hs0
   obtain ⟨⟨h2, hh2, m2, hm2, rfl⟩, -⟩ := hs0'
   rw [PBI.unipotent_level_zero_eq_one hr0 m1 hm1, PBI.unipotent_level_zero_eq_one hr0 m2 hm2, Matrix.mul_one, Matrix.mul_one] at hgs
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed P.k (P.r - P.r) Bs.z
-  have hW' := Formalism.FourierDecayAlt.P.weyl_subgroup_closed P.k (P.r - P.r) Bs.z'
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW P.k (P.r - P.r) Bs.z
+  have hW' := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW P.k (P.r - P.r) Bs.z'
   have hsi : h1⁻¹ ∈ UWset P.k (P.r - P.r) Bs.z := hW.inv_mem _ hh1
   have hs'i : h2⁻¹ ∈ UWset P.k (P.r - P.r) Bs.z' := hW'.inv_mem _ hh2
   have hu1 : IsUnit h1.det := hW.unit _ hh1

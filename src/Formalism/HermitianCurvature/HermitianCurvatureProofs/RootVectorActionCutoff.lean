@@ -70,7 +70,7 @@ theorem leftEq_SA (hD : IsOpen D) (z : Fin (2 * r + k + 1) → ℂ)
   | mem y hy =>
     obtain ⟨p, rfl⟩ := hy
     intro v hv g hg n hn
-    have hng : n * g ∈ Glev k r 0 ∩ D := ⟨Formalism.FourierDecayAlt.P.Qx3.glev_mul hn.2 hg.1, hN g hg n hn⟩
+    have hng : n * g ∈ Glev k r 0 ∩ D := ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hn.2 hg.1, hN g hg n hn⟩
     rw [ev_E hD p.1 p.2 v hng, ev_E hD p.1 p.2 v hg]
     exact ((generator_action_preserved E k r z 0 D p.1 p.2 (v : Mx k r → E) (v : Mx k r → E) 1 hD v.2.1 v.2.1).2.1 hN hv) g hg n hn
   | algebraMap c =>

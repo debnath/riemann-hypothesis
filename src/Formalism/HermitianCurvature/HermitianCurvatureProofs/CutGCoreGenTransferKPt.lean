@@ -49,10 +49,8 @@ section frame
 
 variable {k r : ℕ} {m : ℕ}
 
-theorem hpk_herm' : (Hpk k r)ᴴ = Hpk k r := (Formalism.QuantumDeterminants.hpkFacts k r).1
-
 theorem herm_conj (x y : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) y x = star (herm (Hpk k r) x y) :=
-  (Formalism.FourierDecayAlt.P.SettingConstruction.herm_symm (Hpk k r) hpk_herm' x y).symm
+  (Formalism.FourierDecayAlt.P.SettingConstruction.herm_symm (Hpk k r) _root_.Formalism.FourierDecayAlt.P.Qx2.hpk_h x y).symm
 
 theorem herm_proj {Bs : Fin m → Fin (2 * r + k + 1) → ℂ}
     (hon : ∀ a b, herm (Hpk k r) (Bs a) (Bs b) = if a = b then 1 else 0) (x : Fin (2 * r + k + 1) → ℂ) (c : Fin m) :

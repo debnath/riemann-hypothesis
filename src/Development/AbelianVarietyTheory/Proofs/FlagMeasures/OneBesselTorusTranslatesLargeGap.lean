@@ -173,7 +173,7 @@ theorem ampTK_pt (H : GlobalTheory.GapIn.Hyp) (L : LocBessel k r) (h : ℝ) (μG
     Integrable (besselIntg L (coefF L v v' ξ ξ') γ) ν ∧
       (⟪l v, ξ⟫_ℂ * ⟪ξ', l' v'⟫_ℂ) • ampJ νR 1 (fun g => l (L.σ g w)) (fun g => l' (L.σ g w)) γ =
         ((PI.BesselPeriodGGP.fdegH μG L.σ w : ℂ)⁻¹) • OrbInt L (coefF L v v' ξ ξ') γ ν := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have hσ : PI.UpqRep.IsDSHpk k r L.ε L.lam L.σ := L.hσ
   have hDS : (rep L).IsDS L.ε L.lam := ⟨L.hlam, hσ⟩
   have hDG : (rep L).IsDG L.ε L.lam := ⟨L.hlam, hσ, h, hgap, hok⟩
@@ -902,7 +902,7 @@ theorem pt_bound {k r : ℕ} (L : LocBessel k r) {γ₁ a : Matrix (Fin (2 * r +
   have hXv : pairMaj (γ₁ * a) b p = B.gN X ^ (-b) := rfl
   have hYv : pairMaj γ₁ b (p.1, (h'', conjM a p.2.2)) = B.gN Y ^ (-b) := rfl
   rw [hXv, hYv]
-  have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (P.unitary_group_closed k r).unit _ h3.1
+  have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ h3.1
   have eY : Y = X * ((Matrix.of p.2.1 : B.Mat k r)⁻¹ * a⁻¹ * Matrix.of h'') := by
     simp only [hX, hY, Matrix.mul_assoc]
     rw [Matrix.mul_nonsing_inv_cancel_left _ _ hh'u]

@@ -81,7 +81,7 @@ theorem stab_exp {z e : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 <
     subst hv
     exact hez⟩
   have hBe : ∀ a, herm (Hpk k r) (Bs a) e = 0 := fun a => hB.2.2 a e (by simp)
-  have hBe' : ∀ a, herm (Hpk k r) e (Bs a) = 0 := fun a => by rw [← Qx2.herm_star, hBe a, star_zero]
+  have hBe' : ∀ a, herm (Hpk k r) e (Bs a) = 0 := fun a => by rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, hBe a, star_zero]
   have g1 : (colM Bs)ᴴ * Hpk k r * colM Bs = 1 := by
     ext a b
     rw [gramM_apply, hB.2.1, Matrix.one_apply]
@@ -131,7 +131,7 @@ theorem stab_exp {z e : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 <
     · exact hhe
   have hCd := dual_fix hh.1 hC'
   obtain ⟨e1, e2⟩ := decomp hc g3 h hC hCd
-  obtain ⟨B, hBs, hBe⟩ := unitary_log _ (unitary_of Qx8.hpk_herm hh.1 g1 e1)
+  obtain ⟨B, hBs, hBe⟩ := exists_skew_hermitian_log_unitary _ (unitary_of Qx8.hpk_herm hh.1 g1 e1)
   refine ⟨B, hBs, ?_⟩
   rw [exp_lift hc g1 g2 B, hBe, ← e2]
 
@@ -235,10 +235,10 @@ theorem lie_group_realization : KLLieGrp := by
   obtain ⟨y, hy⟩ : ∃ y, y = g⁻¹ *ᵥ z := ⟨_, rfl⟩
   rw [← hy] at hFr
   have hgy : g *ᵥ y = z := by rw [hy]; exact Qx8.inv_mulVec_uh hgu z
-  have hginv : g⁻¹ ∈ Glev k r (Fin.last r) := FrameEntries.glev_inv hg
+  have hginv : g⁻¹ ∈ Glev k r (Fin.last r) := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hg
   have hyW : inWb k r y := by rw [hy]; exact Qx8.inWb_mulVec hginv hz
   have hyy : herm (Hpk k r) y y = -((Tz k r z : ℝ) : ℂ) := by
-    rw [← Qx8.herm_self', ← hgy, Qx8.herm_UH hgu]
+    rw [← _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, ← hgy, Qx8.herm_UH hgu]
   have hζ : herm (Hpk k r) z' y = zetaL k r z z' (Fin.last r) g := by
     unfold zetaL
     rw [Qx8.fvec_last, Qx8.fvec_last, ← hgy, Qx8.herm_UH hgu]
@@ -249,12 +249,12 @@ theorem lie_group_realization : KLLieGrp := by
       Complex.normSq_conj _
     rw [hc]
     exact hpos
-  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := Qx8.orth_unit hyW hz' hT' hyy (Qx8.herm_self' z') hG2
+  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := Qx8.orth_unit hyW hz' hT' hyy (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z') hG2
   have hFz' : ∀ a, herm (Hpk k r) (Fr a) z' = 0 := fun a => hFr.2.2 a z' (by simp)
   have hFy : ∀ a, herm (Hpk k r) (Fr a) y = 0 := fun a => hFr.2.2 a y (by simp)
   have hFe : ∀ a, herm (Hpk k r) (Fr a) e' = 0 := by
     intro a
-    rw [he', Qx8.herm_smul_right', Qx8.herm_add_right', Qx8.herm_smul_right', hFy, hFz']
+    rw [he', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hFy, hFz']
     simp
   have hFr2 : IsFrameOf k r [z', e'] Fr := ⟨hFr.1, hFr.2.1, fun a v hv => by
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hv

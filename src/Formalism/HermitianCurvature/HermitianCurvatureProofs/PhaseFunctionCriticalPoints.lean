@@ -134,9 +134,6 @@ theorem gradSmall6 (m : ℕ) (D' : ℂ) (hD : D' ≠ 0) (x : Fin (m + 1) → ℂ
         _ ≤ ‖ρ * Complex.exp (-L)‖ * (4 * η) := mul_le_mul_of_nonneg_left hnum hz0
     nlinarith
 
-theorem card_UT (n : ℕ) : Fintype.card (UT n) = ∑ i ∈ range n, i := by
-  apply _root_.Formalism.FourierDecayAlt.P.StandardCharacterExists.card_UT <;> assumption
-
 end Formalism.FourierDecayAlt.P.G1
 
 namespace Formalism.FourierDecayAlt.P
@@ -283,7 +280,7 @@ theorem stationary_leading_constant : Formalism.FourierDecayAlt.G.LeadingConstan
 theorem dimension_count : Formalism.FourierDecayAlt.G.DimCount := by
   intro n
   constructor
-  · rw [card_UT, mul_comm]; exact Finset.sum_range_id_mul_two n
-  · rw [card_UT, card_UT, Finset.sum_range_succ]; ring
+  · rw [_root_.Formalism.FourierDecayAlt.P.StandardCharacterExists.card_UT, mul_comm]; exact Finset.sum_range_id_mul_two n
+  · rw [_root_.Formalism.FourierDecayAlt.P.StandardCharacterExists.card_UT, _root_.Formalism.FourierDecayAlt.P.StandardCharacterExists.card_UT, Finset.sum_range_succ]; ring
 
 end Formalism.FourierDecayAlt.P

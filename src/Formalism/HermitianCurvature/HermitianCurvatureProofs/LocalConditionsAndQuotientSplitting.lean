@@ -26,10 +26,6 @@ open Formalism.FourierDecayAlt.S6
 open NumberField NumberField.IsCMField Module
 open scoped nonZeroDivisors
 
-theorem mem_twLat (E : Type) [Field E] [NumberField E] [IsCMField E] (A B : FI E) (s : ℕ) (t : E) :
-    t ∈ twLat E A B s ↔ t ∈ A ∧ t - (-1) ^ s * complexConj E t ∈ B := by
-  exact Formalism.FourierDecayAlt.P.S6x1.mem_twLat E A B s t
-
 theorem mem_idl (E : Type) [Field E] [NumberField E] (g : ℕ) (k ν : ℤ) (t : E) (hg : 0 < g) :
     t ∈ idl E g k ν ↔ t / (g : E) ^ k ∈ dd E ^ ν := by
   have hg' : ((g : E) ^ k) ≠ 0 := zpow_ne_zero _ (by exact_mod_cast hg.ne')
@@ -40,15 +36,6 @@ theorem mem_idl (E : Type) [Field E] [NumberField E] (g : ℕ) (k ν : ℤ) (t :
     rwa [mul_div_cancel_left₀ _ hg']
   · intro h
     exact ⟨_, h, by field_simp⟩
-
-theorem trace_conj (E : Type) [Field E] [NumberField E] [IsCMField E] (x : E) :
-    Algebra.trace ℚ E (complexConj E x) = Algebra.trace ℚ E x :=
-  Algebra.trace_eq_of_algEquiv ((complexConj E).restrictScalars ℚ) x
-
-theorem trace_rel (E : Type) [Field E] [NumberField E] [IsCMField E] (x : E) :
-    algebraMap (maximalRealSubfield E) E (Algebra.trace (maximalRealSubfield E) E x)
-      = x + complexConj E x :=
-  by apply _root_.Formalism.FourierDecayAlt.P.S6x3.trace_eq
 
 theorem exists_theta (E : Type) [Field E] [NumberField E] [IsCMField E]
     (h1 : differentIdeal (𝓞 (maximalRealSubfield E)) (𝓞 E) = ⊤) :
@@ -98,7 +85,7 @@ theorem exists_theta (E : Type) [Field E] [NumberField E] [IsCMField E]
   rw [FractionalIdeal.mem_coeIdeal] at h1I
   obtain ⟨w, ⟨θ, hθ⟩, hw⟩ := h1I
   refine ⟨θ, ?_⟩
-  rw [← trace_rel, ← hF]
+  rw [← _root_.Formalism.FourierDecayAlt.P.S6x3.trace_eq, ← hF]
   have h2 := Algebra.algebraMap_intTrace (A := 𝓞 F) (K := F) (L := E) (B := 𝓞 E) θ
   rw [hθ, hw] at h2
   rw [show ((θ : E)) = algebraMap (𝓞 E) E θ from rfl, ← h2, map_one]
@@ -139,7 +126,7 @@ theorem traceDualGe : Formalism.FourierDecayAlt.S6.DualSupset := by
     rw [coeIdeal_differentIdeal ℤ ℚ, inv_inv]
   unfold perLat at ht
   unfold dualIdl at hl
-  rw [mem_twLat, mem_idl E g _ _ _ hg, mem_idl E g _ _ _ hg] at hl ht
+  rw [_root_.Formalism.FourierDecayAlt.P.S6x3.mem_twLat, mem_idl E g _ _ _ hg, mem_idl E g _ _ _ hg] at hl ht
   obtain ⟨hl1, hl2⟩ := hl
   obtain ⟨ht1, ht2⟩ := ht
   set ε : E := (-1) ^ s with hε
@@ -168,7 +155,7 @@ theorem traceDualGe : Formalism.FourierDecayAlt.S6.DualSupset := by
     ((FractionalIdeal.mem_one_iff _).2 ⟨θ, rfl⟩)
   rw [Algebra.traceForm_apply] at hz
   have e : Algebra.trace ℚ E ((x + complexConj E x) * (θ : E)) = Algebra.trace ℚ E x := by
-    rw [add_mul, map_add (f := _), ← trace_conj E (complexConj E x * (θ : E)), map_mul (complexConj E),
+    rw [add_mul, map_add (f := _), ← _root_.Formalism.FourierDecayAlt.P.S6x2.trace_conj E (complexConj E x * (θ : E)), map_mul (complexConj E),
       complexConj_apply_apply, ← map_add, ← mul_add, hθ, mul_one]
   rw [e] at hz
   exact hz

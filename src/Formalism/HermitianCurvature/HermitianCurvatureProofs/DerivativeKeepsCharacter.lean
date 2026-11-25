@@ -27,7 +27,7 @@ theorem derivative_keeps_character {E : Type} [NormedAddCommGroup E] [NormedSpac
     ((PBG.E0 hD p q w : VS k r 0 Dm E) : Q.Mx k r → E) (LevelPointCoordinates.nL k r j hj a * g) =
       psi k r z cStd (LevelPointCoordinates.nL k r j hj a) • ((PBG.E0 hD p q w : VS k r 0 Dm E) : Q.Mx k r → E) g := by
   have hng : LevelPointCoordinates.nL k r j hj a * g ∈ Q.Glev k r 0 ∩ Dm :=
-    ⟨Qx3.glev_mul (nL_glev0 hj a) hg.1, hDm g hg a⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (nL_glev0 hj a) hg.1, hDm g hg a⟩
   set c := psi k r z cStd (LevelPointCoordinates.nL k r j hj a) with hc
   have hG := Qx2.good_eh (E := E) (k := k) (r := r) (i := 0) hD (PBG.c0 p) (PBG.c0 q)
   simp only [PBG.position_level_zero_coord] at hG

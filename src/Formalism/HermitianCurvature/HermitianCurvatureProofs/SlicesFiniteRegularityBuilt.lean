@@ -796,7 +796,7 @@ theorem eval_linA (k r : ℕ) (e c : Fin (2 * r + k + 1)) (g : Mat k r) :
 
 theorem eval_linV (k r : ℕ) (e i : Fin (2 * r + k + 1)) (g : Mat k r) (hg : g ∈ GV k r) :
     eval (vars g) (linV k r e i) = (g⁻¹ *ᵥ bvec e) i := by
-  rw [Formalism.FourierDecayAlt.P.JCx2.mn_inv_gv hg]
+  rw [_root_.Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose hg]
   simp [linV, vars_inr, bvec, Matrix.mulVec, dotProduct, Pi.single_apply, Matrix.mul_apply, Finset.sum_mul]
   rw [Finset.sum_comm]
   refine Finset.sum_congr rfl fun _ _ => Finset.sum_congr rfl fun _ _ => ?_
@@ -1780,14 +1780,14 @@ theorem posCoreQ_of (hIntG : IntG) (hTrans : OrbitSliceIntegrable) :
   have hZc : Continuous (fun v : G.UT (n + 1) → ℂ => Zv n t v) := by
     show Continuous (fun v : G.UT (n + 1) → ℂ =>
       (G.ptLong (n + 1) t * G.upper v : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ))
-    exact continuous_const.matrix_mul Dx2.SL.cont_upper
+    exact continuous_const.matrix_mul _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper
   have hΦc : Continuous (fun v : G.UT (n + 1) → ℂ => Φ (Zv n t v)) :=
     continuous_iff_continuousAt.2 fun v => ((hΦreg _ (hZne v)).1.continuousAt).comp hZc.continuousAt
   have hψc : Continuous (fun v : G.UT (n + 1) → ℂ => G.psi U.betaU (G.superSum (G.upper v))) := by
     have h1 : Continuous fun v : G.UT (n + 1) → ℂ => G.superSum (G.upper v) := by
       unfold G.superSum
       exact continuous_finsetSum _ fun i _ =>
-        (continuous_apply _).comp ((continuous_apply _).comp Dx2.SL.cont_upper)
+        (continuous_apply _).comp ((continuous_apply _).comp _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper)
     unfold G.psi
     exact Complex.continuous_exp.comp (continuous_const.mul
       (Complex.continuous_ofReal.comp (Complex.continuous_re.comp (continuous_const.mul h1))))

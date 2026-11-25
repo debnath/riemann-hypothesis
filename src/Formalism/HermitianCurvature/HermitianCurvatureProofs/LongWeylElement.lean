@@ -70,19 +70,7 @@ theorem lev_one (k r' : ℕ) : ιLev k 1 r' 1 = 1 := by
   simp only [ιLev, Matrix.one_apply, Fin.ext_iff]
   split_ifs <;> first | rfl | (exfalso; omega)
 
-theorem lev_mul (k r' : ℕ) (g h : Mat k r') : ιLev k 1 r' (g * h) = ιLev k 1 r' g * ιLev k 1 r' h := by
-  first
-    | exact Formalism.FourierDecayAlt.P.B2x2.lev_mul k r' g h
-
 def blk (k r' : ℕ) (x : Mt k (1 + r')) : Mt k r' := fun s t => x (levPos k 1 r' s) (levPos k 1 r' t)
-
-theorem levM_cont (k r' : ℕ) : Continuous (levM k r') := by
-  refine continuous_pi fun p => continuous_pi fun q => ?_
-  show Continuous fun x : Mt k r' => ιLev k 1 r' (Matrix.of x) p q
-  simp only [ιLev]
-  split_ifs <;> first
-    | exact continuous_const
-    | fun_prop
 
 end PartL
 
@@ -276,7 +264,7 @@ lemma lev_UH (g : Mat k r') : ιLev k 1 r' g ∈ GV k (1 + r') ↔ g ∈ GV k r'
   show (ιLev k 1 r' g)ᴴ * Hpk k (1 + r') * ιLev k 1 r' g = Hpk k (1 + r') ↔ gᴴ * Hpk k r' * g = Hpk k r'
   have key : (ιLev k 1 r' g)ᴴ * Hpk k (1 + r') * ιLev k 1 r' g = w0 k r' 1 * ιLev k 1 r' (gᴴ * Hpk k r' * g) := by
     rw [lev_conjT, Hpk_eq, ← Matrix.mul_assoc, ← t_w0comm k r' 1 gᴴ]
-    simp only [Matrix.mul_assoc, ← lev_mul]
+    simp only [Matrix.mul_assoc, ← _root_.Formalism.FourierDecayAlt.P.B2x2.lev_mul]
   rw [key, Hpk_eq]
   constructor
   · intro h
@@ -286,21 +274,17 @@ lemma lev_UH (g : Mat k r') : ιLev k 1 r' g ∈ GV k (1 + r') ↔ g ∈ GV k r'
   · intro h
     rw [h]
 
-lemma col_eq {m : ℕ} (g : Matrix (Fin m) (Fin m) ℂ) (j p : Fin m) : (g *ᵥ bvec j) p = g p j := by
-  first
-    | (simp [bvec, Matrix.mulVec_single]; done)
-
 lemma fix_iff {m : ℕ} (g : Matrix (Fin m) (Fin m) ℂ) (j : Fin m) :
     g *ᵥ bvec j = bvec j ↔ ∀ p, g p j = if p = j then 1 else 0 := by
   constructor
   · intro h p
     have := congrFun h p
-    rw [col_eq] at this
+    rw [_root_.Formalism.FourierDecayAlt.P.B2x3.mulVec_bvec] at this
     rw [this]
     simp [bvec, Pi.single_apply]
   · intro h
     funext p
-    rw [col_eq, h p]
+    rw [_root_.Formalism.FourierDecayAlt.P.B2x3.mulVec_bvec, h p]
     simp [bvec, Pi.single_apply]
 
 lemma lev_col_iff (g : Mat k r') (t : Fin (2 * r' + k + 1)) :
@@ -614,11 +598,6 @@ section PartM
 
 variable {k r r' : ℕ}
 
-theorem sf {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  haveI : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
-  first
-    | infer_instance
-
 theorem haar_ae {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
     ∀ᵐ g ∂μ, (Matrix.of g : Mat k r) ∈ U := by
   first
@@ -659,7 +638,7 @@ theorem mm_meas {α : Type*} [MeasurableSpace α] {A B : α → Mt k r} (hA : Me
     | exact mulM_meas.comp (hA.prodMk hB)
 
 theorem levM_meas : Measurable (levM k r') := by
-  exact (levM_cont k r').measurable
+  exact (_root_.Formalism.FourierDecayAlt.P.B2x2.levM_cont k r').measurable
 
 lemma continuous_herm {ι : Type*} [Fintype ι] (H : Matrix ι ι ℂ) :
     Continuous fun p : (ι → ℂ) × (ι → ℂ) => herm H p.1 p.2 := by
@@ -728,12 +707,12 @@ theorem os_meas {α : Type*} [MeasurableSpace α] {X X' : α → HPar k r'} {C :
 
 theorem lev_inv (n : Mat k r') (hn : IsUnit n.det) : ιLev k 1 r' n⁻¹ = (ιLev k 1 r' n)⁻¹ := by
   have h1 : ιLev k 1 r' n * ιLev k 1 r' n⁻¹ = 1 := by
-    rw [← lev_mul, Matrix.mul_nonsing_inv n hn, lev_one]
+    rw [← _root_.Formalism.FourierDecayAlt.P.B2x2.lev_mul, Matrix.mul_nonsing_inv n hn, lev_one]
   exact (Matrix.inv_eq_right_inv h1).symm
 
 theorem lev_unit (n : Mat k r') (hn : IsUnit n.det) : IsUnit (ιLev k 1 r' n).det := by
   have h1 : ιLev k 1 r' n * ιLev k 1 r' n⁻¹ = 1 := by
-    rw [← lev_mul, Matrix.mul_nonsing_inv n hn, lev_one]
+    rw [← _root_.Formalism.FourierDecayAlt.P.B2x2.lev_mul, Matrix.mul_nonsing_inv n hn, lev_one]
   exact Matrix.isUnit_det_of_right_inverse h1
 
 theorem os_cell (x x' : HPar k r') (c : ℂ) (B n n' m : Mat k r') (hn : IsUnit n.det) :
@@ -742,7 +721,7 @@ theorem os_cell (x x' : HPar k r') (c : ℂ) (B n n' m : Mat k r') (hn : IsUnit 
         (ιLev k 1 r' n' * heis0 k r' x') := by
   have e : w0 k r' c * ιLev k 1 r' n⁻¹ = (ιLev k 1 r' n)⁻¹ * w0 k r' c := by
     rw [t_w0comm k r' c n⁻¹, lev_inv n hn]
-  simp only [oneStep, lev_mul, Matrix.mul_inv_rev, Matrix.mul_assoc]
+  simp only [oneStep, _root_.Formalism.FourierDecayAlt.P.B2x2.lev_mul, Matrix.mul_inv_rev, Matrix.mul_assoc]
   rw [← Matrix.mul_assoc (w0 k r' c), e]
   simp only [Matrix.mul_assoc]
 
@@ -769,7 +748,7 @@ attribute [local instance] sfHeis
 theorem nuN_eq (hC : HeisConjLevMeas) (hN : ClosedN) (μ' : Measure (Mt k r')) (hμ' : IsHaarOn (Nset k r') μ') :
     ((μHeis k r').prod (μ'.map (levM k r'))).map mulM =
       ((volume : Measure (HPar k r')).prod μ').map (thetaF k r') := by
-  have : SigmaFinite μ' := sf hμ'
+  have : SigmaFinite μ' := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hμ'
   refine Measure.ext_of_lintegral _ fun F hF => ?_
   have h1 : Measurable fun a : Mt k (1 + r') × Mt k (1 + r') => F (mulM a) := hF.comp mulM_meas
   have h2 : Measurable fun a : HPar k r' × Mt k r' => F (thetaF k r' a) := hF.comp thetaF_meas
@@ -804,7 +783,7 @@ theorem key (hN : ClosedN) (μN' μb' : Measure (Mt k r')) (hμN' : IsHaarOn (Ns
         f ((Matrix.of p.1.1)⁻¹ * (w0 k r' c * ιLev k 1 r' B) * Matrix.of p.2 * Matrix.of p.1.2)
           ∂(((((volume : Measure (HPar k r')).prod μN').map (thetaF k r')).prod
             (((volume : Measure (HPar k r')).prod μN').map (thetaF k r'))).prod (μb'.map (levM k r'))) := by
-  have : SigmaFinite μN' := sf hμN'
+  have : SigmaFinite μN' := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hμN'
   have hcell : Measurable fun p : (Mt k (1 + r') × Mt k (1 + r')) × Mt k (1 + r') =>
       f ((Matrix.of p.1.1)⁻¹ * (w0 k r' c * ιLev k 1 r' B) * Matrix.of p.2 * Matrix.of p.1.2) :=
     hf.comp (cell_meas (N := fun p : (Mt k (1 + r') × Mt k (1 + r')) × Mt k (1 + r') => p.1.1)
@@ -905,11 +884,11 @@ theorem iter_step (hO : OneStepInt) (HU : HaarUnique) (hL : LevHaar) (hCN : Clos
   have hνb : IsHaarOn (UWb k (1 + r')) (μb'.map (levM k r')) := by
     rw [uWbRec k r']; exact (hL k r' _ μb' (hCb k r') hb').2
   obtain ⟨b, hb, hbe⟩ := haar_smul HU (hCb k (1 + r')) hμb hνb
-  have : SigmaFinite μG₁ := sf hG₁
-  have : SigmaFinite μN' := sf hN'
-  have : SigmaFinite μb' := sf hb'
-  have : SigmaFinite μN := sf hμN
-  have : SigmaFinite μb := sf hμb
+  have : SigmaFinite μG₁ := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hG₁
+  have : SigmaFinite μN' := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hN'
+  have : SigmaFinite μb' := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hb'
+  have : SigmaFinite μN := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hμN
+  have : SigmaFinite μb := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hμb
   refine ⟨C₀ * C₁ * (a * a * b), by positivity, fun f hf => ?_⟩
 
   let Kμ : Mt k (1 + r') → ℝ≥0∞ := fun T =>
@@ -1022,7 +1001,7 @@ theorem iter_base (HU : HaarUnique) (hCb : ClosedWb) (hNB : NBase) (k : ℕ) : I
     · exact fun h => ⟨h, fun a => a.elim0⟩
   have hG' : IsHaarOn (UWb k 0) μG := by rw [hUW]; exact hG
   obtain ⟨c₀, hc₀, hce⟩ := haar_smul HU (hCb k 0) hb hG'
-  have : SigmaFinite μb := sf hb
+  have : SigmaFinite μb := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hb
   let o : Mt k 0 := (1 : Mat k 0)
   have hNd : μN = μN {o} • Measure.dirac o := by
     rw [← Measure.restrict_singleton, Measure.restrict_eq_self_of_ae_mem]
@@ -1080,24 +1059,9 @@ end Formalism.FourierDecayAlt.P.LongWeylElement
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem bigCellRec_statement : Formalism.FourierDecayAlt.B2.BigCellRec := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellrec
-
-theorem long_weyl_element_commutation : Formalism.FourierDecayAlt.B2.WeylElementCommutesLevelOne := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.t_w0comm
-
-theorem unipotent_weyl_recursion : Formalism.FourierDecayAlt.B2.UWbRec := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.uWbRec
-
-theorem iterated_integral_of_parts : Formalism.FourierDecayAlt.B2.AssembleIter := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.assembleIter
-
 theorem iterated_integration_formula : Formalism.FourierDecayAlt.B2.IterInt :=
-  iterated_integral_of_parts stabilizer_integration_formula haar_measure_unique_up_to_scalar haar_measure_inversion levi_haar_measure_exists unitary_group_closed
-    unipotent_radical_closed opposite_weyl_subgroup_closed unitary_group_haar_exists unipotent_haar_exists opposite_weyl_haar_exists
-    unipotent_haar_recursion unipotent_haar_base_case heisenberg_levi_conjugation_measure bigCellRec_statement long_weyl_element_commutation unipotent_weyl_recursion
-
-theorem bruhat_big_cell_factorization : Formalism.FourierDecayAlt.B2.BigCellFactor := by
-  exact Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor
+  _root_.Formalism.FourierDecayAlt.P.LongWeylElement.assembleIter stabilizer_integration_formula _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique haar_measure_inversion _root_.Formalism.FourierDecayAlt.P.B2x2.levHaar _root_.Formalism.FourierDecayAlt.P.B2x2.closedG
+    _root_.Formalism.FourierDecayAlt.P.B2x2.closedN _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb _root_.Formalism.FourierDecayAlt.P.B2x3.haarG unipotent_haar_exists _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb
+    unipotent_haar_recursion unipotent_haar_base_case _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLevMeas _root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellrec _root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_w0comm _root_.Formalism.FourierDecayAlt.P.LongWeylElement.uWbRec
 
 end Formalism.FourierDecayAlt.P

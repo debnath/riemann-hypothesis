@@ -109,9 +109,9 @@ theorem prod_to_iter {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT 
   have sW := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite hW
   have sW' := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite hW'
   have hinv : μW.map Formalism.FourierDecayAlt.B2.invM = μW :=
-    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z) μW (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hW
+    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z) μW (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hW
   have hinv' : μW'.map Formalism.FourierDecayAlt.B2.invM = μW' :=
-    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z') μW' (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z') hW'
+    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z') μW' (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z') hW'
   have hA := meas_gA (k := k) (r := r) E hf
   have e0 : (fun p : Mt k r × Mt k r => f ((Matrix.of p.1)⁻¹ * E * Matrix.of p.2)) = fun p => f (gA E p.1 p.2) := by
     funext p; rfl
@@ -134,7 +134,7 @@ theorem prod_to_iter {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT 
 
 theorem rhsWHaar : RhsWHaar := by
   intro k r z z' μW μW' a a' μsec D
-  obtain ⟨μb0, hb0⟩ := Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r
+  obtain ⟨μb0, hb0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
   have hW := Formalism.MainNotions.BridgeLemma₃.lbHaarUp_proved.1 k r z μW D.z_mem D.T_pos D.haarW
   have hW' := Formalism.MainNotions.BridgeLemma₃.lbHaarUp_proved.1 k r z' μW' D.z'_mem D.T'_pos D.haarW'
   obtain ⟨C, hC, hI⟩ := Formalism.FourierDecayAlt.P.rank_one_integration_formula k r z z' μsec μb0 μW μW' D.k_pos D.z_mem D.z'_mem
@@ -157,13 +157,13 @@ theorem mBase_mem {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Matrix (
         4 * (Real.sqrt (Tz k r z * Tz k r z') * Real.sqrt (Tz k r z * Tz k r z')) := by ring
     rw [e, hs]
     linarith
-  exact (Formalism.FourierDecayAlt.P.unipotent_weyl_properties k r).1 ▸ ⟨_, (hsec.2 _ hlt).1, rfl⟩
+  exact (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r).1 ▸ ⟨_, (hsec.2 _ hlt).1, rfl⟩
 
 theorem gaugeShiftW : GaugeShiftW := by
   intro k r z z' μb μW μW' a a' μsec D hμb ρ hρ
   have hg : MeasurableSet (bBall k r ρ) := measurableSet_expBall (k := k) (r := r) (Formalism.FourierDecayAlt.B2.UWb k r) ρ hρ
   have hmem : (mBase k r z z' μsec)⁻¹ ∈ Formalism.FourierDecayAlt.B2.UWb k r :=
-    (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r).inv_mem _ (mBase_mem D.T_pos D.T'_pos D.sec)
+    (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r).inv_mem _ (mBase_mem D.T_pos D.T'_pos D.sec)
   have hl : Measurable (lmulM (k := k) (r := r) (mBase k r z z' μsec)⁻¹) := by
     have : Continuous (lmulM (k := k) (r := r) (mBase k r z z' μsec)⁻¹) := by
       show Continuous fun x : Mt k r =>
@@ -180,8 +180,8 @@ theorem wbDataEx : WbDataEx := by
   have hzW : inWb k r z := Formalism.L2.SG.Pf.WFL.inWb_zB 1
   have hzT : Tz k r z = 1 := Formalism.L2.SG.Pf.WFL.Tz_zB zero_le_one
   have hT : 0 < Tz k r z := by rw [hzT]; exact one_pos
-  obtain ⟨μ, hμ⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r z hzW hT
-  have hcpt := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k r z hzW hT
+  obtain ⟨μ, hμ⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hzW hT
+  have hcpt := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k r z hzW hT
   have hfin : μ Set.univ < ⊤ := by
     have h1 : μ Set.univ ≤ μ (UWset k r z : Set (Mt k r)) + μ (UWset k r z : Set (Mt k r))ᶜ := by
       have := measure_union_le (μ := μ) (UWset k r z : Set (Mt k r)) (UWset k r z : Set (Mt k r))ᶜ

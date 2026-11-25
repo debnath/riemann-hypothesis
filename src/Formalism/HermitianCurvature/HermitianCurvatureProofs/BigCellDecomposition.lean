@@ -100,14 +100,14 @@ theorem jf_psiOnto_of_cellDecomp (hCD : BigCellDecomposition.CellDecomp) : Forma
     have h1 : 0 < Complex.normSq P := Complex.normSq_pos.2 hP0
     nlinarith
 
-  have hfac := bruhat_big_cell_factorization k r c μ
-  have huw := unipotent_weyl_properties k r
+  have hfac := _root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ
+  have huw := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r
   have hm : embWb k r μ ∈ UWb k r := TwoByOneBlock.emb_mem_UWb hμ
   have hmz : herm (Hpk k r) (embWb k r μ *ᵥ D.z') D.z = ζ := by
     have e1 : embWb k r μ *ᵥ D.z' = bigCell k r c μ *ᵥ D.z' := by
       rw [hfac.2, ← Matrix.mulVec_mulVec, BigCellDecomposition.bigCell_one_fixes_vector D.z'_mem]
     rw [e1, BigCellHermitian.herm_bigCell _ _ D.z_mem D.z'_mem]
-  obtain ⟨h, hh, h', hh', hmeq⟩ := b2_rank_one_coord k r D.z D.z' D.μsec D.k_pos D.z_mem D.z'_mem D.T_pos
+  obtain ⟨h, hh, h', hh', hmeq⟩ := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneCoord k r D.z D.z' D.μsec D.k_pos D.z_mem D.z'_mem D.T_pos
     D.T'_pos D.sec (embWb k r μ) hm (by rw [hmz]; exact hζ)
   rw [hmz] at hmeq
   have hu1 := WeylGroupFacts.isUnit_of_uh hh.1
@@ -120,7 +120,7 @@ theorem jf_psiOnto_of_cellDecomp (hCD : BigCellDecomposition.CellDecomp) : Forma
       (uWNormal k r D.z D.z_mem h hh n hn).1, hh', (uWNormal k r D.z' D.z'_mem h' hh' n' hn').1⟩,
     (c, ζ), ⟨hc, hζ⟩, ?_⟩
   show n⁻¹ * bigCell k r c μ * n' = h⁻¹ * (h * n * h⁻¹)⁻¹ * bigCell k r c (D.μsec ζ) * (h' * n' * h'⁻¹) * h'
-  rw [hfac.1, hmeq, (bruhat_big_cell_factorization k r c (D.μsec ζ)).1]
+  rw [hfac.1, hmeq, (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c (D.μsec ζ)).1]
   rw [Matrix.mul_inv_rev, Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ hu1]
   simp only [Matrix.mul_assoc]
   rw [Matrix.nonsing_inv_mul _ hu2, Matrix.mul_one]

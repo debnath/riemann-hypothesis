@@ -798,19 +798,3 @@ theorem compactW : CompactW := by
 theorem haarW : HaarWExists := fun k r z hz hT => compactHaar k r _ (closedW k r z) (compactW k r z hz hT)
 
 end Formalism.FourierDecayAlt.P.B2x3
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem weyl_subgroup_closed : Formalism.FourierDecayAlt.B2.ClosedW := B2x3.closedW
-
-theorem opposite_weyl_subgroup_closed : Formalism.FourierDecayAlt.B2.ClosedWb := B2x3.closedWb
-
-theorem weyl_subgroup_compact : Formalism.FourierDecayAlt.B2.CompactW := B2x3.compactW
-
-theorem unitary_group_haar_exists : Formalism.FourierDecayAlt.B2.HaarGExists := B2x3.haarG
-
-theorem opposite_weyl_haar_exists : Formalism.FourierDecayAlt.B2.HaarWbExists := B2x3.haarWb
-
-theorem weyl_haar_exists : Formalism.FourierDecayAlt.B2.HaarWExists := B2x3.haarW
-
-end Formalism.FourierDecayAlt.P

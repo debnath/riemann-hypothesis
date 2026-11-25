@@ -231,10 +231,6 @@ lemma lev_n {g : Mat k r'} (hg : g ∈ Nset k r') : ιLev k 1 r' g ∈ Nset k (1
       rw [lev_mm, hg.2 i' j' (by omega) (by omega)]
       simp only [lv_inj]
 
-lemma herm_sum {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v : Fin m → ℂ) :
-    ∑ j, herm H (bvec j) v * u j = herm H u v := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x5.herm_sum <;> assumption
-
 lemma heisAct (v u : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
     heisG k r' v b *ᵥ u = u - herm (Hpk k (1 + r')) u v • e0 k r' + herm (Hpk k (1 + r')) u (e0 k r') • (v + b • e0 k r') := by
   apply _root_.Formalism.FourierDecayAlt.P.B2x5.heis_act <;> assumption
@@ -496,8 +492,8 @@ theorem unipotent_haar_of_parts : Formalism.FourierDecayAlt.B2.AssembleHaarN := 
     exact ⟨_, hR k r' μ' h'⟩
 
 theorem unipotent_haar_recursion : Formalism.FourierDecayAlt.B2.NRecHaar :=
-  unipotent_recursion_of_parts semidirect_product_haar levi_haar_measure_exists unipotent_radical_closed heisenberg_subgroup_closed heisenberg_haar_measure
-    heisenberg_conjugation_by_levi heisenberg_levi_conjugation_measure unipotent_heisenberg_decomposition
+  unipotent_recursion_of_parts _root_.Formalism.FourierDecayAlt.P.B2x2.semiHaar _root_.Formalism.FourierDecayAlt.P.B2x2.levHaar _root_.Formalism.FourierDecayAlt.P.B2x2.closedN _root_.Formalism.FourierDecayAlt.P.B2x5.heisClosed _root_.Formalism.FourierDecayAlt.P.B2x5.heisHaar
+    _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLev _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLevMeas unipotent_heisenberg_decomposition
 
 theorem unipotent_haar_exists : Formalism.FourierDecayAlt.B2.HaarNExists :=
   unipotent_haar_of_parts unipotent_haar_recursion unipotent_haar_base_case

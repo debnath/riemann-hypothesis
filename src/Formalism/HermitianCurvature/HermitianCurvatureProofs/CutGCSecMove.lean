@@ -34,7 +34,7 @@ theorem sm_inner_conj {k r : ℕ} (Bs : B.RealPlaceData k r Wp Wq) {h h' : B.Mat
 
 theorem sm_slev {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {h : B.Mat k r} (hh : h ∈ UWset k r z) :
     h ∈ Q.Slev k r z (Fin.last r) :=
-  ⟨h, hh, 1, Formalism.FourierDecayAlt.P.Qx6.one_nlev _, (Matrix.mul_one h).symm⟩
+  ⟨h, hh, 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one _, (Matrix.mul_one h).symm⟩
 
 end
 
@@ -165,9 +165,9 @@ theorem section_move_holds : SecMove := by
         have hp2 := hp.2.1
         have hp3 := hp.2.2
         have ht1 : h * p.1 * h⁻¹ ∈ UWset P.k P.r Bs.z :=
-          Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hh hp1) hhi
+          _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hh hp1) hhi
         have ht2 : h'⁻¹ * p.2 * h' ∈ UWset P.k P.r Bs.z' :=
-          Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hhi' hp2) hh'
+          _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hhi' hp2) hh'
         have e3 : ∀ Y : B.Mat P.k P.r, p.1 * (NF.muZ P.k P.r μ0 ζ * (p.2 * Y)) = NF.muZ P.k P.r μ0 ζ * Y := by
           intro Y
           conv_rhs => rw [← hp3]

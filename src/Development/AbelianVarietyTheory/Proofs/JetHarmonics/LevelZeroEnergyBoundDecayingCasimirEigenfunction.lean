@@ -199,7 +199,7 @@ theorem ckOn_inv_entry (k r : ℕ) (c j : Fin (2 * r + k + 1)) :
   refine ⟨Set.univ, fun g => Formalism.FourierDecayAlt.P.JCx2.mnLinInv (Pi.single j 1) c g, isOpen_univ, trivial,
     (Formalism.FourierDecayAlt.P.JCx2.mnLinInv (Pi.single j 1) c).contDiff.contDiffOn, fun g _ hg => ?_⟩
   show g⁻¹ c j = Matrix.mulVec (Hpk k r * g.conjTranspose * Hpk k r) (Pi.single j 1) c
-  rw [← Formalism.FourierDecayAlt.P.JCx2.mn_inv_gv hg]
+  rw [← _root_.Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose hg]
   simp
 
 theorem inCC_inv_entry_smul {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]

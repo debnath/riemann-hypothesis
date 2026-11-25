@@ -131,7 +131,7 @@ theorem orbJ_one_zero (S : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ
     split_ifs with hex
     · have h1mem : (1 : B.Mat k r) ∈ C6.Rset γ := by
         refine ⟨WeylGroupFacts.mem_n_one, ?_⟩
-        rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ)]
+        rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ)]
         exact WeylGroupFacts.mem_n_one
       exact Formalism.FourierDecayAlt.P.Dx2.Rad.u_inj S hγ hpos hd hZ hex.choose_spec.1 h1mem
         (hex.choose_spec.2.trans (Formalism.FourierDecayAlt.P.Dx2.Rad.uMap_one S.z ⟨S.z_mem, S.T_pos⟩).symm)
@@ -147,7 +147,7 @@ theorem orbJ_one_zero (S : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ : γ
   have hact : ∀ p, C6.actR γ 1 p = p := by
     intro p
     unfold C6.actR
-    rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ), Matrix.one_mul,
+    rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ), Matrix.one_mul,
       Matrix.one_mul]
     rfl
   have hθ : ∀ θ, D.IsNormCut S γ (D.muR S γ 1) θ → ∀ p, S.inSS p → θ p = 1 := by
@@ -198,7 +198,7 @@ theorem jf_bigCell_zero (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (F : B.
       (B2.embWb P.k P.r (Bs.μsec ζ)) = 0 := rfl
   rw [hz0] at h0
   unfold Q.resG at h0
-  rw [Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq, ← (Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization P.k P.r c _).1] at h0
+  rw [Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq, ← (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor P.k P.r c _).1] at h0
   rcases smul_eq_zero.1 h0.symm with h | h
   · exfalso
     rw [Complex.ofReal_eq_zero, Finset.prod_eq_zero_iff] at h

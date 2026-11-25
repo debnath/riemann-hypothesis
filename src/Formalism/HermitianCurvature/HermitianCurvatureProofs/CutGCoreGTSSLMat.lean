@@ -153,9 +153,9 @@ theorem second_shift_matrix_form : GTSSLMat := by
         Commute (d.SS l).1 W ∧ Commute (star (d.SS l)).1 W := by
     intro l hl f hf W hW
     obtain ⟨W₁, hW₁⟩ := Formalism.FourierDecayAlt.P.multiplication_zeta_exists Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl (NF.dZ f)
-      (Formalism.FourierDecayAlt.P.NFx4.NO.dZ_smooth (Formalism.FourierDecayAlt.P.NFx4.NO.isOpen_U _) hf)
+      (Formalism.FourierDecayAlt.P.NFx4.NO.dZ_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hf)
     obtain ⟨W₂, hW₂⟩ := Formalism.FourierDecayAlt.P.multiplication_zeta_exists Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl (NF.dZb f)
-      (Formalism.FourierDecayAlt.P.NFx4.NO.dZb_smooth (Formalism.FourierDecayAlt.P.NFx4.NO.isOpen_U _) hf)
+      (Formalism.FourierDecayAlt.P.NFx4.NO.dZb_smooth (_root_.Formalism.FourierDecayAlt.P.NFx4.isOpen_normSq_gt _) hf)
     exact (Formalism.FourierDecayAlt.P.normal_form_order_zero Wp Wq P Bs.z Bs.z' Bs.π Bs.π' hpl X d hL hS hRel hQQ f hf W W₁ W₂
       hW hW₁ hW₂).2.1 l hl
   let ent : Module.End ℂ (Q.RadSp P.k P.r Bs.z Bs.z' Bs.π Bs.π') → M.Ty P → M.Ty P → ℂ → ℂ := fun T ρ' ρ ζ =>

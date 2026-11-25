@@ -308,7 +308,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
   have hspec := _root_.Formalism.FourierDecayAlt.P.ptG_spec
   unfold _root_.Formalism.FourierDecayAlt.D.PtGSpec at hspec
   replace hspec := And.intro hspec trivial
-  have hexist := _root_.Formalism.FourierDecayAlt.P.exists_isotropic_frame
+  have hexist := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists
   unfold _root_.Formalism.FourierDecayAlt.D.DFrameExists at hexist
   refine ⟨c₃, ?_⟩
   intro Wp _ _ _ Wq _ _ _ Wqp _ _ _ Wqm _ _ _ k r D Dp Dm ν' m₀ n₀ b Ap' Am' hpz hpz' hpπ hpμ
@@ -353,7 +353,7 @@ theorem _root_.GlobalTheory.WigSh.contraction_maps_at_representatives :
     have e := rep_eq γ hγ hpos g ⟨hg, hZ, hd⟩
     exact ⟨congrArg Ap' e, congrArg Am' e⟩
   · intro A₀ f hA₀ hf
-    have haar := _root_.Formalism.FourierDecayAlt.P.radial_measure_is_haar
+    have haar := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar
     unfold _root_.Formalism.FourierDecayAlt.D.MuRHaar at haar
     have hrelv := _root_.Formalism.FourierDecayAlt.P.relevant_points_holds
     unfold _root_.Formalism.FourierDecayAlt.D.PtRelevant at hrelv
@@ -622,7 +622,7 @@ theorem intertwiner_dOp_of_EB {V₁ : Type} [NormedAddCommGroup V₁] [NormedSpa
 theorem intertwiner_group_of_EB : ∀ (V₁ : Type) [NormedAddCommGroup V₁] [NormedSpace ℂ V₁] [FiniteDimensional ℂ V₁] (V₂ : Type) [NormedAddCommGroup V₂] [NormedSpace ℂ V₂] [FiniteDimensional ℂ V₂] (k r : ℕ) (z : (Fin (2 * r + k + 1) → ℂ)) (π₁ : Mx k r → (V₁ →L[ℂ] V₁)) (π₂ : Mx k r → (V₂ →L[ℂ] V₂)) (T : V₁ →ₗ[ℂ] V₂) (B : Fin k → (Fin (2 * r + k + 1) → ℂ)), inWb k r z → 0 < Tz k r z → IsRepW k r z π₁ → IsRepW k r z π₂ → IsFrameOf k r [z] B → (∀ a b v, T (EB π₁ B a b v) = EB π₂ B a b (T v)) → ∀ h ∈ UWset k r z, ∀ v, T (π₁ h v) = π₂ h (T v) := by
   intro V₁ _ _ _ V₂ _ _ _ k r z π₁ π₂ T B hz hTz h₁ h₂ hB hT h hh
   have hzz : herm (Hpk k r) z z ≠ 0 := by
-    rw [Qx8.herm_self']
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
     intro h0
     rw [neg_eq_zero, Complex.ofReal_eq_zero] at h0
     exact hTz.ne' h0
@@ -770,7 +770,7 @@ namespace GlobalTheory
 theorem haarOn_UW_eq_of_mass_one {k r : ℕ} (z : Fin (2 * r + k + 1) → ℂ) (μ ν : Measure (Mt k r))
     (hμ : Formalism.FourierDecayAlt.B.IsHaarOn (UWset k r z) μ) (hν : Formalism.FourierDecayAlt.B.IsHaarOn (UWset k r z) ν)
     (h1 : μ Set.univ = 1) (h2 : ν Set.univ = 1) : ν = μ := by
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r _ μ ν (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hμ hν.conc hν.left hν.finite_compact
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r _ μ ν (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hμ hν.conc hν.left hν.finite_compact
   have h3 := congrArg (fun m : Measure (Mt k r) => m Set.univ) hc
   simp only [Measure.smul_apply, ENNReal.smul_def, smul_eq_mul, h1, h2, mul_one] at h3
   have h4 : c = 1 := by exact_mod_cast h3.symm

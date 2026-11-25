@@ -135,17 +135,17 @@ theorem base {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Matrix (Fin (
   have hm := NFRadRedA.muZ_uwb hsec hζ
   have hG := NFRadRedA.uwb_glev hm
   have hU : NF.muZ k r μsec ζ ∈ UH (Hpk k r) := hG.1
-  have hGi := FrameEntries.glev_inv hG
+  have hGi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hG
   have hUi : (NF.muZ k r μsec ζ)⁻¹ ∈ UH (Hpk k r) := hGi.1
   have hyz : herm (Hpk k r) (NF.muZ k r μsec ζ *ᵥ z') z = ζ := by
     rw [← NFRadRedA.zeta_eq]; exact NFRadRedA.zeta_muZ hz hz' hsec hζ
   have hy : inWb k r (NF.muZ k r μsec ζ *ᵥ z') := Qx8.inWb_mulVec hG hz'
   have hyi : inWb k r ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) := Qx8.inWb_mulVec hGi hz
   have hyy : herm (Hpk k r) (NF.muZ k r μsec ζ *ᵥ z') (NF.muZ k r μsec ζ *ᵥ z') = -((Tz k r z' : ℝ) : ℂ) := by
-    rw [Qx2.herm_uh hU, FrameEntries.herm_self]
+    rw [Qx2.herm_uh hU, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
   have hyyi : herm (Hpk k r) ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) =
       -((Tz k r z : ℝ) : ℂ) := by
-    rw [Qx2.herm_uh hUi, FrameEntries.herm_self]
+    rw [Qx2.herm_uh hUi, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq]
   have hyzi : herm (Hpk k r) ((NF.muZ k r μsec ζ)⁻¹ *ᵥ z) z' = conj ζ := by
     rw [hswap, ← FrameEntries.herm_inv hU, hyz]
   have hpos : 0 < Complex.normSq ζ / Tz k r z - Tz k r z' := by

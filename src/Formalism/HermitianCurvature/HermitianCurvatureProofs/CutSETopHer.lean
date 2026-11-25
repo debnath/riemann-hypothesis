@@ -1108,11 +1108,11 @@ theorem lev_ind_her {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
     obtain ⟨μ0, hμ0⟩ := Formalism.FourierDecayAlt.P.exists_zeta_normalized_haar P.k (P.r - 0) Wp Wq (T.bs 0)
     have h1 : B.IsHaarOn (Glev P.k P.r (Fin.last P.r)) μ := hD.2.1
     obtain ⟨a, ha⟩ : ∃ a : ℝ≥0, μ = a • μ0 := by
-      have hU := Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed P.k P.r
+      have hU := _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb P.k P.r
       have h1' := h1
       have h0 : B.IsHaarOn (Glev P.k P.r (Fin.last P.r)) μ0 := hμ0.1
       rw [glev_last_eq] at h1' h0
-      exact Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar P.k P.r _ μ0 μ hU h0 h1'.conc h1'.left h1'.finite_compact
+      exact _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique P.k P.r _ μ0 μ hU h0 h1'.conc h1'.left h1'.finite_compact
     have ha0 : (a : ℝ) ≠ 0 := by
       intro h
       apply h1.ne_zero

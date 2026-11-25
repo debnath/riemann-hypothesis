@@ -1274,7 +1274,7 @@ theorem cW_mem_UWb (θ : ℝ) : cW k r θ ∈ UWb k r := by
 theorem cW_comm (θ : ℝ) {h : Q.Mx k r} (hh : h ∈ UWb k r) : cW k r θ * h = h * cW k r θ := by
   obtain ⟨μ, _, rfl⟩ := (UWb_iff h).1 hh
   unfold cW
-  rw [← emb_mul, ← emb_mul, smul_mul_assoc, one_mul, mul_smul_comm, mul_one]
+  rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, smul_mul_assoc, one_mul, mul_smul_comm, mul_one]
 
 theorem cW_Glev (θ : ℝ) {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r)) : cW k r θ * g ∈ Q.Glev k r (Fin.last r) := by
   obtain ⟨hc, hfix⟩ := cW_mem_UWb (k := k) (r := r) θ
@@ -1420,7 +1420,7 @@ theorem tht_iota_smul (F F' : Fin k → Fin (2 * r + k + 1) → ℂ) (a a' : Fin
   refine Finset.sum_congr rfl fun p _ => ?_
   rw [Finset.smul_sum]
   refine Finset.sum_congr rfl fun q _ => ?_
-  rw [h q, P.Qx8.herm_smul_left', smul_smul]
+  rw [h q, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, smul_smul]
 
 variable [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq]
 
@@ -1594,7 +1594,7 @@ theorem nu0'_facts (Bs : B.RealPlaceData (n + 1) r Wp Wq) {ζ : ℂ}
   obtain ⟨-, -, hfix, -⟩ := DU.base hz hz' Bs.T_pos Bs.T'_pos Bs.sec hζ
   have hm := NFRadRedA.muZ_uwb Bs.sec hζ
   have hG := NFRadRedA.uwb_glev hm
-  have hGi := FrameEntries.glev_inv hG
+  have hGi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hG
   have hy : inWb (n + 1) r ((NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ *ᵥ Bs.z) := Qx8.inWb_mulVec hGi hz
   have hW : inWb (n + 1) r (SSn.nu0' (n + 1) r Bs.z Bs.z' Bs.μsec ζ) := by
     show inWb (n + 1) r (SSn.unitH (n + 1) r (SSn.prWv (n + 1) r Bs.z' ((NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ *ᵥ Bs.z)))
@@ -1639,7 +1639,7 @@ theorem tht_adapted (Bs : B.RealPlaceData (n + 1) r Wp Wq) {ζ : ℂ}
   have hm := NFRadRedA.muZ_uwb Bs.sec hζ
   have hG := NFRadRedA.uwb_glev hm
   have hU : NF.muZ (n + 1) r Bs.μsec ζ ∈ UH (Hpk (n + 1) r) := hG.1
-  have hmm : NF.muZ (n + 1) r Bs.μsec ζ * (NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ = 1 := Gauge.GC.KLAM.mul_inv_uh hU
+  have hmm : NF.muZ (n + 1) r Bs.μsec ζ * (NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ = 1 := _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hU
   set μ := NF.muZ (n + 1) r Bs.μsec ζ with hμ
   set ν := SSn.nu0 (n + 1) r Bs.z Bs.z' Bs.μsec ζ with hν
   set ν' := SSn.nu0' (n + 1) r Bs.z Bs.z' Bs.μsec ζ with hν'
@@ -1728,7 +1728,7 @@ theorem core (hAlg : TW.TWNeAlg) {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerPr
   have hm := NFRadRedA.muZ_uwb Bs.sec hζ'
   have hG := NFRadRedA.uwb_glev hm
   have hU : NF.muZ (n + 1) r Bs.μsec ζ ∈ UH (Hpk (n + 1) r) := hG.1
-  have hmm : NF.muZ (n + 1) r Bs.μsec ζ * (NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ = 1 := Gauge.GC.KLAM.mul_inv_uh hU
+  have hmm : NF.muZ (n + 1) r Bs.μsec ζ * (NF.muZ (n + 1) r Bs.μsec ζ)⁻¹ = 1 := _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hU
   have hy : inWb (n + 1) r (NF.muZ (n + 1) r Bs.μsec ζ *ᵥ Bs.z') := Qx8.inWb_mulVec hG hz'
   have hνW : inWb (n + 1) r (SSn.nu0 (n + 1) r Bs.z Bs.z' Bs.μsec ζ) := by
     show inWb (n + 1) r (SSn.unitH (n + 1) r (SSn.prWv (n + 1) r Bs.z (NF.muZ (n + 1) r Bs.μsec ζ *ᵥ Bs.z')))
@@ -1800,7 +1800,7 @@ theorem core (hAlg : TW.TWNeAlg) {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerPr
     linarith
   have hlabρ : ∀ j : Fin n, ((Function.update Mπ i₀ (Mπ i₀ + 1) j : ℤ) : ℝ) =
       M.rho ⟨n + 1, r, T, T', u, u'⟩ ρ ((j : ℕ) + 1) - u 1 + 1 / 2 := fun j => by
-    rw [rho_raise _ l π ρ hUp _ (hmem j)]
+    rw [_root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp _ l π ρ hUp _ (hmem j)]
     by_cases hj : j = i₀
     · subst hj
       have e : ((i₀ : Fin n) : ℕ) + 1 = l := by rw [hi₀]; show l - 1 + 1 = l; omega

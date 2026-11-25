@@ -23,27 +23,11 @@ section Form
 
 variable {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ)
 
-theorem hb_add_left (x y w : Fin m → ℂ) : herm H (x + y) w = herm H x w + herm H y w := by
-  simp only [herm, Matrix.mulVec_add, dotProduct_add]
-
 theorem hb_sub_left (x y w : Fin m → ℂ) : herm H (x - y) w = herm H x w - herm H y w := by
   simp only [herm, Matrix.mulVec_sub, dotProduct_sub]
 
-theorem hb_smul_left (c : ℂ) (x w : Fin m → ℂ) : herm H (c • x) w = c * herm H x w := by
-  simp only [herm, Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul]
-
-theorem hb_add_right (x w w' : Fin m → ℂ) : herm H x (w + w') = herm H x w + herm H x w' := by
-  simp only [herm, star_add, add_dotProduct]
-
 theorem hb_sub_right (x w w' : Fin m → ℂ) : herm H x (w - w') = herm H x w - herm H x w' := by
   simp only [herm, star_sub, sub_dotProduct]
-
-theorem hb_smul_right (c : ℂ) (x w : Fin m → ℂ) : herm H x (c • w) = star c * herm H x w := by
-  simp only [herm, star_smul, smul_dotProduct, smul_eq_mul]
-
-theorem hb_symm (hH : Hᴴ = H) (x y : Fin m → ℂ) : herm H y x = star (herm H x y) := by
-  simp only [herm]
-  rw [star_dotProduct, Matrix.star_mulVec, hH, Matrix.dotProduct_mulVec]
 
 theorem hb_UH {g : Matrix (Fin m) (Fin m) ℂ} (hg : g ∈ UH H) (x y : Fin m → ℂ) :
     herm H (g *ᵥ x) (g *ᵥ y) = herm H x y := by
@@ -51,15 +35,11 @@ theorem hb_UH {g : Matrix (Fin m) (Fin m) ℂ} (hg : g ∈ UH H) (x y : Fin m �
   simp only [herm]
   rw [Matrix.star_mulVec, ← Matrix.dotProduct_mulVec, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, hg']
 
-theorem hb_self_real (hH : Hᴴ = H) (x : Fin m → ℂ) : herm H x x = ((herm H x x).re : ℂ) := by
-  have h := hb_symm H hH x x
-  exact (Complex.conj_eq_iff_re.mp (by simpa [Complex.star_def] using h.symm)).symm
-
 theorem hb_expand (u v : Fin m → ℂ) (s : ℂ) :
     herm H (u + s • v) (u + s • v) =
       herm H u u + star s * herm H u v + s * herm H v u + s * star s * herm H v v := by
-  rw [hb_add_left, hb_add_right, hb_add_right, hb_smul_left, hb_smul_left, hb_smul_right,
-    hb_smul_right]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right,
+    _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right]
   ring
 
 end Form
@@ -67,9 +47,6 @@ end Form
 section Wb
 
 variable {k r : ℕ}
-
-theorem hpk_herm (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  apply _root_.Formalism.FourierDecayAlt.P.Qx8.hpk_herm <;> assumption
 
 theorem inWb_add {x y : Fin (2 * r + k + 1) → ℂ} (hx : inWb k r x) (hy : inWb k r y) : inWb k r (x + y) := by
   intro i hi
@@ -87,7 +64,7 @@ theorem perp_nonneg {b v : Fin (2 * r + k + 1) → ℂ} (hb : inWb k r b) (hbn :
     (hv : inWb k r v) (hvb : herm (Hpk k r) v b = 0) : 0 ≤ (herm (Hpk k r) v v).re := by
   by_contra! hneg
   have h := reverse_cauchy_schwarz_holds k r v b hv hb hneg hbn
-  have h0 : herm (Hpk k r) b v = 0 := by rw [hb_symm _ (hpk_herm k r) v b, hvb, star_zero]
+  have h0 : herm (Hpk k r) b v = 0 := by rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_symm _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) v b, hvb, star_zero]
   rw [h0, map_zero] at h
   have h1 : 0 < Tz k r v := by unfold Tz; linarith
   have h2 : 0 < Tz k r b := by unfold Tz; linarith
@@ -97,12 +74,12 @@ theorem norm_perp_le {b u v : Fin (2 * r + k + 1) → ℂ} (hb : inWb k r b) (hb
     (hu : inWb k r u) (hv : inWb k r v) (hub : herm (Hpk k r) u b = 0) (hvb : herm (Hpk k r) v b = 0) :
     ‖herm (Hpk k r) u v‖ ≤ (herm (Hpk k r) u u).re + (herm (Hpk k r) v v).re := by
   set H := Hpk k r
-  have hvu : herm H v u = star (herm H u v) := hb_symm H (hpk_herm k r) u v
+  have hvu : herm H v u = star (herm H u v) := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_symm H (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) u v
   have key : ∀ s : ℂ, s * star s = 1 →
       0 ≤ (herm H u u).re + (herm H v v).re + (star s * herm H u v + s * star (herm H u v)).re := by
     intro s hs
     have hw : inWb k r (u + s • v) := inWb_add hu (inWb_smul s hv)
-    have hwb : herm H (u + s • v) b = 0 := by rw [hb_add_left, hb_smul_left, hub, hvb]; ring
+    have hwb : herm H (u + s • v) b = 0 := by rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hub, hvb]; ring
     have h0 := perp_nonneg hb hbn hw hwb
     rw [hb_expand, hvu, hs, one_mul] at h0
     simp only [Complex.add_re] at h0 ⊢
@@ -131,8 +108,8 @@ variable {k r : ℕ}
 theorem hb_sub_expand {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v w : Fin m → ℂ) (s s' : ℂ) :
     herm H (u - s • w) (v - s' • w) =
       herm H u v - star s' * herm H u w - s * herm H w v + s * star s' * herm H w w := by
-  rw [hb_sub_left, hb_sub_right, hb_sub_right, hb_smul_left, hb_smul_left, hb_smul_right,
-    hb_smul_right]
+  rw [hb_sub_left, hb_sub_right, hb_sub_right, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right,
+    _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right]
   ring
 
 theorem norm_herm_le {a b c : Fin (2 * r + k + 1) → ℂ} (ha : inWb k r a) (hb : inWb k r b) (hc : inWb k r c)
@@ -141,14 +118,14 @@ theorem norm_herm_le {a b c : Fin (2 * r + k + 1) → ℂ} (ha : inWb k r a) (hb
       (-(herm (Hpk k r) b b).re)⁻¹ * (‖herm (Hpk k r) a b‖ ^ 2 + ‖herm (Hpk k r) c b‖ ^ 2 +
         ‖herm (Hpk k r) a b‖ * ‖herm (Hpk k r) c b‖) := by
   set H := Hpk k r with hHdef
-  have hH : Hᴴ = H := hpk_herm k r
+  have hH : Hᴴ = H := _root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r
   set T : ℝ := -(herm H b b).re with hTdef
   have hTpos : 0 < T := by rw [hTdef]; linarith
   set t : ℝ := T⁻¹ with htdef
   have htT : (t : ℂ) * (T : ℂ) = 1 := by
     rw [← Complex.ofReal_mul, htdef, inv_mul_cancel₀ hTpos.ne', Complex.ofReal_one]
   have hbb : herm H b b = -(T : ℂ) := by
-    rw [hb_self_real H hH b, hTdef]; push_cast; ring
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_real H hH b, hTdef]; push_cast; ring
   set X := herm H a b with hX
   set Z := herm H c b with hZ
   have hXn : X * star X = ((‖X‖ ^ 2 : ℝ) : ℂ) := by
@@ -160,15 +137,15 @@ theorem norm_herm_le {a b c : Fin (2 * r + k + 1) → ℂ} (ha : inWb k r a) (hb
   set γ : ℂ := -((t : ℂ) * Z) with hγ
   have hsα : star α = -((t : ℂ) * star X) := by rw [hα, star_neg, star_mul', hst]
   have hsγ : star γ = -((t : ℂ) * star Z) := by rw [hγ, star_neg, star_mul', hst]
-  have hba : herm H b a = star X := hb_symm H hH a b
-  have hbc : herm H b c = star Z := hb_symm H hH c b
+  have hba : herm H b a = star X := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_symm H hH a b
+  have hbc : herm H b c = star Z := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_symm H hH c b
   have ha' : inWb k r (a - α • b) := inWb_sub ha (inWb_smul α hb)
   have hc' : inWb k r (c - γ • b) := inWb_sub hc (inWb_smul γ hb)
   have ha'b : herm H (a - α • b) b = 0 := by
-    rw [hb_sub_left, hb_smul_left, hbb, ← hX, hα]
+    rw [hb_sub_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hbb, ← hX, hα]
     linear_combination (-X) * htT
   have hc'b : herm H (c - γ • b) b = 0 := by
-    rw [hb_sub_left, hb_smul_left, hbb, ← hZ, hγ]
+    rw [hb_sub_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hbb, ← hZ, hγ]
     linear_combination (-Z) * htT
   have eac := hb_sub_expand H a c b α γ
   rw [← hX, hbc, hsγ, hbb] at eac
@@ -345,7 +322,7 @@ theorem isCompact_zeta_le (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r
   have hcl : IsClosed {g : Mx k r | g ∈ Glev k r (Fin.last r) ∧ ε ≤ GGl k r z z' g ∧
       ‖zetaL k r z z' (Fin.last r) g‖ ≤ R} :=
     (Formalism.FourierDecayAlt.P.Qx5.Glev_closed (Fin.last r)).inter
-      ((isClosed_le continuous_const (Formalism.FourierDecayAlt.P.Qx5.GGl_continuous k r z z')).inter
+      ((isClosed_le continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')).inter
         (isClosed_le (continuous_norm.comp (Formalism.FourierDecayAlt.P.Qx5.zetaL_contDiff k r z z' (Fin.last r)).continuous)
           continuous_const))
   refine hbox.of_isClosed_subset hcl ?_

@@ -947,7 +947,7 @@ theorem extend {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E]
       ((Formalism.FourierDecayAlt.P.B2x2.closedG k r).closed.inter (isClosed_le Formalism.FourierDecayAlt.P.JCx2.pd_sq_cd.continuous continuous_const)) ?_
     refine (Metric.isBounded_closedBall (x := (0 : Mat k r)) (r := 2 * R)).subset fun M hM => ?_
     rw [Metric.mem_closedBall, dist_zero_right]
-    exact (Formalism.FourierDecayAlt.P.JCx2.mn_norm_le_gN M).trans (Formalism.FourierDecayAlt.P.JCx2.pd_gN_le_of_sq (by positivity) hM.2)
+    exact (_root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN M).trans (Formalism.FourierDecayAlt.P.JCx2.pd_gN_le_of_sq (by positivity) hM.2)
   obtain ⟨Y, hY, hYx, hYQ⟩ := md_glue (V := Mat k r) (E := E) (mm : ℕ∞) K (GV k r) hKc x
     (fun g => ε / 2 < Gf k r z z' g) (by
       intro g₀ hg₀

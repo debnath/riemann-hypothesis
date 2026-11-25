@@ -99,7 +99,7 @@ theorem hconj_lie {P : Mat k r} (hP : inLie k r P) : (Hpk k r)⁻¹ * Pᴴ * Hpk
   unfold inLie at hP
   have hP' : Pᴴ * Hpk k r = -(Hpk k r * P) := eq_neg_of_add_eq_zero_left hP
   rw [Formalism.FourierDecayAlt.P.Qx2.hpk_inv, Matrix.mul_assoc, hP', Matrix.mul_neg, ← Matrix.mul_assoc,
-    Formalism.FourierDecayAlt.P.Qx2.hpk_sq', Matrix.one_mul]
+    _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
 
 theorem hpart1_dec {P Q : Mat k r} (hP : inLie k r P) (hQ : inLie k r Q) :
     hpart1 (Hpk k r) (P + Complex.I • Q) = P := by

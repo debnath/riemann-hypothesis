@@ -96,9 +96,9 @@ def pairSet (L : LocBessel k r) : Set (PairSp k r) :=
     Matrix.of p.2.2 ∈ Nset k r}
 
 theorem closed_pairSet (L : LocBessel k r) : IsClosed (pairSet L) := by
-  have hWc := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r L.z).closed
-  have hWc' := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r L.z').closed
-  have hNc := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).closed
+  have hWc := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r L.z).closed
+  have hWc' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r L.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   exact (hWc.preimage continuous_fst.fst).inter ((hNc.preimage continuous_fst.snd).inter
     ((hWc'.preimage continuous_snd.fst).inter (hNc.preimage continuous_snd.snd)))
 
@@ -125,7 +125,7 @@ theorem ae_pairMeas (L : LocBessel k r) : ∀ᵐ p ∂(pairMeas L), p ∈ pairSe
 
 theorem mem_N_of_mul {a x : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ Nset k r)
     (h : a * x ∈ Nset k r) : x ∈ Nset k r := by
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have := hN.mul_mem _ (hN.inv_mem a ha) _ h
   rwa [Matrix.nonsing_inv_mul_cancel_left _ _ (hN.unit a ha)] at this
 
@@ -141,7 +141,7 @@ theorem ae_quot (L : LocBessel k r) {γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 *
 theorem point_mem (L : LocBessel k r) {γ : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hγ : γ ∈ UH (Hpk k r)) {p : PairSp k r} (hp : p ∈ pairSet L) :
     (Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * γ * Matrix.of p.2.2 * Matrix.of p.2.1 ∈ UH (Hpk k r) := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   exact hG.mul_mem _ (hG.mul_mem _ (hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hp.1.1) _ (hG.inv_mem _ hp.2.1.1)) _ hγ)
     _ hp.2.2.2.1) _ hp.2.2.1.1
 

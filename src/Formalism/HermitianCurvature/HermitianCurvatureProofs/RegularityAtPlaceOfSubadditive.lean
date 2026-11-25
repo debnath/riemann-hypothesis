@@ -115,7 +115,7 @@ theorem vec_Gpow (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (
   unfold KB.Pl.V D.vecV
   split_ifs with h1 h2
   · apply orbJ_smul_ae _ _ _ _ _ _ hc
-    filter_upwards [TBBx2.ae_inSS p.T.base] with q hq
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B5.ae_inSS p.T.base] with q hq
     have hGq : Gf P.k P.r p.T.base.z p.T.base.z' (B.sgs q h2.choose) = Gp p γ := by
       rw [TBBx2.Gf_sgs _ q hq, TBBx2.Gf_of_Zhat _ _ _ _ h2.choose_spec.2.1]
       rfl

@@ -183,11 +183,11 @@ theorem fm_eq (B : Fin k → Fin (2 * r + k + 1) → ℂ) (g : Mx k r) (a b : Fi
 
 theorem fm_add (B : Fin k → Fin (2 * r + k + 1) → ℂ) (g h : Mx k r) : fm B (g + h) = fm B g + fm B h := by
   ext a b
-  simp only [fm, Matrix.of_apply, Matrix.add_apply, Matrix.add_mulVec, Qx8.herm_add_left']
+  simp only [fm, Matrix.of_apply, Matrix.add_apply, Matrix.add_mulVec, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left]
 
 theorem fm_smul (B : Fin k → Fin (2 * r + k + 1) → ℂ) (c : ℂ) (g : Mx k r) : fm B (c • g) = c • fm B g := by
   ext a b
-  simp only [fm, Matrix.of_apply, Matrix.smul_apply, Matrix.smul_mulVec, Qx8.herm_smul_left', smul_eq_mul]
+  simp only [fm, Matrix.of_apply, Matrix.smul_apply, Matrix.smul_mulVec, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, smul_eq_mul]
 
 theorem continuous_fm (B : Fin k → Fin (2 * r + k + 1) → ℂ) : Continuous (fm B) := by
   refine continuous_pi fun a => continuous_pi fun b => ?_
@@ -202,7 +202,7 @@ theorem fm_one (hB : IsFrameOf k r [z] B) : fm B 1 = 1 := by
 
 theorem fm_unitB (hB : IsFrameOf k r [z] B) (a b : Fin k) : fm B (unitB (Hpk k r) B a b) = Matrix.single a b 1 := by
   ext c d
-  simp only [fm, Matrix.of_apply, Qx8.unitB_mulVec, Qx8.herm_smul_left', hB.2.1, Matrix.single_apply]
+  simp only [fm, Matrix.of_apply, Qx8.unitB_mulVec, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hB.2.1, Matrix.single_apply]
   by_cases h1 : a = c <;> by_cases h2 : b = d <;> simp [h1, h2, eq_comm]
 
 theorem mulVec_frame (hz : inWb k r z) (hT : 0 < Tz k r z) (hB : IsFrameOf k r [z] B) {h : Mx k r}

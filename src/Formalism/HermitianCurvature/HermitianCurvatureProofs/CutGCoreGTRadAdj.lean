@@ -98,7 +98,7 @@ theorem radial_adjoint_identity_holds : GTRadAdj := by
     rw [hT, hT']
     rfl
 
-  have hmem := Formalism.FourierDecayAlt.P.b2_rank_one_mem P.k P.r Bs.z Bs.z' Bs.μsec Bs.z_mem Bs.z'_mem Bs.sec
+  have hmem := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem P.k P.r Bs.z Bs.z' Bs.μsec Bs.z_mem Bs.z'_mem Bs.sec
   have hdom : ∀ ζ : ℂ, Tz P.k P.r Bs.z * Tz P.k P.r Bs.z' < Complex.normSq ζ →
       ∀ h ∈ UWset P.k P.r Bs.z, ∀ h' ∈ UWset P.k P.r Bs.z',
         (c, h⁻¹ * NF.muZ P.k P.r Bs.μsec ζ * h') ∈ Q.DomR P.k P.r Bs.z Bs.z' := by
@@ -164,7 +164,7 @@ theorem radial_adjoint_identity_holds : GTRadAdj := by
         unfold Q.GGl at hG
         rw [P5.Rad.zetaL_last] at hG
         linarith
-      obtain ⟨h, hh, h', hh', hgeq⟩ := Formalism.FourierDecayAlt.P.b2_rank_one_coord P.k P.r Bs.z Bs.z' Bs.μsec Bs.k_pos
+      obtain ⟨h, hh, h', hh', hgeq⟩ := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneCoord P.k P.r Bs.z Bs.z' Bs.μsec Bs.k_pos
         Bs.z_mem Bs.z'_mem Bs.T_pos Bs.T'_pos Bs.sec g hu hζA
       have hζK : herm (Hpk P.k P.r) (g.mulVec Bs.z') Bs.z ∉ Kz := by
         intro hK
@@ -187,7 +187,7 @@ theorem radial_adjoint_identity_holds : GTRadAdj := by
     · have hnd : (c, g) ∉ Q.DomR P.k P.r Bs.z Bs.z' := fun hd => hG hd.2.2
       exact ⟨Φ.2.1 (c, g) hnd, Ψ.2.1 (c, g) hnd⟩
 
-  obtain ⟨μ, hμb⟩ := Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists P.k P.r
+  obtain ⟨μ, hμb⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb P.k P.r
   have hμ : B.IsHaarOn (Q.Glev P.k P.r (Fin.last P.r)) μ := by
     rw [← JCx2.rb_uwb_eq]
     exact hμb

@@ -220,15 +220,12 @@ section KRfacts
 
 variable {K : Type} [CommRing K] (R : Subring K)
 
-theorem mem_rangeR (a : K) : a ∈ LinearMap.range (Algebra.linearMap R K) ↔ a ∈ R := by
-  apply _root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng <;> assumption
-
 theorem psiKR_mk (ψ : AddChar K ℂ) (hψ : ∀ r ∈ R, ψ r = 1) (a : K) :
     psiKR R ψ (Submodule.Quotient.mk a : KR R) = ψ a := by
   unfold psiKR
   set b := Quotient.out (Submodule.Quotient.mk a : KR R) with hb
   have h1 : b - a ∈ R := by
-    rw [← mem_rangeR R, ← Submodule.Quotient.eq]
+    rw [← _root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng R, ← Submodule.Quotient.eq]
     exact Quotient.out_eq _
   rw [show b = a + (b - a) by abel, AddChar.map_add_eq_mul, hψ _ h1, mul_one]
 
@@ -247,7 +244,7 @@ theorem latZ_le_ker {n : ℕ} (Z : Matrix (Fin n) (Fin n) K) (hZ : IsUnit Z.det)
   rw [← hw]
   simp only [LinearMap.comp_apply, LinearMap.restrictScalars_apply, Matrix.mulVecLin_apply,
     Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hZ, Matrix.one_mulVec]
-  rw [mem_rangeR]
+  rw [_root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng]
   unfold lastCoord
   rw [LinearMap.sum_apply]
   refine R.sum_mem fun j _ => ?_
@@ -400,7 +397,7 @@ theorem first_kernel_periodic_of_formula (hF : SingleBlockFormula) : SingleBlock
   intro K _ _ _ R ψ hLD h h' c c' hs hc
   rw [hF K R ψ hLD h h' c hs, hF K R ψ hLD h h' c' hs]
   have e : (Submodule.Quotient.mk (c : K) : KR R) = Submodule.Quotient.mk (c' : K) := by
-    rw [Submodule.Quotient.eq, mem_rangeR]
+    rw [Submodule.Quotient.eq, _root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng]
     exact hc
   simp only [singleBlockInner]
   rw [e]
@@ -415,14 +412,14 @@ theorem first_kernel_parseval_of_formula (hF : SingleBlockFormula) (hI : IntFini
       (Submodule.Quotient.mk ((cr x : Kˣ) : K) : KR R)) := by
     constructor
     · intro x y hxy
-      have h1 := (mem_rangeR R _).mp ((Submodule.Quotient.eq _).mp hxy)
+      have h1 := (_root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng R _).mp ((Submodule.Quotient.eq _).mp hxy)
       rw [← hcr x, ← hcr y]
       exact QuotientAddGroup.eq_iff_sub_mem.mpr h1
     · intro y
       obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ y
       refine ⟨(a : K ⧸ R.toAddSubgroup), ?_⟩
       apply (Submodule.Quotient.eq _).mpr
-      rw [mem_rangeR]
+      rw [_root_.Formalism.FourierDecayAlt.P.A5x3.mem_rng]
       exact QuotientAddGroup.eq_iff_sub_mem.mp (hcr (a : K ⧸ R.toAddSubgroup))
   let G : (K ⧸ R.toAddSubgroup) → Cos R h × Cos R h' → ℂ := fun x q =>
     (if IsInt R (orbZ h (rep R q.1)) ∧ IsInt R (orbZ h' (rep R q.2)) then

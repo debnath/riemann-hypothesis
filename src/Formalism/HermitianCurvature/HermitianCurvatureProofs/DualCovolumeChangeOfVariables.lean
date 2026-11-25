@@ -249,9 +249,3 @@ theorem t_PoissonJoint : PoissonJoint := by
 end Poisson
 
 end Formalism.FourierDecayAlt.P.Jx3
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem block_frame : Formalism.FourierDecayAlt.J.BlockFrame := Jx3.t_BlockFrame
-
-end Formalism.FourierDecayAlt.P

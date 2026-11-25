@@ -47,7 +47,7 @@ theorem frame_lie {m : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {Bs : Fin m → Fi
   have hl := Qx8.unitB_lie Bs hB.1 (Fin.last r) a b
   have h0 : ∀ c, herm (Hpk k r) z (Bs c) = 0 := by
     intro c
-    rw [← Qx2.herm_star, hB.2.2 c z (by simp), star_zero]
+    rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, hB.2.2 c z (by simp), star_zero]
   have z1 : unitB (Hpk k r) Bs a b *ᵥ z = 0 := by
     rw [Qx8.unitB_mulVec, h0, zero_smul]
   have z2 : ((Hpk k r)⁻¹ * (unitB (Hpk k r) Bs a b)ᴴ * Hpk k r) *ᵥ z = 0 := by

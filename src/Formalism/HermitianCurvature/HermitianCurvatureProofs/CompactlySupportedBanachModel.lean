@@ -148,14 +148,12 @@ end smooth
 
 lemma hpk_herm : (Hpk k r)ᴴ = Hpk k r := (hpkFacts k r).1
 
-lemma hpk_sq' : Hpk k r * Hpk k r = 1 := (hpkFacts k r).2.1
-
 def prj (Z : Mat k r) : Mat k r := (1 / 2 : ℂ) • (Z - Hpk k r * Zᴴ * Hpk k r)
 
 lemma prj_lie (Z : Mat k r) : inLie k r (prj Z) := by
   unfold inLie prj
   have hH := (hpk_herm (k := k) (r := r))
-  have hHH := (hpk_sq' (k := k) (r := r))
+  have hHH := (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq (k := k) (r := r))
   rw [conjTranspose_smul, conjTranspose_sub, conjTranspose_mul, conjTranspose_mul, hH,
     conjTranspose_conjTranspose]
   have h1 : Hpk k r * (Z * Hpk k r) * Hpk k r = Hpk k r * Z := by
@@ -170,7 +168,7 @@ lemma prj_of_lie {Z : Mat k r} (hZ : inLie k r Z) : prj Z = Z := by
   unfold prj
   have h0 : Zᴴ * Hpk k r = -(Hpk k r * Z) := eq_neg_of_add_eq_zero_left hZ
   have h1 : Hpk k r * Zᴴ * Hpk k r = -Z := by
-    rw [Matrix.mul_assoc, h0, Matrix.mul_neg, ← Matrix.mul_assoc, hpk_sq', Matrix.one_mul]
+    rw [Matrix.mul_assoc, h0, Matrix.mul_neg, ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
   rw [h1, sub_neg_eq_add, ← two_smul ℂ Z, smul_smul]
   norm_num
 

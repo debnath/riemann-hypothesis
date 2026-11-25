@@ -250,7 +250,7 @@ theorem _root_.Formalism.FourierDecayAlt.P.minus_positive_of_parts : MinusPosOfP
         psi k r z cStd (nL k r (m + 1) hj a) • ((PBG.vK hDo Φ hsm : VS k r 0 Dm E) : Mx k r → E) g := by
     intro g hg a
     have hg' : nL k r (m + 1) hj a * g ∈ Glev k r 0 ∩ Dm :=
-      ⟨Glev_mul (HeadLetterLemmas.nL_glev0 hj a) hg.1, (hleft g hg a).1⟩
+      ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (HeadLetterLemmas.nL_glev0 hj a) hg.1, (hleft g hg a).1⟩
     show cut k r 0 Dm Φ _ = _ • cut k r 0 Dm Φ _
     rw [cut_of_mem _ hg', cut_of_mem _ hg]
     exact (hleft g hg a).2
@@ -468,22 +468,9 @@ theorem dmin_zero (z z' : Fin (2 * r + k + 1) → ℂ) (g : Q.Mx k r) (h : 0 < r
   unfold Dmin
   exact Matrix.det_isEmpty
 
-theorem qminorOp_zero (a b : Fin 0 → Fin (2 * r + k + 1)) (u : ℂ) (f : Q.Mx k r → E) (g : Q.Mx k r) :
-    qminorOp (EabH (Hpk k r)) a b u f g = f g := by
-  unfold qminorOp
-  rw [Finset.sum_apply, Fintype.sum_unique]
-  simp
-
 theorem AAop_zero (h : 0 ≤ r) (u : ℂ) (f : Q.Mx k r → E) (g : Q.Mx k r) : C3.AAop k r 0 h u f g = f g := by
   unfold C3.AAop
-  rw [Fintype.sum_unique, ite_eq_left (Subsingleton.strictMono _), Matrix.det_isEmpty, one_smul, qminorOp_zero]
-
-theorem qminorOp_one (a b : Fin 1 → Fin (2 * r + k + 1)) (u : ℂ) (f : Q.Mx k r → E) (g : Q.Mx k r) :
-    qminorOp (EabH (Hpk k r)) a b u f g =
-      (if a 0 = b 0 then u • f g else 0) + EabH (Hpk k r) (a 0) (b 0) f g := by
-  unfold qminorOp
-  rw [Finset.sum_apply, Fintype.sum_unique]
-  simp [QuantumDeterminants.Top]
+  rw [Fintype.sum_unique, ite_eq_left (Subsingleton.strictMono _), Matrix.det_isEmpty, one_smul, _root_.Formalism.FourierDecayAlt.P.CutHLMZ.qminorOp_zero]
 
 theorem AAop_one (h : 1 ≤ r) (x : Q.Mx k r) (τ : ℂ)
     (hnf : ∀ p : Fin (2 * r + k + 1), PBG.xi0 x ⟨0, by omega⟩ p = if p.val = 0 then τ else 0)
@@ -500,7 +487,7 @@ theorem AAop_one (h : 1 ≤ r) (x : Q.Mx k r) (τ : ℂ)
     exact hnf (c 0)
   rw [Finset.sum_eq_single (fun _ => eI k r ⟨0, by omega⟩)]
   · rw [ite_eq_left (Subsingleton.strictMono _), hent, ite_eq_left (by simp [eI]),
-      qminorOp_one, ite_eq_left (by simp [C3.xR, eI])]
+      _root_.Formalism.FourierDecayAlt.P.CutHLMZ.qminorOp_one, ite_eq_left (by simp [C3.xR, eI])]
     simp [C3.xR, eI, Q.EH]
   · intro c _ hc
     split_ifs with hm

@@ -611,8 +611,8 @@ theorem secM_spec (S : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) →
   have hσU : σ ∈ UH (Hpk k r) := sig_UH Y hz' hν hs hzz hνz hνν h3 h4
   have hσu : ∀ i, σ *ᵥ uB S.z' ν' i = Y i := sig_u Y hz' hν hs hzz hνz hνν
   have hγ : m₀ * σ ∈ UH (Hpk k r) := mul_UH hmU hσU
-  have hγu : IsUnit (m₀ * σ).det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hγ
-  have hm0u : IsUnit m₀.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hmU
+  have hγu : IsUnit (m₀ * σ).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hγ
+  have hm0u : IsUnit m₀.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hmU
   have hσf : ∀ b, σ *ᵥ fvec k r S.z' b = cvec k S.z' ν' (xco T T' Zm b) := by
     intro b
     rcases cast_or_last b with hb | ⟨b', rfl⟩
@@ -947,10 +947,10 @@ theorem cell_int [CompleteSpace Wp] (S : B.RealPlaceData k r Wp Wq) (γ : B.Mat 
       ∫ Y : (C2.LPidx w → ℂ) × (G.UT (r + 1) → ℂ),
         (C2.psiC cStd (C2.simpleUp (lowP w Y.1)ᴴ) * star (C2.psiC cStd (C2.simpleUp (G.upper Y.2)))) •
           PBI.fibInt S μ0 μ0' F ((C2.tauM k r S.z (lowP w Y.1)ᴴ)⁻¹ * γ * C2.tauM k r S.z' (G.upper Y.2)) := by
-  have := Dx2.OrbJ.sigmaF hμ0
-  have := Dx2.OrbJ.sigmaF hμ0'
-  have := Dx2.OrbJ.sigmaF S.haarW
-  have := Dx2.OrbJ.sigmaF S.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW'
   have hmp := RE.mp_rearr S w hμ0 hμ0'
   let Φ : ((C2.LPidx w → ℂ) × (G.UT (r + 1) → ℂ)) × B.SS k r → (Wq →L[ℂ] Wp) := fun x =>
     (C2.psiC cStd (C2.simpleUp (lowP w x.1.1)ᴴ) * star (C2.psiC cStd (C2.simpleUp (G.upper x.1.2)))) •
@@ -1151,7 +1151,7 @@ theorem fib_indep (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r) (hbase 
   have hτN : τ ∈ Nset k r := A.tau_N hz hv
   have hτN' : τ' ∈ Nset k r := A.tau_N hz' hu'
   have uτ := _root_.Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hτN
-  have hGG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hGG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have hg1 : τ⁻¹ * γ0 * τ' ∈ B.GV k r :=
     hGG.mul_mem _ (hGG.mul_mem _ (hGG.inv_mem _ hτN.1) _ hγe) _ hτN'.1
   have hpos0 : 0 < Gf k r S.z S.z' γ0 := by
@@ -1174,8 +1174,8 @@ theorem fib_indep (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r) (hbase 
   have huB : C2.uMap k r S.z' nB = 1 := unipotent_character_one_of_product hz' hhB hnB hs'.2
   obtain ⟨hnA'', hfA''⟩ := conj_fix hz hv hnA huA
   obtain ⟨hnB'', hfB''⟩ := conj_fix hz' hu' hnB huB
-  have uhA : IsUnit hA.det := Dx2.OrbJ.isUnit_of_G hhA.1
-  have uhB : IsUnit hB.det := Dx2.OrbJ.isUnit_of_G hhB.1
+  have uhA : IsUnit hA.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uhB : IsUnit hB.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
 
   have cA : hA⁻¹ * τ⁻¹ = τ⁻¹ * hA⁻¹ := by
     have := A.tau_comm hhA v

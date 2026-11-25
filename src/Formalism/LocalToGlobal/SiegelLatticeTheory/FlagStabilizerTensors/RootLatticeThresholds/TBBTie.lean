@@ -33,7 +33,7 @@ def TopLevelBesselHypothesis : Prop :=
             (Formalism.FourierDecayAlt.D.vecV Ds ν' m₀ F (γ.1.map Prod.swap))).re)
 
 theorem topLevelBesselHypothesis : TopLevelBesselHypothesis := by
-  have hDF := Formalism.FourierDecayAlt.P.exists_isotropic_frame
+  have hDF := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists
   have hVI := Formalism.FourierDecayAlt.P.isotropic_vectors_linear_indep
   have hPR := Formalism.FourierDecayAlt.P.relevant_points_holds
   have hRM := root_measure_of_mu_R

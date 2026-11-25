@@ -119,7 +119,7 @@ theorem vecV_sub (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 * r + k + 1) →
             Integrable (fun p => θ p • D.orbIntegrand Bs h'.choose G p) Bs.μSS := by
         intro G cF hcF hGc hGb
         have hm : AEStronglyMeasurable (D.orbIntegrand Bs h'.choose G) Bs.μSS :=
-          Formalism.FourierDecayAlt.P.PBE.integrand_aesm' Bs horb ((Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hGc.1).mono fun g hg => hg.1)
+          Formalism.FourierDecayAlt.P.PBE.integrand_aesm' Bs horb ((_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hGc.1).mono fun g hg => hg.1)
         have hi : Integrable (fun p => θ p • D.orbIntegrand Bs h'.choose G p) Bs.μSS :=
           Integrable.mono' (hmaj.const_mul cF) (hθ.1.aestronglyMeasurable.smul hm)
             (hdom G cF hcF fun p hp => hGb _ (Formalism.FourierDecayAlt.P.B7.sgs_mem Bs hp hγ))

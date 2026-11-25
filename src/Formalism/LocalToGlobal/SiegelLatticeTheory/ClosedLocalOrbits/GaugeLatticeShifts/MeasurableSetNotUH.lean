@@ -43,9 +43,9 @@ theorem muS_inv {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz
   have sN := Formalism.L2.SG.RealObj.InfCut.JacobianCoordinates.JL.RI.sigmaFinite_of_b hN
   have hinvm : Measurable (Formalism.FourierDecayAlt.B2.invM : Mt k r → Mt k r) := Formalism.FourierDecayAlt.P.B2x2.invM_meas
   have hWi : μW.map Formalism.FourierDecayAlt.B2.invM = μW :=
-    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z) μW (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hW
+    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (UWset k r z) μW (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hW
   have hNi : μN.map Formalism.FourierDecayAlt.B2.invM = μN :=
-    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (Nset k r) μN (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hN
+    Formalism.FourierDecayAlt.P.haar_measure_inversion k r (Nset k r) μN (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hN
   have hNc : ∀ h ∈ UWset k r z, μN.map (conjM h) = μN := Formalism.FourierDecayAlt.P.b2_conjInvRaw_proof k r z μN hz hT hN
 
   let g : Mt k r → Mt k r → Mt k r := fun h n => mulF (mulF (h, Formalism.FourierDecayAlt.B2.invM n), Formalism.FourierDecayAlt.B2.invM h)

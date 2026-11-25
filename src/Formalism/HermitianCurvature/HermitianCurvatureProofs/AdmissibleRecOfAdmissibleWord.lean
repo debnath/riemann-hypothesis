@@ -431,9 +431,3 @@ theorem cPosCut : CPosCut := by
   · have := hq (y - 1) (hQs k u u' ρ l y T T' hl1 hlk hint hcut' hT hT'); simpa using this
 
 end Formalism.FourierDecayAlt.P.Fr2
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem frame_of_steps : Formalism.FourierDecayAlt.Fr.FrameAssemble := Fr2.frameAssemble
-
-end Formalism.FourierDecayAlt.P

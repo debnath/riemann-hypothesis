@@ -47,7 +47,7 @@ def heisT (ρ : ℕ) (x : B2.HPar k ρ) : Mt k (1 + ρ) := Matrix.of.symm (B2.he
 theorem heis_cont (ρ : ℕ) : Continuous (heisT (k := k) ρ) := B2x5.continuous_heis0 k ρ
 
 theorem heis_emb (ρ : ℕ) : MeasurableEmbedding (heisT (k := k) ρ) :=
-  (heis_cont ρ).measurableEmbedding (Formalism.FourierDecayAlt.P.heisenberg_subgroup_closed k ρ).1
+  (heis_cont ρ).measurableEmbedding (_root_.Formalism.FourierDecayAlt.P.B2x5.heisClosed k ρ).1
 
 def phiE (ρ : ℕ) : U.RC k 1 ρ ≃ᵐ B2.HPar k ρ where
   toFun := Dx2.MN.phi
@@ -338,13 +338,13 @@ theorem jfStep_of (hO : MCOm) : JFStep := by
   change B.JF B0 f0 γ = ∫ x, (FI ∘ T ∘ reorderE) x ∂_
   rw [integral_prod _ hInt3, hL]
 
-  have w1 : ∀ᵐ x ∂B0.μW, Matrix.of x ∈ UWset k ρ B0.z := _root_.Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem B0.haarW
-  have w1' : ∀ᵐ x ∂B0.μW', Matrix.of x ∈ UWset k ρ B0.z' := _root_.Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem B0.haarW'
-  have w2 : ∀ᵐ x ∂(D.muN k ρ), Matrix.of x ∈ QuantumDeterminants.Nset k ρ := _root_.Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem (Dx2.MN.haar ρ)
+  have w1 : ∀ᵐ x ∂B0.μW, Matrix.of x ∈ UWset k ρ B0.z := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem B0.haarW
+  have w1' : ∀ᵐ x ∂B0.μW', Matrix.of x ∈ UWset k ρ B0.z' := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem B0.haarW'
+  have w2 : ∀ᵐ x ∂(D.muN k ρ), Matrix.of x ∈ QuantumDeterminants.Nset k ρ := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem (Dx2.MN.haar ρ)
   have wH : ∀ᵐ x ∂(B2.μHeis k ρ), Matrix.of x ∈ QuantumDeterminants.Nset k (1 + ρ) := by
-    filter_upwards [_root_.Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem (Formalism.FourierDecayAlt.P.heisenberg_haar_measure k ρ)] with x hx
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem (_root_.Formalism.FourierDecayAlt.P.B2x5.heisHaar k ρ)] with x hx
     obtain ⟨p, hp⟩ := hx
-    rw [← hp]; exact Formalism.FourierDecayAlt.P.heisenberg_mem_unipotent k ρ p
+    rw [← hp]; exact _root_.Formalism.FourierDecayAlt.P.B2x4.heisMem k ρ p
   set μO := (B0.μW.prod (D.muN k ρ)).prod (B0.μW'.prod (D.muN k ρ)) with hμO
   have o1 : ∀ᵐ o ∂μO, Matrix.of o.1.1 ∈ UWset k ρ B0.z :=
     Measure.quasiMeasurePreserving_fst.ae (Measure.quasiMeasurePreserving_fst.ae w1)

@@ -227,7 +227,7 @@ def shearU (n : ℕ) : (G.UT n → ℂ) × (Fin n → ℂ) ≃ᵐ (G.UT n → �
   right_inv q := by
     simp only
     rw [Matrix.mulVec_mulVec, Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det q.1), Matrix.one_mulVec]
-  measurable_toFun := (continuous_fst.prodMk ((Dx2.SL.cont_upper.comp continuous_fst).matrix_mulVec
+  measurable_toFun := (continuous_fst.prodMk ((_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst).matrix_mulVec
     continuous_snd)).measurable
   measurable_invFun := (continuous_fst.prodMk (((G5.continuous_inv_upper n).comp continuous_fst).matrix_mulVec
     continuous_snd)).measurable
@@ -240,7 +240,7 @@ theorem shearU_mp (n : ℕ) : MeasurePreserving (shearU n) volume volume := by
       funext x; rw [Matrix.vecMul_transpose]
     rwa [e] at h
   have hm : Measurable (Function.uncurry fun (u : G.UT n → ℂ) (x : Fin n → ℂ) => G.upper u *ᵥ x) :=
-    ((Dx2.SL.cont_upper.comp continuous_fst).matrix_mulVec continuous_snd).measurable
+    ((_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst).matrix_mulVec continuous_snd).measurable
   have h := (MeasurePreserving.id (volume : Measure (G.UT n → ℂ))).skew_product (μc := volume) (μd := volume) hm
     (Filter.Eventually.of_forall fun u => (hrow u).map_eq)
   exact h

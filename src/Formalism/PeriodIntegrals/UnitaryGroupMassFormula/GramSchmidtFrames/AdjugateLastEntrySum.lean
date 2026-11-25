@@ -41,7 +41,7 @@ lemma adjugate_last_entry_sum {U' W' Zt Z Vm : Matrix (Fin (r + 1)) (Fin (r + 1)
 theorem xcofL_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2.StdZ k r z') {n n' : B.Mat k r}
     (hn : n ∈ Nset k r) (hn' : n' ∈ Nset k r) (y : B.Mat k r) :
     xcofL k r z z' (n * y * n') = n *ᵥ xcofL k r z z' y := by
-  have Nc := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have Nc := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hF' := Formalism.FourierDecayAlt.P.unipotent_map_frame k r z' hz'
   have hF := Formalism.FourierDecayAlt.P.unipotent_map_frame k r z hz
   have hS : n ∈ Sset k r z := ⟨1, one_mem_UW z, n, hn, (one_mul _).symm⟩

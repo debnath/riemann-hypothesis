@@ -69,10 +69,10 @@ variable {k r : ℕ}
 
 theorem exists_setting (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z')
     (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z') : ∃ Bs : B.RealPlaceData k r ℂ ℂ, Bs.z = z ∧ Bs.z' = z' := by
-  obtain ⟨μG, hG⟩ := unitary_group_haar_exists k r
+  obtain ⟨μG, hG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   obtain ⟨μN, hN⟩ := unipotent_haar_exists k r
-  obtain ⟨μW, hW⟩ := weyl_haar_exists k r z hz hT
-  obtain ⟨μW', hW'⟩ := weyl_haar_exists k r z' hz' hT'
+  obtain ⟨μW, hW⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hz hT
+  obtain ⟨μW', hW'⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z' hz' hT'
   obtain ⟨μsec, hs⟩ := SettingConstruction.sectionExists k r z z' hk hz hz' hT hT'
   obtain ⟨χ, hχ1, hχ2, hχ3⟩ := character_exists_alt
   exact ⟨⟨z, z', fun _ => 1, fun _ => 1, μG, μW, μN, μW', μsec, χ, hk, hz, hz', hT, hT',
@@ -149,7 +149,7 @@ theorem exists_root_haar (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz
     funext x; simp [hphi x]
   have hrm : Measurable (rootCoords k r Bs.z p) := by
     rw [hrc]; exact (cjE (rootEquiv p)).symm.measurable.comp (Rad.continuous_radial_phi Bs).measurable
-  refine ⟨D.muR Bs g⁻¹ (permOf p), ⟨OrbJ.sigmaF hH, hH.ne_zero, hH.conc, hH.left⟩, ⟨hH.right, hI⟩, ?_⟩
+  refine ⟨D.muR Bs g⁻¹ (permOf p), ⟨_root_.Formalism.FourierDecayAlt.P.B7.sf hH, hH.ne_zero, hH.conc, hH.left⟩, ⟨hH.right, hI⟩, ?_⟩
   rw [hmu, Measure.map_map hrm hm]
   have : rootCoords k r Bs.z p ∘ (fun x => (Matrix.of.symm (Rad.rhoF Bs g⁻¹ (permOf p) x) : Mt k r)) =
       (cjE (rootEquiv p)).symm := by

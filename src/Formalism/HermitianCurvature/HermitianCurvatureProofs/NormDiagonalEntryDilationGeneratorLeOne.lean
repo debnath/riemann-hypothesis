@@ -396,14 +396,6 @@ theorem Nset_sub (k r : ℕ) : Nset k r ⊆ GV k r := fun _ h => h.1
 
 theorem UWset_sub (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : UWset k r z ⊆ GV k r := fun _ h => h.1
 
-theorem haar_sigmaFinite {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
-  have : IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
-  infer_instance
-
-theorem haar_ae {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) :
-    ∀ᵐ g ∂μ, (Matrix.of g : Mat k r) ∈ U := by
-  rw [ae_iff]; exact h.conc
-
 theorem admissible_two_sided_translate {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] {α c : ℝ} {f : Mat k r → E}
     (hα : 0 ≤ α) (hf : admitted α c f) {u v : Mat k r} (hu : u ∈ GV k r) (hv : v ∈ GV k r) :
     admitted α (c * (gN u⁻¹ * gN v⁻¹) ^ α) (fun g => f (u * g * v)) := by
@@ -456,7 +448,7 @@ theorem admissible_ae_strongly_measurable {E : Type*} [NormedAddCommGroup E] [No
     hf.1
   have h1 := hc.aestronglyMeasurable (μ := μ) hm
   have h2 : μ.restrict {x : Mt k r | (Matrix.of x : Mat k r) ∈ GV k r} = μ :=
-    Measure.restrict_eq_self_of_ae_mem (haar_ae h)
+    Measure.restrict_eq_self_of_ae_mem (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem h)
   rwa [h2] at h1
 
 end basic
@@ -465,13 +457,6 @@ section setting
 
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
   [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq]
-
-theorem sigmaFinite_μSS (D : RealPlaceData k r Wp Wq) : SigmaFinite D.μSS := by
-  have := haar_sigmaFinite D.haarW
-  have := haar_sigmaFinite D.haarN
-  have := haar_sigmaFinite D.haarW'
-  unfold RealPlaceData.μSS
-  infer_instance
 
 theorem ae_inSS (D : RealPlaceData k r Wp Wq) : ∀ᵐ p ∂D.μSS, D.inSS p := by
   apply _root_.Formalism.FourierDecayAlt.P.B7.ae_inSS <;> assumption
@@ -519,12 +504,6 @@ theorem inSS_mem (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) :
     (Matrix.of p.1.2 * Matrix.of p.1.1 : Mat k r) ∈ GV k r ∧ (Matrix.of p.2.2 * Matrix.of p.2.1 : Mat k r) ∈ GV k r :=
   ⟨WeylGroupFacts.uh_mul (Nset_sub k r hp.2.1) (UWset_sub k r _ hp.1),
     WeylGroupFacts.uh_mul (Nset_sub k r hp.2.2.2) (UWset_sub k r _ hp.2.2.1)⟩
-
-theorem sgs_eq (p : SS k r) (g : Mat k r) :
-    sgs p g = (Matrix.of p.1.2 * Matrix.of p.1.1 : Mat k r)⁻¹ * g * (Matrix.of p.2.2 * Matrix.of p.2.1) := by
-  unfold sgs
-  rw [Matrix.mul_inv_rev]
-  simp only [Matrix.mul_assoc]
 
 theorem sgs_dil (hU : DilUW) (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) {x y : ℝ} (hx : 0 < x)
     (hy : 0 < y) (g : Mat k r) :
@@ -586,15 +565,6 @@ theorem smooth_on_mono {m m' : ℕ∞} (hm : m' ≤ m) {UU : Set (Mat k r)} {f :
   intro g₀ hg₀
   obtain ⟨U, f', hU, hgU, hf', he⟩ := h g₀ hg₀
   exact ⟨U, f', hU, hgU, hf'.of_le (by exact_mod_cast hm), he⟩
-
-theorem continuousOn_of_contDiffOn_group {m : ℕ∞} {f : Mat k r → E} (h : CkOn m (GV k r) f) : ContinuousOn f (GV k r) := by
-  intro g₀ hg₀
-  obtain ⟨U, f', hU, hgU, hf', he⟩ := h g₀ hg₀
-  have h1 : ContinuousAt f' g₀ := hf'.continuousOn.continuousAt (hU.mem_nhds hgU)
-  have h2 : ContinuousWithinAt f' (GV k r) g₀ := h1.continuousWithinAt
-  refine h2.congr_of_eventuallyEq ?_ (he g₀ hgU hg₀)
-  filter_upwards [mem_nhdsWithin_of_mem_nhds (hU.mem_nhds hgU), self_mem_nhdsWithin] with g hg1 hg2
-  exact he g hg1 hg2
 
 theorem contDiff_mul_right' (X : Mat k r) {n : WithTop ℕ∞} : ContDiff ℝ n (fun g : Mat k r => g * X) :=
   (LinearMap.toContinuousLinearMap (LinearMap.mulRight ℝ X)).contDiff
@@ -710,7 +680,7 @@ theorem admissible_weighted_of_bound {α c : ℝ} {F : Mat k r → E} (h : CCle 
   obtain ⟨hck, hb⟩ := h
   refine ⟨?_, ?_, ?_⟩
   · intro j hj i hi
-    refine ⟨continuousOn_of_contDiffOn_group (smooth_iterated_left_right_derivatives (n := 0) hck (by omega)), ?_⟩
+    refine ⟨_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (smooth_iterated_left_right_derivatives (n := 0) hck (by omega)), ?_⟩
     intro g hg
     rw [← replicated_word_derivative]
     refine hb _ _ ?_ ?_ ?_ g hg
@@ -904,7 +874,7 @@ theorem aestronglyMeasurable_hilbertSchmidt_rho_integrand (H : Hyp D Ξ α) {A B
     AEStronglyMeasurable (fun g : Mt k r => hsInner (rho D p A (Matrix.of g)) (B (Matrix.of g))) D.μG := by
   have hxy := inSS_mem D hp
   have hAt : AEStronglyMeasurable (fun g : Mt k r => A (sgs p (Matrix.of g))) D.μG := by
-    simp only [sgs_eq]
+    simp only [_root_.Formalism.FourierDecayAlt.P.B7.u_sgs_eq]
     exact admissible_ae_strongly_measurable (admissible_two_sided_translate H.α_nonneg hA (WeylGroupFacts.uh_inv hxy.1) hxy.2) D.haarG
   have h1 : AEStronglyMeasurable (fun g : Mt k r => Sd D p (A (sgs p (Matrix.of g)))) D.μG :=
     (Sd D p).continuous.comp_aestronglyMeasurable hAt
@@ -914,7 +884,7 @@ theorem hilbert_schmidt_integrand_bound (D : RealPlaceData k r Wp Wq) (A B : Mat
     (hp : D.inSS p) (g : Mat k r) :
     ‖hsInner (rho D p A g) (B g)‖ ≤ (Module.finrank ℂ Wq : ℝ) *
       (‖A ((Matrix.of p.1.2 * Matrix.of p.1.1 : Mat k r)⁻¹ * g * (Matrix.of p.2.2 * Matrix.of p.2.1))‖ * ‖B g‖) := by
-  rw [rho_eq, ← sgs_eq, ← mul_assoc]
+  rw [rho_eq, ← _root_.Formalism.FourierDecayAlt.P.B7.u_sgs_eq, ← mul_assoc]
   refine (hsInner_norm_le _ _).trans ?_
   have := Sd_norm_le D hp (A (sgs p g))
   gcongr
@@ -1034,7 +1004,7 @@ theorem conjugated_pair_continuous_on (D : RealPlaceData k r Wp Wq) (g : Mat k r
 theorem conj_product_mem_unitary_group (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) {g : Mat k r} (hg : g ∈ GV k r) :
     sgs p g ∈ GV k r := by
   have hxy := inSS_mem D hp
-  rw [sgs_eq]
+  rw [_root_.Formalism.FourierDecayAlt.P.B7.u_sgs_eq]
   exact WeylGroupFacts.uh_mul (WeylGroupFacts.uh_mul (WeylGroupFacts.uh_inv hxy.1) hg) hxy.2
 
 def normProductOfPair (p : SS k r) : ℝ :=
@@ -1086,10 +1056,10 @@ theorem ph_continuousOn (H : Hyp D Ξ α) {A B : Mat k r → (Wq →L[ℂ] Wp)} 
   · have hN : ∀ᶠ p in 𝓝[{p | D.inSS p}] p₀, normProductOfPair p < normProductOfPair p₀ + 1 :=
       (norm_product_continuous_on D p₀ hp₀).tendsto.eventually_lt_const (lt_add_one _)
     filter_upwards [self_mem_nhdsWithin, hN] with p hp hNp
-    filter_upwards [haar_ae D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     exact norm_hilbertSchmidt_rho_pointwise_le H hA hB hp hg hNp.le
   · exact (model_integrable H).const_mul _
-  · filter_upwards [haar_ae D.haarG] with g hg
+  · filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     have h1 : ContinuousWithinAt (fun p : SS k r => A (sgs p (Matrix.of g))) {p | D.inSS p} p₀ :=
       (hA.1.comp (conjugated_pair_continuous_on D (Matrix.of g)) (fun p hp => conj_product_mem_unitary_group D hp hg)) p₀ hp₀
     have h2 : ContinuousWithinAt (fun p : SS k r => Sd D p (A (sgs p (Matrix.of g)))) {p | D.inSS p} p₀ :=
@@ -1237,12 +1207,12 @@ theorem pairing_derivative_of_integrable
   rw [← hS1d] at hS1i
   rw [← hS2d] at hS2
   have hsgs : ∀ g : Mat k r, sgs p g = S1 * g * S2 := by
-    intro g; rw [sgs_eq, hS1d, hS2d]
+    intro g; rw [_root_.Formalism.FourierDecayAlt.P.B7.u_sgs_eq, hS1d, hS2d]
   obtain ⟨P, hPd⟩ : ∃ P : ℝ, P = (K * K) ^ α := ⟨_, rfl⟩
   obtain ⟨M, hMd⟩ : ∃ M : ℝ, M = (gN S1⁻¹ * gN S2⁻¹) ^ α := ⟨_, rfl⟩
   have hP0 : 0 ≤ P := by rw [hPd]; exact Real.rpow_nonneg (mul_nonneg hK0 hK0) _
   have hM0 : 0 ≤ M := by rw [hMd]; exact Real.rpow_nonneg (mul_nonneg (gN_nonneg _) (gN_nonneg _)) _
-  have hG := haar_ae D.haarG
+  have hG := _root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG
 
   have ms2 : ∀ {f : Mat k r → (Wq →L[ℂ] Wp)} {c : ℝ}, admitted α c f → ∀ t ∈ s,
       AEStronglyMeasurable (fun g : Mt k r => f (a t * sgs p (Matrix.of g) * b t)) D.μG := by
@@ -1867,11 +1837,11 @@ theorem al2 {W : ℝ → ℝ} (hW : ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ�
   have sX := fourier_slice_in_x (K := oneMinusDD h) (K' := regularised_kernel_product ρ W q) x₁ x₂ ((1 + x₁ ^ 2 : ℝ) : ℂ) I_o I_k
     (fun y => by
       simp only [om_eq]
-      exact Formalism.FourierDecayAlt.P.integration_by_parts_regularised (fun x => regularised_kernel_product ρ W q x y) (OUT y).1 (csk y) x₁)
+      exact _root_.Formalism.FourierDecayAlt.P.B1.ibp (fun x => regularised_kernel_product ρ W q x y) (OUT y).1 (csk y) x₁)
   have sY := integral_slice_second_variable_eq (K := regularised_kernel_product ρ W q) (K' := h) x₁ x₂ ((1 + x₂ ^ 2 : ℝ) : ℂ) I_k I_h
     (fun x => by
       simp only [← (IN x).2]
-      exact Formalism.FourierDecayAlt.P.integration_by_parts_regularised (fun y => h x y) (IN x).1 (csh x) x₂)
+      exact _root_.Formalism.FourierDecayAlt.P.B1.ibp (fun y => h x y) (IN x).1 (csh x) x₂)
   rw [sX, sY]; push_cast; ring
 
 end abs
@@ -1995,9 +1965,9 @@ theorem weight_integrable_first_factor {Ξ : Mat k r → NNReal} (z : Fin (2 * r
     ENNReal.ofReal_coe_nnreal]
 
 theorem xi_integrable (H : Hyp D Ξ α) : Integrable (fun p : SS k r => XX Ξ p * LL D p) D.μSS := by
-  have := haar_sigmaFinite D.haarW
-  have := haar_sigmaFinite D.haarN
-  have := haar_sigmaFinite D.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW'
   obtain ⟨hm, h1, h2⟩ := H.xi
   have i1 := weight_integrable_first_factor D.z (D.μW.prod D.μN) hm h1
   have i2 := weight_integrable_first_factor D.z' (D.μW'.prod D.μN) hm h2
@@ -2775,19 +2745,16 @@ theorem exists_bound_isTest_support {w : ℝ → ℝ} (h : IsTest w) :
   rw [Real.norm_eq_abs] at this
   exact max_le_max le_rfl ((le_abs_self _).trans this)
 
-theorem integrable_of_isTest' {w : ℝ → ℝ} (h : IsTest w) : Integrable w :=
-  h.1.continuous.integrable_of_hasCompactSupport h.2.1
-
 theorem product_test_integrable {w₁ w₂ : ℝ → ℝ} (h₁ : IsTest w₁) (h₂ : IsTest w₂) :
     Integrable (fun τ : ℝ × ℝ => |w₁ τ.1| * |w₂ τ.2|) := by
   rw [Measure.volume_eq_prod]
-  exact Integrable.mul_prod (integrable_of_isTest' h₁).abs (integrable_of_isTest' h₂).abs
+  exact Integrable.mul_prod (_root_.Formalism.FourierDecayAlt.P.B7.u_int_test h₁).abs (_root_.Formalism.FourierDecayAlt.P.B7.u_int_test h₂).abs
 
 theorem joint_weighted_integrable (H : Hyp D Ξ α) {F F' : Mat k r → (Wq →L[ℂ] Wp)} {c c' : ℝ} (hF : AdmW α c 2 2 F)
     (hF' : AdmW α c' 2 2 F') {w₁ w₂ : ℝ → ℝ} (h₁ : IsTest w₁) (h₂ : IsTest w₂) :
     Integrable (fun x : (ℝ × ℝ) × SS k r => ((w₁ x.1.1 * w₂ x.1.2 : ℝ) : ℂ) * Gt D F F' x.1 x.2)
       ((volume : Measure (ℝ × ℝ)).prod D.μSS) := by
-  have := sigmaFinite_μSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   obtain ⟨K, hK0, hK⟩ := Gt_bound H
   obtain ⟨M₁, hM₁0, hM₁⟩ := exists_bound_isTest_support h₁
   obtain ⟨M₂, hM₂0, hM₂⟩ := exists_bound_isTest_support h₂
@@ -2904,7 +2871,7 @@ theorem avg1 (H : Hyp D Ξ α) {F F' : Mat k r → (Wq →L[ℂ] Wp)} {c c' : �
     (∫ τ : ℝ × ℝ, ((w₁ τ.1 * w₂ τ.2 : ℝ) : ℂ) * betaInfTau D τ F F') =
       ∫ p : SS k r, (∫ t : ℝ × ℝ, regBracket D F F' p t.1 t.2 *
         (om w₁ (t.1 * lam k r D.z (Matrix.of p.1.2)) * om w₂ (-(t.2 * lam k r D.z' (Matrix.of p.2.2))))) ∂D.μSS := by
-  have := sigmaFinite_μSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   simp_rw [betaInfTau_eq H hF hF', ← integral_const_mul]
   rw [integral_integral_swap (joint_weighted_integrable H hF hF' h₁ h₂)]
   apply integral_congr_ae
@@ -2915,23 +2882,6 @@ theorem avg1 (H : Hyp D Ξ α) {F F' : Mat k r → (Wq →L[ℂ] Wp)} {c c' : �
 end avg1
 
 section avg2pre
-
-theorem test_function_integrable {w : ℝ → ℝ} (hw : IsTest w) : Integrable w :=
-  hw.1.continuous.integrable_of_hasCompactSupport hw.2.1
-
-theorem test_function_fourier_continuous {w : ℝ → ℝ} (hw : IsTest w) : Continuous (om w) := by
-  unfold om
-  refine continuous_of_dominated (bound := fun τ => ‖w τ‖) ?_ ?_ (test_function_integrable hw).norm ?_
-  · intro x
-    have hc : Continuous fun τ : ℝ => (w τ : ℂ) * Complex.exp (Complex.I * ((τ * x : ℝ) : ℂ)) := by
-      have := hw.1.continuous
-      fun_prop
-    exact hc.aestronglyMeasurable
-  · intro x
-    refine Filter.Eventually.of_forall fun τ => ?_
-    rw [norm_mul, Complex.norm_exp_I_mul_ofReal, mul_one, Complex.norm_real]
-  · refine Filter.Eventually.of_forall fun τ => ?_
-    fun_prop
 
 theorem rpow_neg_two_eq_inv_sq {u : ℝ} (hu : 0 ≤ u) : u ^ (-2 : ℝ) = (u ^ 2)⁻¹ := by
   rw [Real.rpow_neg hu, Real.rpow_two]
@@ -2971,9 +2921,9 @@ theorem dilation_action_measurable (t : ℝ × ℝ) : Measurable (dilation₂ (k
 theorem map_measure_dilation_pair_eq_smul (hJ : DilJac D) {t : ℝ × ℝ} (h1 : 0 < t.1) (h2 : 0 < t.2) :
     D.μSS.map (dilation₂ t) =
       (ENNReal.ofReal ((t.1 ^ kap k r)⁻¹) * ENNReal.ofReal ((t.2 ^ kap k r)⁻¹)) • D.μSS := by
-  have := haar_sigmaFinite D.haarW
-  have := haar_sigmaFinite D.haarN
-  have := haar_sigmaFinite D.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW'
   have c1 := (BesselUnitaryEquiv.continuous_conjM (k := k) (r := r) (aDil k r t.1)).measurable
   have c2 := (BesselUnitaryEquiv.continuous_conjM (k := k) (r := r) (aDil k r t.2)).measurable
   have e : dilation₂ (k := k) (r := r) t =
@@ -3010,8 +2960,8 @@ theorem aestronglyMeasurable_dilation_pair_integrand (H : Hyp D Ξ α) {F F' : M
   have hc : ContinuousOn (fourierWeightedPhase D F F' w₁ w₂) {p | D.inSS p} := by
     unfold fourierWeightedPhase
     refine ContinuousOn.mul (Continuous.continuousOn ?_) (ph_continuousOn H hF hF')
-    exact ((test_function_fourier_continuous h₁).comp (first_eigenvalue_continuous D)).mul
-      ((test_function_fourier_continuous h₂).comp (continuous_lambda_second_coordinate D).neg)
+    exact ((_root_.Formalism.FourierDecayAlt.P.B7.u_continuous_om h₁).comp (first_eigenvalue_continuous D)).mul
+      ((_root_.Formalism.FourierDecayAlt.P.B7.u_continuous_om h₂).comp (continuous_lambda_second_coordinate D).neg)
   have := hc.aestronglyMeasurable (μ := D.μSS) (measurableSet_inSS D)
   have hr : D.μSS.restrict {p | D.inSS p} = D.μSS := Measure.restrict_eq_self_of_ae_mem (ae_inSS D)
   rwa [hr] at this
@@ -3065,7 +3015,7 @@ def weightedPhaseJointIntegrand (D : RealPlaceData k r Wp Wq) (F F' : Mat k r �
 theorem second_integrand_integrable (H : Hyp D Ξ α) {F F' : Mat k r → (Wq →L[ℂ] Wp)} {c c' : ℝ}
     (hF : AdmW α c 2 2 F) (hF' : AdmW α c' 2 2 F') {w₁ w₂ : ℝ → ℝ} (h₁ : IsTest w₁) (h₂ : IsTest w₂) :
     Integrable (weightedPhaseJointIntegrand D F F' w₁ w₂) (D.μSS.prod volume) := by
-  have := sigmaFinite_μSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   obtain ⟨C₁, hC₁, d₁⟩ := fourier_transform_quadratic_decay h₁
   obtain ⟨C₂, hC₂, d₂⟩ := fourier_transform_quadratic_decay h₂
   obtain ⟨K, hK, hb⟩ := Bt_bound H
@@ -3078,9 +3028,9 @@ theorem second_integrand_integrable (H : Hyp D Ξ α) {F F' : Mat k r → (Wq �
   have hmeas : AEStronglyMeasurable (weightedPhaseJointIntegrand D F F' w₁ w₂) (D.μSS.prod volume) := by
     unfold weightedPhaseJointIntegrand
     refine ((Bt_measurable H hF hF').mul (Continuous.stronglyMeasurable ?_)).aestronglyMeasurable
-    exact ((test_function_fourier_continuous h₁).comp ((continuous_fst.comp continuous_snd).mul
+    exact ((_root_.Formalism.FourierDecayAlt.P.B7.u_continuous_om h₁).comp ((continuous_fst.comp continuous_snd).mul
         ((first_eigenvalue_continuous D).comp continuous_fst))).mul
-      ((test_function_fourier_continuous h₂).comp ((continuous_snd.comp continuous_snd).mul
+      ((_root_.Formalism.FourierDecayAlt.P.B7.u_continuous_om h₂).comp ((continuous_snd.comp continuous_snd).mul
         ((continuous_lambda_second_coordinate D).comp continuous_fst)).neg)
   refine Integrable.mono' hdom hmeas (Filter.Eventually.of_forall fun q => ?_)
   obtain ⟨p, t⟩ := q
@@ -3163,7 +3113,7 @@ theorem regAverage_of_hyp (H : Hyp D Ξ α) (hJ : DilJac D) : RegAverage D α :=
   intro F F' ⟨c, hc⟩ ⟨c', hc'⟩ w₁ w₂ h₁ h₂
   have hF := admissible_weighted_of_bound hc
   have hF' := admissible_weighted_of_bound hc'
-  have := sigmaFinite_μSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   refine ⟨fourier_weighted_phase_integrable H (admissible_of_weighted hF) (admissible_of_weighted hF') h₁ h₂, ?_⟩
   rw [avg1 H hF hF' h₁ h₂]
   have e1 : (∫ p : SS k r, (∫ t : ℝ × ℝ, regBracket D F F' p t.1 t.2 *

@@ -53,7 +53,7 @@ theorem aCSmooth_of_proper (hP : ACProper) : ACSmooth := by
   have hsgs : ∀ p, D.inSS p → ∀ g, B.sgs p g = Am p * g * Bm p := by
     intro p hp g
     show (Matrix.of p.1.1 : B.Mat k r)⁻¹ * (Matrix.of p.1.2)⁻¹ * g * Matrix.of p.2.2 * Matrix.of p.2.1 = _
-    rw [Formalism.FourierDecayAlt.P.Qx3.uh_inv_eq hp.1.1, Formalism.FourierDecayAlt.P.Qx3.uh_inv_eq hp.2.1.1]
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx8.uh_inv_eq hp.1.1, _root_.Formalism.FourierDecayAlt.P.Qx8.uh_inv_eq hp.2.1.1]
     simp only [hAm, hBm, Matrix.mul_assoc]
   have hof : Continuous (fun ν : Mt k r => (Matrix.of ν : B.Mat k r)) := continuous_id
   have hAc : Continuous Am := by
@@ -84,9 +84,9 @@ theorem aCSmooth_of_proper (hP : ACProper) : ACSmooth := by
     have e2 : ‖v‖ = ‖(Matrix.of v : B.Mat k r)‖ := rfl
     rw [e1, e2, hL]
     set g : B.Mat k r := Matrix.of v
-    have hgA := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_nonneg (Am p)
-    have hgB := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_nonneg (Bm p)
-    have hgg := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_nonneg g
+    have hgA := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (Am p)
+    have hgB := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg (Bm p)
+    have hgg := _root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg g
     have hgn : B.gN g ≤ nn * ‖g‖ :=
       Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.gN_le_of_ent g ‖g‖ (norm_nonneg _) (fun i j => Matrix.norm_entry_le_entrywise_sup_norm g)
     have hAB : B.gN (Am p) * B.gN (Bm p) ≤ max M₁ 0 := by

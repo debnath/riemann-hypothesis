@@ -292,7 +292,7 @@ theorem pairMeas_eq {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hS
     (hN : IsRatioN k r cN) :
     pairMeas L = ((L.κN * ENNReal.ofReal cN) * (L.κN * ENNReal.ofReal cN)) • Bs.μSS := by
   obtain ⟨-, -, -, -, h5, h6, h7, -⟩ := hS
-  have := OrbJ.sigmaF Bs.haarW; have := OrbJ.sigmaF Bs.haarN; have := OrbJ.sigmaF Bs.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW; have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN; have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
   have e : L.μN = (L.κN * ENNReal.ofReal cN) • Bs.μN := by
     rw [h7, ← smul_smul, ← hN.2]
     unfold LocBessel.μN haarLie
@@ -339,14 +339,14 @@ theorem integrand_contOn (D : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} (hγ :
 
 theorem act_inSS (D : B.RealPlaceData k r Wp Wq) {γ ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (p : B.SS k r)
     (hp : D.inSS p) : D.inSS (C6.actR γ ρ p) := by
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   exact ⟨hp.1, hN.mul_mem _ hρ.1 _ hp.2.1, hp.2.2.1, hN.mul_mem _ hρ.2 _ hp.2.2.2⟩
 
 theorem act_inSS_iff (D : B.RealPlaceData k r Wp Wq) {γ ρ : B.Mat k r} (hγ : γ ∈ B.GV k r) (hρ : ρ ∈ C6.Rset γ)
     (p : B.SS k r) : D.inSS (C6.actR γ ρ p) ↔ D.inSS p := by
   refine ⟨fun h => ?_, act_inSS D hρ p⟩
-  have := act_inSS D ((closedR (isUnit_of_G hγ)).inv_mem ρ hρ) _ h
-  rwa [act_act γ (isUnit_of_G hγ) (isUnit_of_N hρ.1)] at this
+  have := act_inSS D ((closedR (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ)).inv_mem ρ hρ) _ h
+  rwa [act_act γ (_root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ) (isUnit_of_N hρ.1)] at this
 
 theorem hs_Cin [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (D : B.RealPlaceData k r Wp Wq) {hA hB : B.Mat k r}
     (hhA : hA ∈ UWset k r D.z) (hhB : hB ∈ UWset k r D.z') (X : Wq →L[ℂ] Wp) :
@@ -407,9 +407,9 @@ theorem orbInt_eq {μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hS :
     exact Measure.ae_smul_measure (ae_inSS Bs) _
   have key := weil_integral (pairMeas L) ν (ENNReal.ofReal a⁻¹ • μ) (fun x p => stabAct g (Matrix.of x) p)
     {p | Bs.inSS p} hcl.measurableSet hP hμ'.ne_zero hν
-    (by filter_upwards [ae_mem hμ'] with x hx p; exact act_inSS_iff Bs hrel.1 hx p)
+    (by filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ'] with x hx p; exact act_inSS_iff Bs hrel.1 hx p)
     (D.orbIntegrand Bs g F) _ hJ (fun x hx => Set.piecewise_eq_of_mem _ _ _ hx)
-    (by filter_upwards [ae_mem hμ'] with x hx p hp; exact integrand_act Bs g F hrel hx p hp.2.1 hp.2.2.2)
+    (by filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ'] with x hx p hp; exact integrand_act Bs g F hrel hx p hp.2.1 hp.2.2.2)
     θ hθ.1 hθ.2.1 (ENNReal.ofReal a⁻¹) (by
       intro p hp
       have h1 := hθ.2.2 p hp
@@ -435,7 +435,7 @@ theorem hs_orbJ {ν' : Fin (2 * r + k + 1) → ℂ} {m₀ : B.Mat k r} (hb : D.I
     (hG : 0 < D.ptG (Tz k r Bs.z * Tz k r Bs.z') r p) {g : B.Mat k r} (hg : g ∈ B.GV k r)
     (hZ : Zhat k r Bs.z Bs.z' g = D.ptMatN p (r + 1)) :
     ‖B.hsVec (D.orbJ Bs g (D.muR Bs g (hp.2 ▸ D.ptPerm p)) F)‖ ^ 2 = ‖B.hsVec (D.vecV Bs ν' m₀ F p)‖ ^ 2 := by
-  obtain ⟨g₀, hg₀, hZ₀, hD₀⟩ := exists_isotropic_frame k r _ _ Bs ν' m₀ p hb hp hG
+  obtain ⟨g₀, hg₀, hZ₀, hD₀⟩ := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists k r _ _ Bs ν' m₀ p hb hp hG
   rw [isotropic_vectors_linear_indep k r _ _ Bs ν' m₀ F p hp g₀ hb hG hg₀ hZ₀ hD₀]
   have hpos : 0 < Gf k r Bs.z Bs.z' g₀ := by
     rw [← ptG_spec k r Bs.z Bs.z' p _ hp hZ₀]; exact hG
@@ -460,7 +460,7 @@ theorem orbSq_eq_vecV : ∃ c₃ : ℝ, ∀ (k r : ℕ) (L : LocBessel k r) (μs
   have hG : 0 < D.ptG (Tz k r Bs.z * Tz k r Bs.z') r (sw γ.1) := by rw [hz, hz', ptG_sw]; exact hγ
   have hFc : ContinuousOn F (B.GV k r) := by
     obtain ⟨c, hc⟩ := hF
-    exact B5.ckOn_continuousOn hc.1
+    exact _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hc.1
   obtain ⟨hw, hd⟩ := VV.ptMatN_monoP' (sw γ.1) (r + 1) hp.2 hp.1
   have hπ : 0 < Real.pi ^ (rootPat γ).card := by positivity
   have facts : ∀ g ∈ B.GV k r, Zhat k r Bs.z Bs.z' g = D.ptMatN (sw γ.1) (r + 1) →
@@ -471,7 +471,7 @@ theorem orbSq_eq_vecV : ∃ c₃ : ℝ, ∀ (k r : ℕ) (L : LocBessel k r) (μs
     have hpos : 0 < Gf k r Bs.z Bs.z' g := by
       rw [← ptG_spec k r Bs.z Bs.z' _ _ hp hZ]; exact hG
     have hrel := relevant_points_holds k r _ _ Bs _ g hp hg hZ
-    exact ⟨hpos, hrel, radial_measure_is_haar k r _ _ Bs g _ _ hg hd (hZ.trans hw),
+    exact ⟨hpos, hrel, _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar k r _ _ Bs g _ _ hg hd (hZ.trans hw),
       hconv k r _ _ Bs g _ _ A F hg hrel hd (hZ.trans hw) hpos hA hF⟩
   have val : ∀ g μR ν, IsPtRep L γ g ∧ IsRelStab L g ∧ IsRootMeas L γ g μR ∧ IsOrbQuot L g μR ν →
       hsNormSq (OrbInt L F g ν) = (L.κN.toReal * cN) ^ 4 * (Real.pi ^ (rootPat γ).card) ^ 2 *
@@ -491,7 +491,7 @@ theorem orbSq_eq_vecV : ∃ c₃ : ℝ, ∀ (k r : ℕ) (L : LocBessel k r) (μs
   · unfold ThB.orbSq
     refine iSup_le fun g => iSup_le fun μR => iSup_le fun ν => iSup_le fun h => ?_
     rw [val g μR ν h]
-  · obtain ⟨g, hg, hZ, -⟩ := exists_isotropic_frame k r _ _ Bs ν' m₀ _ hb hp hG
+  · obtain ⟨g, hg, hZ, -⟩ := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists k r _ _ Bs ν' m₀ _ hb hp hG
     obtain ⟨hpos, hrel, hH, θ, hθ, -⟩ := facts g hg hZ
     have ha0 : ENNReal.ofReal (Real.pi⁻¹ ^ (rootPat γ).card) ≠ 0 := by
       have : 0 < Real.pi⁻¹ ^ (rootPat γ).card := by positivity

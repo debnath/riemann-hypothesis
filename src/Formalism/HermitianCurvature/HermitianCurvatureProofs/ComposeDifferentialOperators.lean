@@ -91,13 +91,6 @@ lemma ckOn_list_sum {m : ℕ∞} {α : Type*} (L : List α) (f : α → Mat k r 
   | cons a t ih =>
     simpa using ckOn_GV_add (h a (by simp)) (ih fun b hb => h b (by simp [hb]))
 
-lemma opOrder_le_of (Θ : DiffOp k r Wp Wq) {n : ℕ} (h : ∀ T ∈ Θ, T.word.length ≤ n) : opOrder Θ ≤ n := by
-  apply _root_.Formalism.FourierDecayAlt.P.CutBP.LimitNormalForms.opOrder_le <;> assumption
-
-lemma one_uw (z : Fin (2 * r + k + 1) → ℂ) : (1 : Mat k r) ∈ UWset k r z := by
-  simp only [UWset, Set.mem_setOf_eq, Matrix.one_mulVec, and_self, implies_true, and_true]
-  simp [UH]
-
 end Formalism.FourierDecayAlt.P.MinorPolynomials
 
 namespace Formalism.FourierDecayAlt.P
@@ -174,7 +167,7 @@ theorem compose_differential_operators : C6.ComposeDDPlus := by
       intro T hT T' hT'
       obtain ⟨e, he, hw⟩ := hW₁ T hT; obtain ⟨e', he', hw'⟩ := hW₂ T' hT'
       rw [← hw, ← hw']; exact hN e he e' he'
-    have hO2 : opOrder Θ₂ ≤ N := opOrder_le_of Θ₂ fun T hT => by have := hord₂ T hT; omega
+    have hO2 : opOrder Θ₂ ≤ N := _root_.Formalism.FourierDecayAlt.P.CutBP.LimitNormalForms.opOrder_le Θ₂ fun T hT => by have := hord₂ T hT; omega
     have hfo2 : CkOn (opOrder Θ₂ : ℕ∞) (GV k r) f := sCkOn_mono (by exact_mod_cast hO2) hf
 
     set s : Mat k r := (Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ with hsdef
@@ -182,7 +175,7 @@ theorem compose_differential_operators : C6.ComposeDDPlus := by
     have hs : s ∈ Sset k r D.z :=
       ⟨_, Formalism.QuantumDeterminants.WeylGroupFacts.uw_inv hp.1, _, (Formalism.QuantumDeterminants.nSubgroup k r).2.2 _ hp.2.1, rfl⟩
     have hs' : s' ∈ Sset k r D.z' :=
-      (Formalism.QuantumDeterminants.sGroup k r D.z' D.z'_mem).2.1 _ ⟨1, one_uw D.z', _, hp.2.2.2, by simp⟩ _
+      (Formalism.QuantumDeterminants.sGroup k r D.z' D.z'_mem).2.1 _ ⟨1, _root_.Formalism.FourierDecayAlt.P.CutBP.LimitNormalForms.uw_one D.z', _, hp.2.2.2, by simp⟩ _
         ⟨_, hp.2.2.1, 1, (Formalism.QuantumDeterminants.nSubgroup k r).1, by simp⟩
     have hsG := Sset_sub hs
     have hs'G := Sset_sub hs'
@@ -226,7 +219,7 @@ theorem compose_differential_operators : C6.ComposeDDPlus := by
       apply ckOn_list_sum
       intro T hT
       have hm : m₁ + T.word.length ≤ N := by
-        have := opOrder_le_of Θ₁ (n := N - T.word.length) fun T₁ hT₁ => by
+        have := _root_.Formalism.FourierDecayAlt.P.CutBP.LimitNormalForms.opOrder_le Θ₁ (n := N - T.word.length) fun T₁ hT₁ => by
           have := hord₁ T₁ hT₁ T hT; omega
         have := hord₂ T hT
         omega

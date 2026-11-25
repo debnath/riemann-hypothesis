@@ -672,46 +672,11 @@ theorem mulM_meas : Measurable (mulM (k := k) (r := r)) := by
 
 attribute [local fun_prop] mulM_meas invM_meas
 
-private lemma hpk_sq_lemma : Hpk k r * Hpk k r = 1 := by
-  ext i j
-  rw [Matrix.mul_apply, Matrix.one_apply]
-  have hi := i.isLt
-  by_cases hm : r ≤ i.val ∧ i.val ≤ r + k
-  · rw [Finset.sum_eq_single i]
-    · simp only [Hpk]
-      split_ifs <;> (first
-          | (exfalso; (try simp only [Fin.ext_iff, and_true] at *); omega)
-          | (norm_num; done))
-    · intro l _ hl
-      have : Hpk k r i l = 0 := by
-        simp only [Hpk]
-        split_ifs <;> (first
-          | (exfalso; (try simp only [Fin.ext_iff, ne_eq] at *); omega)
-          | (norm_num; done))
-      rw [this, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ i) h
-  · have hp : 2 * r + k - i.val < 2 * r + k + 1 := by omega
-    rw [Finset.sum_eq_single ⟨2 * r + k - i.val, hp⟩]
-    · simp only [Hpk]
-      split_ifs <;> (first
-          | (exfalso; (try simp only [Fin.ext_iff] at *); omega)
-          | (norm_num; done))
-    · intro l _ hl
-      have : Hpk k r i l = 0 := by
-        simp only [Hpk]
-        split_ifs <;> (first
-          | (exfalso; (try simp only [Fin.ext_iff, ne_eq] at *); omega)
-          | (norm_num; done))
-      rw [this, zero_mul]
-    · intro h
-      exact absurd (Finset.mem_univ _) h
-
 theorem uw_unit {z : Vc k r} {h : Mat k r} (hh : h ∈ UWset k r z) : IsUnit h.det := by
   have h1 : hᴴ * Hpk k r * h = Hpk k r := hh.1
   have hd : (Hpk k r).det ≠ 0 := by
     intro h0
-    have := congrArg Matrix.det (hpk_sq_lemma (k := k) (r := r))
+    have := congrArg Matrix.det (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq (k := k) (r := r))
     rw [Matrix.det_mul, h0, zero_mul, Matrix.det_one] at this
     exact zero_ne_one this
   have h2 := congrArg Matrix.det h1

@@ -1610,7 +1610,7 @@ theorem localCores : Formalism.FourierDecayAlt.PB.LocalCores :=
   ⟨_root_.Formalism.FourierDecayAlt.P.Jx1.t_PSDAgree,
    _root_.Formalism.FourierDecayAlt.P.Jx7.t_SchurProduct,
    _root_.Formalism.FourierDecayAlt.P.Jx7.t_ProductDomination,
-   _root_.Formalism.FourierDecayAlt.P.Jx7.t_DiagScale,
+   _root_.Formalism.FourierDecayAlt.P.Jx8.t_DiagScale,
    _root_.Formalism.FourierDecayAlt.P.diagonal_phase_conj,
    _root_.Formalism.FourierDecayAlt.P.block_diagonal_psd,
    _root_.Formalism.FourierDecayAlt.P.Jx7.t_ProductLemma',

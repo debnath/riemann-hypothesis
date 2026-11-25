@@ -116,7 +116,7 @@ theorem orbVecAt_carrierOf (sc : ℝ) (i0 i0' : ∀ _ : InfinitePlace X.B.I.F, F
   rw [hMP p w hp hw h h' hD v μRv hH hpin hloc']
   have hrel := Formalism.FourierDecayAlt.P.relevant_points_holds D.R.k D.R.rS _ _ ((PP).T ((PP).τ.symm v)).base _ _ hloc hGV hZ
   have hmono := Formalism.FourierDecayAlt.P.Dx2.VV.ptMatN_monoP' _ (D.R.rS + 1) hloc.2 hloc.1
-  have hHaar := Formalism.FourierDecayAlt.P.radial_measure_is_haar D.R.k D.R.rS _ _ ((PP).T ((PP).τ.symm v)).base _ _ _ hGV hmono.2
+  have hHaar := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar D.R.k D.R.rS _ _ ((PP).T ((PP).τ.symm v)).base _ _ _ hGV hmono.2
     (hZ.trans hmono.1)
   have hb : 0 < Formalism.FourierDecayAlt.D.bSt (Formalism.FourierDecayAlt.D.kapG ((PP).S.g : ℝ) (Formalism.FourierDecayAlt.S6.rd D.host.E))
       (Formalism.FourierDecayAlt.C.loc ((PP).S.emb ((PP).τ.symm v)) p) := by

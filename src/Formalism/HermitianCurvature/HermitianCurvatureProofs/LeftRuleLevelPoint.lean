@@ -203,7 +203,7 @@ theorem rdV_hM (E : Type) [NormedAddCommGroup E] [NormedSpace ℂ E] (hj : j + 1
       hc.continuousAt.preimage_mem_nhds hUn
     filter_upwards [hmem] with t ht
     have hG : x₁ + (t : ℂ) • (nN k r j hj a * x₁) ∈ Q.Glev k r 0 := by
-      rw [hcurve t]; exact Formalism.FourierDecayAlt.P.Qx3.glev_mul (HeadLetterLemmas.nL_glev0 hj _) hxG
+      rw [hcurve t]; exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (HeadLetterLemmas.nL_glev0 hj _) hxG
     simp only [Function.comp]
     rw [← hFU _ ht hG, hcurve t, hEq]
   have h2 := (psi_nL_hasDeriv hj hj1 z hz a).smul_const (Ψ x₁)

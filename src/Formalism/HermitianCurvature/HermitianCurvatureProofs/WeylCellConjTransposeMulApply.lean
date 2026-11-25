@@ -29,23 +29,11 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 
 variable {k r : ℕ}
 
-theorem glev_one (i : Fin (r + 1)) : (1 : Mx k r) ∈ Glev k r i :=
-  ⟨WeylGroupFacts.uh_one, fun _ _ => ⟨by simp, by simp⟩⟩
-
-theorem glev_mul {i : Fin (r + 1)} {g h : Mx k r} (hg : g ∈ Glev k r i) (hh : h ∈ Glev k r i) :
-    g * h ∈ Glev k r i := by
-  refine ⟨WeylGroupFacts.uh_mul hg.1 hh.1, fun a ha => ⟨?_, ?_⟩⟩
-  · rw [← Matrix.mulVec_mulVec, (hh.2 a ha).1, (hg.2 a ha).1]
-  · rw [← Matrix.mulVec_mulVec, (hh.2 a ha).2, (hg.2 a ha).2]
-
 theorem glev_mono {i j : Fin (r + 1)} (h : j ≤ i) : Glev k r i ⊆ Glev k r j :=
   fun _ hg => ⟨hg.1, fun a ha => hg.2 a (lt_of_lt_of_le ha h)⟩
 
 theorem nlev_mono {i j : Fin (r + 1)} (h : j ≤ i) : Nlev k r i ⊆ Nlev k r j :=
   fun _ hg => ⟨hg.1, glev_mono h hg.2⟩
-
-theorem uw_glev {z : Fin (2 * r + k + 1) → ℂ} (i : Fin (r + 1)) : UWset k r z ⊆ Glev k r i :=
-  fun _ hg => ⟨hg.1, fun a _ => hg.2.1 a⟩
 
 def mulVecL (v : Fin (2 * r + k + 1) → ℂ) : Mx k r →L[ℝ] (Fin (2 * r + k + 1) → ℂ) :=
   LinearMap.toContinuousLinearMap
@@ -53,31 +41,14 @@ def mulVecL (v : Fin (2 * r + k + 1) → ℂ) : Mx k r →L[ℝ] (Fin (2 * r + k
       map_add' := fun A B => Matrix.add_mulVec A B v
       map_smul' := fun c A => Matrix.smul_mulVec c A v }
 
-theorem exp_fix {X : Mx k r} {v : Fin (2 * r + k + 1) → ℂ} (h : X *ᵥ v = 0) (t : ℝ) :
-    NormedSpace.exp ((t : ℂ) • X) *ᵥ v = v :=
-  _root_.Formalism.FourierDecayAlt.P.Qx8.exp_fix h t
-
 def LieLev (i : Fin (r + 1)) (X : Mx k r) : Prop := ∀ t : ℝ, NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i
 
 theorem lieLev_of {i : Fin (r + 1)} {X : Mx k r} (hX : inLieLev k r i X) : LieLev i X :=
-  fun t => ⟨B5.exp_mem hX.1 t, fun a ha => ⟨exp_fix (hX.2 a ha).1 t, exp_fix (hX.2 a ha).2 t⟩⟩
-
-theorem hpk_e (a : Fin r) : Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) :=
-  _root_.Formalism.FourierDecayAlt.P.Qx8.hpk_e a
-
-theorem hpk_es (a : Fin r) : Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) :=
-  _root_.Formalism.FourierDecayAlt.P.Qx8.hpk_es a
-
-theorem hpk_herm : (Hpk k r)ᴴ = Hpk k r := (hermitian_pos_facts_hold k r).1
+  fun t => ⟨B5.exp_mem hX.1 t, fun a ha => ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.exp_fix (hX.2 a ha).1 t, _root_.Formalism.FourierDecayAlt.P.Qx8.exp_fix (hX.2 a ha).2 t⟩⟩
 
 theorem hpart_skew {n : ℕ} (H Z : Matrix (Fin n) (Fin n) ℂ) (hsq : H * H = 1) (hh : Hᴴ = H) :
     (hpart1 H Z)ᴴ * H + H * hpart1 H Z = 0 ∧ (hpart2 H Z)ᴴ * H + H * hpart2 H Z = 0 := by
   apply Formalism.FourierDecayAlt.P.Qx8.hpart_skew <;> assumption
-
-theorem hpart_lie (i : Fin (r + 1)) (a b : Fin (mdim k r i)) :
-    inLieLev k r i (hpart1 (Hpk k r) (Matrix.single (posL k r i a) (posL k r i b) 1)) ∧
-    inLieLev k r i (hpart2 (Hpk k r) (Matrix.single (posL k r i a) (posL k r i b) 1)) := by
-  apply Formalism.FourierDecayAlt.P.Qx8.hpart_lie
 
 section Fam
 
@@ -110,7 +81,7 @@ theorem sf_rdV {Φ : Fn k r E} {X : Mx k r} (hX : LieLev i X) (h : SmoothFam k r
       have hmem : ∀ᶠ t : ℝ in 𝓝 0, ((x.1, x.2 * NormedSpace.exp ((t : ℂ) • X)) : XX k r) ∈ U :=
         hγ.continuousAt.preimage_mem_nhds (by rw [hγ0]; exact hU.mem_nhds hx)
       filter_upwards [hmem] with t ht
-      exact hΦ _ ht (glev_mul hxG (hX t))
+      exact hΦ _ ht (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hxG (hX t))
     show deriv (fun t : ℝ => Φ x.1 (x.2 * NormedSpace.exp ((t : ℂ) • X))) 0 = _
     rw [hev.deriv_eq]
     exact hcomp.deriv
@@ -159,8 +130,8 @@ def Pres (i : Fin (r + 1)) (U₀ : Set (XX k r)) (T : (Mx k r → E) → Mx k r 
 theorem pres_EH (a b : Fin (mdim k r i)) :
     Pres (E := E) i U₀ (EH k r (posL k r i a) (posL k r i b)) := by
   intro Φ h
-  exact sf_add (sf_rdV (lieLev_of (hpart_lie i a b).1) h)
-    (sf_csmul Complex.I (sf_rdV (lieLev_of (hpart_lie i a b).2) h))
+  exact sf_add (sf_rdV (lieLev_of (_root_.Formalism.FourierDecayAlt.P.Qx8.hpart_lie i a b).1) h)
+    (sf_csmul Complex.I (sf_rdV (lieLev_of (_root_.Formalism.FourierDecayAlt.P.Qx8.hpart_lie i a b).2) h))
 
 theorem pres_Top (u : ℂ) (a b : Fin (mdim k r i)) :
     Pres (E := E) i U₀ (Top (EH k r) u (posL k r i a) (posL k r i b)) := by
@@ -200,12 +171,6 @@ section Entries
 
 variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 variable {i : Fin (r + 1)} {U₀ : Set (XX k r)}
-
-theorem uh_inv_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  have hg' : gᴴ * Hpk k r * g = Hpk k r := hg
-  calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [hg', WeylGroupFacts.hpk_sq]
 
 theorem sf_yv (z : Fin (2 * r + k + 1) → ℂ) (j : Fin (mdim k r i)) :
     SmoothFam k r i U₀ (fun _ g => yv k r z i g j) :=
@@ -473,16 +438,16 @@ theorem weyl_cell_conjTranspose_mul_apply (l : Fin r) (c : ℂ) (M : Mx k r) (p 
 
 theorem hpk_col_e (l : Fin r) (x : Fin (2 * r + k + 1)) :
     Hpk k r x (eI k r l) = if x = esI k r l then 1 else 0 := by
-  have := congrFun (hpk_e (k := k) l) x
+  have := congrFun (_root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e (k := k) l) x
   simpa [bvec, Matrix.mulVec_single_one, Pi.single_apply] using this
 
 theorem hpk_col_es (l : Fin r) (x : Fin (2 * r + k + 1)) :
     Hpk k r x (esI k r l) = if x = eI k r l then 1 else 0 := by
-  have := congrFun (hpk_es (k := k) l) x
+  have := congrFun (_root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es (k := k) l) x
   simpa [bvec, Matrix.mulVec_single_one, Pi.single_apply] using this
 
 theorem hpk_symm (x y : Fin (2 * r + k + 1)) : Hpk k r x y = star (Hpk k r y x) := by
-  have := congrFun (congrFun (hpk_herm (k := k) (r := r)) x) y
+  have := congrFun (congrFun (_root_.Formalism.FourierDecayAlt.P.Qx4.Hh (k := k) (r := r)) x) y
   rw [Matrix.conjTranspose_apply] at this
   exact this.symm
 
@@ -589,7 +554,7 @@ theorem slev_mono {z : Fin (2 * r + k + 1) → ℂ} {i j : Fin (r + 1)} (h : j �
 
 theorem slev_glev {z : Fin (2 * r + k + 1) → ℂ} (i : Fin (r + 1)) : Slev k r z i ⊆ Glev k r i := by
   rintro s ⟨u, hu, m, hm, rfl⟩
-  exact glev_mul (uw_glev i hu) hm.2
+  exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev i hu) hm.2
 
 variable {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp] [NormedAddCommGroup Wq] [NormedSpace ℂ Wq]
 variable {z z' : Fin (2 * r + k + 1) → ℂ} {π : Mx k r → (Wp →L[ℂ] Wp)} {π' : Mx k r → (Wq →L[ℂ] Wq)}
@@ -600,13 +565,13 @@ theorem ffl_res {j i : Fin (r + 1)} (hji : j ≤ i) {w₀ : Mx k r} (hw : w₀ �
     (fun g => J (w₀ * g)) ∈ FFl k r z z' π π' i {g | w₀ * g ∈ D} := by
   obtain ⟨hS, hL, hR, hπ⟩ := hJ
   have hmem : ∀ g ∈ Glev k r i ∩ {g | w₀ * g ∈ D}, w₀ * g ∈ Glev k r j ∩ D :=
-    fun g hg => ⟨glev_mul hw (glev_mono hji hg.1), hg.2⟩
+    fun g hg => ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hw (glev_mono hji hg.1), hg.2⟩
   refine ⟨?_, ?_, ?_, ?_⟩
   · intro g₀ hg₀
     obtain ⟨U, F, hU, hgU, hF, hJF⟩ := hS _ (hmem g₀ hg₀)
     exact ⟨{g | w₀ * g ∈ U}, fun g => F (w₀ * g), hU.preimage (mulLeftL w₀).continuous, hgU,
       hF.comp (mulLeftL w₀).contDiff.contDiffOn (fun _ h => h),
-      fun g hg hgG => hJF _ hg (glev_mul hw (glev_mono hji hgG))⟩
+      fun g hg hgG => hJF _ hg (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hw (glev_mono hji hgG))⟩
   · intro g hg n hn
     show J (w₀ * (n * g)) = _ • J (w₀ * g)
     rw [← Matrix.mul_assoc, hcomm n hn.2, Matrix.mul_assoc]
@@ -618,7 +583,7 @@ theorem ffl_res {j i : Fin (r + 1)} (hji : j ≤ i) {w₀ : Mx k r} (hw : w₀ �
   · intro g hg h hh h' hh'
     show J (w₀ * (h * g * h')) = _
     have e : w₀ * (h * g * h') = h * (w₀ * g) * h' := by
-      rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hcomm h (uw_glev i hh), Matrix.mul_assoc h w₀ g]
+      rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hcomm h (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev i hh), Matrix.mul_assoc h w₀ g]
     rw [e]
     exact hπ _ (hmem g hg) h hh h' hh'
 
@@ -652,13 +617,13 @@ theorem fam_res {j i : Fin (r + 1)} (hji : j ≤ i) {w : (Fin r → ℂ) → Mx 
   refine sf_smul (sf_ofC hρ (fun x hx => hx.1)) ?_
   rintro x₀ ⟨hc₀, hD₀⟩ hG₀
   obtain ⟨U, F, hU, hgU, hF, hJF⟩ :=
-    hJ.1 (w x₀.1 * x₀.2) ⟨glev_mul (hwG _ hc₀) (glev_mono hji hG₀), hD₀⟩
+    hJ.1 (w x₀.1 * x₀.2) ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hwG _ hc₀) (glev_mono hji hG₀), hD₀⟩
   have hm : ContDiffOn ℝ ∞ (fun x : XX k r => w x.1 * x.2) {x | x.1 ∈ OmX r} :=
     cdo_mul (hw.comp contDiff_fst.contDiffOn (fun _ h => h)) contDiff_snd.contDiffOn
   exact ⟨{x | x.1 ∈ OmX r} ∩ (fun x : XX k r => w x.1 * x.2) ⁻¹' U, fun x => F (w x.1 * x.2),
     hm.continuousOn.isOpen_inter_preimage isOpen_OmXX hU, ⟨hc₀, hgU⟩,
     hF.comp (hm.mono Set.inter_subset_left) (fun x hx => hx.2),
-    fun x hx hxG => hJF _ hx.2 (glev_mul (hwG _ hx.1) (glev_mono hji hxG))⟩
+    fun x hx hxG => hJF _ hx.2 (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hwG _ hx.1) (glev_mono hji hxG))⟩
 
 theorem cd_normPow (a : Fin r) (n : ℕ) : ContDiffOn ℝ ∞ (fun c : Fin r → ℂ => ‖c a‖ ^ n) (OmX r) :=
   (ContDiffOn.norm ℝ ((cd_coord a).contDiffOn (s := OmX r)) fun x (hx : x ∈ OmX r) => hx a).pow n
@@ -666,10 +631,10 @@ theorem cd_normPow (a : Fin r) (n : ℕ) : ContDiffOn ℝ ∞ (fun c : Fin r →
 theorem wlist_glev {c : Fin r → ℂ} (hc : c ∈ OmX r) (L : List (Fin r)) :
     (L.map fun a => w1 k r a (c a)).prod ∈ Glev k r 0 := by
   induction L with
-  | nil => exact glev_one 0
+  | nil => exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one 0
   | cons a L ih =>
     rw [List.map_cons, List.prod_cons]
-    exact glev_mul (glev_mono (Fin.zero_le _) (weyl_cell_mem_level_group a (hc a))) ih
+    exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (glev_mono (Fin.zero_le _) (weyl_cell_mem_level_group a (hc a))) ih
 
 theorem wlist_comm (i : Fin (r + 1)) (c : Fin r → ℂ) (L : List (Fin r)) (hL : ∀ a ∈ L, a.val < i.val)
     {g : Mx k r} (hg : g ∈ Glev k r i) :
@@ -753,7 +718,7 @@ theorem restriction_mem : Formalism.FourierDecayAlt.Q.ResMem := by
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, Qx3.w1_commute_of_mem_Glev l c (Qx3.slev_glev _ hs),
         Matrix.mul_assoc s (w1 k r l c) g]
     rw [e]
-    exact hD.2 _ ⟨Qx3.glev_mul (Qx3.weyl_cell_mem_level_group l hc) (Qx3.glev_mono hle hg.1), hg.2⟩ s (Qx3.slev_mono hle hs) s'
+    exact hD.2 _ ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Qx3.weyl_cell_mem_level_group l hc) (Qx3.glev_mono hle hg.1), hg.2⟩ s (Qx3.slev_mono hle hs) s'
       (Qx3.slev_mono hle hs')
   · exact Qx3.fam_res hle (w := fun c => w1 k r l (c l))
       (ρ := fun c => ((‖c l‖ ^ (Mdim k r l - 1) : ℝ) : ℂ)) (Qx3.weyl_cell_contDiffOn l)

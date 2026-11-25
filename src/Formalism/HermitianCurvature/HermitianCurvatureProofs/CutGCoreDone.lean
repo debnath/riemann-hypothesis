@@ -881,7 +881,7 @@ theorem frameG_exists {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
     intro i hi
     rw [ha, Pi.smul_apply, inWb_bvec_wI _ i hi, smul_zero]
   have haa : herm (Hpk k r) a a = ((-(Tz k r z) : ℝ) : ℂ) := by
-    rw [ha, herm_smul_left', herm_smul_right', herm_wI, ite_eq_left rfl, ite_eq_left rfl]
+    rw [ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_wI, ite_eq_left rfl, ite_eq_left rfl]
     have : star (s : ℂ) = s := Complex.conj_ofReal s
     rw [this]
     push_cast
@@ -893,7 +893,7 @@ theorem frameG_exists {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
       herm (Hpk k r) (bvec (eI k r c)) w = 0 ∧ herm (Hpk k r) (bvec (esI k r c)) w = 0 := by
     intro w hw c
     rw [inWb_iff] at hw
-    rw [herm_bvec_left, hpk_e, dot_bvec, herm_bvec_left, hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
+    rw [herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, dot_bvec, herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
       (hw c).2]
     simp
   exact ⟨g, hgU, fun c => ⟨hfix _ (horth a haW c).1 (horth z hz c).1, hfix _ (horth a haW c).2 (horth z hz c).2⟩, hga⟩
@@ -1259,9 +1259,9 @@ theorem radial_gauge_move : GTRMove := by
         have hp2 := hp.2.1
         have hp3 := hp.2.2
         have ht1 : h * p.1 * h⁻¹ ∈ UWset P.k P.r Bs.z :=
-          Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hh hp1) hhi
+          _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hh hp1) hhi
         have ht2 : h'⁻¹ * p.2 * h' ∈ UWset P.k P.r Bs.z' :=
-          Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hhi' hp2) hh'
+          _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hhi' hp2) hh'
         have e3 : ∀ Y : B.Mat P.k P.r, p.1 * (NF.muZ P.k P.r μ0 ζ * (p.2 * Y)) = NF.muZ P.k P.r μ0 ζ * Y := by
           intro Y
           conv_rhs => rw [← hp3]
@@ -1706,34 +1706,6 @@ theorem vl_smul (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) [FiniteDimensio
 
 end vals
 
-theorem dzQ_one (P : M.Par) (hTT : 0 ≤ P.TT) : dzQ P (1 : MA.SmQ P.r P.TT) = 0 := by
-  have h0 : MA.eulerQ (TT := P.TT) M.vz (1 : MA.SmQ P.r P.TT) = 0 := by
-    have h := Formalism.FourierDecayAlt.P.analytic_leibniz P.r P.TT M.vz 1 1
-    rw [mul_one, one_mul, mul_one] at h
-    have h2 : MA.eulerQ (TT := P.TT) M.vz (1 : MA.SmQ P.r P.TT) + MA.eulerQ (TT := P.TT) M.vz 1 =
-        MA.eulerQ (TT := P.TT) M.vz 1 + 0 := by
-      rw [add_zero]
-      exact h.symm
-    exact add_left_cancel h2
-  unfold dzQ MA.DAlg.dzP MA.DAlg.mkP
-  have h0' : (MA.DQ P).ev M.vz 1 = 0 := h0
-  show (MA.DQ P).mulOp ((MA.DQ P).inv ((MA.DQ P).x M.vz)) ((MA.DQ P).ev M.vz 1) = 0
-  rw [h0', map_zero]
-
-theorem dzbQ_one (P : M.Par) (hTT : 0 ≤ P.TT) : dzbQ P (1 : MA.SmQ P.r P.TT) = 0 := by
-  have h0 : MA.eulerQ (TT := P.TT) M.vzb (1 : MA.SmQ P.r P.TT) = 0 := by
-    have h := Formalism.FourierDecayAlt.P.analytic_leibniz P.r P.TT M.vzb 1 1
-    rw [mul_one, one_mul, mul_one] at h
-    have h2 : MA.eulerQ (TT := P.TT) M.vzb (1 : MA.SmQ P.r P.TT) + MA.eulerQ (TT := P.TT) M.vzb 1 =
-        MA.eulerQ (TT := P.TT) M.vzb 1 + 0 := by
-      rw [add_zero]
-      exact h.symm
-    exact add_left_cancel h2
-  unfold dzbQ MA.DAlg.dzbP MA.DAlg.mkP
-  have h0' : (MA.DQ P).ev M.vzb 1 = 0 := h0
-  show (MA.DQ P).mulOp ((MA.DQ P).inv ((MA.DQ P).x M.vzb)) ((MA.DQ P).ev M.vzb 1) = 0
-  rw [h0', map_zero]
-
 theorem theta_fst {V : Type} [AddCommGroup V] [Module ℂ V] (P : M.Par) (d : Q.NFData P (Q.Pr V)) (Φ : V) :
     (ThetaNF P d).1 Φ = d.L.ζ.1 (d.L.nab.1 Φ) + d.L.ζb.1 (d.L.nabs.1 Φ) +
       (d.κ (fun ρ => ((rhoSum P ρ : ℝ) : ℂ))).1 Φ +
@@ -1771,9 +1743,9 @@ theorem radial_gauge_transition_holds : GTRTrans := by
     rw [t0]
     rfl
   have t1 : trR P Bs e (d.L.nab.1 Ψ0) ρ = fnZ P (A ρ) := by
-    rw [(hC Ψ0 ρ).1, t0, GTRT.dzQ_one P hTT, mul_one, zero_add]
+    rw [(hC Ψ0 ρ).1, t0, _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.CurvTr.dzQ_one P hTT, mul_one, zero_add]
   have t2 : trR P Bs e (d.L.nabs.1 Ψ0) ρ = fnZ P (B ρ) := by
-    rw [(hC Ψ0 ρ).2, t0, GTRT.dzbQ_one P hTT, mul_one, neg_zero, zero_add]
+    rw [(hC Ψ0 ρ).2, t0, _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.CurvTr.dzbQ_one P hTT, mul_one, neg_zero, zero_add]
   have v1 : SSC.vl P Bs e (d.L.nab.1 Ψ0) ρ q0 = A ρ ζ := by
     unfold SSC.vl
     rw [t1, fnZ_val P (hAB ρ).1]
@@ -1783,7 +1755,7 @@ theorem radial_gauge_transition_holds : GTRTrans := by
 
   have vm : SSC.vl P Bs e ((ThetaNF P d).1 Ψ0) ρ q0 = m := by
     unfold SSC.vl
-    rw [hm Ψ0, t0, GTRT.dzQ_one P hTT, GTRT.dzbQ_one P hTT, mul_zero, mul_zero, sub_zero, zero_add]
+    rw [hm Ψ0, t0, _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.CurvTr.dzQ_one P hTT, _root_.Formalism.FourierDecayAlt.P.CutMP.Gauge.GC.CurvTr.dzbQ_one P hTT, mul_zero, mul_zero, sub_zero, zero_add]
     show m * 1 = m
     ring
   have v3 : SSC.vl P Bs e ((d.κ (fun ρ => ((rhoSum P ρ : ℝ) : ℂ))).1 Ψ0) ρ q0 = ((rhoSum P ρ : ℝ) : ℂ) := by

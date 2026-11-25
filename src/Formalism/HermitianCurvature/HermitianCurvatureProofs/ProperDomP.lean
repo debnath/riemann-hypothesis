@@ -91,7 +91,7 @@ theorem zh_eq_blk (y : B.Mat k (p + ρ)) :
   rw [Ux3.wMat_mul_apply]
   simp only [Matrix.submatrix_apply, U.Zh]
   congr 1
-  all_goals (ext; first | (rw [Ux3.block_index_last_val]; simp [Fin.val_rev]; omega))
+  all_goals (ext; first | (rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; simp [Fin.val_rev]; omega))
 
 theorem minor_leviElement_mul_high (z z' : Fin (2 * (p + ρ) + k + 1) → ℂ) (hz : inWb k (p + ρ) z) (hz' : inWb k (p + ρ) z')
     (q : Matrix (Fin p) (Fin p) ℂ) (g : B.Mat k (p + ρ)) (m : ℕ) (hm : m ≤ ρ + 1) :
@@ -299,8 +299,6 @@ theorem cont_embG : Continuous (fun y : B.Mat k ρ => U.embG k p ρ y) := by
   unfold ιLev
   split_ifs <;> first | exact (continuous_apply _).comp (continuous_apply _) | exact continuous_const
 
-theorem closedGV (k r : ℕ) : IsClosed (B.GV k r) := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).closed
-
 theorem properA (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + ρ) Wp Wq)
     (hmuP : ∀ q : Matrix (Fin p) (Fin p) ℂ, IsUnit q.det → U.muP k p ρ q ∈ B.GV k (p + ρ))
     (hM : ∀ y ∈ domP k (p + ρ) p B0.z B0.z', y ∈ B.GV k (p + ρ) →
@@ -311,21 +309,21 @@ theorem properA (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + �
   intro y hy
   by_cases hyG : y ∈ B.GV k (p + ρ)
   swap
-  · exact ⟨(B.GV k (p + ρ))ᶜ, (closedGV k (p + ρ)).isOpen_compl.mem_nhds hyG, ∅, isCompact_empty,
+  · exact ⟨(B.GV k (p + ρ))ᶜ, (_root_.Formalism.FourierDecayAlt.P.B6.isClosed_GV k (p + ρ)).isOpen_compl.mem_nhds hyG, ∅, isCompact_empty,
       fun g hg hgG => absurd hgG hg⟩
   obtain ⟨q, hq, V, hV, hVc, hVO⟩ := hM y hy hyG
   have hqi : IsUnit q⁻¹.det := by rw [Matrix.det_nonsing_inv]; exact hq.ringInverse
 
   set KO := (fun g => U.muP k p ρ q * g) '' (V ∩ B.GV k (p + ρ)) with hKOdef
   have hKOc : IsCompact KO :=
-    (hVc.inter_right (closedGV k (p + ρ))).image (continuous_const.mul continuous_id)
+    (hVc.inter_right (_root_.Formalism.FourierDecayAlt.P.B6.isClosed_GV k (p + ρ))).image (continuous_const.mul continuous_id)
   have hKO : KO ⊆ JF.Om k (p + ρ) B0.z B0.z' := by
     rintro _ ⟨g, ⟨hgV, hgG⟩, rfl⟩; exact hVO g hgV hgG
   obtain ⟨C, hC0, hC⟩ := Formalism.FourierDecayAlt.P.WeakDominationMajorants.Orb.orbit B0.z B0.z' KO hKOc hKO
 
-  have hW : IsCompact (UWset k ρ Bj.z) := Formalism.FourierDecayAlt.P.weyl_subgroup_compact k ρ Bj.z Bj.z_mem Bj.T_pos
+  have hW : IsCompact (UWset k ρ Bj.z) := _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k ρ Bj.z Bj.z_mem Bj.T_pos
   have hW' : IsCompact (UWset k (p + ρ) B0.z') :=
-    Formalism.FourierDecayAlt.P.weyl_subgroup_compact k (p + ρ) B0.z' B0.z'_mem B0.T'_pos
+    _root_.Formalism.FourierDecayAlt.P.B2x3.compactW k (p + ρ) B0.z' B0.z'_mem B0.T'_pos
   set Kc := (fun t : B.Mat k ρ × B.Mat k (p + ρ) × B.Mat k (p + ρ) =>
     U.embG k p ρ t.1 * U.muP k p ρ q * t.2.1 * (Hpk k (p + ρ) * t.2.2ᴴ * Hpk k (p + ρ))) ''
       (UWset k ρ Bj.z ×ˢ Cs ×ˢ UWset k (p + ρ) B0.z') with hKcdef

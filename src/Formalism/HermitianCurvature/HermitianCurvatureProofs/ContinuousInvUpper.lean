@@ -16,16 +16,10 @@ open Formalism.FourierDecayAlt.G
 
 instance sigmaFinite_mu (β : ℂ) : SigmaFinite (mu β) := by unfold mu; infer_instance
 
-theorem wMat_mul_self (d : ℕ) : wMat d * wMat d = 1 := by
-  apply _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_self <;> assumption
-
 theorem norm_det_wMat (d : ℕ) : ‖(wMat d).det‖ = 1 := by
-  have h := congrArg (fun M => ‖Matrix.det M‖) (wMat_mul_self d)
+  have h := congrArg (fun M => ‖Matrix.det M‖) (_root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_self d)
   simp only [Matrix.det_mul, norm_mul, Matrix.det_one, norm_one] at h
   nlinarith [norm_nonneg (wMat d).det]
-
-theorem det_upper {d : ℕ} (v : UT d → ℂ) : (upper v).det = 1 := by
-  apply _root_.Formalism.FourierDecayAlt.P.Ux3.det_upper <;> assumption
 
 theorem continuous_upper (d : ℕ) : Continuous (upper : (UT d → ℂ) → Matrix (Fin d) (Fin d) ℂ) := by
   refine continuous_matrix fun i j => ?_
@@ -64,7 +58,7 @@ theorem blk_ll {n : ℕ} (A : Matrix (Fin n) (Fin n) ℂ) (b a : Fin n → ℂ) 
 theorem continuous_inv_upper (d : ℕ) : Continuous (fun v : UT d → ℂ => (upper v)⁻¹) := by
   have h : (fun v : UT d → ℂ => (upper v)⁻¹) = fun v => (upper v).adjugate := by
     funext v
-    rw [Matrix.inv_def, det_upper, Ring.inverse_one, one_smul]
+    rw [Matrix.inv_def, _root_.Formalism.FourierDecayAlt.P.Ux3.det_upper, Ring.inverse_one, one_smul]
   rw [h]
   exact (continuous_upper d).matrix_adjugate
 

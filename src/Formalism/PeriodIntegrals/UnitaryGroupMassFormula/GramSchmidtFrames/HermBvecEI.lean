@@ -134,7 +134,7 @@ lemma adj_of_inv {m : ℕ} {U V : Matrix (Fin m) (Fin m) ℂ} (hd : U.det = 1) (
 lemma zhat_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2.StdZ k r z') {n n' : B.Mat k r}
     (hn : n ∈ Nset k r) (hn' : n' ∈ Nset k r) (y : B.Mat k r) :
     Zhat k r z z' (n * y * n') = (C2.uMap k r z n⁻¹)ᴴ * Zhat k r z z' y * C2.uMap k r z' n' := by
-  have Nc := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have Nc := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hni := Nc.inv_mem n hn
   have h := Formalism.FourierDecayAlt.P.zhat_equivalence k r z z' hz hz' n⁻¹ ⟨1, one_mem_UW z, n⁻¹, hni, (one_mul _).symm⟩
     n' ⟨1, one_mem_UW z', n', hn', (one_mul _).symm⟩ y
@@ -142,7 +142,7 @@ lemma zhat_N {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : C2
 
 lemma uMap_inv {z : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) {n : B.Mat k r} (hn : n ∈ Nset k r) :
     C2.uMap k r z n * C2.uMap k r z n⁻¹ = 1 ∧ C2.uMap k r z n⁻¹ * C2.uMap k r z n = 1 := by
-  have Nc := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have Nc := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hni := Nc.inv_mem n hn
   have hF := Formalism.FourierDecayAlt.P.unipotent_map_frame k r z hz
   have hS : n ∈ Sset k r z := ⟨1, one_mem_UW z, n, hn, (one_mul _).symm⟩

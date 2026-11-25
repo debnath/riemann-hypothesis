@@ -788,12 +788,9 @@ variable {E : Type} [Field E] [NumberField E] [IsCMField E] {Wp Wq : InfinitePla
   {Cb Cc : ℝ} {S : C.HidaSetting E Wp Wq} {p : ∀ v, KB.Pl (D.parOf S v) (Wp (S.pl v)) (Wq (S.pl v))}
   {f : ∀ v : Fin S.f, B.Mat S.G.k S.G.r → (Wq (S.pl v) →L[ℂ] Wp (S.pl v))} {χ : ℝ → ℝ} {A₀ : ℝ}
 
-theorem lenI_pos (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (v : Fin S.f) : 0 < S.G.lenI := by
-  apply _root_.Formalism.FourierDecayAlt.P.LiftDegreeLemmas.lenI_pos' <;> assumption
-
 theorem xw_nonneg (hB : KB.IsLeadingFormSetting Cb Cc S p f χ A₀) (i : ℕ) (v : Fin S.f) : 0 ≤ Xw S i v := by
   obtain ⟨hg, hk⟩ := Formalism.FourierDecayAlt.P.LiftDegreeLemmas.glob_pos' hB
-  have hl := lenI_pos hB v
+  have hl := _root_.Formalism.FourierDecayAlt.P.LiftDegreeLemmas.lenI_pos' hB v
   have hN : (0 : ℝ) ≤ S.G.N := by unfold Sz.Glob.N; positivity
   have hA := supA_nonneg S hg hk v (decide (i = 1 ∧ 0 + 1 = 1))
   unfold Xw
@@ -804,7 +801,7 @@ theorem thr_wave (hCc : 28 * Real.exp 1 ≤ Cc) (hB : KB.IsLeadingFormSetting Cb
     JC.HidaCurvatureBarriers S (fun i v => Xw S i v) := by
   intro i hi1 _ v
   obtain ⟨hg, hk⟩ := Formalism.FourierDecayAlt.P.LiftDegreeLemmas.glob_pos' hB
-  have hl := lenI_pos hB v
+  have hl := _root_.Formalism.FourierDecayAlt.P.LiftDegreeLemmas.lenI_pos' hB v
   have hCA : Cc ≤ S.CA := hB.2.2.2.2.2.2.2.2.2.2.2.2.2.1
   have hN : (0:ℝ) ≤ S.G.N := by unfold Sz.Glob.N; positivity
   have hcg : (0:ℝ) ≤ (28 * S.G.N / S.G.lenI) ^ (2 * (i - 1) + 0) := by positivity

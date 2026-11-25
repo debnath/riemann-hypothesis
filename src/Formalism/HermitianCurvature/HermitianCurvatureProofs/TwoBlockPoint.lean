@@ -384,9 +384,6 @@ variable {K : Type} [CommRing K]
 
 private alias blk_revIn_lemma_4 := _root_.Formalism.DoubleCosetMeasures.P.Phase.blk_revIn
 
-private lemma pt_unit_lemma_5 (s : List ℕ) (t : ℕ → Kˣ) : IsUnit (pt s t).det := by
-  apply _root_.Formalism.FourierDecayAlt.P.A5x5.isUnit_det_pt <;> assumption
-
 theorem pt_append (l l' : List ℕ) (T T₁ T₂ : ℕ → Kˣ) (h₁ : ∀ b, b < l.length → T b = T₁ b)
     (h₂ : ∀ b, b < l'.length → T (l.length + b) = T₂ b) (hN : (l ++ l').sum = l.sum + l'.sum) :
     pt (l ++ l') T = blkM hN (pt l T₁) 0 0 (pt l' T₂) := by
@@ -510,7 +507,7 @@ theorem low_mem (A : Matrix (Fin h.1.sum) (Fin h.1.sum) K)
     · simpa using e1
     · simpa using e4
   · rintro ⟨⟨hA, H1, hH1, e1⟩, ⟨hD, H4, hH4, e4⟩⟩
-    have hu := pt_unit_lemma_5 g.1 g.2
+    have hu := _root_.Formalism.FourierDecayAlt.P.A5x5.isUnit_det_pt g.1 g.2
     refine ⟨(blkM_isLowUni _ _ _ _ _).2 ⟨hA, rfl, hD⟩,
       blkM hN H1 0 ((pt g.1 g.2)⁻¹ * C * pt h.1 h.2) H4,
       (blkM_isLowUni _ _ _ _ _).2 ⟨hH1, rfl, hH4⟩, ?_⟩
@@ -1094,7 +1091,7 @@ theorem PhiH_supp (ψ : AddChar K ℂ) (h : Point K) {n' : ℕ}
     ring
   have hu : IsUnit T.det := by
     rw [hdT]
-    exact pt_unit_lemma_5 h.1 h.2
+    exact _root_.Formalism.FourierDecayAlt.P.A5x5.isUnit_det_pt h.1 h.2
   have hTR : T = R.subtype.mapMatrix (Matrix.of fun a b => (⟨T a b, hT a b⟩ : R)) := by
     ext a b
     rfl
@@ -1538,7 +1535,7 @@ theorem PhiH_const (ψ : AddChar K ℂ) (h : Point K) {n' : ℕ} (Z' : Matrix (F
     (hc : G.det * c = 1) (hck : ϖ ^ k * c ∈ R)
     (hE : ∀ i l, ∃ r ∈ R, E i l = (pt h.1 h.2).det ^ 2 * ϖ ^ (2 * k + 1 + j) * r) :
     PhiH R ψ h Z' s (G + E) = PhiH R ψ h Z' s G := by
-  have hdpt := pt_unit_lemma_5 h.1 h.2
+  have hdpt := _root_.Formalism.FourierDecayAlt.P.A5x5.isUnit_det_pt h.1 h.2
   have hdG : IsUnit G.det := ⟨⟨G.det, c, hc, by rw [mul_comm]; exact hc⟩, rfl⟩
   unfold PhiH
   refine finsum_congr fun τ => ?_
@@ -1588,7 +1585,7 @@ theorem head_reduction_lemma : Formalism.FourierDecayAlt.A6.HeadReduction := by
   obtain ⟨k, hk⟩ := hbd Q hQc hQu
   obtain ⟨j, hj⟩ := hϖK ((pt h.1 h.2).det ^ 2)
   have hψ : ∀ r ∈ R, ψ r = 1 := fun r hr => by simpa using (hD.selfDual 1).2 R.one_mem r hr
-  have hdpt := pt_unit_lemma_5 h.1 h.2
+  have hdpt := _root_.Formalism.FourierDecayAlt.P.A5x5.isUnit_det_pt h.1 h.2
   have hu0inv : ((hdpt.unit⁻¹ : Kˣ) : K) = Ring.inverse (pt h.1 h.2).det := by
     rw [← Ring.inverse_unit, IsUnit.unit_spec]
   have hlat : ∀ u : Kˣ, IsLat (mulR R (u : K)) := by

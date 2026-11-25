@@ -1745,7 +1745,7 @@ theorem word_family_symbol_holds : WFamSymb := by
 
 theorem trace_real_lie_holds : TrRealLie := by
   intro k r A X hA hX
-  have hH : (Hpk k r)ᴴ = Hpk k r := Formalism.FourierDecayAlt.P.Ux4.hpk_conjTranspose k r
+  have hH : (Hpk k r)ᴴ = Hpk k r := _root_.Formalism.FourierDecayAlt.P.Ux3.hpk_herm k r
   have hH2 : Hpk k r * Hpk k r = 1 := WeylGroupFacts.hpk_sq
   have eA : Aᴴ = -(Hpk k r * A * Hpk k r) := by
     have h := congrArg (· * Hpk k r) hA

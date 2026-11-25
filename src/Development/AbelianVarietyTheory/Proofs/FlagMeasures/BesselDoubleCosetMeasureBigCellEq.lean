@@ -178,7 +178,7 @@ theorem exp_pad (X : Mb k) : NormedSpace.exp (pad k r X) = embWb k r (NormedSpac
   have e2 : (NormedSpace.exp (X, (0 : ℂ))).2 = NormedSpace.exp 0 := Prod.snd_exp (X, (0 : ℂ))
   rw [e1, e2, NormedSpace.exp_zero, one_smul, ← emb_eq]
 
-theorem uwb_eq : UWb k r = embWb k r '' UH (Hb k) := (Formalism.FourierDecayAlt.P.unipotent_weyl_properties k r).1
+theorem uwb_eq : UWb k r = embWb k r '' UH (Hb k) := (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r).1
 
 attribute [local instance] Matrix.linftyOpNormedRing Matrix.linftyOpNormedAlgebra in
 theorem lieOf_uwb : lieOf (UWb k r) = pad k r '' lieOf (UH (Hb k)) := by
@@ -511,7 +511,7 @@ theorem shell_rhs {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ → Mb k} {�
         ((Matrix.of p.1)⁻¹ * embWb k r (μsec ζ) * Matrix.of p.2) =
         {ζ : ℂ | |Complex.normSq ζ - Tz k r z * Tz k r z'| ≤ s}.indicator 1 ζ := by
       filter_upwards [h2] with p hp
-      have e1 := (Formalism.FourierDecayAlt.P.b2_rank_one_mem k r z z' μsec hz hz' hsec ζ h _ hp.1 _ hp.2).2
+      have e1 := (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem k r z z' μsec hz hz' hsec ζ h _ hp.1 _ hp.2).2
       have e2 : (((Matrix.of p.1)⁻¹ * embWb k r (μsec ζ) * Matrix.of p.2 : Mat k r) : Mt k r) ∈ shell k r z z' s ↔
           ζ ∈ {ζ : ℂ | |Complex.normSq ζ - Tz k r z * Tz k r z'| ≤ s} := by
         show |Complex.normSq (herm (Hpk k r) (((Matrix.of p.1)⁻¹ * embWb k r (μsec ζ) * Matrix.of p.2) *ᵥ z') z) -
@@ -567,7 +567,7 @@ theorem shell_lhs {z z' : Fin (2 * r + k + 1) → ℂ} {μb : Measure (Mt k r)}
   obtain ⟨g', hg', -⟩ := GlobalTheory.BesselFrame.frame_exists k r z' hz' hT'
   have hf : IsFrameW k r z g := hg
   have hf' : IsFrameW k r z' g' := hg'
-  have hcl := Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r
+  have hcl := _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r
   have hgm : g ∈ UWb k r := ⟨hf.1, hf.2.1⟩
   have hgm' : g' ∈ UWb k r := ⟨hf'.1, hf'.2.1⟩
   have hml : Measurable (lmulM g : Mt k r → Mt k r) := (GlobalTheory.MatHaar.lmulQ_cont g).measurable
@@ -602,7 +602,7 @@ alias volUn_pos := _root_.GlobalTheory.UnitaryVolume.volUn_pos
 theorem rankOne_exact : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) (μb μW μW' : Measure (Mt k r)) (cb : ℝ), 1 ≤ k → inWb k r z → inWb k r z' → 0 < Tz k r z → 0 < Tz k r z' → IsSection k r z z' μsec → 0 < cb → IsHaarOn (Formalism.FourierDecayAlt.B2.UWb k r) μb → HasDens (Formalism.FourierDecayAlt.B2.UWb k r) μb (ENNReal.ofReal cb) → IsHaarOn (UWset k r z) μW → μW Set.univ = 1 → IsHaarOn (UWset k r z') μW' → μW' Set.univ = 1 → ∀ f : Mt k r → ℝ≥0∞, Measurable f → ∫⁻ m, f m ∂μb = ENNReal.ofReal (cb * 2 * volUn k ^ 2 / volUn (k - 1) / (Tz k r z * Tz k r z') ^ k) * ∫⁻ ζ : ℂ, ENNReal.ofReal (Formalism.FourierDecayAlt.B2.zWeight k (Tz k r z) (Tz k r z') ζ) * ∫⁻ p : Mt k r × Mt k r, f ((Matrix.of p.1)⁻¹ * Formalism.FourierDecayAlt.B2.embWb k r (μsec ζ) * Matrix.of p.2) ∂(μW.prod μW') := by
   intro k r z z' μsec μb μW μW' cb hk hz hz' hT hT' hsec hcb hb hd hW h1 hW' h1'
   have hbB : Formalism.FourierDecayAlt.B.IsHaarOn (UWb k r) μb :=
-    (GlobalTheory.HaarNotions.isHaarOn_iff (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k r) (Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r) μb).1 hb
+    (GlobalTheory.HaarNotions.isHaarOn_iff (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r) (_root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r) μb).1 hb
   have hWB := (((GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μW).2.2 z hz hT hk).1 hW)
   have hWB' := (((GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μW').2.2 z' hz' hT' hk).1 hW')
   obtain ⟨C, -, hC⟩ := Formalism.FourierDecayAlt.P.rank_one_integration_formula k r z z' μsec μb μW μW' hk hz hz' hT hT' hsec hbB hWB hWB'
@@ -680,8 +680,8 @@ theorem map_inv_prod {z : Fin (2 * r + k + 1) → ℂ} {μW μN : Measure (Mt k 
     (hW : B.IsHaarOn (UWset k r z) μW) (hN : B.IsHaarOn (Nset k r) μN)
     (hc : ∀ h ∈ UWset k r z, μN.map (conjM h) = μN) :
     ((μW.prod μN).map B2.mulM).map B2.invM = (μW.prod μN).map B2.mulM := by
-  have iW := haar_measure_inversion k r _ μW (weyl_subgroup_closed k r z) hW
-  have iN := haar_measure_inversion k r _ μN (unipotent_radical_closed k r) hN
+  have iW := haar_measure_inversion k r _ μW (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hW
+  have iN := haar_measure_inversion k r _ μN (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hN
   have e : (B2.invM ∘ B2.mulM : Mt k r × Mt k r → Mt k r) = In.m1 ∘ Prod.map B2.invM B2.invM := by
     funext p
     exact Matrix.mul_inv_rev (Matrix.of p.1 : Mat k r) (Matrix.of p.2)
@@ -728,7 +728,7 @@ theorem continuous_dmin (z z' : Fin (2 * r + k + 1) → ℂ) (l : Fin (r + 2)) :
 
 theorem measurableSet_greg (z z' : Fin (2 * r + k + 1) → ℂ) :
     MeasurableSet {x : Mt k r | Matrix.of x ∈ Greg k r z z'} := by
-  have h1 : IsClosed {x : Mt k r | Matrix.of x ∈ GG k r} := (unitary_group_closed k r).closed
+  have h1 : IsClosed {x : Mt k r | Matrix.of x ∈ GG k r} := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).closed
   have hD : ∀ l, Continuous fun x : Mt k r => Dmin k r z z' (Matrix.of x) l := fun l => continuous_dmin z z' l
   have hG : Continuous fun x : Mt k r => Gf k r z z' (Matrix.of x) := by
     unfold Gf
@@ -763,7 +763,7 @@ theorem bigCell_mem_regular {z z' : Fin (2 * r + k + 1) → ℂ} {μsec : ℂ �
 
 theorem measurable_weight (T T' : ℝ) :
     Measurable fun q : (Fin r → ℂ) × ℂ => ENNReal.ofReal (bcWeight k r T T' q) := by
-  simp only [weight_factorization k r T T']
+  simp only [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor k r T T']
   exact ((In.cW_cont.measurable.comp measurable_fst).mul ((R1.zW_meas k T T').comp measurable_snd)).ennreal_ofReal
 
 theorem ae_dom (z z' : Fin (2 * r + k + 1) → ℂ) :
@@ -775,7 +775,7 @@ theorem ae_dom (z z' : Fin (2 * r + k + 1) → ℂ) :
     exact (Measure.quasiMeasurePreserving_snd (μ := (volume : Measure (Fin r → ℂ))) (ν := (volume : Measure ℂ))).ae
       (R1.ae_Om z z')
   filter_upwards [hae] with q hq h0
-  rw [weight_factorization k r] at h0
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor k r] at h0
   refine ⟨fun a ha => h0 ?_, hq.resolve_right fun h => h0 (by rw [h]; simp)⟩
   have : B2.cWeight k r q.1 = 0 := by
     unfold B2.cWeight
@@ -797,8 +797,8 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
     unfold haarLie; rw [one_smul]
   set μN := haarLie (Nset k r) (ENNReal.ofReal κ) with hμN
   have hNb : B.IsHaarOn (Nset k r) μN := (GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μN).2.1.1 hN
-  obtain ⟨μb, hbb⟩ := opposite_weyl_haar_exists k r
-  have hcl := opposite_weyl_subgroup_closed k r
+  obtain ⟨μb, hbb⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
+  have hcl := _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k r
   have := R1.haar_sigmaFinite hbb
   have := hW.1
   have := hW'.1
@@ -813,7 +813,7 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
   have h2 := _root_.GlobalTheory.RankOneExact.rankOne_exact k r z z' (R1.secF k r z z' μsec) μb μW μW' cb hk hz hz' hT hT' hsec' hcb hb hdb hW hW1 hW' hW1'
   have hconj := b2_conjInvRaw_proof k r z μN hz hT hNb
   have hconj' := b2_conjInvRaw_proof k r z' μN hz' hT' hNb
-  have UF := unipotent_weyl_properties
+  have UF := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts
   have h1' : ∀ f : Mt k r → ℝ≥0∞, Measurable f → ∫⁻ g, f g ∂μG =
       ((c / cb * 2 ^ r / κ ^ 2).toNNReal : ℝ≥0∞) * ∫⁻ x : Fin r → ℂ,
       ENNReal.ofReal (B2.cWeight k r x) * ∫⁻ p : (Mt k r × Mt k r) × Mt k r,
@@ -846,7 +846,7 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
     filter_upwards [hdom] with q hq
     show _ = B2.mulM (In.bc1 k r q.1, R1.embF k r (R1.secF k r z z' μsec q.2))
     rw [R1.secF_on hq.2]
-    exact (bruhat_big_cell_factorization k r q.1 (μsec q.2)).1
+    exact (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r q.1 (μsec q.2)).1
   have hae : AEMeasurable (fun q : (Fin r → ℂ) × ℂ => (Matrix.of.symm (bigCell k r q.1 (μsec q.2)) : Mt k r)) ρ :=
     hψ.aemeasurable.congr hψe.symm
   refine ⟨hae, ?_, ?_, ?_⟩
@@ -900,7 +900,7 @@ theorem isDis_bigCell : ∀ (k r : ℕ) (z z' : (Fin (2 * r + k + 1) → ℂ)) (
       field_simp
       ring
     · refine lintegral_congr fun q => ?_
-      rw [← weight_factorization k r]
+      rw [← _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor k r]
       rfl
 
 end GlobalTheory.DoubleCosetMeasure

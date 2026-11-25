@@ -835,9 +835,6 @@ theorem modK_det_pt (s : List ℕ) (t : ℕ → Kˣ) :
   rw [hε]
   rcases Int.units_eq_one_or ε with h | h <;> rw [h] <;> simp [modK_neg]
 
-theorem blk_lt : ∀ (s : List ℕ) (j : ℕ), j < s.sum → blk s j < s.length := by
-  apply _root_.Formalism.FourierDecayAlt.P.A5x7.blk_lt_length <;> assumption
-
 theorem blk_append_lt : ∀ (s : List ℕ) (k j : ℕ), j < s.sum → blk (s ++ [k]) j = blk s j
   | [], k, j, h => by simp at h
   | a :: s, k, j, h => by
@@ -876,7 +873,7 @@ theorem prod_addBlock (h : Point K) (s : ℕ) (t : Kˣ) :
   congr 1
   · refine Finset.prod_congr rfl fun i hi => ?_
     rw [Finset.mem_range] at hi
-    rw [blk_append_lt h.1 s i hi, Function.update_of_ne (blk_lt h.1 i hi).ne]
+    rw [blk_append_lt h.1 s i hi, Function.update_of_ne (_root_.Formalism.FourierDecayAlt.P.A5x7.blk_lt_length h.1 i hi).ne]
   · have e : ∀ j ∈ Finset.range s,
         (((Function.update h.2 h.1.length t) (blk (h.1 ++ [s]) (h.1.sum + j)) : Kˣ) : K) = (t : K) :=
       fun j hj => by

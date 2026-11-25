@@ -190,16 +190,13 @@ variable {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpac
 
 theorem sgs_GV {Bs : B.RealPlaceData k ρ Wp Wq} {P : B.SS k ρ} (hP : Bs.inSS P) {g : B.Mat k ρ} (hg : g ∈ B.GV k ρ) :
     B.sgs P g ∈ B.GV k ρ := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k ρ
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k ρ
   unfold B.sgs
   refine hG.mul_mem _ (hG.mul_mem _ (hG.mul_mem _ (hG.mul_mem _ ?_ _ ?_) _ hg) _ ?_) _ ?_
   · exact hG.inv_mem _ (Formalism.FourierDecayAlt.P.B6.UWset_sub k ρ _ hP.1)
   · exact hG.inv_mem _ (Formalism.FourierDecayAlt.P.B6.Nset_sub k ρ hP.2.1)
   · exact Formalism.FourierDecayAlt.P.B6.Nset_sub k ρ hP.2.2.2
   · exact Formalism.FourierDecayAlt.P.B6.UWset_sub k ρ _ hP.2.2.1
-
-theorem isClosed_inSS (Bs : B.RealPlaceData k ρ Wp Wq) : IsClosed {P : B.SS k ρ | Bs.inSS P} := by
-  apply _root_.Formalism.FourierDecayAlt.P.B6.setting_support_closed <;> assumption
 
 theorem sgs_contOn (Bs : B.RealPlaceData k ρ Wp Wq) (g : B.Mat k ρ) :
     ContinuousOn (fun P : B.SS k ρ => B.sgs P g) {P | Bs.inSS P} := by
@@ -224,7 +221,7 @@ theorem fl_aesm (Bj : B.RealPlaceData k ρ Wp Wq) (σ : Equiv.Perm (Fin p)) (d :
     AEStronglyMeasurable (FL Bj (liftVec k p ρ Bj.z) (liftVec k p ρ Bj.z') σ d H g)
       (Bj.μSS.prod (U.muXi k p 0 ρ σ)) := by
   set S : Set (B.SS k ρ × U.Xi k p 0 ρ σ) := {q | Bj.inSS q.1} with hSdef
-  have hS : IsClosed S := (isClosed_inSS Bj).preimage continuous_fst
+  have hS : IsClosed S := (_root_.Formalism.FourierDecayAlt.P.B6.setting_support_closed Bj).preimage continuous_fst
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW'
@@ -316,7 +313,7 @@ theorem aestronglyMeasurable_germ_integrand (hGS : GaXiSplit) (Bj : B.RealPlaceD
     AEStronglyMeasurable (fun q : XL k p ρ σ × XR k p ρ =>
       KrI B0 H (sxL Bj σ q.1 * U.mMap k p ρ (U.hMat σ d) g) (PsiR q.2)) ((muL Bj σ).prod (muR Bj)) := by
   set S : Set (XL k p ρ σ × XR k p ρ) := {q | Bj.inSS (ssOf σ q)} with hSdef
-  have hS : IsClosed S := (isClosed_inSS Bj).preimage (ssOf_cont σ)
+  have hS : IsClosed S := (_root_.Formalism.FourierDecayAlt.P.B6.setting_support_closed Bj).preimage (ssOf_cont σ)
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW'
@@ -326,8 +323,8 @@ theorem aestronglyMeasurable_germ_integrand (hGS : GaXiSplit) (Bj : B.RealPlaceD
         (Matrix.of x.1.2 : B.Mat k ρ) ∈ QuantumDeterminants.Nset k ρ := by
       have b : ∀ᵐ y : Mt k ρ × Mt k ρ ∂(Bj.μW.prod Bj.μN), (Matrix.of y.1 : B.Mat k ρ) ∈ UWset k ρ Bj.z ∧
           (Matrix.of y.2 : B.Mat k ρ) ∈ QuantumDeterminants.Nset k ρ :=
-        (Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarW)).and
-          (Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarN))
+        (Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarW)).and
+          (Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarN))
       exact (Measure.quasiMeasurePreserving_fst (μ := Bj.μW.prod Bj.μN)
         (ν := (U.muRC k p ρ).prod ((volume : Measure ((Fin 0 → Fin p → ℂ) × (Fin p → Fin 0 → ℂ))).prod
           (volume : Measure (U.LW σ → ℂ))))).ae b
@@ -335,8 +332,8 @@ theorem aestronglyMeasurable_germ_integrand (hGS : GaXiSplit) (Bj : B.RealPlaceD
         (Matrix.of y.1.2 : B.Mat k ρ) ∈ QuantumDeterminants.Nset k ρ := by
       have b : ∀ᵐ y : Mt k ρ × Mt k ρ ∂(Bj.μW'.prod Bj.μN), (Matrix.of y.1 : B.Mat k ρ) ∈ UWset k ρ Bj.z' ∧
           (Matrix.of y.2 : B.Mat k ρ) ∈ QuantumDeterminants.Nset k ρ :=
-        (Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarW')).and
-          (Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bj.haarN))
+        (Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarW')).and
+          (Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bj.haarN))
       exact (Measure.quasiMeasurePreserving_fst (μ := Bj.μW'.prod Bj.μN)
         (ν := (U.muRC k p ρ).prod (volume : Measure (G.UT p → ℂ)))).ae b
     filter_upwards [Measure.quasiMeasurePreserving_fst.ae a1, Measure.quasiMeasurePreserving_snd.ae a2] with q h1 h2
@@ -373,9 +370,9 @@ theorem aestronglyMeasurable_germ_integrand (hGS : GaXiSplit) (Bj : B.RealPlaceD
       star (psi k (p + ρ) B0.z' cStd (NR q.2)) • (H (A q)).comp (Bj.π' (Matrix.of q.2.1.1 : B.Mat k ρ)⁻¹) := by
     intro q hq
     obtain ⟨hh, hν, hh', hν'⟩ := hq
-    have uh : IsUnit (Matrix.of q.1.1.1 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z).unit _ hh
-    have uν : IsUnit (Matrix.of q.1.1.2 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k ρ).unit _ hν
-    have uh' : IsUnit (Matrix.of q.2.1.1 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z').unit _ hh'
+    have uh : IsUnit (Matrix.of q.1.1.1 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z).unit _ hh
+    have uν : IsUnit (Matrix.of q.1.1.2 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k ρ).unit _ hν
+    have uh' : IsUnit (Matrix.of q.2.1.1 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z').unit _ hh'
     have hH' : (Matrix.of q.2.1.1 : B.Mat k ρ)ᴴ * Hpk k ρ * Matrix.of q.2.1.1 = Hpk k ρ := hh'.1
     have hpt : sxL Bj σ q.1 * U.mMap k p ρ (U.hMat σ d) g * Matrix.of (PsiR q.2).2 * Matrix.of (PsiR q.2).1 = A q := by
       have := hGS k p ρ σ d (xiOf σ q) (fun a => a.elim0) (Matrix.of q.1.1.1) (Matrix.of q.1.1.2)

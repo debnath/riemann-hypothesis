@@ -725,7 +725,7 @@ theorem vecV_split [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (Bs : B
   obtain ⟨cF, hcF0, hb⟩ := Formalism.FourierDecayAlt.P.PBN.gN_bound Bs hF A (le_max_left _ _)
   have hbnd : ∀ᵐ p ∂Bs.μSS, θ p * ‖F (B.sgs p h'.choose)‖ ≤ cF * maj p :=
     hdom F cF hcF0 (fun p hp => hb _ (Formalism.FourierDecayAlt.P.B7.sgs_mem Bs hp hγ))
-  have hFc : ContinuousOn F (B.GV k r) := Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn hF.1
+  have hFc : ContinuousOn F (B.GV k r) := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hF.1
   have hm : AEStronglyMeasurable (D.orbIntegrand Bs h'.choose F) Bs.μSS :=
     Formalism.FourierDecayAlt.P.PBE.integrand_aesm' Bs (U := B.GV k r) (fun p hp => Formalism.FourierDecayAlt.P.B7.sgs_mem Bs hp hγ) hFc
   have hi : Integrable (fun p => θ p • D.orbIntegrand Bs h'.choose F p) Bs.μSS := by
@@ -770,11 +770,11 @@ theorem ae_left {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProduct
     [InnerProductSpace ℂ Wq] (Bs : B.RealPlaceData k r Wp Wq) :
     ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z ∧
       (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r := by
-  have := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
   have a1 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z :=
-    Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarW)
+    Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW)
   have a2 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r :=
-    Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarN)
+    Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarN)
   filter_upwards [a1, a2] with x h1 h2 using ⟨h1, h2⟩
 
 theorem polyTop_of (hKA : KrAA) : PBN.PolyTop := by

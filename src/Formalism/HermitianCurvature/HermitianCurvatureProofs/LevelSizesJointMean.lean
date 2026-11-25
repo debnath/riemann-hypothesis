@@ -325,9 +325,3 @@ end
 end Euclid
 
 end Formalism.FourierDecayAlt.P.Jx2
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem euclidean_frame : Formalism.FourierDecayAlt.J.EuclidFrame := Jx2.t_EuclidFrame
-
-end Formalism.FourierDecayAlt.P

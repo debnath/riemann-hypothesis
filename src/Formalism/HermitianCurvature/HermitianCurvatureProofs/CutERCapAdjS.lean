@@ -125,7 +125,7 @@ theorem capacity_adjoint_scalar : CapAdjScalar := by
       ∫ x : Mt k r, ((capLw k r Y).map fun cw =>
         cw.1 * (B.Rw cw.2 a (Matrix.of x) * star (b (Matrix.of x)))).sum ∂μ := by
     refine integral_congr_ae ?_
-    filter_upwards [Formalism.FourierDecayAlt.P.B5.haar_ae h] with x hx
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem h] with x hx
     have := hCV ℂ (B.GV k r) a (ckOn_of_contDiff ha _ _) (Matrix.of x) hx hx
     rw [this, ← List.sum_map_mul_right]
     refine congrArg List.sum (List.map_congr_left fun cw _ => ?_)

@@ -1517,10 +1517,6 @@ theorem core (r : ℕ) (P : Fin (r + 1) → Fin (r + 1)) (hP : ∀ a, P (P a) = 
 section geo
 variable {k r : ℕ}
 
-theorem mulVec_bvec (M : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ) (e x : Fin (2 * r + k + 1)) :
-    (M *ᵥ bvec e) x = M x e := by
-  simp [bvec]
-
 def Fm (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) : Matrix (Fin (2 * r + k + 1)) (Fin (r + 1)) ℂ :=
   Matrix.of fun i a => fvec k r z a i
 
@@ -1587,7 +1583,7 @@ theorem expandAt (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z)
       simp only [Bm, Matrix.of_apply]
       rw [dite_eq_right (by simp)]
       by_cases hc : c.val < r
-      · rw [fvec_lt z c hc, mulVec_bvec, hN2 ⟨c.val, hc⟩ j (by show c.val ≤ j.val; omega),
+      · rw [fvec_lt z c hc, _root_.Formalism.QuantumDeterminants.BruhatBigCell.mulVec_bvec, hN2 ⟨c.val, hc⟩ j (by show c.val ≤ j.val; omega),
           ite_eq_right (fun h => by have h2 := congrArg Fin.val h; simp [eI] at h2; omega), ite_eq_right (by omega)]
         simp
       · rw [fvec_last z c hc, mulVec_apply_eq_of_mem_Nset_of_inWb_of_le z hz ρ ⟨hN1, hN2, hN3⟩ j hj]
@@ -1625,7 +1621,7 @@ theorem Bm_upper (z : Fin (2 * r + k + 1) → ℂ)
   simp only [Bm, Matrix.of_apply]
   split_ifs with h1 h2
   · have ha : a.val < r := by omega
-    rw [fvec_lt z a ha, mulVec_bvec, hN2 ⟨a.val, ha⟩ ⟨i.val, by omega⟩ (by show a.val ≤ i.val; omega)]
+    rw [fvec_lt z a ha, _root_.Formalism.QuantumDeterminants.BruhatBigCell.mulVec_bvec, hN2 ⟨a.val, ha⟩ ⟨i.val, by omega⟩ (by show a.val ≤ i.val; omega)]
     rw [ite_eq_right]
     intro h3
     have h4 := congrArg Fin.val h3
@@ -1641,7 +1637,7 @@ theorem Bm_diag (z : Fin (2 * r + k + 1) → ℂ)
   obtain ⟨-, hN2, hN3⟩ := hρ
   simp only [Bm, Matrix.of_apply]
   split_ifs with h h2
-  · rw [fvec_lt z i h, mulVec_bvec]
+  · rw [fvec_lt z i h, _root_.Formalism.QuantumDeterminants.BruhatBigCell.mulVec_bvec]
     have e := hN2 ⟨i.val, h⟩ ⟨i.val, by omega⟩ (le_refl _)
     rw [e]
     simp [eI]
@@ -1661,7 +1657,7 @@ theorem ell_eq (z : Fin (2 * r + k + 1) → ℂ) (ρ : Matrix (Fin (2 * r + k + 
   refine Finset.sum_congr rfl fun a _ => ?_
   rw [dite_eq_left (by simp : ((Fin.castSucc a : Fin (r + 1)) : ℕ) < r)]
   by_cases h : a.val + 1 < r
-  · rw [dite_eq_left h, fvec_lt z a.succ (by simpa using h), mulVec_bvec]
+  · rw [dite_eq_left h, fvec_lt z a.succ (by simpa using h), _root_.Formalism.QuantumDeterminants.BruhatBigCell.mulVec_bvec]
     rfl
   · rw [dite_eq_right h, fvec_last z a.succ (by simpa using h)]
     rfl
@@ -1727,12 +1723,8 @@ end
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem ptPerm_spec : Formalism.FourierDecayAlt.D.PtPermSpec := by
-  exact Dx1.d_ptPermSpec
 alias ptG_spec := _root_.Formalism.FourierDecayAlt.P.Dx1.ptGSpec
 alias relevant_points_holds := _root_.Formalism.FourierDecayAlt.P.Dx1.Rel.ptRelevant
 alias level_zero_holds := _root_.Formalism.FourierDecayAlt.P.Dx1.LZ.levelZero
-theorem module_of_words : Formalism.FourierDecayAlt.D.ModuleOfWdOn := by
-  exact Dx1.d_moduleOfWdOn
 
 end Formalism.FourierDecayAlt.P

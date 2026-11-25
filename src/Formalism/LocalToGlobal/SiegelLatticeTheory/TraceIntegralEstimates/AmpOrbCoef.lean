@@ -32,7 +32,7 @@ theorem fdegH_pos {k r : ℕ} {ε : Fin (2 * r + k + 1) → Bool} {lam : Fin (2 
     {μG : Measure (Mt k r)} (hlam : IsHCParam lam) (hσ : PI.UpqRep.IsDSHpk k r ε lam σ)
     (hG : PI.BesselPeriodGGP.IsHaarOn (UH (Hpk k r)) μG) {w : H} (hw : ‖w‖ = 1) :
     0 < PI.BesselPeriodGGP.fdegH μG σ w := by
-  obtain ⟨d, hd, hS⟩ := Formalism.FourierDecayAlt.P.schur_hermitian k r ε lam H σ μG hlam hσ hG
+  obtain ⟨d, hd, hS⟩ := _root_.PI.WBL.NIS.schurH k r ε lam H σ μG hlam hσ hG
   obtain ⟨hint, heq⟩ := hS w w w w
   have hf : (fun x : Mt k r => ⟪w, σ (Matrix.of x) w⟫_ℂ * star ⟪w, σ (Matrix.of x) w⟫_ℂ) =
       fun x => (((‖⟪w, σ (Matrix.of x) w⟫_ℂ‖ ^ 2 : ℝ)) : ℂ) := by

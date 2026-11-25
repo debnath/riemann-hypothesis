@@ -86,9 +86,6 @@ theorem exists_skew_hermitian_log_unitary {k : ℕ} (A : Matrix (Fin k) (Fin k) 
 
 end L2
 
-theorem unitary_log {k : ℕ} (A : Matrix (Fin k) (Fin k) ℂ) (hA : Aᴴ * A = 1) :
-    ∃ B : Matrix (Fin k) (Fin k) ℂ, Bᴴ = -B ∧ NormedSpace.exp B = A := exists_skew_hermitian_log_unitary A hA
-
 section Core
 
 variable {N K J : Type} [Fintype N] [Fintype K] [Fintype J] [DecidableEq N] [DecidableEq K] [DecidableEq J]
@@ -350,7 +347,7 @@ theorem exp_generates : Formalism.FourierDecayAlt.Qr.ExpGen := by
     exact fix_c' hh j
   have hCd := dual_fix hh.1 hC'
   obtain ⟨e1, e2⟩ := decomp hc g3 h hC hCd
-  obtain ⟨B, hBs, hBe⟩ := unitary_log _ (unitary_of Qx8.hpk_herm hh.1 g1 e1)
+  obtain ⟨B, hBs, hBe⟩ := exists_skew_hermitian_log_unitary _ (unitary_of Qx8.hpk_herm hh.1 g1 e1)
   have hXC : colM Bs * B * ((colM Bs)ᴴ * Hpk k r) * colM (cvec k r z) = 0 := by
     rw [Matrix.mul_assoc, g2, Matrix.mul_zero]
   have col : ∀ j, (colM Bs * B * ((colM Bs)ᴴ * Hpk k r)) *ᵥ cvec k r z j = 0 := by

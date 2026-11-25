@@ -45,7 +45,7 @@ theorem dmin_wCell {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' :
       Dmin k r z z' (wCell k r (Fin.last r) c * g) (Fin.last (r + 1)) = zetaL k r z z' (Fin.last r) g * pc c := by
   obtain ⟨μ, _, rfl⟩ := (Formalism.FourierDecayAlt.P.TwoByOneBlock.UWb_iff g).1 (Formalism.FourierDecayAlt.P5.Rad.glev_last_uwb hg)
   have e : wCell k r (Fin.last r) c * Formalism.FourierDecayAlt.B2.embWb k r μ = bigCell k r c μ := by
-    rw [Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq, ← (Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c μ).1]
+    rw [Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq, ← (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ).1]
   rw [e]
   have hmin := big_cell_minors_holds k r z z' c μ hz hz'
   have hζ : herm (Hpk k r) (bigCell k r c μ *ᵥ z') z = zetaL k r z z' (Fin.last r) (Formalism.FourierDecayAlt.B2.embWb k r μ) := by
@@ -67,9 +67,9 @@ theorem jfCptLocAll : JFCptLocAll := by
   intro Wp Wq _ _ _ _ _ _ P z z' π π' D F Φ _hP hz hz' hπ hπ' hF hΦ
   subst hz hz' hπ hπ'
   obtain ⟨⟨_, ε, hε, hG⟩, hC⟩ := hF
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed P.k P.r
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed P.k P.r
-  have hGV := Formalism.FourierDecayAlt.P.unitary_group_closed P.k P.r
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW P.k P.r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN P.k P.r
+  have hGV := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG P.k P.r
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarN
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW'

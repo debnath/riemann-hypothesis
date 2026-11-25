@@ -578,21 +578,11 @@ theorem cd_matmul {X : Type*} [NormedAddCommGroup X] [NormedSpace ℝ X] {s : Se
   simp only [Matrix.mul_apply]
   exact ContDiffOn.sum fun j _ => (hA p j).mul (hB j q)
 
-theorem contDiffOn_weyl_cell (l : Fin r) : ContDiffOn ℝ ∞ (fun c : Fin r → ℂ => w1 k r l (c l)) (OmX r) := by
-  rw [cd_entries]
-  intro p q
-  unfold w1
-  split_ifs
-  · exact (Qx3.cd_coord l).contDiffOn
-  · exact (Qx3.cd_coordBar l).contDiffOn.inv (fun x hx => star_ne_zero.2 (hx l))
-  · exact contDiffOn_const
-  · exact contDiffOn_const
-
 def mL (k r : ℕ) (l : Fin r) (x : XX k r) : XX k r := (x.1, w1 k r l (x.1 l) * x.2)
 
 theorem cd_mL (l : Fin r) : ContDiffOn ℝ ∞ (mL k r l) {x : XX k r | x.1 ∈ OmX r} := by
   refine contDiff_fst.contDiffOn.prodMk (cd_matmul ?_ contDiff_snd.contDiffOn)
-  exact (contDiffOn_weyl_cell l).comp contDiff_fst.contDiffOn (fun x hx => hx)
+  exact (_root_.Formalism.FourierDecayAlt.P.Qx3.weyl_cell_contDiffOn l).comp contDiff_fst.contDiffOn (fun x hx => hx)
 
 theorem cd_gamma (l : Fin r) (n : ℕ) :
     ContDiffOn ℝ ∞ (fun c : Fin r → ℂ => ((‖c l‖ ^ n : ℝ) : ℂ)) (OmX r) :=
@@ -665,7 +655,7 @@ variable {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 
 theorem mul_mem_of_mem_inv_mul_ideal (hW : WeylLevelElementFacts) (l : Fin r) {c : ℂ} (hc : c ≠ 0) {g : Mx k r} (hg : g ∈ Glev k r l.succ) :
     w1 k r l c * g ∈ Glev k r l.castSucc :=
-  Qx3.glev_mul (hW k r l c hc).1 (((hW k r l c hc).2 g hg).1)
+  _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hW k r l c hc).1 (((hW k r l c hc).2 g hg).1)
 
 theorem smooth_family_restriction (hW : WeylLevelElementFacts) (l : Fin r) {U U' : Set (XX k r)} {Φ : Fn k r E}
     (h : SmoothFam k r l.castSucc U Φ) (hU' : ∀ x ∈ U', x.1 ∈ OmX r ∧ mL k r l x ∈ U) :
@@ -1320,28 +1310,23 @@ open scoped Matrix.Norms.Elementwise
 
 variable {k r : ℕ}
 
-theorem one_uw (z : Fin (2 * r + k + 1) → ℂ) : (1 : Mx k r) ∈ UWset k r z :=
-  ⟨WeylGroupFacts.uh_one, fun _ => ⟨by simp, by simp⟩, by simp⟩
-
-theorem one_nlev (i : Fin (r + 1)) : (1 : Mx k r) ∈ Nlev k r i := ⟨WeylGroupFacts.mem_n_one, Qx3.glev_one i⟩
-
 section Dom
 variable {z z' : Fin (2 * r + k + 1) → ℂ} {i : Fin (r + 1)} {D : Set (Mx k r)}
 
 theorem dom_left (hD : IsDom k r z z' i D) {g : Mx k r} (hg : g ∈ Glev k r i ∩ D) {n : Mx k r}
     (hn : n ∈ Nlev k r i) : n * g ∈ Glev k r i ∩ D := by
-  have := hD.2 g hg (1 * n) ⟨1, one_uw z, n, hn, rfl⟩ (1 * 1) ⟨1, one_uw z', 1, one_nlev i, rfl⟩
-  exact ⟨Qx3.glev_mul hn.2 hg.1, by simpa using this⟩
+  have := hD.2 g hg (1 * n) ⟨1, _root_.Formalism.FourierDecayAlt.P.Qx8.uw_one z, n, hn, rfl⟩ (1 * 1) ⟨1, _root_.Formalism.FourierDecayAlt.P.Qx8.uw_one z', 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one i, rfl⟩
+  exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hn.2 hg.1, by simpa using this⟩
 
 theorem dom_right (hD : IsDom k r z z' i D) {g : Mx k r} (hg : g ∈ Glev k r i ∩ D) {n : Mx k r}
     (hn : n ∈ Nlev k r i) : g * n ∈ Glev k r i ∩ D := by
-  have := hD.2 g hg (1 * 1) ⟨1, one_uw z, 1, one_nlev i, rfl⟩ (1 * n) ⟨1, one_uw z', n, hn, rfl⟩
-  exact ⟨Qx3.glev_mul hg.1 hn.2, by simpa using this⟩
+  have := hD.2 g hg (1 * 1) ⟨1, _root_.Formalism.FourierDecayAlt.P.Qx8.uw_one z, 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one i, rfl⟩ (1 * n) ⟨1, _root_.Formalism.FourierDecayAlt.P.Qx8.uw_one z', n, hn, rfl⟩
+  exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hg.1 hn.2, by simpa using this⟩
 
 theorem dom_uw (hD : IsDom k r z z' i D) {g : Mx k r} (hg : g ∈ Glev k r i ∩ D) {h h' : Mx k r}
     (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') : h * g * h' ∈ Glev k r i ∩ D := by
-  have := hD.2 g hg (h * 1) ⟨h, hh, 1, one_nlev i, rfl⟩ (h' * 1) ⟨h', hh', 1, one_nlev i, rfl⟩
-  exact ⟨Qx3.glev_mul (Qx3.glev_mul (Qx3.uw_glev i hh) hg.1) (Qx3.uw_glev i hh'), by simpa using this⟩
+  have := hD.2 g hg (h * 1) ⟨h, hh, 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one i, rfl⟩ (h' * 1) ⟨h', hh', 1, _root_.Formalism.FourierDecayAlt.P.Qx8.nlev_one i, rfl⟩
+  exact ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev i hh) hg.1) (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev i hh'), by simpa using this⟩
 
 theorem smooth_congr {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] (hD : IsOpen D) {f f' : Mx k r → E}
     (h : SmoothLev k r i D f) (he : ∀ g ∈ Glev k r i ∩ D, f' g = f g) : SmoothLev k r i D f' := by
@@ -1744,10 +1729,3 @@ theorem chainFromStep : ChainFromStep := by
 end
 
 end Formalism.FourierDecayAlt.P.Qx6
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem chain_recursion_from_single_descent : Formalism.FourierDecayAlt.Q.ChainFromStep := by
-  exact Qx6.chainFromStep
-
-end Formalism.FourierDecayAlt.P

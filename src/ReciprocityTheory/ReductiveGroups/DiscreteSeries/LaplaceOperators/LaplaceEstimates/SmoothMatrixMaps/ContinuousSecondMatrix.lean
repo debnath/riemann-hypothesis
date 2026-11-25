@@ -174,8 +174,8 @@ theorem continuous_first_matrix : Continuous (fun p : Mt k r × Mt k r => (Matri
 theorem continuous_second_matrix : Continuous (fun p : Mt k r × Mt k r => (Matrix.of p.2 : Mat k r)) := continuous_snd
 
 theorem suppA_closed : IsClosed (suppA k r z) :=
-  IsClosed.inter (IsClosed.preimage continuous_first_matrix (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z).closed)
-    (IsClosed.preimage continuous_second_matrix (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).closed)
+  IsClosed.inter (IsClosed.preimage continuous_first_matrix (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z).closed)
+    (IsClosed.preimage continuous_second_matrix (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed)
 
 theorem cont_gp (P x : Mat k r) :
     Continuous (fun p : Mt k r × Mt k r => P * (Matrix.of p.1 * Matrix.of p.2 * x) * P⁻¹) :=
@@ -197,7 +197,7 @@ theorem chi_norm (hB : IsBData z c u π μW μN) {h : Mat k r} (hh : h ∈ UWset
   have hU := hcTypeW_uRep k r z u Vp π hz hT hπ
   unfold chiInv Formalism.MainNotions.S.psiGen
   rw [norm_smul, norm_star, Complex.norm_exp_I_mul_ofReal, one_mul,
-    hU.2.1 _ ((Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z).inv_mem _ hh)]
+    hU.2.1 _ ((_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z).inv_mem _ hh)]
 
 theorem aesm_int {ε : Fin (2 * r + k + 1) → Bool} {P : Mat k r} (hP : Formalism.MainNotions.S.IsCayley k r ε P)
     (hB : IsBData z c u π μW μN) {x : Mat k r} (hx : x ∈ UH (Hpk k r)) (ξ : Vp)
@@ -206,7 +206,7 @@ theorem aesm_int {ε : Fin (2 * r + k + 1) → Bool} {P : Mat k r} (hP : Formali
       chiInv (Formalism.MainNotions.S.psiGen k r z c) π (Matrix.of p.1) (Matrix.of p.2) ξ) (μW.prod μN) := by
   obtain ⟨hz, hT, hc, hπ, hW, hN⟩ := hB
   have hU := hcTypeW_uRep k r z u Vp π hz hT hπ
-  have hWc := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z
+  have hWc := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z
   have hs : ∀ᵐ p ∂(μW.prod μN), p ∈ suppA k r z := ae_supp hW hN
   rw [← Measure.restrict_eq_self_of_ae_mem hs]
   refine ContinuousOn.aestronglyMeasurable ?_ suppA_closed.measurableSet

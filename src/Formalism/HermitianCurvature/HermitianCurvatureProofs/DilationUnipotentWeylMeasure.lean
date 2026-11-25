@@ -130,14 +130,8 @@ lemma inLie_sub {X Y : Mat k r} (hX : inLie k r X) (hY : inLie k r Y) : inLie k 
   rw [sub_eq_add_neg]
   exact inLie_add hX (inLie_neg hY)
 
-private lemma hpk_sq_lemma : Hpk k r * Hpk k r = 1 := by
-  apply _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.hpk_sq <;> assumption
-
 lemma hpk_isUnit : IsUnit (Hpk k r) := by
-  exact ⟨⟨Hpk k r, Hpk k r, hpk_sq_lemma, hpk_sq_lemma⟩, rfl⟩
-
-lemma exp_mem {Y : Mat k r} (hY : inLie k r Y) : NormedSpace.exp Y ∈ GV k r := by
-  apply ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem <;> assumption
+  exact ⟨⟨Hpk k r, Hpk k r, _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.hpk_sq, _root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.hpk_sq⟩, rfl⟩
 
 def cv (b : Bool) (X : Mat k r) (t : ℝ) (g : Mat k r) : Mat k r :=
   match b with
@@ -183,9 +177,9 @@ lemma cv_mem {b : Bool} {X g : Mat k r} (hX : inLie k r X) (hg : g ∈ GV k r) (
     cv b X t g ∈ GV k r := by
   cases b
   · simp only [cv]
-    exact gv_mul_lemma hg (exp_mem (inLie_rsmul hX t))
+    exact gv_mul_lemma hg (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem (inLie_rsmul hX t))
   · simp only [cv]
-    exact gv_mul_lemma (exp_mem (inLie_neg (inLie_rsmul hX t))) hg
+    exact gv_mul_lemma (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.exp_mem (inLie_neg (inLie_rsmul hX t))) hg
 
 lemma cv_hasDerivAt (b : Bool) (X g : Mat k r) :
     HasDerivAt (fun t : ℝ => cv b X t g) (vf b X g) 0 := by
@@ -233,11 +227,6 @@ lemma hasDerivAt_ext {f f' : Mat k r → E} {U : Set (Mat k r)} {g X : Mat k r} 
   filter_upwards [hU'] with t ht
   exact hff _ ht (cv_mem hX hgG t)
 
-lemma natCast_succ_le (m : ℕ) :
-    (((m : ℕ) : ℕ∞) : WithTop ℕ∞) + 1 ≤ (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) := by
-  first
-    | exact le_of_eq (by norm_cast)
-
 lemma cast_ne_zero (m : ℕ) : (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) ≠ 0 := by
   first
     | exact_mod_cast Nat.succ_ne_zero m
@@ -248,7 +237,7 @@ def op' (b : Bool) (X : Mat k r) (f' : Mat k r → E) : Mat k r → E :=
 lemma op'_contDiffOn {f' : Mat k r → E} {U : Set (Mat k r)} (m : ℕ) (b : Bool) (X : Mat k r)
     (hU : IsOpen U) (hf : ContDiffOn ℝ (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) f' U) :
     ContDiffOn ℝ (((m : ℕ) : ℕ∞) : WithTop ℕ∞) (op' b X f') U := by
-  exact (hf.fderiv_of_isOpen hU (natCast_succ_le m)).clm_apply (vf b X).contDiff.contDiffOn
+  exact (hf.fderiv_of_isOpen hU (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.cast_succ_le m)).clm_apply (vf b X).contDiff.contDiffOn
 
 lemma op_eq_op' {f f' : Mat k r → E} {U : Set (Mat k r)} {X : Mat k r} (m : ℕ) (b : Bool)
     (hU : IsOpen U) (hf : ContDiffOn ℝ (((m + 1 : ℕ) : ℕ∞) : WithTop ℕ∞) f' U)
@@ -496,7 +485,7 @@ lemma op_op_ext {f f' : Mat k r → E} {U : Set (Mat k r)} {X Y g : Mat k r} (b 
       fderiv ℝ (fderiv ℝ f') g (vf b X g) (vf b' Y g) + fderiv ℝ f' g (vf b' Y (vf b X g)) := by
   rw [op_eq_op' 0 b hU (op'_contDiffOn 1 b' Y hU hc) (op_eq_op' 1 b' hU hc hff hY) hX g hg hgG]
   have hd : DifferentiableAt ℝ (fderiv ℝ f') g :=
-    ((hc.fderiv_of_isOpen hU (natCast_succ_le 1)).differentiableOn (cast_ne_zero 0)).differentiableAt
+    ((hc.fderiv_of_isOpen hU (_root_.ReciprocityTheory.ChartRestriction.DS.Mult1.InvCC.cast_succ_le 1)).differentiableOn (cast_ne_zero 0)).differentiableAt
       (hU.mem_nhds hg)
   have H := (hd.hasFDerivAt.clm_apply (vf b' Y).hasFDerivAt).fderiv
   unfold op'

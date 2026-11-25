@@ -545,7 +545,7 @@ theorem vecw_frame_map {g : B.Mat k r} (hgU : g ∈ UH (Hpk k r))
   refine ⟨fun a => hgW _ (h1 a), fun a b => ?_, fun a v hv => ?_⟩
   · rw [Dx2.DF.herm_m0_mulVec_invariant g hgU]; exact h2 a b
   · obtain ⟨c, v0, hv0, rfl⟩ := hvs v hv
-    rw [Qx8.herm_smul_right', Dx2.DF.herm_m0_mulVec_invariant g hgU, h3 a v0 hv0, mul_zero]
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, Dx2.DF.herm_m0_mulVec_invariant g hgU, h3 a v0 hv0, mul_zero]
 
 theorem vecw_frame_sub {m : ℕ} {vs vs' : List (Fin (2 * r + k + 1) → ℂ)} (hsub : ∀ v ∈ vs', v ∈ vs)
     {Bs : Fin m → Fin (2 * r + k + 1) → ℂ} (hB : Q.IsFrameOf k r vs Bs) : Q.IsFrameOf k r vs' Bs := by
@@ -996,7 +996,7 @@ theorem vecw_main : Formalism.FourierDecayAlt.Top.VecVTypes := by
   have he : inWb P.k P.r (m₀ *ᵥ ν') := hmW ν' hν
   have hee : herm (Hpk P.k P.r) (m₀ *ᵥ ν') (m₀ *ᵥ ν') = 1 := by rw [Dx2.DF.herm_m0_mulVec_invariant m₀ hmU]; exact hνν
   have hez : herm (Hpk P.k P.r) (m₀ *ᵥ ν') S.z = 0 := by
-    rw [hzeq, Qx8.herm_smul_right', Dx2.DF.herm_m0_mulVec_invariant m₀ hmU, hνz, mul_zero]
+    rw [hzeq, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, Dx2.DF.herm_m0_mulVec_invariant m₀ hmU, hνz, mul_zero]
   obtain ⟨Bs₀', hB₀'⟩ := vecw_frame_exists P.k P.r hOK.k_pos S.z' ν' hz' S.T'_pos hν hνz hνν
   have hB₀ := vecw_frame_fwd S hbase hB₀'
   obtain ⟨S', hInt', -, heig⟩ := branching_proof Wq (parametersUPrimeForU P) (parameters_u_prime_for_u_ok hOK) rfl S.z' ν' S.π' hz'

@@ -94,7 +94,7 @@ theorem rds_zeta_compact (D : B.RealPlaceData k r Wp Wq) {Kz : Set ℂ} (hKz : I
     (hKzA : Kz ⊆ JCx2.rbO (Tz k r D.z) (Tz k r D.z')) :
     ∃ K' : Set (Mx k r), IsCompact K' ∧ K' ⊆ Qx5.Dp k r D.z D.z' ∧
       ∀ g ∈ Glev k r (Fin.last r), 0 < GGl k r D.z D.z' g → zetaL k r D.z D.z' (Fin.last r) g ∈ Kz → g ∈ K' := by
-  have hmem := Formalism.FourierDecayAlt.P.b2_rank_one_mem k r D.z D.z' D.μsec D.z_mem D.z'_mem D.sec
+  have hmem := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem k r D.z D.z' D.μsec D.z_mem D.z'_mem D.sec
   let SW : Set (Mt k r) := {x | (Matrix.of x : Mx k r) ∈ UWset k r D.z}
   let SW' : Set (Mt k r) := {x | (Matrix.of x : Mx k r) ∈ UWset k r D.z'}
   let F : ℂ × (Mt k r × Mt k r) → Mt k r := fun p =>
@@ -136,7 +136,7 @@ theorem rds_zeta_compact (D : B.RealPlaceData k r Wp Wq) {Kz : Set ℂ} (hKz : I
       unfold GGl at hG
       rw [P5.Rad.zetaL_last] at hG
       linarith
-    obtain ⟨h, hh, h', hh', hgeq⟩ := Formalism.FourierDecayAlt.P.b2_rank_one_coord k r D.z D.z' D.μsec D.k_pos D.z_mem
+    obtain ⟨h, hh, h', hh', hgeq⟩ := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneCoord k r D.z D.z' D.μsec D.k_pos D.z_mem
       D.z'_mem D.T_pos D.T'_pos D.sec g hu hζA
     rw [P5.Rad.zetaL_last] at hζK
     refine ⟨(herm (Hpk k r) (g.mulVec D.z') D.z, ((h⁻¹ : Mx k r), (h' : Mx k r))),
@@ -313,7 +313,7 @@ theorem spectral_fundamental_identity : RDSFund := by
   let A' := A ∩ OmX P.r
   let B' := Bo ∩ {x : Mt P.k P.r | 0 < GGl P.k P.r D.z D.z' (Matrix.of x)}
   have hA' : IsOpen A' := hA.inter hOm
-  have hB' : IsOpen B' := hB.inter (isOpen_lt continuous_const (Qx5.GGl_continuous P.k P.r D.z D.z'))
+  have hB' : IsOpen B' := hB.inter (isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont P.k P.r D.z D.z'))
   have hGl : IsClosed {x : Mt P.k P.r | (Matrix.of x : Mx P.k P.r) ∈ Glev P.k P.r (Fin.last P.r)} :=
     Qx5.Glev_closed _
   have hbox : A' ×ˢ (B' ∩ {x : Mt P.k P.r | (Matrix.of x : Mx P.k P.r) ∈ Glev P.k P.r (Fin.last P.r)}) ⊆
@@ -415,7 +415,7 @@ theorem spectral_section_identity : RDSSection := by
       Formalism.FourierDecayAlt.P.CutMP.JA.SA.self_adjoint_cover_holds P.k P.r z z' hz hz' g hg
     have hw := (hKv c hc g₁ hg₁ hGG).1
     have hwG : Q.wCell P.k P.r (Fin.last P.r) c * g₁ ∈ Q.Glev P.k P.r 0 :=
-      Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
+      _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
         (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) hg₁)
     rw [hgeq]
     exact hD₀.2 _ ⟨hwG, hw⟩ n ⟨1, Formalism.FourierDecayAlt.P.Qx8.uw_one _, n, hn, (Matrix.one_mul n).symm⟩ n'

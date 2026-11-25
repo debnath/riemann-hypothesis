@@ -146,16 +146,16 @@ open Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Formalism.Fourier
 
 theorem hpkEx_holds : HpkEx := by
   intro k r z z' hk hz hz' hT hT' μ μW μW' μN hμ hW hW' hN μsec hsec
-  obtain ⟨μG0, hG0⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
-  obtain ⟨μW0, hW0⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r z hz hT
-  obtain ⟨μW0', hW0'⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r z' hz' hT'
+  obtain ⟨μG0, hG0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
+  obtain ⟨μW0, hW0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z hz hT
+  obtain ⟨μW0', hW0'⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z' hz' hT'
   obtain ⟨μN0, hN0⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
   have hD : IsMeasData k r z z' μsec μG0 μW0 μN0 μW0' := ⟨hk, hz, hz', hT, hT', hG0, hW0, hN0, hW0', hsec⟩
   obtain ⟨C, hC, hInt⟩ := Formalism.FourierDecayAlt.P.integration_formula_constant k r z z' μsec μG0 μW0 μN0 μW0' hD
-  have cG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
-  have cW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z
-  have cW' := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z'
-  have cN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have cG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
+  have cW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z
+  have cW' := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z'
+  have cN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   obtain ⟨a, ha0, hat, rfl⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant cG hG0 hμ
   obtain ⟨b, hb0, hbt, rfl⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant cW hW0 hW
   obtain ⟨b', hb0', hbt', rfl⟩ := Formalism.MainNotions.LeviCoordinates.left_haar_eq_smul_biinvariant cW' hW0' hW'

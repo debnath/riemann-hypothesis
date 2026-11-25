@@ -128,7 +128,7 @@ theorem t_pres_cpt (X : ActualOps k r z z' π π') (Y : ℂ) (a b : Fin 2) :
     simp only at e
     rw [e]
     set D : Set (Mx k r) := {g | 0 < GGl k r z z' g} \ K with hDdef
-    have hDo : IsOpen D := (isOpen_lt continuous_const (P.Qx5.GGl_continuous k r z z')).sdiff hKc.isClosed
+    have hDo : IsOpen D := (isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')).sdiff hKc.isClosed
     have hDG : D ⊆ {g | 0 < GGl k r z z' g} := Set.sdiff_subset
     have hgD : g ∈ Glev k r (Fin.last r) ∩ D := ⟨hg, hd.2.2, hgK⟩
     have hS1 := smoothLev_slice Φ c hc D hDG
@@ -564,14 +564,6 @@ theorem nonneg_of_continuous {φ : ℂ → ℂ} (hc : Continuous φ) (h : ∀ t,
 theorem eq_of_continuous_off_zero {f g : ℂ → ℂ} (hf : Continuous f) (hg : Continuous g)
     (h : ∀ t, t ≠ 0 → f t = g t) : f = g := hf.ext_on (dense_compl_singleton (0 : ℂ)) hg (fun t ht => h t ht)
 
-theorem update_mem_OmX {m : ℕ} {c : Fin m → ℂ} (hc : c ∈ OmX m) (l : Fin m) {t : ℂ} (ht : t ≠ 0) :
-    Function.update c l t ∈ OmX m := by
-  intro j
-  rcases eq_or_ne j l with rfl | hj
-  · simpa using ht
-  · rw [Function.update_of_ne hj]
-    exact hc j
-
 theorem nonneg_all_levels {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
     [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] {S : Type} [Fintype S]
     [DecidableEq S] (P : M.Par) (z z' : Fin (2 * P.r + P.k + 1) → ℂ) (π : Mx P.k P.r → (Wp →L[ℂ] Wp))
@@ -608,7 +600,7 @@ theorem nonneg_all_levels {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
         simp only [Fin.coe_castSucc] at hi
         simp only [Fin.val_succ]
         omega
-      exact ih l.succ hn _ (update_mem_OmX hc l ht) _ (hSI w hw l x hx)
+      exact ih l.succ hn _ (_root_.Formalism.FourierDecayAlt.P.Qx6.update_mem_Om hc l ht) _ (hSI w hw l x hx)
 
 theorem thmPFromStepsAll : ThmPFromStepsAll := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' μ L st K l0
@@ -973,7 +965,7 @@ theorem t_van (X : ActualOps k r z z' π π') (Y : ℂ) (a b : Fin 2) (Φ : RadS
     simp only at e
     rw [e]
     set D : Set (Mx k r) := {g | 0 < GGl k r z z' g} \ K with hDdef
-    have hDo : IsOpen D := (isOpen_lt continuous_const (P.Qx5.GGl_continuous k r z z')).sdiff hKc.isClosed
+    have hDo : IsOpen D := (isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')).sdiff hKc.isClosed
     have hDG : D ⊆ {g | 0 < GGl k r z z' g} := Set.sdiff_subset
     have hgD : g ∈ Glev k r (Fin.last r) ∩ D := ⟨hg, hd.2.2, hgK⟩
     have hS1 := smoothLev_slice Φ c hd.1 D hDG

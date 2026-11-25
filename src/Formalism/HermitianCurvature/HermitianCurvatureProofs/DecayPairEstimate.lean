@@ -54,7 +54,7 @@ theorem dpMul_isMulOp (l : Fin r) :
 theorem pairAt_dpMul_right (μ : Measure (Mt k r)) (l : Fin r) (Φ Ψ : RadSp k r z z' π π') (c : Fin r → ℂ) :
     pairAt μ Φ (dpMul l Ψ) c = ((dpW (c l) : ℝ) : ℂ) * pairAt μ Φ Ψ c := by
   unfold pairAt
-  simp_rw [dpMul_isMulOp l Ψ c, PBFV.hsInner_smul_right, Complex.conj_ofReal]
+  simp_rw [dpMul_isMulOp l Ψ c, _root_.Formalism.FourierDecayAlt.P.B5.hs_smul_right, Complex.conj_ofReal]
   exact integral_const_mul _ _
 
 theorem dens_dpMul {S : Type} [Fintype S] [DecidableEq S] (μ : Measure (Mt k r)) (l : Fin r)

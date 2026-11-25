@@ -185,7 +185,7 @@ theorem upper_isUpUni (u : G.UT p → ℂ) : Formalism.DoubleCosetMeasures.IsUpU
 theorem psi_right_equivariant : PsiRight := by
   intro k p ρ z' ν' u x hz hν
   have hz0 := inWb_liftVec (p := p) hz
-  have hcl := Formalism.FourierDecayAlt.P.unipotent_radical_closed k (p + ρ)
+  have hcl := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k (p + ρ)
   have h1 := embG_nset (p := p) hν
   have h2 := Formalism.FourierDecayAlt.P.BigCellDiagonalMap.leviElement_nset (k := k) (ρ := ρ) _ (upper_isUpUni u)
   rw [Formalism.FourierDecayAlt.P.PBG.psi_mul_nset _ hz0 _ (hcl.mul_mem _ h1 _ h2) (_root_.Formalism.FourierDecayAlt.P.Ux3.rn_nset x),

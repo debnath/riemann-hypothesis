@@ -421,7 +421,7 @@ theorem V_dmin (p : KB.Pl P Wp Wq) {f F₀ : B.Mat P.k P.r → (Wq →L[ℂ] Wp)
   unfold KB.Pl.V D.vecV
   split_ifs with h1 h2
   · apply TBBx4.orbJ_smul_ae _ _ _ _ _ _ h0
-    filter_upwards [TBBx2.ae_inSS p.T.base] with q hq
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B5.ae_inSS p.T.base] with q hq
     have hGq : Dmin P.k P.r p.T.base.z p.T.base.z' (B.sgs q h2.choose) ⟨j + 1, by omega⟩ = mnr hj γ := by
       rw [BigCellZetaMinors.dmin_sgs _ hq]
       unfold Dmin mnr

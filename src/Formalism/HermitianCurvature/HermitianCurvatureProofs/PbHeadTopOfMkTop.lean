@@ -418,8 +418,8 @@ theorem kr_right_uw (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L
     (hw : w ∈ UWset k r Bs.z') : PBG.Kr Bs F (x * w) = (PBG.Kr Bs F x).comp (Bs.π' w) := by
   have hU := unit_of_uw hw
   have hwi : w⁻¹ ∈ UWset k r Bs.z' := LieBracketMultiplication.uw_inv hw
-  have := PBG.sigmaFinite_of_haar Bs.haarN
-  have := PBG.sigmaFinite_of_haar Bs.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bs.haarW'
   set e1 := (PBG.lmulHomeo w hU).toMeasurableEquiv
   set e2 := (conjHomeo w hU).toMeasurableEquiv
   set Φ : Mt k r × Mt k r ≃ᵐ Mt k r × Mt k r := MeasurableEquiv.prodCongr e1 e2
@@ -438,7 +438,7 @@ theorem kr_right_uw (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L
       (F (x * w * Matrix.of p.2 * Matrix.of p.1)).comp (Bs.π' (Matrix.of p.1)⁻¹)
   have hK1 : PBG.Kr Bs F x = ∫ p, f (Φ p) ∂(Bs.μW'.prod Bs.μN) := (hmp.integral_comp' f).symm
   have hae : ∀ᵐ p ∂(Bs.μW'.prod Bs.μN), (Matrix.of p.1 : B.Mat k r) ∈ UWset k r Bs.z' :=
-    Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B5.haar_ae Bs.haarW')
+    Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW')
   have hK2 : ∫ p, f (Φ p) ∂(Bs.μW'.prod Bs.μN) = ∫ p, pre (Bs.π' w⁻¹) (g p) ∂(Bs.μW'.prod Bs.μN) := by
     refine integral_congr_ae ?_
     filter_upwards [hae] with p hp
@@ -497,8 +497,8 @@ theorem pbF_left_uw (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n 
   have hU := unit_of_uw hh
   have hi : h⁻¹ ∈ UWset k ρ Bj.z := LieBracketMultiplication.uw_inv hh
   have hiU := unit_of_uw hi
-  have := PBG.sigmaFinite_of_haar Bj.haarN
-  have := PBG.sigmaFinite_of_haar Bj.haarW
+  have := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
+  have := _root_.Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   haveI : SigmaFinite (U.muRC k p ρ) := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p ρ
   set e1 := (PBG.lmulHomeo h⁻¹ hiU).toMeasurableEquiv
   set e2 := (conjHomeo h⁻¹ hiU).toMeasurableEquiv
@@ -1091,8 +1091,8 @@ theorem radial_of_function_holds : RadOfFun := by
     obtain ⟨hΩ, hG, hpos⟩ := hx₀
     obtain ⟨U, F, hU, hgU, hF, hFe⟩ := hloc x₀.2 hG hpos
     refine ⟨OmX ρ ×ˢ (U ∩ {g | 0 < GGl k ρ z z' g}), fun x => F x.2, ?_, ?_, ?_, ?_⟩
-    · exact (Formalism.FourierDecayAlt.P.Qx5.isOpen_OmX ρ).prod
-        (hU.inter (isOpen_lt continuous_const (Formalism.FourierDecayAlt.P.Qx5.GGl_continuous k ρ z z')))
+    · exact (_root_.Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX ρ).prod
+        (hU.inter (isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k ρ z z')))
     · exact ⟨hΩ, hgU, hpos⟩
     · exact hF.comp contDiff_snd.contDiffOn (fun x hx => hx.2.1)
     · intro x hx hxG
@@ -1103,7 +1103,7 @@ theorem radial_of_function_holds : RadOfFun := by
   · intro x hx h hh h' hh'
     obtain ⟨hΩ, hG, hpos⟩ := hx
     have hD : (x.1, h * x.2 * h') ∈ DomR k ρ z z' :=
-      ⟨hΩ, Formalism.FourierDecayAlt.P.Qx5.Glev_mul (Formalism.FourierDecayAlt.P.Qx5.Glev_mul (hUW hh) hG) (hUW hh'),
+      ⟨hΩ, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hUW hh) hG) (hUW hh'),
         by rw [Formalism.FourierDecayAlt.P5.Rad.GGl_uw hh hh']; exact hpos⟩
     have hD0 : (x.1, x.2) ∈ DomR k ρ z z' := ⟨hΩ, hG, hpos⟩
     show (if (x.1, h * x.2 * h') ∈ DomR k ρ z z' then f (h * x.2 * h') else 0) =
@@ -1390,7 +1390,7 @@ theorem head_weight_at_of_exists : DiagonalScalarMatrices.HeadWeightAtOfEx := by
     congr 1
   have hc := _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
     _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos (Fin w.length) P.k P.u P.u' (M.rho P ρ) p.l0 P.T P.T'
-    (D.positionted w) hl1 hlk (Formalism.FourierDecayAlt.P.types_interlace P p.hP.1 ρ) p.hP.1.T_pos p.hP.1.T'_pos hw.2.1 hw.2.2 e
+    (D.positionted w) hl1 hlk (_root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P p.hP.1 ρ) p.hP.1.T_pos p.hP.1.T'_pos hw.2.1 hw.2.2 e
   have hpos : 0 < f ρ := by rw [Complex.lt_def]; exact ⟨hc.1, hc.2.symm⟩
   have hre : 0 < (f ρ).re := (Complex.lt_def.1 hpos).1
   have him : (f ρ).im = 0 := (Complex.lt_def.1 hpos).2.symm
@@ -1542,8 +1542,8 @@ theorem outer_int (S : B.RealPlaceData k r Wp Wq) (hN : S.μN = D.muN k r) (hW1 
         ∫ x, conjL S x.1 x.2 (U.PhiFun (s := 0) k 0 σ d S.z S.z' F (fun a => a.elim0)
           ((midB r 0 (Matrix.of x.1))⁻¹ * γ0 * midB r 0 (Matrix.of x.2))) ∂(S.μW.prod S.μW') := by
   have : CompleteSpace Wp := FiniteDimensional.complete ℂ Wp
-  have hsW : SigmaFinite S.μW := Dx2.OrbJ.sigmaF S.haarW
-  have hsW' : SigmaFinite S.μW' := Dx2.OrbJ.sigmaF S.haarW'
+  have hsW : SigmaFinite S.μW := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW
+  have hsW' : SigmaFinite S.μW' := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW'
   have hfW : IsFiniteMeasure S.μW := ⟨by rw [hW1]; exact ENNReal.one_lt_top⟩
   have hfW' : IsFiniteMeasure S.μW' := ⟨by rw [hW1']; exact ENNReal.one_lt_top⟩
   set γ := U.mMap k r 0 (U.hMat σ d) γ0 with hγ
@@ -1571,8 +1571,8 @@ theorem outer_int (S : B.RealPlaceData k r Wp Wq) (hN : S.μN = D.muN k r) (hW1 
     exact hfTm.comp_measurePreserving (hsw.symm _)
 
   have hae : ∀ᵐ x ∂(S.μW.prod S.μW'), Matrix.of x.1 ∈ UWset k r S.z ∧ Matrix.of x.2 ∈ UWset k r S.z' := by
-    have b1 := (Measure.quasiMeasurePreserving_fst (μ := S.μW) (ν := S.μW')).ae (Dx2.OrbJ.ae_mem S.haarW)
-    have b2 := (Measure.quasiMeasurePreserving_snd (μ := S.μW) (ν := S.μW')).ae (Dx2.OrbJ.ae_mem S.haarW')
+    have b1 := (Measure.quasiMeasurePreserving_fst (μ := S.μW) (ν := S.μW')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem S.haarW)
+    have b2 := (Measure.quasiMeasurePreserving_snd (μ := S.μW) (ν := S.μW')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem S.haarW')
     filter_upwards [b1, b2] with x h1 h2 using ⟨h1, h2⟩
   have hin := fun x : Mt k r × Mt k r => fun hx : Matrix.of x.1 ∈ UWset k r S.z ∧ Matrix.of x.2 ∈ UWset k r S.z' =>
     inner_int S z0 z0' hz hz' σ d hd γ0 hγ0 hrel F hFc M Bs hBs hBsf hdom x.1 x.2 hx.1 hx.2
@@ -1623,7 +1623,7 @@ theorem orbJ_mMap (S : B.RealPlaceData k r Wp Wq) (hN : S.μN = D.muN k r) (hW1 
     ⟨_, hnc, hint⟩
   unfold D.orbJ
   rw [dite_eq_left hex, Formalism.FourierDecayAlt.P.orbital_integral_indep_choice k r Wp Wq S _ _ hrel
-    (Formalism.FourierDecayAlt.P.radial_measure_is_haar k r Wp Wq S _ w dd hγG hdd hZw) F hex.choose _ hex.choose_spec.1 hnc
+    (_root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar k r Wp Wq S _ w dd hγG hdd hZw) F hex.choose _ hex.choose_spec.1 hnc
     hex.choose_spec.2 hint, heq]
 
 end outer
@@ -1754,15 +1754,15 @@ theorem vecV_append_singleton_eq_vecV_sliceAt (k R ρ : ℕ) (hρ : ρ = 0) (e :
     rw [hZhat]; exact hQmono
   rw [orbJ_mMap S hN hW1 hW1' S0.z S0.z' hzS hzS' σR dR hdR γ0 hγ0G hrel _ _ hdd hZw hw F hFc hR Rb hFs]
 
-  have hsW0 : SigmaFinite S0.μW := Dx2.OrbJ.sigmaF S0.haarW
-  have hsW0' : SigmaFinite S0.μW' := Dx2.OrbJ.sigmaF S0.haarW'
+  have hsW0 : SigmaFinite S0.μW := _root_.Formalism.FourierDecayAlt.P.B7.sf S0.haarW
+  have hsW0' : SigmaFinite S0.μW' := _root_.Formalism.FourierDecayAlt.P.B7.sf S0.haarW'
   have hH := haar_lev R 0 e S0.z S.z hzL S.μW S0.μW S.haarW S0.haarW hW1 hW01
   have hH' := haar_lev R 0 e S0.z' S.z' hzL' S.μW' S0.μW' S.haarW' S0.haarW' hW1' hW01'
   rw [hH, hH', Measure.map_prod_map _ _ (levMt_cont R 0 e).measurable (levMt_cont R 0 e).measurable,
     ((levMt_emb R 0 e).prodMap (levMt_emb R 0 e)).integral_map]
   have hae : ∀ᵐ y ∂(S0.μW.prod S0.μW'), Matrix.of y.1 ∈ UWset k 0 S0.z ∧ Matrix.of y.2 ∈ UWset k 0 S0.z' := by
-    have b1 := (Measure.quasiMeasurePreserving_fst (μ := S0.μW) (ν := S0.μW')).ae (Dx2.OrbJ.ae_mem S0.haarW)
-    have b2 := (Measure.quasiMeasurePreserving_snd (μ := S0.μW) (ν := S0.μW')).ae (Dx2.OrbJ.ae_mem S0.haarW')
+    have b1 := (Measure.quasiMeasurePreserving_fst (μ := S0.μW) (ν := S0.μW')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem S0.haarW)
+    have b2 := (Measure.quasiMeasurePreserving_snd (μ := S0.μW) (ν := S0.μW')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem S0.haarW')
     filter_upwards [b1, b2] with x h1 h2 using ⟨h1, h2⟩
   refine integral_congr_ae ?_
   filter_upwards [hae] with y hy

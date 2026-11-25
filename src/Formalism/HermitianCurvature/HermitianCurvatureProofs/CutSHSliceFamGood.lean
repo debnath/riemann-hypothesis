@@ -152,7 +152,7 @@ theorem mc_GV {k ρ m : ℕ} (e : ρ + 1 = m) {t : ℂ} (ht : t ≠ 0) {γ : B.M
 theorem point_mem_unitary_group : PtGV := by
   intro k ρ m e t ht γ hγ xx
   unfold pt
-  exact HermitianFormFactor.UH_mul (HermitianFormFactor.UH_mul (HermitianFormFactor.UH_inv (B2x5.isUnit_det_Hpk k m) (radial_embedding_mem_unitary_group e xx.1))
+  exact HermitianFormFactor.UH_mul (HermitianFormFactor.UH_mul (HermitianFormFactor.UH_inv (_root_.Formalism.FourierDecayAlt.P.B2x3.hpk_unit k m) (radial_embedding_mem_unitary_group e xx.1))
     (mc_GV e ht hγ)) (radial_embedding_mem_unitary_group e xx.2)
 
 end Formalism.FourierDecayAlt.P.CutSH.SFG
@@ -695,7 +695,7 @@ theorem rad_main (t : ℂ) (γ : B.Mat k ρ) (x x' : U.RC k 1 ρ) {R δ : ℝ} (
           rw [PLV, norm_mul, norm_mul, norm_neg, mul_comm]
       _ ≤ R := hQ _ _
   have hs : Matrix.vecMul (Matrix.vecMul (star (cy x')) (Hpk k ρ)) (Hpk k ρ) = star (cy x') := by
-    rw [Matrix.vecMul_vecMul, _root_.Formalism.FourierDecayAlt.P.Ux1.hpk_sq', Matrix.vecMul_one]
+    rw [Matrix.vecMul_vecMul, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.vecMul_one]
   have hcx' : ∀ v, ‖cy x' v‖ ≤ ((2 * ρ + k + 1 : ℕ) : ℝ) * (R / δ) := by
     intro v
     rw [← norm_star, ← Pi.star_apply, ← hs]

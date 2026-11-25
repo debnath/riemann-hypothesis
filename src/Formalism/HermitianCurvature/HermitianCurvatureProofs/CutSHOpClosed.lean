@@ -326,7 +326,7 @@ theorem family_orbital_derivative : CutSH.FamJFDeriv := by
         exact hφ1 γ
       · intro u hu p hin
         have hy := B7.sgs_mem (T.bs (j + 1)) hin hγ.1
-        refine (B5.rho_norm_le (T.bs (j + 1)) hin _ _).trans ?_
+        refine (_root_.Formalism.FourierDecayAlt.P.B7.norm_rho_le (T.bs (j + 1)) hin _ _).trans ?_
         have hΦy := norm_le_rho (T.bs (j + 1)) hin ((fun y => φ y • A₁) (B.sgs p γ₀))
         by_cases hz : famP j G v u (B.sgs p γ₀) = 0
         · rw [hz, norm_zero]

@@ -37,7 +37,7 @@ theorem gN_Y_eq (hNI : NormInv) {P Q γ : Mx k r} (hP : P ∈ Formalism.QuantumD
     have h1 : gᴴ * H * g = H := hg
     have h2 := congrArg Matrix.det h1
     rw [Matrix.det_mul, Matrix.det_mul] at h2
-    have hH : IsUnit H.det := Formalism.FourierDecayAlt.P.B2x5.isUnit_det_Hpk k r
+    have hH : IsUnit H.det := _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_unit k r
     have h3 : (gᴴ).det * g.det = 1 := by
       apply hH.mul_left_cancel
       calc H.det * ((gᴴ).det * g.det) = (gᴴ).det * H.det * g.det := by ring

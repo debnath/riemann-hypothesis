@@ -461,7 +461,7 @@ theorem continuous_lowRow (n : ℕ) : Continuous (fun a : Fin n → ℂ => lowRo
 
 theorem continuous_blkU (n : ℕ) :
     Continuous (fun p : (UT n → ℂ) × (Fin n → ℂ) => blk (upper p.1) p.2 0 1) :=
-  P.G7.continuous_blk (P.Dx2.SL.cont_upper.comp continuous_fst) continuous_snd continuous_const continuous_const
+  P.G7.continuous_blk (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst) continuous_snd continuous_const continuous_const
 
 theorem continuous_orbM (n : ℕ) (t c : ℂ) : Continuous (orbM n t c) := by
   unfold orbM
@@ -532,14 +532,14 @@ theorem integrable_longIntegrand (n : ℕ) (Φ : Mat (n + 1) → V) (z : ℂ) (h
   have hZc : Continuous (fun v : UT (n + 1) → ℂ => P.JCTx6.Pos.Zv n z v) := by
     show Continuous (fun v : UT (n + 1) → ℂ =>
       ((ptLong (n + 1) z * upper v : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) : Mat (n + 1)))
-    exact continuous_const.matrix_mul P.Dx2.SL.cont_upper
+    exact continuous_const.matrix_mul _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper
   have hΦc : Continuous (fun v : UT (n + 1) → ℂ => Φ (P.JCTx6.Pos.Zv n z v)) :=
     continuous_iff_continuousAt.2 fun v => (hc v).comp hZc.continuousAt
   have hψc : Continuous (fun v : UT (n + 1) → ℂ => psi U.betaU (superSum (upper v))) := by
     have h1 : Continuous fun v : UT (n + 1) → ℂ => superSum (upper v) := by
       unfold superSum
       exact continuous_finsetSum _ fun i _ =>
-        (continuous_apply _).comp ((continuous_apply _).comp P.Dx2.SL.cont_upper)
+        (continuous_apply _).comp ((continuous_apply _).comp _root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper)
     exact (P.G7.continuous_psi _).comp h1
   have hbound : ∀ v : UT (n + 1) → ℂ, ‖psi U.betaU (superSum (upper v)) • Φ (P.JCTx6.Pos.Zv n z v)‖ ≤
       K * (min 1 ‖z‖) ^ (-a) * (1 + ‖v‖) ^ (-a) := by

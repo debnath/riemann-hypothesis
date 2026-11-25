@@ -84,7 +84,7 @@ theorem jf_swap (Ds : B.RealPlaceData k r Wp Wq) (Ds' : B.RealPlaceData k r Wp W
     unfold JF.integrand D.orbIntegrand
     rw [xi_eq_xiTau_one_one]
   have hae : ∀ᵐ q ∂Ds.μSS, D.orbIntegrand Ds' γ (fun g => (f g).comp (A g)) q = L (D.orbIntegrand Ds γ f q) := by
-    filter_upwards [TBBx2.ae_inSS Ds] with q hq
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B5.ae_inSS Ds] with q hq
     rw [orbIntegrand_swap Ds Ds' hz hz' hπ A hA f γ hγ.1 hγ.2.2 q hq]
     rfl
   rw [← bessel_function_trivial_index k r Wp Wq' Ds' _ γ, ← bessel_function_trivial_index k r Wp Wq Ds f γ]
@@ -212,7 +212,7 @@ theorem shiftAtR_full (hW : WigExists) : ∃ Cb c₃ : ℝ, 0 ≤ Cb ∧ ∀ (P 
       c₃ * ((P.r : ℝ) + 1) ^ 2 * ((P.r : ℝ) * ((2 * P.r + P.k + 1 : ℕ) : ℝ) + 1) ≤ A₀ →
       B.InCC A₀ 1 f → ∀ γ : C.LPt, D.IsLocPt γ (P.r + 1) → 0 < Gp p γ →
         q.V (fun g => (f g).comp (A g)) γ = (p.V f γ).comp (A (ptRep p γ)) := by
-    obtain ⟨c₃, hc⟩ := Formalism.FourierDecayAlt.P.orbital_integral_converges
+    obtain ⟨c₃, hc⟩ := _root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv
     refine ⟨c₃, ?_⟩
     intro Pa Wp Wq Wq' _ _ _ _ _ _ _ _ _ u u' p q f A A₀ hT hA hA₀ hf γ hγ hG
     obtain ⟨hz, hz', hπ, hW, hN, hW', hν, hm⟩ := hT
@@ -240,7 +240,7 @@ theorem shiftAtR_full (hW : WigExists) : ∃ Cb c₃ : ℝ, 0 ≤ Cb ∧ ∀ (P 
         rw [TBBx2.Gf_of_Zhat _ _ g γ hZ]
         exact hG'
       have hrel := Final.d_ptRelevant _ _ _ _ p.T.base γ g hγ hgGV hZ
-      have hH := Formalism.FourierDecayAlt.P.radial_measure_is_haar _ _ _ _ p.T.base g _ _ hgGV hd hZm
+      have hH := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar _ _ _ _ p.T.base g _ _ hgGV hd hZm
       obtain ⟨θ, hθ, hi⟩ := hc Pa.k Pa.r Wp Wq p.T.base g _ _ A₀ f hgGV hrel hd hZm hGf hA₀ hf
       simp only [KB.Pl.V]
       rw [Formalism.FourierDecayAlt.P.isotropic_vectors_linear_indep _ _ _ _ q.T.base q.ν' q.m₀ _ γ hγ g q.hF hGq hgGV hZq hFq,

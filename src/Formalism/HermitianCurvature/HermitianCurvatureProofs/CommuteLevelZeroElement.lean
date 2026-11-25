@@ -760,13 +760,6 @@ theorem minusL : MinusL := by
 
 end Formalism.FourierDecayAlt.P.Fr9
 
-namespace Formalism.FourierDecayAlt.P
-
-theorem minus_letter_tau : Formalism.FourierDecayAlt.Fr.MinusTau := Fr9.minusTau
-
-theorem minus_letter_l : Formalism.FourierDecayAlt.Fr.MinusL := Fr9.minusL
-
-end Formalism.FourierDecayAlt.P
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Formalism.HermitianCurvature.HermitianCurvatureProofs.CommuteLevelZeroElement =====

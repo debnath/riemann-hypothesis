@@ -40,12 +40,12 @@ theorem map_levM_smul {μ : Measure (Mt k (1 + ρ))} {μs : Measure (Mt k ρ)}
     (hμ : B.IsHaarOn (Glev k (1 + ρ) (Fin.last (1 + ρ))) μ) (hμs : B.IsHaarOn (Glev k ρ (Fin.last ρ)) μs) :
     ∃ c : NNReal, μs.map (B2.levM k ρ) = c • μ := by
   rw [glev_last_eq] at hμs hμ
-  have hU := Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k ρ
-  obtain ⟨_, hν⟩ := Formalism.FourierDecayAlt.P.levi_haar_measure_exists k ρ _ μs hU hμs
+  have hU := _root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k ρ
+  obtain ⟨_, hν⟩ := _root_.Formalism.FourierDecayAlt.P.B2x2.levHaar k ρ _ μs hU hμs
   have e : ιLev k 1 ρ '' B2.UWb k ρ = B2.UWb k (1 + ρ) := by
     rw [← glev_last_eq, ← glev_last_eq, image_glev]
   rw [e] at hν
-  exact Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k (1 + ρ) _ μ _ (Formalism.FourierDecayAlt.P.opposite_weyl_subgroup_closed k (1 + ρ)) hμ hν.conc
+  exact _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k (1 + ρ) _ μ _ (_root_.Formalism.FourierDecayAlt.P.B2x3.closedWb k (1 + ρ)) hμ hν.conc
     hν.left hν.finite_compact
 
 theorem zeta_levM (z z' : Fin (2 * ρ + k + 1) → ℂ) (x : Mt k ρ) :
@@ -59,7 +59,7 @@ theorem zeta_levM (z z' : Fin (2 * ρ + k + 1) → ℂ) (x : Mt k ρ) :
   rw [hf, hf, hf, hf, Formalism.FourierDecayAlt.P.B2x5.lev_lift, Formalism.FourierDecayAlt.P.B2x4.herm_lift]
 
 theorem measurable_levM : Measurable (B2.levM k ρ) := by
-  exact (Formalism.FourierDecayAlt.P.LongWeylElement.levM_cont k ρ).measurable
+  exact (_root_.Formalism.FourierDecayAlt.P.B2x2.levM_cont k ρ).measurable
 
 theorem continuous_zetaL (r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) :
     Continuous fun x : Mt k r => zetaL k r z z' (Fin.last r) (Matrix.of x) := by

@@ -71,7 +71,7 @@ namespace Formalism.MainNotions.S.Pv.AmpDDPf.BM
 open Formalism.BasicNotions Formalism.QuantumDeterminants Formalism.MainNotions.S Formalism.MainNotions.S.Pv.AmpDDPf
 
 theorem ampDD_thm : Formalism.MainNotions.S.Pv.AmpDD.BM.AmpDD := by
-  have hSchH := Formalism.FourierDecayAlt.P.schur_hermitian
+  have hSchH := _root_.PI.WBL.NIS.schurH
   have hNI := Formalism.FourierDecayAlt.P.norm_inverse_bound
   have hGG := Formalism.FourierDecayAlt.P.growth_group_bound
   have hRS := right_stabilizer_invariance
@@ -111,7 +111,7 @@ theorem ampDD_thm : Formalism.MainNotions.S.Pv.AmpDD.BM.AmpDD := by
   exact amp_core L hμG hd hSch hNI hw1 l l' hl hl' hγ hrel hμR hOQ hQ hinv hb hab hIG hpm hv hv' hC1 hC2 ξ ξ'
 
 theorem amplitude_K_finite : Formalism.MainNotions.S.Pv.AmpDD.BM.AmpKF := by
-  have hSchH := Formalism.FourierDecayAlt.P.schur_hermitian
+  have hSchH := _root_.PI.WBL.NIS.schurH
   have hNI := Formalism.FourierDecayAlt.P.norm_inverse_bound
   have hGG := Formalism.FourierDecayAlt.P.growth_group_bound
   have hRS := right_stabilizer_invariance

@@ -455,7 +455,7 @@ namespace Formalism.FourierDecayAlt.P.PBC
 open Formalism.FourierDecayAlt Finset NumberField
 
 theorem pbc_blockLatV : PBC.BlockLatV := by
-  obtain ⟨C0, hC0, hbox⟩ := _root_.Formalism.FourierDecayAlt.P.Jx1.t_BoxSumLattice Formalism.SA.P.smoothedSumBound
+  obtain ⟨C0, hC0, hbox⟩ := _root_.Formalism.FourierDecayAlt.P.Jx2.t_BoxSumLattice Formalism.SA.P.smoothedSumBound
   refine ⟨2 * 3 ^ C.Kst * C0, by
     have : (1 : ℝ) ≤ 3 ^ C.Kst := one_le_pow₀ (by norm_num)
     nlinarith, ?_⟩

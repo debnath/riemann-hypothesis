@@ -311,8 +311,8 @@ theorem sInt_equiv {u : Fin k → ℝ} {z : Fin (2 * r + k + 1) → ℂ} {c : Fi
       Formalism.MainNotions.S.psiGen k r z c m₀ • π h₀ (sInt μW μN (Formalism.MainNotions.S.psiGen k r z c) π f ξ g) := by
   obtain ⟨hz, hT, -, hHC, hW, hN⟩ := hB
   have hπ : Formalism.MainNotions.S.IsURepOn (UWset k r z) π := hcTypeW_uRep k r z u Vp π hz hT hHC
-  have hMP := Mult1.S0.A.shift_measurePreserving Mult1.haarUniqueSF' Formalism.FourierDecayAlt.P.weyl_subgroup_closed
-    Formalism.FourierDecayAlt.P.weyl_haar_exists Formalism.FourierDecayAlt.P.unipotent_radical_closed Formalism.FourierDecayAlt.P.unipotent_haar_exists
+  have hMP := Mult1.S0.A.shift_measurePreserving Mult1.haarUniqueSF' _root_.Formalism.FourierDecayAlt.P.B2x3.closedW
+    _root_.Formalism.FourierDecayAlt.P.B2x3.haarW _root_.Formalism.FourierDecayAlt.P.B2x2.closedN Formalism.FourierDecayAlt.P.unipotent_haar_exists
     Formalism.FourierDecayAlt.P.b2_conjInvRaw_proof hz hT hW hN hh₀ hm₀
   have hd := TransportGeo.uh_det hh₀.1
   have hdm := TransportGeo.uh_det hm₀.1
@@ -341,7 +341,7 @@ theorem sInt_equiv {u : Fin k → ℝ} {z : Fin (2 * r + k + 1) → ℂ} {c : Fi
     refine integral_congr_ae ?_
     filter_upwards [hae] with p hp
     rw [← he]
-    exact Mult1.S0.A.integrand_shift Formalism.FourierDecayAlt.P.weyl_subgroup_closed Formalism.FourierDecayAlt.P.unipotent_radical_closed
+    exact Mult1.S0.A.integrand_shift _root_.Formalism.FourierDecayAlt.P.B2x3.closedW _root_.Formalism.FourierDecayAlt.P.B2x2.closedN
       Formalism.QuantumDeterminants.unitary_weyl_normal_holds hz c hπ f ξ hh₀ hm₀ hp.1 hp.2
   rw [he] at hMP
   rw [h1, integral_smul, L.integral_comp_comm (fun p => F (e p)), hMP.integral_comp' F]
@@ -471,8 +471,8 @@ theorem frameLaw : FrameLawStatement := by
       (hgood _ (hact _ m hm))
     simp only [EvaluationEquivalence.exp_conj_frame hg₀.1] at this
     exact this
-  have h1W : (1 : Mat k r) ∈ Formalism.QuantumDeterminants.UWset k r z := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z).one_mem
-  have h1N : (1 : Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).one_mem
+  have h1W : (1 : Mat k r) ∈ Formalism.QuantumDeterminants.UWset k r z := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z).one_mem
+  have h1N : (1 : Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).one_mem
   have hπ := hcTypeW_uRep k r z u Vp π hB.1 hT hB.2.2.2.1
   have hN : ∀ Y : Mat k r, Y ∈ Base.N.levF (Base.levB k r) 0 →
       Formalism.QuantumDeterminants.Hpk k r * Yᴴ * Formalism.QuantumDeterminants.Hpk k r = -Y → ∀ m ∈ genSub E V,

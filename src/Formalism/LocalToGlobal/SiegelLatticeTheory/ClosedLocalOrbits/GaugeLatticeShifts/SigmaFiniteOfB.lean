@@ -67,7 +67,7 @@ theorem det_unit_of_UH {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) �
   intro h0
   have h1 := congrArg Matrix.det hg'
   rw [Matrix.det_mul, Matrix.det_mul, h0, mul_zero] at h1
-  exact (Formalism.FourierDecayAlt.P.B2x5.isUnit_det_Hpk k r).ne_zero h1.symm
+  exact (_root_.Formalism.FourierDecayAlt.P.B2x3.hpk_unit k r).ne_zero h1.symm
 
 theorem inv_mem_UW {z : Fin (2 * r + k + 1) → ℂ} {g : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hg : g ∈ Formalism.QuantumDeterminants.UWset k r z) : g⁻¹ ∈ Formalism.QuantumDeterminants.UWset k r z := by
@@ -137,7 +137,7 @@ theorem rightInvS_of (hSC : SetCorr) (hHC : HaarCorr) : _root_.Formalism.L2.SG.R
   obtain ⟨P, hPJ, hPdet, hPe, zH, -, hzH, -, hPz, -, hTz, -⟩ :=
     pFrame_holds r k ε e z (z' + ∑ a, d a • e a) T T' hF'' hGP
   have hT : 0 < Formalism.QuantumDeterminants.Tz k r zH := by rw [hTz]; exact hF.T_pos
-  obtain ⟨μW0, hW0⟩ := Formalism.FourierDecayAlt.P.weyl_haar_exists k r zH hzH hT
+  obtain ⟨μW0, hW0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r zH hzH hT
   obtain ⟨μN0, hN0⟩ := Formalism.FourierDecayAlt.P.unipotent_haar_exists k r
   obtain ⟨-, hC⟩ := hHC r k ε e z zH P hPJ hPdet hPe hzH hPz hT hF.k_pos
   obtain ⟨c, -, hm⟩ := hC μW0 μN0 (haarOn_sk_of_b' hW0) (haarOn_sk_of_b' hN0) μ hμ

@@ -186,7 +186,7 @@ theorem root_conj {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : 
   rw [← hI', Measure.map_map mc mi, Measure.map_map (_root_.GlobalTheory.Amp.RootMove.measurable_rootCoords z p) (mc.comp mi), ← h2.map_eq,
     ← Measure.map_smul _ h2.measurable.aemeasurable, ← h, Measure.map_map h2.measurable (_root_.GlobalTheory.Amp.RootMove.measurable_rootCoords z' p)]
   refine Measure.map_congr ?_
-  filter_upwards [P.Dx2.OrbJ.ae_mem hμ] with x hx
+  filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ] with x hx
   have hxi := (hR.inv_mem _ hx).2
   rw [hii] at hxi
   set ρ : MatKR k r := Matrix.of x with hρ
@@ -316,7 +316,7 @@ theorem amp_at_root (D : D7) τ w w' θ (W : LocW D.R.k D.R.rS) (hW : GoodW D τ
     ⟨(haar_conj hg hH₀).conc, ?_⟩, ?_, ?_⟩
   · rw [hmap]
     refine ⟨hg, hpos, ⟨_, d, hd, hm⟩, relevant hz hz' hg hZ _,
-      ⟨Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hR, hR.ne_zero, hR.conc, hR.left⟩, hν, ?_⟩
+      ⟨_root_.Formalism.FourierDecayAlt.P.B7.sf hR, hR.ne_zero, hR.conc, hR.left⟩, hν, ?_⟩
     have e1 : (fun x : Mt D.R.k D.R.rS => fun i j => (g⁻¹ * Matrix.of x * g) i j) = conjM g⁻¹ := by
       funext x
       unfold conjM

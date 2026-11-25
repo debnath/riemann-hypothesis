@@ -40,7 +40,7 @@ theorem locChart (k r : ℕ) (hk : 1 ≤ k) (z z' : Fin (2 * r + k + 1) → ℂ)
       ∀ x : Mt k r, Matrix.of x ∈ Formalism.MainNotions.S.Rset k r g₀ → ψ (rootCoords k r z' p x) = x := by
   obtain ⟨k0, rfl⟩ : ∃ k0, k = k0 + 1 := ⟨k - 1, by omega⟩
   obtain ⟨Ds, hDz, hDz'⟩ := Formalism.MainNotions.S.Pv.AmpDDPf.bsetting_of (k0 + 1) r hk z' z ⟨hz', hT'⟩ ⟨hz, hT⟩
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed (k0 + 1) r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG (k0 + 1) r
   have hgG : g₀ ∈ Formalism.FourierDecayAlt.B.GV (k0 + 1) r := hg
   have hu : IsUnit g₀.det := hG.unit g₀ hgG
   have hgi : g₀⁻¹ ∈ Formalism.FourierDecayAlt.B.GV (k0 + 1) r := hG.inv_mem g₀ hgG

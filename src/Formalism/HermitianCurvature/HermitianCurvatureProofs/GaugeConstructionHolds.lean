@@ -91,7 +91,7 @@ theorem glev_mul_exp {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r)) (w : Fi
     g * NormedSpace.exp ((t : ℂ) • genW k r w) ∈ Q.Glev k r (Fin.last r) := by
   rw [exp_genW]
   obtain ⟨μ, hμ, rfl⟩ := (TwoByOneBlock.UWb_iff g).1 (NFRadRedA.glev_uwb hg)
-  rw [← TwoByOneBlock.emb_mul]
+  rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
   exact NFRadRedA.uwb_glev (TwoByOneBlock.emb_mem_UWb (TwoByOneBlock.UH_mul hμ (dW_uh w t)))
 
 theorem hasDerivAt_genW {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
@@ -491,19 +491,12 @@ theorem phase_star_mul (φ : ℝ) :
     ← Complex.exp_conj, ← Complex.exp_add]
   simp [Complex.conj_ofReal]
 
-theorem Hb_mul_self : Hb k * Hb k = 1 := by
-  unfold Hb
-  rw [diagonal_mul_diagonal, ← diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
-
 theorem inv_of_UH {g : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hg : g ∈ UH (Hb k)) :
     g⁻¹ * g = 1 ∧ g * g⁻¹ = 1 := by
   have hg' : gᴴ * Hb k * g = Hb k := hg
   have hl : (Hb k * gᴴ * Hb k) * g = 1 := by
     calc (Hb k * gᴴ * Hb k) * g = Hb k * (gᴴ * Hb k * g) := by simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [hg', Hb_mul_self]
+      _ = 1 := by rw [hg', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq]
   rw [Matrix.inv_eq_left_inv hl]
   exact ⟨hl, mul_eq_one_comm.1 hl⟩
 
@@ -744,15 +737,15 @@ theorem rotation_section_holds : GTRRSec := by
   · refine (UWset_iff hz' _).2 ⟨_, Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_mul (Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_mul (UH_inv hB) (dTwo_UH φ)) hB, ?_, rfl⟩
     rw [← mulVec_mulVec, ← mulVec_mulVec, hBv, dTwo_fix_last hk, ← hBv, mulVec_mulVec, hB1, one_mulVec]
   · simp only [hL]
-    rw [dOne_eq_one exp_zero_I, Matrix.mul_one, hA2, emb_one]
+    rw [dOne_eq_one exp_zero_I, Matrix.mul_one, hA2, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
   · simp only [hR]
-    rw [dTwo_eq_one exp_zero_I, Matrix.mul_one, hB1, emb_one]
+    rw [dTwo_eq_one exp_zero_I, Matrix.mul_one, hB1, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
   · simp only [hL]
-    rw [dOne_eq_one exp_two_pi_I, Matrix.mul_one, hA2, emb_one]
+    rw [dOne_eq_one exp_two_pi_I, Matrix.mul_one, hA2, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
   · simp only [hR]
-    rw [dTwo_eq_one exp_two_pi_I, Matrix.mul_one, hB1, emb_one]
+    rw [dTwo_eq_one exp_two_pi_I, Matrix.mul_one, hB1, _root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
   · simp only [hL]
-    rw [← emb_mul, dOne_add]
+    rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, dOne_add]
     congr 1
     set A := gA k (wbPart k r z) (Tz k r z)
     calc A * (dOne k φ * dOne k ψ) * A⁻¹ = A * dOne k φ * (A⁻¹ * A) * dOne k ψ * A⁻¹ := by
@@ -760,7 +753,7 @@ theorem rotation_section_holds : GTRRSec := by
           simp only [Matrix.mul_one, Matrix.mul_assoc]
       _ = A * dOne k φ * A⁻¹ * (A * dOne k ψ * A⁻¹) := by simp only [Matrix.mul_assoc]
   · simp only [hR]
-    rw [← emb_mul, dTwo_add]
+    rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, dTwo_add]
     congr 1
     set B := gB k (wbPart k r z') (Tz k r z')
     calc B⁻¹ * (dTwo k φ * dTwo k ψ) * B = B⁻¹ * dTwo k φ * (B * B⁻¹) * dTwo k ψ * B := by
@@ -770,19 +763,19 @@ theorem rotation_section_holds : GTRRSec := by
   · intro φ g hg
     obtain ⟨μ, _, _, rfl⟩ := (UWset_iff hz' g).1 hg
     simp only [zc]
-    rw [← emb_mul, ← emb_mul, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
+    rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, Matrix.smul_mul, Matrix.mul_smul, Matrix.one_mul, Matrix.mul_one]
   · intro ζ hζ φ
     have hSU : theSection k r z z' ζ ∈ UH (Hb k) := (hsec.2 ζ hζ).1
     refine ⟨?_, ?_⟩
     · simp only [NF.muZ, zc, hL, hR]
-      rw [← emb_mul, show theSection k r z z' ζ = theSecB k (wbPart k r z) (wbPart k r z') (Tz k r z) (Tz k r z') ζ from rfl,
-        secB_rot hk hA hB ζ φ, emb_mul, emb_mul]
+      rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, show theSection k r z z' ζ = theSecB k (wbPart k r z) (wbPart k r z') (Tz k r z) (Tz k r z') ζ from rfl,
+        secB_rot hk hA hB ζ φ, _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
       rfl
     · intro c hc
       have hprod : NF.muZ k r (theSection k r z z') ζ * zc k r φ =
           embWb k r (theSection k r z z' ζ * (Complex.exp ((φ : ℂ) * Complex.I) • 1)) := by
         simp only [NF.muZ, zc]
-        rw [emb_mul]
+        rw [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
       refine ⟨hc, ?_, ?_⟩
       · rw [hprod]
         obtain ⟨hU, hfix⟩ := emb_mem_UWb (r := r) (Formalism.FourierDecayAlt.P.TwoByOneBlock.UHb_mul hSU (smul_one_UH φ))

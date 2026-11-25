@@ -97,7 +97,7 @@ theorem sqIntegrable_of_threshold (D : RealPlaceData k r Wp Wq) (hα : AB k r �
   have hI : Integrable (fun g : Mt k r => gN (Matrix.of g : Mat k r) ^ (-α)) D.μG :=
     ⟨hm.aestronglyMeasurable, (hasFiniteIntegral_iff_ofReal (Eventually.of_forall hnn)).2 hfin⟩
   refine hI.mono' (hm.mul hm).aestronglyMeasurable ?_
-  filter_upwards [haar_ae D.haarG] with g hg
+  filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
   rw [Real.norm_of_nonneg (mul_nonneg (hnn g) (hnn g))]
   exact mul_le_of_le_one_right (hnn g)
     (Real.rpow_le_one_of_one_le_of_nonpos (matrix_norm_ge_one k r _ hg) (by linarith))
@@ -107,7 +107,7 @@ theorem integrand_aestronglyMeasurable (H : SqIntegrable D α) {A B : Mat k r �
     AEStronglyMeasurable (fun g : Mt k r => hsInner (rho D p A (Matrix.of g)) (B (Matrix.of g))) D.μG := by
   have hxy := inSS_mem D hp
   have hAt : AEStronglyMeasurable (fun g : Mt k r => A (sgs p (Matrix.of g))) D.μG := by
-    simp only [sgs_eq]
+    simp only [_root_.Formalism.FourierDecayAlt.P.B7.u_sgs_eq]
     exact admissible_ae_strongly_measurable (admissible_two_sided_translate H.1 hA (WeylGroupFacts.uh_inv hxy.1) hxy.2) D.haarG
   have h1 : AEStronglyMeasurable (fun g : Mt k r => Sd D p (A (sgs p (Matrix.of g)))) D.μG :=
     (Sd D p).continuous.comp_aestronglyMeasurable hAt
@@ -142,7 +142,7 @@ theorem coef_integrand_integrable (H : SqIntegrable D α) {A B : Mat k r → (Wq
     Integrable (fun g : Mt k r => hsInner (rho D p A (Matrix.of g)) (B (Matrix.of g))) D.μG := by
   refine (H.integrable.const_mul ((Module.finrank ℂ Wq : ℝ) * (cA * normProductOfPair p ^ α * cB))).mono'
     (integrand_aestronglyMeasurable H hA hB hp) ?_
-  filter_upwards [haar_ae D.haarG] with g hg
+  filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
   exact integrand_norm_le H hA hB hp hg le_rfl
 
 theorem coef_continuousOn (H : SqIntegrable D α) {A B : Mat k r → (Wq →L[ℂ] Wp)} {cA cB : ℝ} (hA : admitted α cA A)
@@ -158,10 +158,10 @@ theorem coef_continuousOn (H : SqIntegrable D α) {A B : Mat k r → (Wq →L[�
   · have hN : ∀ᶠ p in 𝓝[{p | D.inSS p}] p₀, normProductOfPair p < normProductOfPair p₀ + 1 :=
       (norm_product_continuous_on D p₀ hp₀).tendsto.eventually_lt_const (lt_add_one _)
     filter_upwards [self_mem_nhdsWithin, hN] with p hp hNp
-    filter_upwards [haar_ae D.haarG] with g hg
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     exact integrand_norm_le H hA hB hp hg hNp.le
   · exact (SqIntegrable.integrable H).const_mul _
-  · filter_upwards [haar_ae D.haarG] with g hg
+  · filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with g hg
     have h1 : ContinuousWithinAt (fun p : SS k r => A (sgs p (Matrix.of g))) {p | D.inSS p} p₀ :=
       (hA.1.comp (conjugated_pair_continuous_on D (Matrix.of g)) (fun p hp => conj_product_mem_unitary_group D hp hg)) p₀ hp₀
     have h2 : ContinuousWithinAt (fun p : SS k r => Sd D p (A (sgs p (Matrix.of g)))) {p | D.inSS p} p₀ :=
@@ -413,7 +413,7 @@ theorem betaInfTau_eq_integral (hα : AB k r ≤ α) {F F' : Mat k r → (Wq →
   have hF := admissible_weighted_of_bound hc
   have hF' := admissible_weighted_of_bound hc'
   have H := sqIntegrable_of_threshold D hα
-  have := sigmaFinite_μSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   have hξ : Continuous (xiTau D τ) := by
     unfold xiTau
     exact Complex.continuous_exp.comp (continuous_const.mul (Complex.continuous_ofReal.comp

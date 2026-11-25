@@ -89,7 +89,7 @@ theorem x0_mul_torus_element (hj : j + 1 ≤ r) {Z : Matrix (Fin j) (Fin j) ℂ}
     (γ : B.Mat k (r - (j + 1))) (s : ℂ) :
     x0 k r j hj Z τ γ * hM k r j hj (Fin.last j) (Fin.last j) s =
       (s * τ) • M1 k r j hj - (star s * (star τ)⁻¹) • M2 k r j hj := by
-  rw [level_point_eq_block_three, hM_blk, ← castM_mul', Ux4.block3_mul, zfull_conjTranspose_inv hZ hτ]
+  rw [level_point_eq_block_three, hM_blk, ← castM_mul', _root_.Formalism.FourierDecayAlt.P.Ux3.block3_mul, zfull_conjTranspose_inv hZ hτ]
   unfold M1 M2
   rw [← castM_smul', ← castM_smul', ← castM_sub']
   congr 1

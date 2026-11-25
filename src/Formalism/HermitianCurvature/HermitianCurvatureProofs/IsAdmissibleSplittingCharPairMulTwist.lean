@@ -222,7 +222,7 @@ theorem cwPos (P : M.Par) (l : ℕ) (L : R.LevelData (A P (DQ P)) P.r) (j : M.Ty
     obtain ⟨Y', hY', e⟩ := MAx2.mem_wordP ha
     rw [e]
     exact ⟨Complex.ofReal_im _, by rw [Complex.ofReal_re]; exact hcut _ (hYI _ hY')⟩
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P hOK (ixOf P w.length i).2
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK (ixOf P w.length i).2
   have hpos := _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
     _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos (Fin w.length) P.k P.u P.u'
     (M.rho P (ixOf P w.length i).2) l P.T P.T' (wordP w) hl1 hlk hπ hOK.T_pos hOK.T'_pos hcutw
@@ -2682,20 +2682,6 @@ open Formalism.FourierDecayAlt Formalism.FourierDecayAlt.Wd Formalism.FourierDec
 
 noncomputable section
 
-section Star
-
-variable {A : Type} [Ring A] [StarRing A] {S : Type} [Fintype S] [DecidableEq S]
-
-theorem star_io (x : A) : star (io x : SlopeTestRemainingChoices S A) = io (star x) := by
-  ext E E'
-  unfold io
-  simp only [Matrix.star_apply, Matrix.scalar_apply, Matrix.diagonal_apply]
-  by_cases h : E = E'
-  · subst h; simp
-  · rw [ite_eq_right (Ne.symm h), ite_eq_right h, star_zero]
-
-end Star
-
 section StarModel
 
 variable (P : M.Par) (D : DAlg P.r)
@@ -2797,7 +2783,7 @@ theorem contract (Λ Q : M2 (SlopeTestRemainingChoices S A)) (vv : Fin 2 → A) 
       Matrix.conjTranspose_apply]
   have hS : ∀ b, star ((Λ *ᵥ fun c => (io (vv c) : SlopeTestRemainingChoices S A)) b) = ∑ c, io (star (vv c)) * star (Λ b c) := by
     intro b
-    simp only [Matrix.mulVec, dotProduct, star_sum, star_mul, star_io]
+    simp only [Matrix.mulVec, dotProduct, star_sum, star_mul, _root_.Formalism.FourierDecayAlt.P.NormalFormRelations.star_io']
   simp only [hS, hE]
   exact contractR (fun b c => Λ b c) (fun b c => star (Λ b c)) (fun b => Q b b) (fun c => io (star (vv c)))
     (fun c => io (vv c))
@@ -3302,7 +3288,7 @@ theorem act_diag (hTT : 0 ≤ P.TT) (n : ℕ) {N : ℕ} (cc : Ix (Fin N) → M.T
 theorem cs_real (hOK : P.OK) {l : ℕ} (hl1 : 1 ≤ l) (hlk : l ≤ P.k) {S : Type} [Fintype S] [DecidableEq S]
     (w : List (Letter ℂ S)) (h : M.CutWord P l w) (π : M.Ty P) (e : Ix S) :
     (((cs (M.x0 P l π) (M.qC P) w e).re : ℝ) : ℂ) = cs (M.x0 P l π) (M.qC P) w e := by
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P hOK π
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK π
   have hpos := _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
     _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos S P.k P.u P.u' (M.rho P π) l P.T P.T' w hl1 hlk hπ
     hOK.T_pos hOK.T'_pos h.2.1 h.2.2 e
@@ -3546,7 +3532,7 @@ section S_F_F27
 namespace Formalism.FourierDecayAlt.P
 
 theorem third_identity : Formalism.FourierDecayAlt.MA.EnergyAbsoluteIdentity :=
-  third_identity_of_parts third_identity_signed polynomial_sign types_interlace boxes_fit
+  third_identity_of_parts third_identity_signed polynomial_sign _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces boxes_fit
 
 end Formalism.FourierDecayAlt.P
 
@@ -3941,7 +3927,7 @@ theorem weightRatio : WeightRatioQ := by
   have hYs1' : ∀ p ∈ w, Lb ≤ Y + s + 1 - p := fun p hp => by linarith [(hfar p hp).2]
 
   set π := (ixOf P w.length i).2 with hπdef
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P hOK π
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK π
   have hsx : ∀ Z ∈ Set.Icc α β, 0 < sx P l π Z ∧ 0 < sx P l π (Z + 1) := fun Z hZ => by
     have h0 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z hl1 hlk hπ (hcut Z hZ) 0 (by simp)
     have h1 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z hl1 hlk hπ (hcut Z hZ) 1 (by simp)
@@ -5355,7 +5341,7 @@ theorem ee_form (P : M.Par) (l : ℕ) (L : R.LevelData (A P (DQ P)) P.r) (hOK : 
   have hAdm : admitted (startM P (DQ P) l) (wordP w) :=
     (Formalism.FourierDecayAlt.P.admissible_joint_alt P (DQ P) l _ (wordP w)).2
       (Formalism.FourierDecayAlt.P.cut_admissible _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
-        _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift Formalism.FourierDecayAlt.P.types_interlace Formalism.FourierDecayAlt.P.realPoints_statement
+        _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces _root_.Formalism.FourierDecayAlt.P.Mx3.realPoints
         P hOK l hl1 hlk _ (wordP w) hcutW)
   have hee : ∀ Y, (startM P (DQ P) l).ee Y = L.ζ * L.ζbi * ∑ j, (Y - gJ P j)⁻¹ • ZJ P j := by
     intro Y
@@ -6183,14 +6169,14 @@ theorem Ctx.twelve_le_window (h : Ctx P l α β Lb Ntot w Y s) : 12 ≤ β - α 
 
 theorem Ctx.sx_pos (h : Ctx P l α β Lb Ntot w Y s) (π : M.Ty P) (Z : ℝ) (hZ : Z ∈ Set.Icc α β) :
     0 < sx P l π Z ∧ 0 < sx P l π (Z + 1) := by
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P h.hOK π
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P h.hOK π
   have h0 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z h.hl1 h.hlk hπ (h.hcut Z hZ) 0 (by simp)
   have h1 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z h.hl1 h.hlk hπ (h.hcut Z hZ) 1 (by simp)
   rw [add_zero] at h0
   exact ⟨h0, h1⟩
 
 theorem Ctx.qp_pos (h : Ctx P l α β Lb Ntot w Y s) (Z : ℝ) (hZ : Z ∈ Set.Icc α β) : 0 < qp P Z := by
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P h.hOK (fun _ => 0)
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P h.hOK (fun _ => 0)
   exact _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive P.k P.u P.u' _ l Z P.T P.T' h.hl1 h.hlk hπ (h.hcut Z hZ) h.hOK.T_pos h.hOK.T'_pos
 
 theorem Ctx.mid_I (h : Ctx P l α β Lb Ntot w Y s) (Z : ℝ) (hZ : α + (β - α) / 3 ≤ Z ∧ Z ≤ β - (β - α) / 3) :
@@ -6370,7 +6356,7 @@ variable {P : M.Par} {l : ℕ} {α β Lb : ℝ} {Ntot : ℕ} {w : List ℝ} {Y s
 theorem Ctx.sides (h : Ctx P l α β Lb Ntot w Y s) (π : M.Ty P) :
     Side P.k l (fun i => -(1 / 2) - P.u i) (fun j => -M.rho P π j - 1) α β ∧
       Side P.k l (fun i => -(1 / 2) - P.u' i) (fun j => -M.rho P π j) α β :=
-  Formalism.FourierDecayAlt.P.MAx3.R.sides P.k l P.u P.u' (M.rho P π) α β h.hOK.k_pos h.hl1 h.hlk (Formalism.FourierDecayAlt.P.types_interlace P h.hOK π)
+  Formalism.FourierDecayAlt.P.MAx3.R.sides P.k l P.u P.u' (M.rho P π) α β h.hOK.k_pos h.hl1 h.hlk (_root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P h.hOK π)
     (h.hcut α ⟨le_rfl, h.hαβ.le⟩) (h.hcut β ⟨h.hαβ.le, le_rfl⟩)
 
 theorem coef_bound (a s Lb : ℝ) (hs : |s| ≤ Lb) (ha : 2 * Lb ≤ |a|) (hL : 0 < Lb) :
@@ -6433,7 +6419,7 @@ theorem Ctx.ss_entry (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (i i' :
   have hYI := h.mid_I Y h.hYm
   have hLpos : 0 < Lb := by linarith [h.hL2]
 
-  have hrho := Formalism.FourierDecayAlt.P.rho_raise P mm πs πt hup
+  have hrho := _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P mm πs πt hup
   set ρs := M.rho P πs
   have hρt : M.rho P πt mm = ρs mm + 1 := by rw [hrho mm hmm, ite_eq_left rfl]
   have hgJ : gJ P (m, πt) = -((ρs mm + 1 : ℝ) : ℂ) := by
@@ -6876,9 +6862,9 @@ theorem Ctx.weights_nonneg (h : Ctx P l α β Lb Ntot w Y s) (q : Qp P.r P.TT) (
 theorem sep_of_up (P : M.Par) (hOK : P.OK) (πs πt : M.Ty P) (m : ℕ) (hm : m ∈ Icc 1 (P.k - 1))
     (hup : M.Up P m πs πt) : ∀ j ∈ Icc 1 (P.k - 1), 1 ≤ |(-M.rho P πs m - 1) - -M.rho P πs j| := by
   intro j hj
-  have hrho := Formalism.FourierDecayAlt.P.rho_raise P m πs πt hup
-  have hs := Formalism.FourierDecayAlt.P.types_interlace P hOK πs
-  have ht := Formalism.FourierDecayAlt.P.types_interlace P hOK πt
+  have hrho := _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P m πs πt hup
+  have hs := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK πs
+  have ht := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK πt
   have hm' := mem_Icc.1 hm
   have hj' := mem_Icc.1 hj
   rcases lt_trichotomy j m with hlt | heq | hgt
@@ -10792,7 +10778,7 @@ theorem jbox_facts (c : LE.Cut) (hH : Hyps P l L j lam α β Lb Ntot) (w : List 
 theorem sx_pos (hH : Hyps P l L j lam α β Lb Ntot) (π : M.Ty P) {Z : ℝ} (hZ : Z ∈ Set.Icc α β) :
     0 < MAx3.R.sx P l π Z ∧ 0 < MAx3.R.sx P l π (Z + 1) := by
   obtain ⟨⟨hOK, hl1, hlk, _, hu, hu', hαβ, hcut⟩, _⟩ := hH
-  have hπ := Formalism.FourierDecayAlt.P.types_interlace P hOK π
+  have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK π
   have h0 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z hl1 hlk hπ (hcut Z hZ) 0 (by simp)
   have h1 := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign P.k P.u P.u' (M.rho P π) l Z hl1 hlk hπ (hcut Z hZ) 1 (by simp)
   rw [add_zero] at h0

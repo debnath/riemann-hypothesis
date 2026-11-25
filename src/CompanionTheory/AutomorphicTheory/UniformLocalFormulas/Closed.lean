@@ -260,10 +260,10 @@ theorem cell_factor (L : LocBessel k r) {a : ℝ} {w0 : L.Hs} (hw1 : ⟪w0, w0�
       (∀ x, ContinuousLinearMap.adjoint P x ∈ Sm) → (∀ w, Q w ∈ Sm) → ∀ F : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ → (L.Wq →L[ℂ] L.Wp),
       (∀ x ∈ UH (Hpk k r), F x = P.comp ((L.σ x).comp Q)) → OrbInt L F γ ν = (lamP L l P * lamQ L l' Q) • Ψ := by
   obtain ⟨hγ, hrel, hR, hq, hinv, b, hb, hab, hpm⟩ := hc
-  obtain ⟨μG, hμG0⟩ := P.unitary_group_haar_exists k r
+  obtain ⟨μG, hμG0⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   have hμG : IsHaarOn (UH (Hpk k r)) μG := ⟨P.B5.haar_sigmaFinite hμG0, hμG0.ne_zero, hμG0.conc, hμG0.left⟩
   obtain ⟨νR, hν⟩ := quot_exists hγ hμG hR
-  obtain ⟨d, hd, hSch⟩ := P.schur_hermitian k r L.ε L.lam L.Hs L.σ μG L.hlam L.hσ hμG
+  obtain ⟨d, hd, hSch⟩ := _root_.PI.WBL.NIS.schurH k r L.ε L.lam L.Hs L.σ μG L.hlam L.hσ hμG
   have hd' : (d : ℂ) ≠ 0 := by exact_mod_cast hd.ne'
   have hAG0 : 0 ≤ ThreeDimData.AG k r := by unfold ThreeDimData.AG; positivity
   have hab' : b ≤ a := by linarith
@@ -335,7 +335,7 @@ theorem nz_translate (hKD : Pv.AmpDD.KDense) (hlam : IsHCParam lam) (hσ : PI.Up
     ∃ u : H, PI.UpqRep.IsKFinHpk (k := k) (r := r) σ u ∧ Bm (σ t u) ≠ 0 := by
   have hU : IsURepOn (UH (Hpk k r)) σ := Formalism.MainNotions.LowestKTypeMultiplicity.urep_of_DS hσ
   have hti := WeylGroupFacts.uh_inv ht
-  have hu : IsUnit t.det := (unitary_group_closed k r).unit t ht
+  have hu : IsUnit t.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit t ht
   set x := σ t⁻¹ v with hx
   have hxs : x ∈ PI.UpqRep.smoothVecs (k := k) (r := r) σ := TranslationBesselVanishing.smooth_translate hσ hv hti
   have htx : σ t x = v := by
@@ -390,7 +390,7 @@ theorem side_nz (hKD : Pv.AmpDD.KDense) {h : ℝ} (hlam : IsHCParam lam) (hσ : 
       ThreeDimData.be z c π σ μW (haarLie (Nset k r) κ) w v = (innerSL ℂ (l v)).smulRight (l w))
     {v : H} (hv : PI.UpqRep.IsKFinHpk (k := k) (r := r) σ v) (hlv : l v ≠ 0) {t : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ht : t ∈ UH (Hpk k r)) :
     ∃ y : H, PI.UpqRep.IsKFinHpk (k := k) (r := r) σ y ∧ l (σ t y) ≠ 0 ∧ ∀ a : ℂ, l (a • σ t y) = a • l (σ t y) := by
-  obtain ⟨μG, hμG⟩ := unitary_group_haar_exists k r
+  obtain ⟨μG, hμG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   have hGsk : IsHaarOn (UH (Hpk k r)) μG := ⟨B5.haar_sigmaFinite hμG, hμG.ne_zero, hμG.conc, hμG.left⟩
   have hS := Formalism.L2.SG.Pf.Choice.isHaarOn_muS hz hT hW hW1 h0 h1
   obtain ⟨νq, hq⟩ := Formalism.L2.SG.Pf.QuotMeasExists.quotMeasExists k r z hz hT μG _ hGsk hS
@@ -1074,7 +1074,7 @@ theorem quot_push (γ : X.B.I.Ginf) (τ : D.what₂.Tau) {μR ν : Measure (Form
 theorem mem_range (τ : D.what₂.Tau) (g : Formalism.REAL.UJ (X.B.I.ε (vOf X τ))) {x : MatKR D.R.k D.R.rS}
     (hx : x ∈ Formalism.QuantumDeterminants.UH (Formalism.QuantumDeterminants.Hpk D.R.k D.R.rS)) : x ∈ Set.range (Smap C τ g) := by
   rw [range_smap]
-  have h1 := transp_mem C τ ((Formalism.FourierDecayAlt.P.unitary_group_closed D.R.k D.R.rS).mul_mem _ hx _ (C.y_mem τ))
+  have h1 := transp_mem C τ ((_root_.Formalism.FourierDecayAlt.P.B2x2.closedG D.R.k D.R.rS).mul_mem _ hx _ (C.y_mem τ))
   have e : C.Q τ * Matrix.of x * C.y τ * C.Qi τ = C.Q τ * (x * C.y τ) * C.Qi τ := by
     rw [← Matrix.mul_assoc]; rfl
   show umat g * (C.Q τ * Matrix.of x * C.y τ * C.Qi τ) ∈ UJset _
@@ -1090,7 +1090,7 @@ theorem root_push (u u' : D.what₂.Word) (w : Point D.host.E (D.R.rS + 1)) (hw 
   set γ := gamW X u u' w with hγ
   have hemb := cMr_measEmb C γ τ
   have hN1 : (1 : MatKR D.R.k D.R.rS) ∈ Formalism.QuantumDeterminants.Nset D.R.k D.R.rS :=
-    (Formalism.FourierDecayAlt.P.unipotent_radical_closed D.R.k D.R.rS).one_mem
+    (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN D.R.k D.R.rS).one_mem
   have hid : (fun x : Formalism.QuantumDeterminants.Mt D.R.k D.R.rS => fun i j => ((1 : MatKR D.R.k D.R.rS)⁻¹ * Matrix.of x * 1) i j) = id := by
     funext x i j
     simp

@@ -45,7 +45,7 @@ theorem uw_pow {g : Mx k r} (hg : g ∈ UWset k r z) (n : ℕ) : g ^ n ∈ UWset
     exact uw_mul ih hg
 
 theorem uw_inv {h : Mx k r} (hh : h ∈ UWset k r z) : h⁻¹ ∈ UWset k r z := by
-  have := FrameEntries.glev_inv (Qx8.uw_glev (Fin.last r) hh)
+  have := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv (Qx8.uw_glev (Fin.last r) hh)
   refine ⟨this.1, fun a => this.2 a (by simp), ?_⟩
   calc h⁻¹ *ᵥ z = h⁻¹ *ᵥ (h *ᵥ z) := by rw [hh.2.2]
     _ = z := by rw [Matrix.mulVec_mulVec, LeftDerivativeCurves.uh_inv_mul hh.1, Matrix.one_mulVec]

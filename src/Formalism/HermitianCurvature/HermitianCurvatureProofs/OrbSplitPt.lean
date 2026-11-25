@@ -69,13 +69,13 @@ theorem orbJ_domL : ∃ c₃ : ℝ, ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCom
   have hG : P.Dx2.Rad.Good Bs γ w d := ⟨P.Dx2.Rad.exists_rho Bs hγ hpos hd hZ, P.Dx2.Rad.u_inj Bs hγ hpos hd hZ,
     fun ρ hρ => P.Dx2.Rad.u_lstg Bs hγ hpos hd hZ hρ⟩
   have hR := P.Dx2.Rad.haar_good Bs hγ hd hG
-  have := P.Dx2.OrbJ.sigmaF hR
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf hR
   have hI := Dx3.intR Bs hγ hd hG hMR
   set μR := D.muR Bs γ w with hμR
   set cR : ℝ := ∫ x, B.gN (Matrix.of x) ^ (-M) ∂μR with hcRdef
   have hone : Matrix.of (Matrix.of.symm (1 : B.Mat k r)) ∈ B.GV k r := by
     rw [Equiv.apply_symm_apply]
-    exact (P.unitary_group_closed k r).one_mem
+    exact (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).one_mem
   have hcR : 0 < cR := by
     have := Dx3.om_pos hR hM0 hI hone
     dsimp only [Dx3.Om] at this
@@ -108,8 +108,8 @@ theorem orbJ_domL : ∃ c₃ : ℝ, ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCom
   have hsgs := P.B7.sgs_mem Bs ⟨h1, h2, h3, h4⟩ hγ
   have hGg : 0 < B.gN (B.sgs p γ) := by linarith [P.BetaSesquilinearity.gN_ge_one hsgs]
   have hYG : B.gN ((Matrix.of p.1.2 : B.Mat k r)⁻¹ * γ * Matrix.of p.2.2) ≤ K1 * B.gN (B.sgs p γ) := by
-    have hhu : IsUnit (Matrix.of p.1.1 : B.Mat k r).det := (P.unitary_group_closed k r).unit _ h1.1
-    have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (P.unitary_group_closed k r).unit _ h3.1
+    have hhu : IsUnit (Matrix.of p.1.1 : B.Mat k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ h1.1
+    have hh'u : IsUnit (Matrix.of p.2.1 : B.Mat k r).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ h3.1
     have e : (Matrix.of p.1.2 : B.Mat k r)⁻¹ * γ * Matrix.of p.2.2 =
         (Matrix.of p.1.1 : B.Mat k r) * B.sgs p γ * (Matrix.of p.2.1 : B.Mat k r)⁻¹ := by
       simp only [B.sgs, Matrix.mul_assoc]
@@ -204,9 +204,9 @@ theorem fub [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (Bs : B.RealPl
       Integrable (rint Bs F ((Matrix.of x.1)⁻¹ * (Matrix.of x.2)⁻¹ * γ)) (Bs.μW'.prod Bs.μN)) :
     Integrable (lint Bs γ (fun x => θ (x, 0)) F) (Bs.μW.prod Bs.μN) ∧
       ∫ p, θ p • D.orbIntegrand Bs γ F p ∂Bs.μSS = ∫ x, lint Bs γ (fun x => θ (x, 0)) F x ∂(Bs.μW.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
   have hI' : Integrable (fun p => θ p • D.orbIntegrand Bs γ F p) ((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)) := hI
   have hinner : ∀ᵐ x ∂(Bs.μW.prod Bs.μN),
       ∫ y, θ (x, y) • D.orbIntegrand Bs γ F (x, y) ∂(Bs.μW'.prod Bs.μN) = lint Bs γ (fun x => θ (x, 0)) F x := by
@@ -257,12 +257,12 @@ theorem norm_rint (Bs : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[�
 theorem rint_aesm (Bs : B.RealPlaceData k r Wp Wq) {F : B.Mat k r → (Wq →L[ℂ] Wp)} (x : B.Mat k r) (hx : x ∈ B.GV k r)
     (hF : ContinuousOn F (B.GV k r)) :
     AEStronglyMeasurable (rint Bs F x) (Bs.μW'.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
   set S : Set (Mt k r × Mt k r) := {y | (Matrix.of y.1 : B.Mat k r) ∈ UWset k r Bs.z' ∧ (Matrix.of y.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r}
     with hS
-  have hWc' := (P.weyl_subgroup_closed k r Bs.z').closed
-  have hNc := (P.unipotent_radical_closed k r).closed
+  have hWc' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   have hSc : IsClosed S := (hWc'.preimage continuous_fst).inter (hNc.preimage continuous_snd)
   have hinv : ContinuousOn (fun y : Mt k r × Mt k r => (Matrix.of y.1 : B.Mat k r)⁻¹) S :=
     (P.B6.inv_continuousOn k r).comp continuous_fst.continuousOn (fun y hy => hy.1.1)
@@ -281,9 +281,9 @@ theorem rint_aesm (Bs : B.RealPlaceData k r Wp Wq) {F : B.Mat k r → (Wq →L[�
   have h1 := hcont.aestronglyMeasurable (μ := Bs.μW'.prod Bs.μN) hSc.measurableSet
   have hae : ∀ᵐ y ∂(Bs.μW'.prod Bs.μN), y ∈ S := by
     have a1 : ∀ᵐ y ∂(Bs.μW'.prod Bs.μN), (Matrix.of y.1 : B.Mat k r) ∈ UWset k r Bs.z' :=
-      Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarW')
+      Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW')
     have a2 : ∀ᵐ y ∂(Bs.μW'.prod Bs.μN), (Matrix.of y.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r :=
-      Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarN)
+      Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarN)
     filter_upwards [a1, a2] with y h1 h2 using ⟨h1, h2⟩
   rwa [Measure.restrict_eq_self_of_ae_mem hae] at h1
 
@@ -293,9 +293,9 @@ theorem inner_int (Bs : B.RealPlaceData k r Wp Wq) (γ : B.Mat k r) (hγ : γ �
     (hF : ContinuousOn F (B.GV k r)) (hb : ∀ᵐ p ∂Bs.μSS, θ p * ‖F (B.sgs p γ)‖ ≤ cF * maj p) :
     ∀ᵐ x ∂(Bs.μW.prod Bs.μN),
       Integrable (rint Bs F ((Matrix.of x.1)⁻¹ * (Matrix.of x.2)⁻¹ * γ)) (Bs.μW'.prod Bs.μN) := by
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarN
-  haveI := Formalism.FourierDecayAlt.P.B6.haar_sigmaFinite Bs.haarW'
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
+  haveI := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
   have hmaj' : Integrable maj ((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)) := hmaj
   have hb' : ∀ᵐ p ∂((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)), θ p * ‖F (B.sgs p γ)‖ ≤ cF * maj p := hb
   have hW' : ∀ᵐ p ∂((Bs.μW.prod Bs.μN).prod (Bs.μW'.prod Bs.μN)), (Matrix.of p.2.1 : B.Mat k r) ∈ UWset k r Bs.z' :=
@@ -303,9 +303,9 @@ theorem inner_int (Bs : B.RealPlaceData k r Wp Wq) (γ : B.Mat k r) (hγ : γ �
   have hxW : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z ∧
       (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r := by
     have a1 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.1 : B.Mat k r) ∈ UWset k r Bs.z :=
-      Measure.quasiMeasurePreserving_fst.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarW)
+      Measure.quasiMeasurePreserving_fst.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW)
     have a2 : ∀ᵐ x ∂(Bs.μW.prod Bs.μN), (Matrix.of x.2 : B.Mat k r) ∈ Formalism.QuantumDeterminants.Nset k r :=
-      Measure.quasiMeasurePreserving_snd.ae (Formalism.FourierDecayAlt.P.B6.haar_ae Bs.haarN)
+      Measure.quasiMeasurePreserving_snd.ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarN)
     filter_upwards [a1, a2] with x h1 h2 using ⟨h1, h2⟩
   filter_upwards [Measure.ae_ae_of_ae_prod hb', Measure.ae_ae_of_ae_prod hW', hmaj'.prod_right_ae, hxW]
     with x hbx hWx hmx hx

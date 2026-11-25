@@ -52,14 +52,14 @@ theorem frame_smul {z b : Fin (2 * r + k + 1) → ℂ} {c : ℂ} (hc : c ≠ 0) 
     rcases hv with rfl | rfl
     · exact h3 a _ (by simp)
     · have := h3 a (c • v) (by simp)
-      rw [Qx8.herm_smul_right'] at this
+      rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right] at this
       exact (mul_eq_zero.1 this).resolve_left (star_ne_zero.2 hc)
   · rintro ⟨h1, h2, h3⟩
     refine ⟨h1, h2, fun a v hv => ?_⟩
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hv
     rcases hv with rfl | rfl
     · exact h3 a _ (by simp)
-    · rw [Qx8.herm_smul_right', h3 a b (by simp), mul_zero]
+    · rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, h3 a b (by simp), mul_zero]
 
 section Wp
 
@@ -217,7 +217,7 @@ theorem rho_projection_assembly : Assembly := by
       intro h0; have : Tz P.k P.r Bs.z = 0 := by unfold Tz; rw [h0]; simp
       linarith
     have hzzT : herm (Hpk P.k P.r) Bs.z Bs.z = ((-(Tz P.k P.r Bs.z) : ℝ) : ℂ) := by
-      have e2 := Complex.conj_eq_iff_re.1 (Qx2.herm_star Bs.z Bs.z)
+      have e2 := Complex.conj_eq_iff_re.1 (_root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj Bs.z Bs.z)
       simp only [Tz, neg_neg]; exact e2.symm
     have hbW : inWb P.k P.r b ∧ herm (Hpk P.k P.r) b Bs.z = 0 := by
       rw [hb]
@@ -226,7 +226,7 @@ theorem rho_projection_assembly : Assembly := by
         simp only [SSn.prWv, SSn.wbP, Pi.add_apply, Pi.smul_apply, hz i hi, smul_eq_mul, mul_zero, add_zero]
         rw [ite_eq_right (by omega)]
       · unfold SSn.prWv
-        rw [Qx8.herm_add_left', Qx8.herm_smul_left', hzzT]
+        rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hzzT]
         have hT0 : ((Tz P.k P.r Bs.z : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT.ne'
         field_simp
         push_cast
@@ -236,13 +236,13 @@ theorem rho_projection_assembly : Assembly := by
     set c : ℂ := ((s⁻¹ : ℝ) : ℂ) with hc
     have hc0 : c ≠ 0 := by rw [hc]; exact_mod_cast (inv_pos.2 hs0).ne'
     have hbb : herm (Hpk P.k P.r) b b = ((PRho.nrmW P.k P.r Bs.z a : ℝ) : ℂ) := by
-      have e1 : star (herm (Hpk P.k P.r) b b) = herm (Hpk P.k P.r) b b := Qx2.herm_star b b
+      have e1 : star (herm (Hpk P.k P.r) b b) = herm (Hpk P.k P.r) b b := _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj b b
       have e2 := Complex.conj_eq_iff_re.1 e1
       rw [← e2]; rfl
     have he1 : inWb P.k P.r (c • b) := fun i hi => by simp [hbW.1 i hi]
-    have he2 : herm (Hpk P.k P.r) (c • b) Bs.z = 0 := by rw [Qx8.herm_smul_left', hbW.2, mul_zero]
+    have he2 : herm (Hpk P.k P.r) (c • b) Bs.z = 0 := by rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hbW.2, mul_zero]
     have he3 : herm (Hpk P.k P.r) (c • b) (c • b) = 1 := by
-      rw [Qx8.herm_smul_left', Qx8.herm_smul_right', hbb, hc, Complex.star_def, Complex.conj_ofReal]
+      rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hbb, hc, Complex.star_def, Complex.conj_ofReal]
       have hss : s * s = PRho.nrmW P.k P.r Bs.z a := Real.mul_self_sqrt ha.le
       rw [← Complex.ofReal_mul, ← Complex.ofReal_mul, ← hss]
       field_simp

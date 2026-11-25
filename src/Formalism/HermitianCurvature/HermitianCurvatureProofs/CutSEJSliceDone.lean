@@ -762,23 +762,12 @@ theorem seven_derivatives_of_word_operator (X : ActualOps k r z z' π π') (l : 
   fin_cases i <;>
     simp [wd7, wlist7, wOp, dT, dTb, List.map_cons, List.prod_cons]
 
-theorem wOp_lcJ (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
-    ∀ Ψ ∈ lcSub k r z z' π π', wOp X l js Ψ ∈ lcSub k r z z' π π' := by
-  induction js with
-  | nil => intro Ψ h; simpa [wOp] using h
-  | cons j js ih =>
-    intro Ψ h
-    have e : wOp X l (j :: js) Ψ = X.op l j (wOp X l js Ψ) := by
-      simp [wOp, List.map_cons, List.prod_cons]
-    rw [e]
-    exact op_lc X l j _ (ih Ψ h)
-
 end Gen
 
 theorem jSliceGenC_of_sob2_meas_locality (hS : JSSob2) (hM : JSMeas) (hL : SpectralL2Locality) : JSliceGenC := by
   intro Wp Wq _ _ _ _ _ _ S _ _ P z z' π π' X μ L st l0 D hD hl1 hl2 hz hz' hπ hπ' l hl c hc Ψ hΨ
   refine ⟨hΨ.1, fun js t0 ht0 => ?_⟩
-  refine slDom_of_loc hS hM X μ hD.2.1 l c (wOp X l js Ψ) (wOp_lcJ X l js Ψ hΨ.1) t0 ht0 fun i => ?_
+  refine slDom_of_loc hS hM X μ hD.2.1 l c (wOp X l js Ψ) (wOp_lc X l js Ψ hΨ.1) t0 ht0 fun i => ?_
   rw [seven_derivatives_of_word_operator]
   exact hL Wp Wq S P z z' π π' X μ L st l0 D hD hl1 hl2 hz hz' hπ hπ' l hl c hc Ψ hΨ (wlist7 i ++ js) t0 ht0
 
@@ -832,10 +821,6 @@ private theorem opL_eq_zero_of_eventuallyEq_zero {m : ℕ} {E : Type*} [NormedAd
     simp [cbOp, h0]
   · show cbiOp l f x = 0
     simp [cbiOp, h0]
-
-theorem jsl_wOp_lc (X : ActualOps k r z z' π π') (l : Fin r) (js : List (Fin 6)) :
-    ∀ Φ ∈ lcSub k r z z' π π', wOp X l js Φ ∈ lcSub k r z z' π π' := by
-  apply _root_.Formalism.FourierDecayAlt.P.CutSE.wOp_lcJ <;> assumption
 
 theorem jsl_hsInner_self_norm (C : Wq →L[ℂ] Wp) : ‖B.hsInner C C‖ = ‖B.hsVec C‖ ^ 2 := by
   rw [B.hsInner, inner_self_eq_norm_sq_to_K]
@@ -948,7 +933,7 @@ theorem jSL2Loc_of : JSWordNF → JSRadLoc → SpectralL2Locality := by
   obtain ⟨δ, hδ, hδP⟩ := Metric.eventually_nhds_iff_ball.1 hev
   refine ⟨δ, hδ, (K : ℝ) * ∑ i, (‖m i t0 * fsv s t0‖ + 1) ^ 2 * M i, fun t ht => ?_⟩
   have hP := hδP t ht
-  have hvlc : ∀ i, wOp X l (ab i) (Wn Ψ) ∈ lcSub P.k P.r z z' π π' := fun i => jsl_wOp_lc X l (ab i) _ hΦlc
+  have hvlc : ∀ i, wOp X l (ab i) (Wn Ψ) ∈ lcSub P.k P.r z z' π π' := fun i => wOp_lc X l (ab i) _ hΦlc
 
   have hx : ∀ (c' : Cf P.r l.succ) (g : Mx P.k P.r),
       (wOp X l js Ψ : Fn P.k P.r (Wq →L[ℂ] Wp)) (glue l.succ (Function.update c l t) c') g =

@@ -779,7 +779,7 @@ def XLeavesP : Prop :=
     (X0 : Fin (2 * D.R.rS + 2) → Fin T.X.B.I.n → T.X.B.I.E) (sd C Th : ℝ)
     {F0 : FlagG (VS D) D.R.rS ((Tu D u : ℕ) : D.host.E)} {what₂ : Finset (Submodule (𝓞 D.host.E) (VS D).V)}
     (vR : Formalism.L2.SG.TermDef.Term D u u' F0 what₂ → ℝ) (Q : Formalism.L2.SG.PairVal.PairSys D u u' F0 what₂),
-    u ≠ u' → 0 < cb → 0 < cTf → Formalism.BasicNotions.Ties D → 29 ≤ C' → 1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose| ≤ Cl →
+    u ≠ u' → 0 < cb → 0 < cTf → Formalism.BasicNotions.Ties D → 29 ≤ C' → 1000 + |_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose| ≤ Cl →
     1801 ≤ D.R.k →
     Formalism.MainNotions.S.Cnt.Hyp0 D L C' Cl Cg cb Cw cTf CT C0f → ∀ hPl : PlaceTie T.X e,
     J.SzHyp (gOf D e) CA C0 CG CDel cT Cb' L.sc.b Cp Th' (deOf D τ u) (deOf D τ u')
@@ -798,9 +798,9 @@ theorem carrierXSideP_of_leaves (Cb : ℝ) (hLift : LiftAt3 Cb) (hX : XLeavesP) 
   intro CA hCA h1CA C0 CG CDel cT Cb' a2 a3 a4 a5 a6 a7
   set Cq : ℝ := 8400 * (|Cc| + |Cd| + |C₆| + |Ce| + |fourierDecayLevelZeroConst|) + 48120 with hCq
   obtain ⟨k1, hk1⟩ := lenI_big CDel Cb' Cq a4 a6
-  refine ⟨max k1 1801, fun Cg cb Cw cTf CT C0f hcb hcT => ⟨29, max (max 1000 (25000 + 21 * (|Cc| + |Cd| + |Ce|))) (1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose|), ?_⟩⟩
+  refine ⟨max k1 1801, fun Cg cb Cw cTf CT C0f hcb hcT => ⟨29, max (max 1000 (25000 + 21 * (|Cc| + |Cd| + |Ce|))) (1000 + |_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose|), ?_⟩⟩
   intro C' Cl hC' hCl D L T u u' e τ Cp Th' i0 i0' νq X0 sd C Th F0 what₂ vR Q hTies hne hk hH0 hPl hSz hi hPt hNu
-  have hClp : 1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose| ≤ Cl := le_trans (le_max_right _ _) hCl
+  have hClp : 1000 + |_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose| ≤ Cl := le_trans (le_max_right _ _) hCl
   have hk18' : 1801 ≤ D.R.k := by
     have : 1801 ≤ (gOf D e).k := le_trans (le_max_right _ _) hk
     exact this
@@ -918,7 +918,7 @@ def XPinsP : Prop :=
     (D : D7) (L : SizeData₂ D) (T : STies D) (u u' : D.what₂.Word) (e : InfinitePlace D.host.E ≃ D.what₂.Tau)
     (τ : D.what₂.Tau) (Cp Th' : ℝ)
     (i0 i0' : ∀ _ : InfinitePlace T.X.B.I.F, Fin D.R.k) (νq : T.X.B.I.Ginf → Measure T.X.B.I.Ginf),
-    u ≠ u' → 0 < cb → 0 < cTf → Formalism.BasicNotions.Ties D → 29 ≤ C' → 1000 + |Formalism.FourierDecayAlt.P.orbital_integral_converges.choose| ≤ Cl → 1801 ≤ D.R.k →
+    u ≠ u' → 0 < cb → 0 < cTf → Formalism.BasicNotions.Ties D → 29 ≤ C' → 1000 + |_root_.Formalism.FourierDecayAlt.P.Dx3.d_orbJConv.choose| ≤ Cl → 1801 ≤ D.R.k →
     Formalism.MainNotions.S.Cnt.Hyp0 D L C' Cl Cg cb Cw cTf CT C0f → PlaceTie T.X e →
     J.SzHyp (gOf D e) CA C0 CG CDel cT Cb' L.sc.b Cp Th' (deOf D τ u) (deOf D τ u')
       (D.mem u).A.T (D.mem u').A.T (D.duS u) (D.duS u') (lOf D (deOf D τ u) (deOf D τ u')) →

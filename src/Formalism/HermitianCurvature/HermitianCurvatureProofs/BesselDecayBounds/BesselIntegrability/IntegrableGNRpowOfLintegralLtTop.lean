@@ -18,8 +18,6 @@ namespace Formalism.FourierDecayAlt.P
 
 open Formalism.QuantumDeterminants
 
-theorem gN_nonneg_bessel_integrability {k r : ℕ} (x : Formalism.FourierDecayAlt.B.Mat k r) : 0 ≤ Formalism.FourierDecayAlt.B.gN x := Real.sqrt_nonneg _
-
 theorem growth_group_bound : Formalism.FourierDecayAlt.ThreeDimData.GrowthG := by
   apply _root_.GlobalTheory.gN_rpow_neg_integrable_haar <;> assumption
 

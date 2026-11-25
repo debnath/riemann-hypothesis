@@ -242,9 +242,9 @@ theorem gram {y x : Fin (2 * r + k + 1) → ℂ} {Bs : Fin (k - 1) → Fin (2 * 
   have hBy : ∀ a, herm (Hpk k r) (Bs a) y = 0 := fun a => hB.2.2 a y (by simp)
   have hBx : ∀ a, herm (Hpk k r) (Bs a) x = 0 := fun a => hB.2.2 a x (by simp)
   have hyB : ∀ a, herm (Hpk k r) y (Bs a) = 0 := fun a => by
-    rw [← Qx2.herm_star (Bs a) y, hBy, star_zero]
+    rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj (Bs a) y, hBy, star_zero]
   have hxB : ∀ a, herm (Hpk k r) x (Bs a) = 0 := fun a => by
-    rw [← Qx2.herm_star (Bs a) x, hBx, star_zero]
+    rw [← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj (Bs a) x, hBx, star_zero]
   have hne : ∀ {m m' : Fin (mdim k r (Fin.last r))}, m.val ≠ m'.val → m ≠ m' := fun h e => h (congrArg Fin.val e)
   by_cases h0 : j.val = 0
   · rw [qrow, dite_eq_left h0]
@@ -292,7 +292,7 @@ end CapelliTwoByTwo
 open CapelliTwoByTwo in
 theorem capelli_two_by_two : Formalism.FourierDecayAlt.Q.CapelliIdentityEntry := by
   intro E _ _ k r z z' D f hz hz' hD hf g hg hGG Bs hB Y
-  have hgi := FrameEntries.glev_inv hg.1
+  have hgi := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_inv hg.1
   have hy : inWb k r (g⁻¹ *ᵥ z) := Qx8.inWb_mulVec hgi hz
   have hk : 1 ≤ k := by
     by_contra hk
@@ -305,8 +305,8 @@ theorem capelli_two_by_two : Formalism.FourierDecayAlt.Q.CapelliIdentityEntry :=
     ring
   have hδ : gd k r (g⁻¹ *ᵥ z) z' = -((GGl k r z z' g : ℝ) : ℂ) := by
     unfold gd GGl zetaL
-    rw [Qx8.fvec_last, Qx8.fvec_last, Qx2.herm_uh hgi.1, FrameEntries.herm_self, FrameEntries.herm_self, FrameEntries.herm_inv hg.1.1,
-      ← Qx2.herm_star z' (g⁻¹ *ᵥ z)]
+    rw [Qx8.fvec_last, Qx8.fvec_last, Qx2.herm_uh hgi.1, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, FrameEntries.herm_inv hg.1.1,
+      ← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj z' (g⁻¹ *ᵥ z)]
     push_cast
     rw [Complex.normSq_eq_conj_mul_self, Complex.star_def]
     ring

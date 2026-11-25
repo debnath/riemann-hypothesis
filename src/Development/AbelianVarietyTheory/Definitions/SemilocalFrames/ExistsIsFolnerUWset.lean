@@ -52,13 +52,13 @@ theorem isClosedSub_of {S : Set (Mat k r)} (hS : Formalism.FourierDecayAlt.B2.Is
   exact ⟨h, hS.closed, hS.one_mem, hS.mul_mem, hS.inv_mem⟩
 
 theorem isClosedSub_GG : IsClosedSub k r (GG k r) :=
-  isClosedSub_of (Formalism.FourierDecayAlt.P.unitary_group_closed k r) subset_rfl
+  isClosedSub_of (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r) subset_rfl
 
 theorem isClosedSub_Nset : IsClosedSub k r (Nset k r) :=
-  isClosedSub_of (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) fun _ hg => hg.1
+  isClosedSub_of (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) fun _ hg => hg.1
 
 theorem isClosedSub_UWset (z : Fin (2 * r + k + 1) → ℂ) : IsClosedSub k r (UWset k r z) :=
-  isClosedSub_of (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) fun _ hg => hg.1
+  isClosedSub_of (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) fun _ hg => hg.1
 
 private theorem inv_eq_Hpk_conjTranspose_of_mem_GG {g : Mat k r} (hg : g ∈ GG k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
   apply Matrix.inv_eq_left_inv
@@ -69,7 +69,7 @@ private theorem inv_eq_Hpk_conjTranspose_of_mem_GG {g : Mat k r} (hg : g ∈ GG 
 theorem isClosedSub_Sset {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z) :
     IsClosedSub k r (Sset k r z) := by
   obtain ⟨h1, hmul, hinv⟩ := sGroup k r z hz
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   have hK : IsCompact (UWset k r z) := Formalism.FourierDecayAlt.P.B2x3.compactW k r z hz hT
   have hsub : Sset k r z ⊆ GG k r := by
     rintro s ⟨h, hh, m, hm, rfl⟩
@@ -111,7 +111,7 @@ theorem haar_unimod_of_biinv {S : Set (Mat k r)} (hS : IsClosedSub k r S) {μ : 
     exact ⟨h.right, Formalism.FourierDecayAlt.P.haar_measure_inversion k r S μ hS.isClosedSubgroup h⟩
 
 theorem exists_unimod_GG : ∃ μ : Measure (Mt k r), IsHaarOn (GG k r) μ ∧ IsUnimod (GG k r) μ := by
-  obtain ⟨μ, hμ⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
+  obtain ⟨μ, hμ⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   exact ⟨μ, haar_unimod_of_biinv isClosedSub_GG hμ⟩
 
 def zStd (k r : ℕ) : Fin (2 * r + k + 1) → ℂ := bvec (wI k r (Fin.last k))

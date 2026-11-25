@@ -1081,7 +1081,7 @@ theorem mult_phase {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] (m : �
     rw [Real.rpow_natCast]
     have h1 := hdlr Λ (hΛc.of_le (by exact_mod_cast le_top)) u v hu hv hl g
     have hg1 : 1 ≤ gN g := Formalism.FourierDecayAlt.P.BetaSesquilinearity.gN_ge_one hg
-    have hng : ‖g‖ ≤ gN g := Formalism.FourierDecayAlt.P.JCx2.mn_norm_le_gN g
+    have hng : ‖g‖ ≤ gN g := _root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN g
     have hsum : ∑ i ∈ Finset.range (m + 1), ‖iteratedFDeriv ℝ i Λ g‖ ≤
         ((m + 1 : ℕ) : ℝ) * (‖Lid‖ * (t * (‖g‖ + L ^ m))) := by
       calc ∑ i ∈ Finset.range (m + 1), ‖iteratedFDeriv ℝ i Λ g‖

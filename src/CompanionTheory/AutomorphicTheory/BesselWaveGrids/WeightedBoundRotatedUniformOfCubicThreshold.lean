@@ -534,7 +534,7 @@ theorem glev_last_eq (k r : ℕ) : Glev k r (Fin.last r) = B2.UWb k r := by
 
 theorem haar_glev_last (k r : ℕ) : ∃ μ : Measure (Mt k r), B.IsHaarOn (Glev k r (Fin.last r)) μ := by
   rw [glev_last_eq]
-  exact Formalism.FourierDecayAlt.P.opposite_weyl_haar_exists k r
+  exact _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
 
 theorem isData_of_place {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
     [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (P : M.Par)
@@ -886,7 +886,7 @@ theorem wLoc1N_of (hW : ∀ Cb, WEnd.WBp Cb) {Cgc : ℝ} (hCC : CoefCC1 Cgc) (Ch
 theorem wLoc1_of_N {D : D7} {Ch Cg Ca C : ℝ}
     (H : WLoc1 D Ch Cg Ca C fun L => L.μN = Formalism.FourierDecayAlt.D.muN D.R.k D.R.rS) : WLoc1 D Ch Cg Ca C fun _ => True := by
   intro L f μsec ka b _ hok hg hf hsec l a ha γ hγ
-  obtain ⟨c, hc0, hc1, hc⟩ := Formalism.MainNotions.BridgeLemma₃.hu_eq_smul (Formalism.FourierDecayAlt.P.unipotent_radical_closed D.R.k D.R.rS)
+  obtain ⟨c, hc0, hc1, hc⟩ := Formalism.MainNotions.BridgeLemma₃.hu_eq_smul (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN D.R.k D.R.rS)
     (Formalism.FourierDecayAlt.P.nilpotent_measure_is_haar D.R.k D.R.rS) (Formalism.MainNotions.BridgeCSB.haarLieN D.R.k D.R.rS 1 one_ne_zero ENNReal.one_ne_top)
   have hsm : ∀ κ : ℝ≥0∞, haarLie (Nset D.R.k D.R.rS) κ = κ • haarLie (Nset D.R.k D.R.rS) 1 := fun κ => by
     simp [haarLie]

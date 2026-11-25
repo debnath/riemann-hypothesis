@@ -1149,7 +1149,7 @@ theorem topRatio : TopRatio := by
     simp only [hx0r, M.sgn, M.xC, I.xpoly, D.parOf]
     push_cast
     rfl
-  have hinter := Formalism.FourierDecayAlt.P.types_interlace (D.parOf S v) hOK ρ
+  have hinter := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces (D.parOf S v) hOK ρ
   have hx0pos : 0 < x0r := _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign S.G.k (D.parOf S v).u (D.parOf S v).u' (M.rho (D.parOf S v) ρ) (S.l + 1) y (by omega)
     (by omega) hinter hycut 1 (by simp)
   have hD2 : (2 : ℝ) ≤ (S.Ntop : ℝ) ^ 2 - 1 := by nlinarith

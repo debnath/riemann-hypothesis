@@ -187,7 +187,7 @@ end pointwise
 
 theorem capacity_adjoint_from_integral : CapAdjFromInt := by
   intro hI k r Wp Wq _ _ _ _ _ _ s Y F hF g₀ hg₀
-  obtain ⟨μ, hμ⟩ := Formalism.FourierDecayAlt.P.unitary_group_haar_exists k r
+  obtain ⟨μ, hμ⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   obtain ⟨U, F', hU, hg₀U, hc, he⟩ := hF g₀ hg₀
   obtain ⟨ε, hε, hball⟩ := Metric.isOpen_iff.1 hU g₀ hg₀U
   obtain ⟨β, hβin, hβout⟩ : ∃ β : ContDiffBump g₀, β.rIn = ε / 4 ∧ β.rOut = ε / 2 :=

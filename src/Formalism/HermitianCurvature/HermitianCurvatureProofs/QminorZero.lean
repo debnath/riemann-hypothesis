@@ -87,7 +87,7 @@ variable {k r : ℕ} {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {D : 
 theorem leftEq_cut (z : Fin (2 * r + k + 1) → ℂ) (hN : ∀ g ∈ Glev k r 0 ∩ D, ∀ n ∈ Nlev k r 0, n * g ∈ D)
     {f : Mx k r → E} (hLf : LeftEq k r z 0 D f) : LeftEq k r z 0 D (cut k r 0 D f) := by
   intro g hg n hn
-  rw [cut_of_mem f ⟨Formalism.FourierDecayAlt.P.Qx3.glev_mul hn.2 hg.1, hN g hg n hn⟩, cut_of_mem f hg]
+  rw [cut_of_mem f ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hn.2 hg.1, hN g hg n hn⟩, cut_of_mem f hg]
   exact hLf g hg n hn
 
 theorem claim (hRR : RightRuleE) (hLR : LeftRuleCell) (hTC : TorusCell) (hGP : GaugeP)

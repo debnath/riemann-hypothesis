@@ -308,7 +308,7 @@ variable {c : Fin r → ℂ} {g : Q.Mx k r}
 
 theorem x_glev0 (hc : c ∈ OmX r) (hg : g ∈ Q.Glev k r (Fin.last r)) :
     Q.wCell k r (Fin.last r) c * g ∈ Q.Glev k r 0 :=
-  Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _) (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) hg)
+  _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _) (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) hg)
 
 theorem ginvH_mul (hc : c ∈ OmX r) (hg : g ∈ Q.Glev k r (Fin.last r)) :
     ginvH k r (Q.wCell k r (Fin.last r) c * g) * (Q.wCell k r (Fin.last r) c * g) = 1 := by

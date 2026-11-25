@@ -284,7 +284,7 @@ theorem integral_side {H W : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
   have hWB := ((GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μW).2.2 z hz hT hk).1 hW
   have hm : Measurable (Formalism.FourierDecayAlt.B2.invM (k := k) (r := r)) := Formalism.FourierDecayAlt.P.B7.measurable_invM
   have iW : MeasurePreserving (Formalism.FourierDecayAlt.B2.invM (k := k) (r := r)) μW μW :=
-    ⟨hm, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μW (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r z) hWB⟩
+    ⟨hm, Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μW (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r z) hWB⟩
   have hTm := iW.prod (mp_inv_haarLie (Nset k r) κ)
   have hπc : ContinuousOn π (UWset k r z) := continuousOn_clm_apply.mpr (Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_cont hT hπ)
   have hπu := Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.piW_unitary hT hπ
@@ -324,7 +324,7 @@ theorem integral_side {H W : Type} [NormedAddCommGroup H] [InnerProductSpace ℂ
     filter_upwards [hUae] with p hp
     have h3 := ((GlobalTheory.BesselPsi.psi_character k r z c hz).2.2.1 _ hp.2).2
     have h4 : ((Matrix.of p.1 : MatKR k r)⁻¹)⁻¹ = Matrix.of p.1 :=
-      Matrix.nonsing_inv_nonsing_inv _ ((Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hp.1.1)
+      Matrix.nonsing_inv_nonsing_inv _ ((_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hp.1.1)
     show _ = ((⟪v, σ ((Matrix.of p.1)⁻¹ * (Matrix.of p.2)⁻¹) u⟫_ℂ * star (psi k r z c (Matrix.of p.2)⁻¹)) •
       π ((Matrix.of p.1 : MatKR k r)⁻¹)⁻¹) ξ
     rw [h3, h4, star_star, mul_comm]
@@ -352,17 +352,17 @@ open GlobalTheory.CellOrbInt
 
 theorem lA_mem (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hpk k r)) {p : PairSp k r} (hp : p ∈ pairSet L) :
     lA γ p ∈ UH (Hpk k r) :=
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hp.1.1) _ (hG.inv_mem _ hp.2.1.1)) _ hγ
 
 theorem lB_mem (L : LocBessel k r) {p : PairSp k r} (hp : p ∈ pairSet L) : lB p ∈ UH (Hpk k r) :=
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   hG.mul_mem _ (hG.inv_mem _ hp.2.2.1.1) _ (hG.inv_mem _ hp.2.2.2.1)
 
 theorem lA_lB (L : LocBessel k r) (γ : MatKR k r) {p : PairSp k r} (hp : p ∈ pairSet L) :
     lA γ p * (lB p)⁻¹ =
       (Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * γ * Matrix.of p.2.2 * Matrix.of p.2.1 := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   unfold lA lB
   rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (hG.unit _ hp.2.2.1.1),
     Matrix.nonsing_inv_nonsing_inv _ (hG.unit _ hp.2.2.2.1), ← Matrix.mul_assoc]
@@ -370,7 +370,7 @@ theorem lA_lB (L : LocBessel k r) (γ : MatKR k r) {p : PairSp k r} (hp : p ∈ 
 theorem aesm_ker (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hpk k r)) (w v v' : L.Hs) (ξ : L.Wp) (ξ' : L.Wq)
     (μ : Measure (PairSp k r)) (ρ : Measure (Mt k r)) [SFinite ρ] (hμ : ∀ᵐ p ∂μ, p ∈ pairSet L)
     (hρ : ∀ᵐ x ∂ρ, Matrix.of x ∈ UH (Hpk k r)) : AEStronglyMeasurable (ker L γ w v v' ξ ξ') (μ.prod ρ) := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have hσ : PI.UpqRep.IsDSHpk k r L.ε L.lam L.σ := L.hσ
   let U : Set (PairSp k r × Mt k r) := pairSet L ×ˢ {x | Matrix.of x ∈ UH (Hpk k r)}
   have hcl : IsClosed {x : Mt k r | Matrix.of x ∈ UH (Hpk k r)} := hG.closed
@@ -404,7 +404,7 @@ theorem ker_act (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hpk k r))
     (hp : p ∈ pairSet L) (x : Mt k r) :
     ker L γ w v v' ξ ξ' (stabAct γ a p, x) =
       ker L γ w v v' ξ ξ' (p, Matrix.of.symm (γ⁻¹ * a⁻¹ * γ * Matrix.of x)) := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have uγ := hG.unit _ hγ
   have e1 : lA γ (stabAct γ a p) * Matrix.of x = lA γ p * (γ⁻¹ * a⁻¹ * γ * Matrix.of x) := by
     show (Matrix.of p.1.1)⁻¹ * (a * Matrix.of p.1.2)⁻¹ * γ * Matrix.of x = _
@@ -431,7 +431,7 @@ theorem integral_ker_pair (L : LocBessel k r) (hk : 1 ≤ k) {γ : MatKR k r} (h
     ∫ p, ker L γ w v v' ξ ξ' (p, x) ∂(pairMeas L) =
       (innerSL ℂ (Formalism.FourierDecayAlt.ThreeDimData.be L.z' L.c L.π' L.σ L.μW' L.μN (L.σ (Matrix.of x) w) v' ξ')).smulRight
         (Formalism.FourierDecayAlt.ThreeDimData.be L.z L.c L.π L.σ L.μW L.μN (L.σ (γ * Matrix.of x) w) v ξ) := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have hσ : PI.UpqRep.IsDSHpk k r L.ε L.lam L.σ := L.hσ
   have : SFinite (haarLie (Nset k r) L.κN) := by unfold haarLie; infer_instance
   have : SigmaFinite L.μW := L.hμW.1.1
@@ -464,7 +464,7 @@ theorem integral_ker_group (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH
     (hS : ∀ y y' : L.Hs, ∫ x, ⟪y, L.σ (Matrix.of x) w⟫_ℂ * star ⟪y', L.σ (Matrix.of x) w⟫_ℂ ∂μG = d * ⟪y, y'⟫_ℂ)
     (v v' : L.Hs) (ξ : L.Wp) (ξ' : L.Wq) {p : PairSp k r} (hp : p ∈ pairSet L) :
     ∫ x, ker L γ w v v' ξ ξ' (p, x) ∂μG = d • besselIntg L (coefF L v v' ξ ξ') γ p := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have adj : ∀ g ∈ UH (Hpk k r), ∀ y ∈ UH (Hpk k r), ∀ a b : L.Hs,
       ⟪a, L.σ (g * y) b⟫_ℂ = ⟪L.σ g⁻¹ a, L.σ y b⟫_ℂ := by
     intro g hg y hy a b
@@ -503,7 +503,7 @@ theorem integrable_ker (L : LocBessel k r) {γ : MatKR k r} (hγ : γ ∈ UH (Hp
     (hC : ∀ x ∈ UH (Hpk k r), ‖⟪v, L.σ x w⟫_ℂ‖ ≤ C * Formalism.FourierDecayAlt.B.gN x ^ (-e))
     (hC' : ∀ x ∈ UH (Hpk k r), ‖⟪v', L.σ x w⟫_ℂ‖ ≤ C' * Formalism.FourierDecayAlt.B.gN x ^ (-e)) :
     Integrable (ker L γ w v v' ξ ξ') (ν.prod μG) := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   haveI : SigmaFinite μG := hμ.1
   have aG : ∀ᵐ y ∂μG, Matrix.of y ∈ UH (Hpk k r) := by rw [ae_iff]; exact hμ.2.2.1
   have hAG : 0 ≤ Formalism.FourierDecayAlt.ThreeDimData.AG k r := by unfold Formalism.FourierDecayAlt.ThreeDimData.AG; positivity

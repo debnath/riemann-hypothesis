@@ -176,15 +176,12 @@ lemma unit_lr' {u v : List (Mat k r)} (hu : ∀ X ∈ u, unitLie k r X) (hv : �
   · exact hu X hX
   · exact hv X hX
 
-private theorem inLie_conj_of_mem_GV {y X : Mat k r} (hy : y ∈ GV k r) (hX : inLie k r X) : inLie k r (y⁻¹ * X * y) := by
-  apply _root_.Formalism.FourierDecayAlt.P.B4.inLie_conj <;> assumption
-
 lemma adM_lie {D : RealPlaceData k r Wp Wq} {p : SS k r} (hp : D.inSS p) {x : Bool × Mat k r} (hx : inLie k r x.2) :
     inLie k r (adM p x).2 := by
   obtain ⟨b, X⟩ := x
   cases b
-  · exact inLie_conj_of_mem_GV (JFxDs2.sR_mem hp) hx
-  · exact inLie_conj_of_mem_GV (JFxDs2.sL_mem hp) hx
+  · exact _root_.Formalism.FourierDecayAlt.P.B4.inLie_conj (JFxDs2.sR_mem hp) hx
+  · exact _root_.Formalism.FourierDecayAlt.P.B4.inLie_conj (JFxDs2.sL_mem hp) hx
 
 lemma adM_cont (D : RealPlaceData k r Wp Wq) (x : Bool × Mat k r) :
     ContinuousOn (fun p => (adM p x).2) {p : SS k r | D.inSS p} := by
@@ -245,7 +242,7 @@ theorem continuousOn_rho_dLR [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ W
     have hck : CkOn ((0 : ℕ) : ℕ∞) (GV k r) (W ((lr u v).map (adM p₀)) F) :=
       smooth_on_of_word_derivatives ((lr u v).map (adM p₀)) hAL 0 (ckOn_mono (by simpa using hwl) hc.1)
     have hsec : ContinuousWithinAt (fun p => W ((lr u v).map (adM p₀)) F (sgs p g)) {p : SS k r | D.inSS p} p₀ :=
-      ((B6.continuousOn_of_contDiffOn_group hck).comp hx hxG) p₀ hp₀
+      ((_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hck).comp hx hxG) p₀ hp₀
     let Kf : SS k r → ℝ := fun p => 1 + ((lr u v).map fun x => ‖(adM p x).2‖ + ‖(adM p₀ x).2‖).sum
     let εf : SS k r → ℝ := fun p => ((lr u v).map fun x => ‖(adM p x).2 - (adM p₀ x).2‖).sum
     have hKc : ContinuousOn Kf {p : SS k r | D.inSS p} :=

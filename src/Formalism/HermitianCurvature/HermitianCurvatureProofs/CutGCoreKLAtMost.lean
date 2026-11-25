@@ -119,12 +119,6 @@ open Formalism.FourierDecayAlt.Q Formalism.FourierDecayAlt.P.Qx8
 
 variable {k r : ℕ}
 
-theorem inv_mul_uh {g : Q.Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ * g = 1 :=
-  Matrix.nonsing_inv_mul _ (WeylGroupFacts.isUnit_of_uh hg)
-
-theorem mul_inv_uh {g : Q.Mx k r} (hg : g ∈ UH (Hpk k r)) : g * g⁻¹ = 1 :=
-  Matrix.mul_nonsing_inv _ (WeylGroupFacts.isUnit_of_uh hg)
-
 theorem geom_fr {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z')
     (hT : 0 < Tz k r z) (hT' : 0 < Tz k r z') {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r))
     (hne : Q.GGl k r z z' g ≠ 0) {m : ℕ} {Fr : Fin m → Fin (2 * r + k + 1) → ℂ}
@@ -140,12 +134,12 @@ theorem geom_fr {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : in
   have hginv : g⁻¹ ∈ Q.Glev k r (Fin.last r) := by
     refine ⟨WeylGroupFacts.uh_inv hg.1, fun a ha => ⟨?_, ?_⟩⟩
     · conv_lhs => rw [← (hg.2 a ha).1]
-      rw [Matrix.mulVec_mulVec, inv_mul_uh hg.1, Matrix.one_mulVec]
+      rw [Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.one_mulVec]
     · conv_lhs => rw [← (hg.2 a ha).2]
-      rw [Matrix.mulVec_mulVec, inv_mul_uh hg.1, Matrix.one_mulVec]
+      rw [Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.one_mulVec]
   have hyW : inWb k r y := inWb_mulVec hginv hz
   have hyy : herm (Hpk k r) y y = -((Tz k r z : ℝ) : ℂ) := by
-    rw [← herm_self', ← hgy, herm_UH hg.1]
+    rw [← _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, ← hgy, herm_UH hg.1]
   have hζ : herm (Hpk k r) z' y = Q.zetaL k r z z' (Fin.last r) g := by
     unfold Q.zetaL
     rw [fvec_last, fvec_last, ← hgy, herm_UH hg.1]
@@ -156,16 +150,16 @@ theorem geom_fr {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : in
     have : Complex.normSq (star (Q.zetaL k r z z' (Fin.last r) g)) =
         Complex.normSq (Q.zetaL k r z z' (Fin.last r) g) := Complex.normSq_conj _
     rw [this]; exact hpos
-  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := orth_unit hyW hz' hT' hyy (herm_self' z') hG2
-  obtain ⟨f, s₂, c₂, hs₂, hf, hfW, hfy, hff⟩ := orth_unit hz' hyW hT (herm_self' z') hyy hG1
+  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := orth_unit hyW hz' hT' hyy (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z') hG2
+  obtain ⟨f, s₂, c₂, hs₂, hf, hfW, hfy, hff⟩ := orth_unit hz' hyW hT (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z') hyy hG1
   have hBz : ∀ a, herm (Hpk k r) (Fr a) z' = 0 := fun a => hFr.2.2 a z' (by simp)
   have hBy : ∀ a, herm (Hpk k r) (Fr a) y = 0 := fun a => hFr.2.2 a y (by simp)
   have hBe : ∀ a, herm (Hpk k r) (Fr a) e' = 0 := by
     intro a
-    rw [he', herm_smul_right', herm_add_right', herm_smul_right', hBz, hBy]; simp
+    rw [he', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hBz, hBy]; simp
   have hBf : ∀ a, herm (Hpk k r) (Fr a) f = 0 := by
     intro a
-    rw [hf, herm_smul_right', herm_add_right', herm_smul_right', hBz, hBy]; simp
+    rw [hf, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hBz, hBy]; simp
   refine ⟨e', f, s, c, s₂, c₂, hs, hs₂, he', hf, ⟨he'W, he'z, he'e⟩, ⟨inWb_mulVec hg hfW, ?_, ?_⟩, ⟨hFr.1, hFr.2.1, ?_⟩,
     ⟨fun a => inWb_mulVec hg (hFr.1 a), ?_, ?_⟩⟩
   · rw [← hgy, herm_UH hg.1, hfy]
@@ -187,7 +181,7 @@ theorem geom_fr {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : in
 theorem conj_uw {z z' : Fin (2 * r + k + 1) → ℂ} {g : Q.Mx k r} (hg : g ∈ Q.Glev k r (Fin.last r))
     {h' : Q.Mx k r} (hh' : h' ∈ UWset k r z') (hy : h' *ᵥ (g⁻¹ *ᵥ z) = g⁻¹ *ᵥ z) :
     g * h' * g⁻¹ ∈ UWset k r z := by
-  have hginv : g⁻¹ * g = 1 := inv_mul_uh hg.1
+  have hginv : g⁻¹ * g = 1 := _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1
   have hgi : g⁻¹ ∈ UH (Hpk k r) := WeylGroupFacts.uh_inv hg.1
   refine ⟨WeylGroupFacts.uh_mul (WeylGroupFacts.uh_mul hg.1 hh'.1) hgi, fun c => ?_, ?_⟩
   · have hc := hg.2 c (by simp)
@@ -218,17 +212,17 @@ theorem fib_intertwine {z z' : Fin (2 * r + k + 1) → ℂ} {π : Q.Mx k r → (
   have hh'i : h'⁻¹ ∈ UWset k r z' := LieBracketMultiplication.uw_inv hh'
   have hyi : h'⁻¹ *ᵥ (g⁻¹ *ᵥ z) = g⁻¹ *ᵥ z := by
     conv_lhs => rw [← hy]
-    rw [Matrix.mulVec_mulVec, inv_mul_uh hh'.1, Matrix.one_mulVec]
+    rw [Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hh'.1, Matrix.one_mulVec]
   have hh : g * h'⁻¹ * g⁻¹ ∈ UWset k r z := conj_uw hg hh'i hyi
   have hc : g * h' * g⁻¹ ∈ UWset k r z := conj_uw hg hh' hy
   have hgg : g * h'⁻¹ * g⁻¹ * g * h' = g := by
-    rw [Matrix.mul_assoc (g * h'⁻¹) g⁻¹ g, inv_mul_uh hg.1, Matrix.mul_one, Matrix.mul_assoc, inv_mul_uh hh'.1,
+    rw [Matrix.mul_assoc (g * h'⁻¹) g⁻¹ g, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.mul_one, Matrix.mul_assoc, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hh'.1,
       Matrix.mul_one]
   have hfib := hX _ hh h' hh' hgg
   have hone : g * h' * g⁻¹ * (g * h'⁻¹ * g⁻¹) = 1 := by
     rw [show g * h' * g⁻¹ * (g * h'⁻¹ * g⁻¹) = g * h' * (g⁻¹ * g) * h'⁻¹ * g⁻¹ by
-      simp only [Matrix.mul_assoc], inv_mul_uh hg.1, Matrix.mul_one, Matrix.mul_assoc g h' h'⁻¹, mul_inv_uh hh'.1,
-      Matrix.mul_one, mul_inv_uh hg.1]
+      simp only [Matrix.mul_assoc], _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.mul_one, Matrix.mul_assoc g h' h'⁻¹, _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hh'.1,
+      Matrix.mul_one, _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hg.1]
   have hπ1 : (π (g * h' * g⁻¹)).comp (π (g * h'⁻¹ * g⁻¹)) = 1 := by
     rw [← hrep.2 _ hc _ hh, hone, hrep.1]
   calc X (π' h' v) = (π (g * h' * g⁻¹)).comp (π (g * h'⁻¹ * g⁻¹)) (X (π' h' v)) := by rw [hπ1]; rfl
@@ -333,7 +327,7 @@ theorem lie_weight_at_most_holds : KLAtMost := by
       refine capRep_intertwine hFe2 hrep' hcont' hh0.1 (π' h0) (fun h' hh' _ u => ?_) w x
       have hc : h0 * h' * h0⁻¹ ∈ UWset P.k P.r z' := LieBracketMultiplication.uw_mul (LieBracketMultiplication.uw_mul hh0 hh') (LieBracketMultiplication.uw_inv hh0)
       have e1 : h0 * h' * h0⁻¹ * h0 = h0 * h' := by
-        rw [Matrix.mul_assoc, KLAM.inv_mul_uh hh0.1, Matrix.mul_one]
+        rw [Matrix.mul_assoc, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hh0.1, Matrix.mul_one]
       have := hrep'.2 _ hc _ hh0
       rw [e1, hrep'.2 _ hh0 _ hh'] at this
       have e2 := congrArg (fun L : Wq →L[ℂ] Wq => L u) this
@@ -398,7 +392,7 @@ theorem lie_weight_at_most_holds : KLAtMost := by
       have hyy : h' *ᵥ (g⁻¹ *ᵥ z) = g⁻¹ *ᵥ z := by
         rw [hh'def, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, inv_mulVec_uh hg.1, hh.2.2]
       have hff : h' *ᵥ f = f := by
-        rw [hh'def, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, he, Matrix.mulVec_mulVec, KLAM.inv_mul_uh hg.1,
+        rw [hh'def, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, he, Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1,
           Matrix.one_mulVec]
       have hz'f : z' = s₂⁻¹ • f - c₂ • (g⁻¹ *ᵥ z) := by
         rw [hf, smul_smul, inv_mul_cancel₀ hs₂, one_smul, add_sub_cancel_right]
@@ -409,15 +403,15 @@ theorem lie_weight_at_most_holds : KLAtMost := by
         rw [he', Matrix.mulVec_smul, Matrix.mulVec_add, Matrix.mulVec_smul, hyy, hzz]
       have hgl' : g⁻¹ ∈ Q.Glev P.k P.r (Fin.last P.r) := ⟨hgi, fun a ha => ⟨by
           conv_lhs => rw [← (hg.2 a ha).1]
-          rw [Matrix.mulVec_mulVec, KLAM.inv_mul_uh hg.1, Matrix.one_mulVec], by
+          rw [Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.one_mulVec], by
           conv_lhs => rw [← (hg.2 a ha).2]
-          rw [Matrix.mulVec_mulVec, KLAM.inv_mul_uh hg.1, Matrix.one_mulVec]⟩⟩
+          rw [Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.LeftDerivativeCurves.uh_inv_mul hg.1, Matrix.one_mulVec]⟩⟩
       have hlev := glev_mul (glev_mul hgl' (uw_glev (Fin.last P.r) hh)) hg
       have hmem : h' ∈ UWset P.k P.r z' := ⟨hlev.1, fun a => hlev.2 a (by simp), hzz⟩
       refine ⟨(π' h' : Wq →ₗ[ℂ] Wq), ⟨h', ⟨hmem, hee⟩, rfl⟩, ?_⟩
       have hconj : g * h' * g⁻¹ = h := by
         rw [hh'def, show g * (g⁻¹ * h * g) * g⁻¹ = (g * g⁻¹) * h * (g * g⁻¹) by simp only [Matrix.mul_assoc],
-          KLAM.mul_inv_uh hg.1, Matrix.one_mul, Matrix.mul_one]
+          _root_.Formalism.FourierDecayAlt.P.FrameEntries.mul_inv_uh hg.1, Matrix.one_mul, Matrix.mul_one]
       ext v
       have := KLAM.fib_intertwine hrep hg hEf hmem hyy v
       rw [hconj] at this

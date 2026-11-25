@@ -140,7 +140,7 @@ theorem dOp_tensor {V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [
   rw [h6] at h3
   rw [h3.unique h5, Finset.sum_add_distrib]
   simp only [Complex.ofReal_zero, zero_smul, NormedSpace.exp_zero, Matrix.one_mulVec, hπ.1.1, hB.2.1,
-    Qx2.herm_star, herm_skew hX.1.1]
+    _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, herm_skew hX.1.1]
   simp [hermLin, sub_eq_add_neg]
 
 theorem EB_tensor : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpace ℂ V] [FiniteDimensional ℂ V] (k r : ℕ) (z : (Fin (2 * r + k + 1) → ℂ)) (π : Mx k r → (V →L[ℂ] V)) (B : Fin k → (Fin (2 * r + k + 1) → ℂ)) (πt : Mx k r → ((PiLp 2 (fun _ : Fin k => V)) →L[ℂ] (PiLp 2 (fun _ : Fin k => V)))), inWb k r z → 0 < Tz k r z → IsRepW k r z π → IsRepW k r z πt → IsFrameOf k r [z] B → (∀ h ∈ UWset k r z, ∀ y c, πt h y c = ∑ d, star (herm (Hpk k r) (h *ᵥ B d) (B c)) • π h (y d)) → ∀ a b y c, EB πt B a b y c = EB π B a b (y c) - if c = b then y a else 0 := by
@@ -239,7 +239,7 @@ theorem wigMap_contract : ∀ (V : Type) [NormedAddCommGroup V] [InnerProductSpa
     rw [key d, Finset.sum_smul]
     refine Finset.sum_congr rfl fun c _ => ?_
     rw [mul_comm]
-  · simp only [Qx8.herm_smul_left', pow_one, Finset.smul_sum, smul_smul]
+  · simp only [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, pow_one, Finset.smul_sum, smul_smul]
   · refine (norm_sq_contract_le a ha _).trans (le_of_eq ?_)
     have h1 := HermitianFormSums.herm_comb hB (fun c => herm (Hpk k r) ω (B c)) (fun c => herm (Hpk k r) ω (B c))
     rw [← hexp ω hω hωz] at h1

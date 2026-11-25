@@ -392,7 +392,7 @@ theorem ck_at (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k n Wp Wq)
       ContinuousOn (dLR (w.map Formalism.FourierDecayAlt.P.Ux1.Lt) [] Φt) (GV k n) := by
     intro w
     rw [Formalism.FourierDecayAlt.P.B4.dLR_eq]
-    exact Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (m := ((0 : ℕ) : ℕ∞))
+    exact _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (m := ((0 : ℕ) : ℕ∞))
       (smooth_on_of_word_derivatives _ (allLie_lr (hunit w) (by simp)) 0 (Formalism.FourierDecayAlt.P.B5.ckOn_mono le_top hΦt))
   have hbw : ∀ w : List (Formalism.FourierDecayAlt.P.Ux1.J k n), ∃ C : ℝ,
       ∀ y ∈ KImage, ‖dLR (w.map Formalism.FourierDecayAlt.P.Ux1.Lt) [] Φt y‖ ≤ C :=

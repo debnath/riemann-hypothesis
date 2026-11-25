@@ -214,7 +214,7 @@ theorem aaFun_data {k r : ℕ} {u : Fin k → ℝ}
   obtain ⟨a, ha, had, hUW, hNN, hψ, hfr⟩ := _root_.ReciprocityTheory.ChartRestriction.DS.Lap.TransportGeo.conj_data hz hT hc hz' hT' hc'
   obtain ⟨U, hU⟩ := _root_.ReciprocityTheory.ChartRestriction.DS.Lap.TransportGeo.pi_conj had hz hT hz' hT' hUW hfr hπ hπ'
   obtain ⟨κW, hκW, hWeq⟩ := haar_unique (uw_closedSubgroup k r z')
-    (Formalism.FourierDecayAlt.P.weyl_haar_exists k r z' hz' hT') (haar_conj had hUW hW) hW'
+    (_root_.Formalism.FourierDecayAlt.P.B2x3.haarW k r z' hz' hT') (haar_conj had hUW hW) hW'
   obtain ⟨κN, hκN, hNeq⟩ := haar_unique (n_closedSubgroup k r)
     (Formalism.FourierDecayAlt.P.unipotent_haar_exists k r) (haar_conj had hNN hN) hN'
   have : SigmaFinite μW := hW.1

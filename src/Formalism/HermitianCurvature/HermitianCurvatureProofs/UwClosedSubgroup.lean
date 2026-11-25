@@ -150,7 +150,7 @@ theorem muW_lev {ρ : ℕ} (z0 : Fin (2 * ρ + k + 1) → ℂ)
     calc ν K ≤ ν Set.univ := measure_mono (Set.subset_univ _)
       _ = 1 := hνu
       _ < ⊤ := ENNReal.one_lt_top
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k (ρ + 1) U1 μ1 ν (uw_closedSubgroup (ρ + 1) _) h1 hconc hleft hfin
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k (ρ + 1) U1 μ1 ν (uw_closedSubgroup (ρ + 1) _) h1 hconc hleft hfin
   have hc1 : (c : ENNReal) = 1 := by
     have := congrArg (fun μ : Measure (Mt k (ρ + 1)) => μ Set.univ) hc
     simp only [Measure.smul_apply, n1, hνu, smul_eq_mul, mul_one, ENNReal.smul_def] at this
@@ -173,7 +173,7 @@ theorem Qm_cont (ρ : ℕ) : Continuous (Qm (k := k) ρ) := by
   exact (continuous_apply _).comp ((continuous_apply _).comp (h1.matrix_mul hI))
 
 theorem sf_heis (ρ : ℕ) : SigmaFinite (B2.μHeis k ρ) :=
-  Dx2.MN.sigma_of_haar (Formalism.FourierDecayAlt.P.heisenberg_haar_measure k ρ)
+  _root_.Formalism.FourierDecayAlt.P.B7.sf (_root_.Formalism.FourierDecayAlt.P.B2x5.heisHaar k ρ)
 
 theorem muN_succ' (ρ : ℕ) : D.muN k (ρ + 1) = ((B2.μHeis k ρ).prod (D.muN k ρ)).map (Qm ρ) := by
   have := sf_heis (k := k) ρ

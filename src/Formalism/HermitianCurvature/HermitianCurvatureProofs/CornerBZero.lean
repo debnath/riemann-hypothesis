@@ -190,7 +190,7 @@ theorem djU_mul_UW (z : Fin (2 * (p + m) + k + 1) → ℂ) (g h : B.Mat k (p + m
     have h1 := congrFun (hh.2.1 ⟨b.val, by omega⟩).1 c
     have e : eI k (p + m) ⟨b.val, by omega⟩ = ⟨b.val, by omega⟩ := rfl
     rw [e] at h1
-    rw [← Formalism.FourierDecayAlt.P.PBM.mulVec_bvec_apply h ⟨b.val, by omega⟩ c, h1]
+    rw [← _root_.PI.QnLevBasicsW.mulVec_bvec h ⟨b.val, by omega⟩ c, h1]
     unfold bvec
     by_cases hcb : c.val = b.val
     · rw [ite_eq_left hcb, Pi.single_apply, ite_eq_left (Fin.ext hcb)]
@@ -222,9 +222,9 @@ theorem fl_split (hGS : GaXiSplit) (hPR : PsiRight) (hPA : PsiRnAct) (hPM : PsiM
       ellL Bj σ x (KrI B0 H (sxL Bj σ x * U.mMap k p ρ (U.hMat σ d) g) (PsiR y)) := by
   obtain ⟨hh, hν⟩ := hx
   obtain ⟨hh', hν'⟩ := hy
-  have uh : IsUnit (Matrix.of x.1.1 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z).unit _ hh
-  have uν : IsUnit (Matrix.of x.1.2 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k ρ).unit _ hν
-  have uh' : IsUnit (Matrix.of y.1.1 : B.Mat k ρ).det := (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z').unit _ hh'
+  have uh : IsUnit (Matrix.of x.1.1 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z).unit _ hh
+  have uν : IsUnit (Matrix.of x.1.2 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k ρ).unit _ hν
+  have uh' : IsUnit (Matrix.of y.1.1 : B.Mat k ρ).det := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z').unit _ hh'
   have hH' : (Matrix.of y.1.1 : B.Mat k ρ)ᴴ * Hpk k ρ * Matrix.of y.1.1 = Hpk k ρ := hh'.1
 
   have hpt : U.gaXi k ρ σ d ((splitE σ).symm (x, y)).2 (fun a => a.elim0) (B.sgs ((splitE σ).symm (x, y)).1 g) =

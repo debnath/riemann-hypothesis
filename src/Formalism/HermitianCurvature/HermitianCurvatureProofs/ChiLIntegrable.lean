@@ -54,8 +54,8 @@ theorem TN_meas : Measurable (TN k r) := by
 
 theorem muSS_eq (S : B.RealPlaceData k r Wp Wq) (hN : S.μN = D.muN k r) :
     S.μSS = ((S.μW.prod (QN k r)).prod (S.μW'.prod (QN k r))).map (TN k r) := by
-  have hW : SigmaFinite S.μW := Dx2.MN.sigma_of_haar S.haarW
-  have hW' : SigmaFinite S.μW' := Dx2.MN.sigma_of_haar S.haarW'
+  have hW : SigmaFinite S.μW := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW
+  have hW' : SigmaFinite S.μW' := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW'
   have hN' : S.μN = (QN k r).map (psiR k r) := by rw [hN]; exact muN_rev (k := k) r
   unfold B.RealPlaceData.μSS
   rw [hN', ← Measure.map_id (μ := S.μW), Measure.map_prod_map _ _ measurable_id (psiR_meas r),
@@ -701,7 +701,7 @@ theorem inner_int (S : B.RealPlaceData k r Wp Wq) (z0 z0' : Fin (2 * 0 + k + 1) 
   have uy1 : IsUnit y1.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hy1W.1
   have uy1' : IsUnit y1'.det := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hy1W'.1
   have hγ' : y1⁻¹ * γ0 * y1' ∈ B.GV k 0 := by
-    have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k 0
+    have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k 0
     exact hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ hy1W.1) _ hγ0) _ hy1W'.1
   have hAUT : ∀ x, Amat σ d x ∈ C2.UTset r := conjS_UT hd
   have hAc : ∀ i j, Measurable fun x => Amat σ d x i j := fun i j => ((Amat_cont σ d).matrix_elem i j).measurable

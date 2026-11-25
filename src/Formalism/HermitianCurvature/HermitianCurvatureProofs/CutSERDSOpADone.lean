@@ -225,7 +225,7 @@ theorem rdsag_todaV {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
   obtain ⟨U, F, hUo, hx0, hF, hFeq⟩ := hfam (c, g) ⟨hc, hcg⟩ hg
   have hemb : ContDiff ℝ ∞ (fun c' : Fin P.r → ℂ => (c', g)) := contDiff_id.prodMk contDiff_const
   set U' : Set (Fin P.r → ℂ) := {c' | (c', g) ∈ U} ∩ OmX P.r with hU'
-  have hU'o : IsOpen U' := (hUo.preimage hemb.continuous).inter (Formalism.FourierDecayAlt.P.Qx5.isOpen_OmX P.r)
+  have hU'o : IsOpen U' := (hUo.preimage hemb.continuous).inter (_root_.Formalism.FourierDecayAlt.P.Qx3.isOpen_OmX P.r)
   have hgauge : ∀ c' : Fin P.r → ℂ, gaugeF P.k P.r c' • J (Q.wCell P.k P.r (Fin.last P.r) c' * g) =
       Q.resG P.k P.r (Fin.last P.r) J c' g := by
     intro c'
@@ -424,8 +424,6 @@ variable {V : Type} [AddCommGroup V] [Module ℂ V]
 
 theorem rdsR_fst_neg (a : Pr V) : (-a).1 = -a.1 := rfl
 theorem rdsR_fst_sub (a b : Pr V) : (a - b).1 = a.1 - b.1 := rfl
-theorem rdsR_fst_one : (1 : Pr V).1 = 1 := rfl
-theorem rdsR_fst_zero : (0 : Pr V).1 = 0 := rfl
 
 variable {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq] {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {π : Mx k r → (Wp →L[ℂ] Wp)}
@@ -447,10 +445,10 @@ theorem rds_vab_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
     rw [rdsVp_zero]
     refine ⟨?_, ?_⟩
     · funext c g
-      simp only [Matrix.one_apply_eq, rdsR_fst_one, Module.End.one_apply]
+      simp only [Matrix.one_apply_eq, _root_.Formalism.FourierDecayAlt.P.NFx4.NO.fst_one, Module.End.one_apply]
       rfl
     · funext c g
-      simp only [Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide), rdsR_fst_zero, LinearMap.zero_apply,
+      simp only [Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide), _root_.Formalism.FourierDecayAlt.P.NFx4.NO.fst_zero, LinearMap.zero_apply,
         Submodule.coe_zero, Pi.zero_apply]
       rfl
   | succ i ih =>
@@ -494,10 +492,10 @@ theorem rds_vabm_ind (hL : IsActualLevel X L) (Y : ℂ) : ∀ i : ℕ, i ≤ r �
     rw [rdsVvp_zero]
     refine ⟨?_, ?_⟩
     · funext c g
-      simp only [Matrix.one_apply_eq, rdsR_fst_one, Module.End.one_apply]
+      simp only [Matrix.one_apply_eq, _root_.Formalism.FourierDecayAlt.P.NFx4.NO.fst_one, Module.End.one_apply]
       rfl
     · funext c g
-      simp only [Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide), rdsR_fst_zero, LinearMap.zero_apply,
+      simp only [Matrix.one_apply_ne (show (1 : Fin 2) ≠ 0 by decide), _root_.Formalism.FourierDecayAlt.P.NFx4.NO.fst_zero, LinearMap.zero_apply,
         Submodule.coe_zero, Pi.zero_apply]
       rfl
   | succ i ih =>

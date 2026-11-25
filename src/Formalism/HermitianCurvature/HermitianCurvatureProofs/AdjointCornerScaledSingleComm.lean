@@ -88,7 +88,7 @@ theorem single_eI_blk (hj : j + 1 ≤ r) (x y : Fin (j + 1)) :
   simp only [Fin.cast_cast, Fin.cast_eq_self]
   rw [Ux3.block3_apply]
   rcases P with ((a | a) | a) <;> rcases Q with ((b | b) | b) <;>
-    simp [Matrix.single_apply, eI, Fin.ext_iff, Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val] <;> omega
+    simp [Matrix.single_apply, eI, Fin.ext_iff, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] <;> omega
 
 theorem single_esI_blk (hj : j + 1 ≤ r) (x y : Fin (j + 1)) :
     Matrix.single (esI k r ⟨x.val, by omega⟩) (esI k r ⟨y.val, by omega⟩) (1 : ℂ) =
@@ -100,7 +100,7 @@ theorem single_esI_blk (hj : j + 1 ≤ r) (x y : Fin (j + 1)) :
   simp only [Fin.cast_cast, Fin.cast_eq_self]
   rw [Ux3.block3_apply]
   rcases P with ((a | a) | a) <;> rcases Q with ((b | b) | b) <;>
-    simp [Matrix.single_apply, esI, Fin.ext_iff, Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val, Fin.val_rev] <;>
+    simp [Matrix.single_apply, esI, Fin.ext_iff, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r, Fin.val_rev] <;>
     (try omega) <;>
     (have := x.isLt; have := y.isLt; have := a.isLt; have := b.isLt; split_ifs <;> first | rfl | omega)
 

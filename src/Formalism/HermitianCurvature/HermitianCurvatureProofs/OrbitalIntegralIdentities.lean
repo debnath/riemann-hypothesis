@@ -68,9 +68,9 @@ theorem jf_equiv (D : RealPlaceData k r Wp Wq) (F : Mat k r → (Wq →L[ℂ] Wp
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarN
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite D.haarW'
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r D.z
-  have hW' := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r D.z'
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z
+  have hW' := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z'
   have hU := Formalism.QuantumDeterminants.bessel_unitary_equiv_holds Wp Wq k r D.z D.z' cStd D.π D.π' D.μW D.μN D.μW' F
     D.z_mem D.z'_mem D.haarN.conc D.haarW.conc D.haarW'.conc D.haarW.left D.haarW'.left
     (Formalism.FourierDecayAlt.P.conjugation_invariance_every_setting k r Wp Wq D) D.π_rep D.π'_rep

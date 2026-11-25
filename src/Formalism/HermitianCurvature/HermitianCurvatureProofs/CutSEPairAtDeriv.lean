@@ -207,9 +207,6 @@ theorem hsInner_hasFDerivAt {φ ψ : ℂ → (Wq →L[ℂ] Wp)} {a1 b1 a2 b2 : W
     inner_smul_right, B.hsInner, Complex.conj_conj]
   ring
 
-theorem norm_wl_le' (A B : ℂ) : ‖wl A B‖ ≤ ‖A‖ + ‖B‖ := by
-  apply _root_.Formalism.FourierDecayAlt.P.CutSE.norm_wl_le <;> assumption
-
 theorem pairAt_off (μ : Measure (Mt k r)) (Φ Ψ : RadSp k r z z' π π') (x : Fin r → ℂ) (hx : x ∉ OmX r) :
     pairAt μ Φ Ψ x = 0 := by
   unfold pairAt
@@ -331,7 +328,7 @@ theorem pairAt_hasFDerivAt (X : ActualOps k r z z' π π') (μ : Measure (Mt k r
       (iB.aestronglyMeasurable.smul_const Complex.conjCLE.toContinuousLinearMap))
     (Filter.Eventually.of_forall fun g s hs => by
       obtain ⟨h1, h2, h3, h4, -⟩ := hb s hs
-      refine (norm_wl_le' _ _).trans (add_le_add ((norm_add_le _ _).trans (add_le_add (hB1 s h1 g) (hB2 s h2 g)))
+      refine (norm_wl_le _ _).trans (add_le_add ((norm_add_le _ _).trans (add_le_add (hB1 s h1 g) (hB2 s h2 g)))
         ((norm_add_le _ _).trans (add_le_add (hB3 s h3 g) (hB4 s h4 g)))))
     (((iC C1 M1 hC1).add (iC C2 M2 hC2)).add ((iC C3 M3 hC3).add (iC C4 M4 hC4)))
     (Filter.Eventually.of_forall fun g s hs => by

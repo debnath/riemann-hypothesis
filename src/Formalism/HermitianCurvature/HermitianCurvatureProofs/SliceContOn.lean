@@ -37,7 +37,7 @@ theorem rn_mem_GV (x : U.RC k r 0) : U.Rn k r 0 x ∈ B.GV k (r + 0) := by
 
 theorem gaXi_mem_GV (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) (hd : ∀ i, d i ≠ 0) (ξ : U.Xi k r 0 0 σ)
     (γ : B.Mat k 0) (hγ : γ ∈ B.GV k 0) : U.gaXi k 0 σ d ξ (fun a => a.elim0) γ ∈ B.GV k r := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k (r + 0)
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k (r + 0)
   have hm := (_root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem k r 0).1 (U.ZjH σ d ξ.2 (fun a => a.elim0)) γ
     (by rw [zjH_det]; exact _root_.Formalism.FourierDecayAlt.P.Ux10.det_hMat_ne σ d hd) hγ
   unfold U.gaXi
@@ -52,7 +52,7 @@ theorem slice_dom (k r : ℕ) (hr : 1 ≤ r) (σ : Equiv.Perm (Fin r)) (d : Fin 
 
   have hK : IsCompact {g : B.Mat k r | g ∈ B.GV k r ∧ B.gN g ≤ R} := by
     have h1 := Formalism.FourierDecayAlt.P.PBE.isCompact_gN_le k r R
-    have h2 := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).closed
+    have h2 := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).closed
     have : {g : B.Mat k r | g ∈ B.GV k r ∧ B.gN g ≤ R} = B.GV k r ∩ {g | B.gN g ≤ R} := rfl
     rw [this]; exact h1.inter_left h2
   obtain ⟨M0, hM0⟩ := hK.exists_bound_of_continuousOn (hFc.mono fun g hg => hg.1)
@@ -165,7 +165,7 @@ theorem headH_cont (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) :
     Continuous (fun η : U.XiH r 0 σ => U.headH σ d η.2.1 η.2.2) := by
   unfold U.headH
   exact ((continuous_const.matrix_mul ((Dx2.SL.cont_lowW σ).comp (continuous_fst.comp continuous_snd))).matrix_mul
-    continuous_const).matrix_mul (Dx2.SL.cont_upper.comp (continuous_snd.comp continuous_snd))
+    continuous_const).matrix_mul (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp (continuous_snd.comp continuous_snd))
 
 theorem gaXi_cont (σ : Equiv.Perm (Fin r)) (d : Fin r → ℂ) (hd : ∀ i, d i ≠ 0) :
     Continuous (fun p : U.Xi k r 0 0 σ × B.Mat k 0 => U.gaXi k 0 σ d p.1 (fun a => a.elim0) p.2) := by

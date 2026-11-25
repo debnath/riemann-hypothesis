@@ -155,9 +155,6 @@ def eta (k r' : ℕ) (v : Fin (2 * (1 + r') + k + 1) → ℂ) : ℂ × HPar k r'
 lemma xi_last (p : ℂ × HPar k r') : xi k r' p (iL k r') = p.1 := by
   simp [xi, dual_base_vector_eq_single, e0_eq, liftVec_last, (first_ne_last (k := k) (r' := r')).symm]
 
-lemma hb_im (y : Fin (2 * r' + k + 1) → ℂ) (s : ℝ) : (hb k r' y s).im = s := by
-  simp [hb]
-
 lemma eta_xi (p : ℂ × HPar k r') (hc : p.1 ≠ 0) : eta k r' (xi k r' p) = p := by
   obtain ⟨c, y, s⟩ := p
   simp only at hc
@@ -173,7 +170,7 @@ lemma eta_xi (p : ℂ × HPar k r') (hc : p.1 ≠ 0) : eta k r' (xi k r' p) = p 
     show c * y j / c = y j
     rw [mul_comm, mul_div_assoc, div_self hc, mul_one]
   · show (c * hb k r' y s / c).im = s
-    rw [mul_comm, mul_div_assoc, div_self hc, mul_one, hb_im]
+    rw [mul_comm, mul_div_assoc, div_self hc, mul_one, _root_.Formalism.FourierDecayAlt.P.B2x8.hb_im]
 
 lemma heisenberg_dual_base_vector_formula (HA : HeisAct) (x : HPar k r') :
     heis0 k r' x *ᵥ es0 k r' = es0 k r' + liftVec k 1 r' x.1 + hb k r' x.1 x.2 • e0 k r' := by
@@ -247,12 +244,9 @@ lemma levPos_inj : Function.Injective (levPos k 1 r') := by
   have h2 : a.val + 1 = b.val + 1 := congrArg Fin.val h
   exact Fin.ext (by omega)
 
-lemma lev_mul (g h : Mat k r') : ιLev k 1 r' (g * h) = ιLev k 1 r' g * ιLev k 1 r' h := by
-  apply ReciprocityTheory.ChartRestriction.DS.Xi.StepA.lev_mul
-
 lemma lev_inv (g : Mat k r') (hg : IsUnit g.det) : (ιLev k 1 r' g)⁻¹ = ιLev k 1 r' g⁻¹ := by
   apply Matrix.inv_eq_right_inv
-  rw [← lev_mul, Matrix.mul_nonsing_inv _ hg, lev_one]
+  rw [← _root_.Formalism.FourierDecayAlt.P.B2x8.al_lev_mul, Matrix.mul_nonsing_inv _ hg, lev_one]
 
 end Formalism.FourierDecayAlt.P.B2x9
 
@@ -277,22 +271,9 @@ theorem invM_smul : (invM : Mt k r → Mt k r) = fun x => (detF x)⁻¹ • adjF
   show (Matrix.of x : Mat k r)⁻¹ = (Matrix.of x : Mat k r).det⁻¹ • (Matrix.of x : Mat k r).adjugate
   rw [Matrix.inv_def, Ring.inverse_eq_inv']
 
-theorem invM_meas : Measurable (invM : Mt k r → Mt k r) := by
-  rw [invM_smul]
-  first
-    | exact (detF_cont.measurable.inv).smul adjF_cont.measurable
-
 theorem invM_contOn : ContinuousOn (invM : Mt k r → Mt k r) {x | detF x ≠ 0} := by
   rw [invM_smul]
   exact (detF_cont.continuousOn.inv₀ (fun x hx => hx)).smul adjF_cont.continuousOn
-
-theorem lmulM_cont (a : Mat k r) : Continuous (lmulM a : Mt k r → Mt k r) := by
-  first
-    | exact continuous_const.matrix_mul continuous_id
-
-theorem mulM_cont : Continuous (mulM : Mt k r × Mt k r → Mt k r) := by
-  first
-    | exact continuous_fst.matrix_mul continuous_snd
 
 theorem sigmaFinite_of_haar {U : Set (Mat k r)} {μ : Measure (Mt k r)} (h : IsHaarOn U μ) : SigmaFinite μ := by
   haveI : IsFiniteMeasureOnCompacts μ := ⟨@fun K hK => h.finite_compact K hK⟩
@@ -305,17 +286,6 @@ lemma liftVec_cont : Continuous (liftVec k 1 r') := by
   by_cases hp : 1 ≤ p.val ∧ p.val < 2 * r' + k + 1 + 1
   · simp only [dite_eq_left hp]; exact continuous_apply _
   · simp only [dite_eq_right hp]; exact continuous_const
-
-lemma herm_cont {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) : Continuous fun p : (Fin m → ℂ) × (Fin m → ℂ) => herm H p.1 p.2 := by
-  first
-    | (simp only [herm, dotProduct, mulVec]; fun_prop)
-
-lemma hb_cont : Continuous fun x : HPar k r' => hb k r' x.1 x.2 := by
-  have h1 : Continuous fun x : HPar k r' => herm (Hpk k r') x.1 x.1 :=
-    (herm_cont (Hpk k r')).comp (by fun_prop : Continuous fun x : HPar k r' => (x.1, x.1))
-  unfold hb
-  exact (Complex.continuous_ofReal.comp ((Complex.continuous_re.comp h1).neg.div_const 2)).add
-    ((Complex.continuous_ofReal.comp continuous_snd).mul continuous_const)
 
 def heisF (k r' : ℕ) (x : HPar k r') : Mt k (1 + r') := heis0 k r' x
 
@@ -348,7 +318,7 @@ lemma xi_cont : Continuous (xi k r') := by
   unfold xi
   have hl : Continuous fun p : ℂ × HPar k r' => liftVec k 1 r' p.2.1 :=
     liftVec_cont.comp (continuous_fst.comp continuous_snd)
-  have hh : Continuous fun p : ℂ × HPar k r' => hb k r' p.2.1 p.2.2 := hb_cont.comp continuous_snd
+  have hh : Continuous fun p : ℂ × HPar k r' => hb k r' p.2.1 p.2.2 := _root_.Formalism.FourierDecayAlt.P.B2x8.heisenberg_quadratic_continuous.comp continuous_snd
   exact continuous_fst.smul ((continuous_const.add hl).add (hh.smul continuous_const))
 
 lemma eta_meas : Measurable (eta k r') := by
@@ -362,7 +332,7 @@ def Psi (k r' : ℕ) (p : ℂ × ((HPar k r' × HPar k r') × Mt k r')) : Mt k (
 lemma Psi_meas : Measurable (Psi k r') := by
   have hm : ∀ {α : Type} [MeasurableSpace α] (f g : α → Mt k (1 + r')), Measurable f → Measurable g →
       Measurable fun p => mulM (f p, g p) :=
-    fun f g hf hg => mulM_cont.measurable.comp (hf.prodMk hg)
+    fun f g hf hg => _root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.measurable.comp (hf.prodMk hg)
   have hx : Measurable fun p : ℂ × ((HPar k r' × HPar k r') × Mt k r') => heisF k r' p.2.1.1 :=
     heisenberg_map_continuous.measurable.comp (measurable_fst.comp (measurable_fst.comp measurable_snd))
   have hx' : Measurable fun p : ℂ × ((HPar k r' × HPar k r') × Mt k r') => heisF k r' p.2.1.2 :=
@@ -372,7 +342,7 @@ lemma Psi_meas : Measurable (Psi k r') := by
   have hg : Measurable fun p : ℂ × ((HPar k r' × HPar k r') × Mt k r') => levM k r' p.2.2 :=
     levM_cont.measurable.comp (measurable_snd.comp measurable_snd)
   have hi : Measurable fun p : ℂ × ((HPar k r' × HPar k r') × Mt k r') => invM (heisF k r' p.2.1.1) :=
-    invM_meas.comp hx
+    _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas.comp hx
   exact hm _ _ (hm _ _ (hm _ _ hi hw) hg) hx'
 
 lemma heis_mem_P (hG : ClosedG) (SD : StabDecomp) (x : HPar k r') : heis0 k r' x ∈ P1set k r' := by
@@ -464,7 +434,7 @@ def Ff (μP : Measure (Mt k (1 + r'))) (f : Mt k (1 + r') → ℝ≥0∞) (g : M
 lemma Ff_meas (μP : Measure (Mt k (1 + r'))) [SFinite μP] {f : Mt k (1 + r') → ℝ≥0∞} (hf : Measurable f) :
     Measurable (Ff μP f) := by
   unfold Ff
-  exact Measurable.lintegral_prod_right' (hf.comp mulM_cont.measurable)
+  exact Measurable.lintegral_prod_right' (hf.comp _root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.measurable)
 
 lemma neg_HPar : (volume : Measure (HPar k r')).map Neg.neg = volume := by
   rw [Measure.volume_eq_prod]
@@ -481,20 +451,20 @@ lemma swap (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (Mt k
     Measure.map_prod_map _ _ heisenberg_map_continuous.measurable levM_cont.measurable
   have hPM : Measurable (Prod.map (heisF k r') (levM k r')) := heisenberg_map_continuous.measurable.prodMap levM_cont.measurable
   have hH : Measurable fun p : HPar k r' × Mt k r' => h (mulM (levM k r' p.2, heisF k r' p.1)) :=
-    hh.comp (mulM_cont.measurable.comp ((levM_cont.measurable.comp measurable_snd).prodMk (heisenberg_map_continuous.measurable.comp measurable_fst)))
+    hh.comp (_root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.measurable.comp ((levM_cont.measurable.comp measurable_snd).prodMk (heisenberg_map_continuous.measurable.comp measurable_fst)))
   have hNI : Measurable (Prod.map (Neg.neg : HPar k r' → HPar k r') (invM : Mt k r' → Mt k r')) :=
-    measurable_neg.prodMap invM_meas
+    measurable_neg.prodMap _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas
   have hae : ∀ᵐ p : HPar k r' × Mt k r' ∂((volume : Measure (HPar k r')).prod μG₁), p.2 ∈ (GV k r' : Set (Mt k r')) := by
     rw [ae_iff]
     have : {p : HPar k r' × Mt k r' | ¬ p.2 ∈ (GV k r' : Set (Mt k r'))} = Set.univ ×ˢ ((GV k r')ᶜ : Set (Mt k r')) := by
       ext p; simp only [Set.mem_prod, Set.mem_univ, true_and]; exact Iff.rfl
     rw [this, Measure.prod_prod, h₁.conc, mul_zero]
   calc ∫⁻ q, h q ∂(muP μG₁) = ∫⁻ q, h q ∂((muP μG₁).map invM) := by rw [HIv _ _ _ _ hP hμP]
-    _ = ∫⁻ q, h (invM q) ∂(muP μG₁) := lintegral_map hh invM_meas
+    _ = ∫⁻ q, h (invM q) ∂(muP μG₁) := lintegral_map hh _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas
     _ = ∫⁻ p : HPar k r' × Mt k r', h (invM (mulM (heisF k r' p.1, levM k r' p.2))) ∂((volume : Measure (HPar k r')).prod μG₁) := by
         unfold muP
-        rw [e1, Measure.map_map mulM_cont.measurable hPM]
-        exact lintegral_map (f := fun q => h (invM q)) (hh.comp invM_meas) (mulM_cont.measurable.comp hPM)
+        rw [e1, Measure.map_map _root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.measurable hPM]
+        exact lintegral_map (f := fun q => h (invM q)) (hh.comp _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas) (_root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.measurable.comp hPM)
     _ = ∫⁻ p : HPar k r' × Mt k r', (fun p' : HPar k r' × Mt k r' => h (mulM (levM k r' p'.2, heisF k r' p'.1)))
           (Prod.map (Neg.neg : HPar k r' → HPar k r') (invM : Mt k r' → Mt k r') p) ∂((volume : Measure (HPar k r')).prod μG₁) := by
         refine lintegral_congr_ae ?_
@@ -508,7 +478,7 @@ lemma swap (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (Mt k
           ∂(((volume : Measure (HPar k r')).prod μG₁).map (Prod.map (Neg.neg : HPar k r' → HPar k r') (invM : Mt k r' → Mt k r'))) :=
         (lintegral_map hH hNI).symm
     _ = _ := by
-        rw [← Measure.map_prod_map _ _ measurable_neg invM_meas, neg_HPar, HIv _ _ _ _ (hG k r') h₁]
+        rw [← Measure.map_prod_map _ _ measurable_neg _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas, neg_HPar, HIv _ _ _ _ (hG k r') h₁]
 
 def II (μG₁ : Measure (Mt k r')) (f : Mt k (1 + r') → ℝ≥0∞) : ℝ≥0∞ :=
   ∫⁻ c : ℂ, wt k r' c * ∫⁻ p : (HPar k r' × HPar k r') × Mt k r', f (Psi k r' (c, p))
@@ -535,7 +505,7 @@ lemma inner_eq (HIv : HaarInv) (hG : ClosedG) (HI : HeisInv) (μG₁ : Measure (
       Ff (muP μG₁) f (tau k r' (c, (-x.1, -x.2))) := by
     intro x
     have hh : Measurable fun q => f (mulM (tau k r' (c, (-x.1, -x.2)), q)) :=
-      hf.comp (mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable
+      hf.comp (_root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable
     have hm2 : Measurable fun p : HPar k r' × Mt k r' => f (Psi k r' (c, ((x, p.1), p.2))) :=
       hmF.comp ((measurable_const.prodMk measurable_fst).prodMk measurable_snd)
     calc ∫⁻ y : HPar k r', ∫⁻ g, f (Psi k r' (c, ((x, y), g))) ∂μG₁ ∂volume
@@ -613,13 +583,13 @@ lemma Ff_right (μP : Measure (Mt k (1 + r'))) (hμP : IsHaarOn (P1set k r') μP
     (g q : Mt k (1 + r')) (hq : q ∈ (P1set k r' : Set (Mt k (1 + r')))) : Ff μP f (mulM (g, q)) = Ff μP f g := by
   unfold Ff
   have hmeas : Measurable fun q' : Mt k (1 + r') => f (mulM (g, q')) :=
-    hf.comp (mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable
+    hf.comp (_root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable
   calc ∫⁻ q', f (mulM (mulM (g, q), q')) ∂μP
       = ∫⁻ q', f (mulM (g, lmulM q q')) ∂μP := by
         congr 1; funext q'; congr 1
         show Matrix.of g * Matrix.of q * Matrix.of q' = Matrix.of g * (Matrix.of q * Matrix.of q')
         exact Matrix.mul_assoc _ _ _
-    _ = ∫⁻ q', f (mulM (g, q')) ∂(μP.map (lmulM q)) := (lintegral_map hmeas (lmulM_cont q).measurable).symm
+    _ = ∫⁻ q', f (mulM (g, q')) ∂(μP.map (lmulM q)) := (lintegral_map hmeas (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont q).measurable).symm
     _ = ∫⁻ q', f (mulM (g, q')) ∂μP := by rw [hμP.left q hq]
 
 lemma II_inv (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM : OneStepMem) (OC : OneStepCoord) (CI : ConeInv)
@@ -628,7 +598,7 @@ lemma II_inv (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM : 
     (a : Mat k (1 + r')) (ha : a ∈ GV k (1 + r')) : II μG₁ (fun g => f (lmulM a g)) = II μG₁ f := by
   haveI := sigmaFinite_of_haar h₁
   haveI : SigmaFinite (muP μG₁) := sigmaFinite_of_haar hμP
-  have hfa : Measurable fun g => f (lmulM a g) := hf.comp (lmulM_cont a).measurable
+  have hfa : Measurable fun g => f (lmulM a g) := hf.comp (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont a).measurable
   rw [II_eq HIv hG HI μG₁ h₁ hP hμP _ hfa, II_eq HIv hG HI μG₁ h₁ hP hμP f hf]
   have hE : Measurable fun v : Fin (2 * (1 + r') + k + 1) → ℂ => Ff (muP μG₁) f (tau k r' (eta k r' v)) :=
     (Ff_meas _ hf).comp (tau_meas.comp eta_meas)
@@ -664,7 +634,7 @@ lemma Ff_ind (μP : Measure (Mt k (1 + r'))) (S : Set (Mt k (1 + r'))) (hS : Mea
     Ff μP (S.indicator 1) g = μP ((fun q => mulM (g, q)) ⁻¹' S) := by
   unfold Ff
   have hm : MeasurableSet ((fun q => mulM (g, q)) ⁻¹' S) :=
-    (mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable hS
+    (_root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont.comp (continuous_const.prodMk continuous_id)).measurable hS
   rw [← lintegral_indicator_one hm]
   first | rfl
 
@@ -692,7 +662,7 @@ lemma nu_left (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM :
     (a : Mat k (1 + r')) (ha : a ∈ GV k (1 + r')) : (nu μG₁).map (lmulM a) = nu μG₁ := by
   haveI := sigmaFinite_of_haar h₁
   ext S hS
-  rw [Measure.map_apply (lmulM_cont a).measurable hS, nu_apply _ _ ((lmulM_cont a).measurable hS),
+  rw [Measure.map_apply (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont a).measurable hS, nu_apply _ _ ((_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont a).measurable hS),
     nu_apply _ _ hS]
   have hi : (lmulM a ⁻¹' S).indicator (1 : Mt k (1 + r') → ℝ≥0∞) = fun g => S.indicator 1 (lmulM a g) := by
     funext g
@@ -748,7 +718,7 @@ lemma nu_fin (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM : 
   have hinvc : IsCompact ((invM : Mt k (1 + r') → Mt k (1 + r')) '' K') :=
     hK'c.image_of_continuousOn (invM_contOn.mono fun x hx => ((hG k (1 + r')).unit x hx.2).ne_zero)
   set D : Set (Mt k (1 + r')) := mulM '' (((invM : Mt k (1 + r') → Mt k (1 + r')) '' K') ×ˢ K') with hD
-  have hDc : IsCompact D := (hinvc.prod hK'c).image mulM_cont
+  have hDc : IsCompact D := (hinvc.prod hK'c).image _root_.Formalism.FourierDecayAlt.P.B2x1.mulM_cont
   set Ke : Set (Fin (2 * (1 + r') + k + 1) → ℂ) := (fun g : Mt k (1 + r') => (Matrix.of g : Mat k (1 + r')) *ᵥ e0 k r') '' K with hKe
   have hKec : IsCompact Ke := hK.image evalE_cont
   have hKem : MeasurableSet Ke := hKec.isClosed.measurableSet
@@ -783,7 +753,7 @@ lemma nu_fin (HIv : HaarInv) (hG : ClosedG) (HA : HeisAct) (HI : HeisInv) (OM : 
             rw [Matrix.mul_inv_rev, Matrix.mul_assoc, ← Matrix.mul_assoc _ (Matrix.of (tau k r' p) : Mat k (1 + r')),
               Matrix.nonsing_inv_mul _ ((hG k (1 + r')).unit _ hgG), Matrix.one_mul]
         _ = (muP μG₁).map (lmulM ((Matrix.of q₀ : Mat k (1 + r'))⁻¹ : Mat k (1 + r'))) D :=
-            (Measure.map_apply (lmulM_cont _).measurable hDc.isClosed.measurableSet).symm
+            (Measure.map_apply (_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont _).measurable hDc.isClosed.measurableSet).symm
         _ = muP μG₁ D := by rw [hμP.left _ hq₀inv]
     · rw [Set.not_nonempty_iff_eq_empty.1 hne, measure_empty]
       exact bot_le
@@ -860,17 +830,13 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt.B Fo
 
 variable {k r' : ℕ}
 
-lemma herm_bvec {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (p q : Fin m) : herm H (bvec q) (bvec p) = H p q := by
-  rw [herm_bvec_right_eq_mulVec_apply]
-  simp [bvec, mulVec, dotProduct, Pi.single_apply]
-
 lemma base_vector_levi_coordinate_zero (i : Fin (2 * r' + k + 1)) : e0 k r' (levPos k 1 r' i) = 0 := by
   rw [e0_eq]
   simp [levPos_ne_first]
 
 lemma hermitian_levi_vector_base_orthogonal (j : Fin (2 * r' + k + 1)) :
     herm (Hpk k (1 + r')) (bvec (levPos k 1 r' j)) (e0 k r') = 0 := by
-  rw [show e0 k r' = bvec (iF k r') from rfl, herm_bvec, Hpk_first]
+  rw [show e0 k r' = bvec (iF k r') from rfl, _root_.Formalism.FourierDecayAlt.P.B2x4.herm_bvec, Hpk_first]
   simp [levPos_ne_last]
 
 lemma levPos_inj : Function.Injective (levPos k 1 r') := by
@@ -882,10 +848,6 @@ lemma heis_block (x : HPar k r') (i j : Fin (2 * r' + k + 1)) :
     heis0 k r' x (levPos k 1 r' i) (levPos k 1 r' j) = if i = j then 1 else 0 := by
   simp only [heis0, heisG, Matrix.add_apply, Matrix.sub_apply, vecMulVec_apply, base_vector_levi_coordinate_zero,
     hermitian_levi_vector_base_orthogonal, zero_mul, mul_zero, sub_zero, add_zero, Matrix.one_apply, levPos_inj.eq_iff]
-
-lemma lev_block (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
-    ιLev k 1 r' g (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
-  exact lev_mid g i j
 
 lemma lev_off (g : Mat k r') (m : Fin (2 * (1 + r') + k + 1)) (hm : m ∉ Set.range (levPos k 1 r'))
     (j : Fin (2 * r' + k + 1)) : ιLev k 1 r' g m (levPos k 1 r' j) = 0 := by
@@ -900,7 +862,7 @@ lemma lev_off (g : Mat k r') (m : Fin (2 * (1 + r') + k + 1)) (hm : m ∉ Set.ra
 lemma prod_block (x : HPar k r') (g : Mat k r') (i j : Fin (2 * r' + k + 1)) :
     (heis0 k r' x * ιLev k 1 r' g) (levPos k 1 r' i) (levPos k 1 r' j) = g i j := by
   rw [Matrix.mul_apply, Finset.sum_eq_single (levPos k 1 r' i)]
-  · rw [heis_block, ite_eq_left rfl, one_mul, lev_block]
+  · rw [heis_block, ite_eq_left rfl, one_mul, _root_.Formalism.FourierDecayAlt.P.B2x9.lev_mid]
   · intro m _ hm
     by_cases hr : m ∈ Set.range (levPos k 1 r')
     · obtain ⟨l, rfl⟩ := hr
@@ -961,19 +923,13 @@ namespace Formalism.FourierDecayAlt.P
 
 open Formalism.FourierDecayAlt.B2
 
-theorem stabilizer_haar_of_parts : Formalism.FourierDecayAlt.B2.AssembleStab := by
-  exact Formalism.FourierDecayAlt.P.B2x9.S1.assembleStab
-
 theorem stabilizer_haar_measure : Formalism.FourierDecayAlt.B2.StabHaar := by
-  exact stabilizer_haar_of_parts semidirect_product_haar levi_haar_measure_exists unitary_group_closed heisenberg_subgroup_closed
-    heisenberg_haar_measure heisenberg_conjugation_by_levi heisenberg_levi_conjugation_measure stabilizer_factorization
-
-theorem stabilizer_integration_of_parts : Formalism.FourierDecayAlt.B2.AssembleOneStep := by
-  exact Formalism.FourierDecayAlt.P.B2x9.assembleOneStep
+  exact _root_.Formalism.FourierDecayAlt.P.B2x9.S1.assembleStab _root_.Formalism.FourierDecayAlt.P.B2x2.semiHaar _root_.Formalism.FourierDecayAlt.P.B2x2.levHaar _root_.Formalism.FourierDecayAlt.P.B2x2.closedG _root_.Formalism.FourierDecayAlt.P.B2x5.heisClosed
+    _root_.Formalism.FourierDecayAlt.P.B2x5.heisHaar _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLev _root_.Formalism.FourierDecayAlt.P.B2x5.heisConjLevMeas _root_.Formalism.FourierDecayAlt.P.B2x8.al_stabDecomp
 
 theorem stabilizer_integration_formula : Formalism.FourierDecayAlt.B2.OneStepInt := by
-  exact stabilizer_integration_of_parts haar_measure_unique_up_to_scalar haar_measure_inversion unitary_group_closed heisenberg_action_formula
-    heisenberg_inverse stabilizer_one_parameter_mem rank_one_coordinates_formula isotropic_cone_invariance isotropic_cone_finite_measure
-    stabilizer_factorization stabilizer_haar_measure
+  exact _root_.Formalism.FourierDecayAlt.P.B2x9.assembleOneStep _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique haar_measure_inversion _root_.Formalism.FourierDecayAlt.P.B2x2.closedG _root_.Formalism.FourierDecayAlt.P.B2x4.heisAct
+    _root_.Formalism.FourierDecayAlt.P.B2x5.heisInv _root_.Formalism.FourierDecayAlt.P.B2x8.al_oneStepMem _root_.Formalism.FourierDecayAlt.P.B2x8.al_oneStepCoord isotropic_cone_invariance isotropic_cone_finite_measure
+    _root_.Formalism.FourierDecayAlt.P.B2x8.al_stabDecomp stabilizer_haar_measure
 
 end Formalism.FourierDecayAlt.P

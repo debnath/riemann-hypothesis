@@ -136,7 +136,7 @@ theorem embG_nset {k p ρ : ℕ} {y : B.Mat k ρ} (hy : y ∈ QuantumDeterminant
   refine ⟨?_, ?_⟩
   · show (U.embG k p ρ y)ᴴ * Hpk k (p + ρ) * U.embG k p ρ y = Hpk k (p + ρ)
     have hy1 : yᴴ * Hpk k ρ * y = Hpk k ρ := hy.1
-    rw [Formalism.FourierDecayAlt.P.hermitian_group_blocks k p ρ, U.embG, Ux3.block3_conjTranspose, Ux3.block3_mul, Ux3.block3_mul]
+    rw [_root_.Formalism.FourierDecayAlt.P.Ux2.hpkBlocks k p ρ, U.embG, Ux3.block3_conjTranspose, Ux3.block3_mul, Ux3.block3_mul]
     congr 1 <;> simp [hy1]
   · intro i c hc hi
     obtain ⟨x, rfl⟩ := (U.eB k p ρ).surjective i
@@ -144,7 +144,7 @@ theorem embG_nset {k p ρ : ℕ} {y : B.Mat k ρ} (hy : y ∈ QuantumDeterminant
     rw [U.embG, Ux3.block3_apply]
     simp only [(U.eB k p ρ).apply_eq_iff_eq]
     rcases x with ((x | x) | x) <;> rcases w with ((w | w) | w) <;>
-      simp only [Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val] at hc hi <;>
+      simp only [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r] at hc hi <;>
       first
       | (simp [Matrix.one_apply]; done)
       | (exfalso; have := x.isLt; have := w.isLt; omega)
@@ -156,7 +156,7 @@ theorem left_factor_mem : LeftMem := by
   intro k p ρ z x l h ν hz hl hh hν
   have hH := Formalism.FourierDecayAlt.P.Ux3.hpk_det k ρ
   have hhu : IsUnit h.det := WeylGroupFacts.isUnit_of_uh hh.1
-  have hclN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k (p + ρ)
+  have hclN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k (p + ρ)
 
   have hlH : G.IsUpperUni lᴴ := by
     refine ⟨fun i => ?_, fun i j hij => ?_⟩
@@ -167,9 +167,9 @@ theorem left_factor_mem : LeftMem := by
     rw [← Formalism.FourierDecayAlt.P.PBM.leviElement_inv _ hlu]
     refine hclN.inv_mem _ (Formalism.FourierDecayAlt.P.BigCellDiagonalMap.leviElement_nset _ ⟨fun i j hij => hlH.2 i j hij, hlH.1⟩)
   have hRn : U.Rn k p ρ (rcAct h x) ∈ QuantumDeterminants.Nset k (p + ρ) :=
-    (Formalism.FourierDecayAlt.P.radical_parametrisation k p ρ).2.2 (by rw [← (Formalism.FourierDecayAlt.P.radical_parametrisation k p ρ).2.1]; exact ⟨rcAct h x, rfl⟩)
+    (_root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam k p ρ).2.2 (by rw [← (_root_.Formalism.FourierDecayAlt.P.Ux2.radicalParam k p ρ).2.1]; exact ⟨rcAct h x, rfl⟩)
   have hνN : U.embG k p ρ ν⁻¹ ∈ QuantumDeterminants.Nset k (p + ρ) :=
-    embG_nset ((Formalism.FourierDecayAlt.P.unipotent_radical_closed k ρ).inv_mem ν hν)
+    embG_nset ((_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k ρ).inv_mem ν hν)
   have hW : U.embG k p ρ h⁻¹ ∈ UWset k (p + ρ) (liftVec k p ρ z) := by
     rw [← Formalism.FourierDecayAlt.P.Dx2.Tower.lev_eq_embG]; exact Formalism.FourierDecayAlt.P.Dx2.Tower.lev_UW p ρ z _ (WeylGroupFacts.uw_inv hh)
   refine ⟨U.embG k p ρ h⁻¹, hW, U.Rn k p ρ (rcAct h x) * U.muP k p ρ (lᴴ)⁻¹ * U.embG k p ρ ν⁻¹,

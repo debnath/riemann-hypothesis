@@ -66,7 +66,7 @@ open Formalism.FourierDecayAlt.P.CutMP.JA.FFS.AC
 
 theorem adjoint_continuity_holds : AdjCont := by
   intro k r Wp Wq _ _ _ _ _ _ D Θ hs f hf _ hfs p hp
-  exact ⟨Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (ckOn_opAdj D Θ hs (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp hf) (suppIn_rho D hp hfs)),
-    Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp (ckOn_opAdj D Θ hs hf hfs))⟩
+  exact ⟨_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (ckOn_opAdj D Θ hs (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp hf) (suppIn_rho D hp hfs)),
+    _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (Formalism.FourierDecayAlt.P.B5.ckOn_rho D hp (ckOn_opAdj D Θ hs hf hfs))⟩
 
 end Formalism.FourierDecayAlt.P.CutMP.JA.FFS

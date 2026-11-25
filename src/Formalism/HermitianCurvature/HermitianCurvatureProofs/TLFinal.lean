@@ -249,7 +249,7 @@ theorem top_lift_exists : Formalism.FourierDecayAlt.TL.TopLiftExists3 := by
         intro i j hij
         simpa using hw.2 i j (ne_of_lt hij)
     obtain ⟨h1, h2, h3, h4⟩ := cut_admissible _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift
-      types_interlace realPoints_statement P hD.1.1 l0 hl1 hlk (Fin w.length) (D.positionted w) hM
+      _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces _root_.Formalism.FourierDecayAlt.P.Mx3.realPoints P hD.1.1 l0 hl1 hlk (Fin w.length) (D.positionted w) hM
     refine ⟨h1, h2, ?_, h4⟩
     rw [hD.2.2.2.2.1, hD.2.2.2.2.2.1]
     exact h3

@@ -82,7 +82,7 @@ theorem radial_residue_formula : RDResRad := by
         Rad.sf_resG hS x₀ ⟨hx₀.1, (hin x₀ hx₀).2⟩ hx₀.2.1
       refine ⟨U ∩ (Prod.fst ⁻¹' OmX P.r ∩ Prod.snd ⁻¹' {g | 0 < GGl P.k P.r z z' g}), F,
         hU.inter (((Qx3.isOpen_OmX _).preimage continuous_fst).inter
-          (isOpen_lt continuous_const ((Qx5.GGl_continuous _ _ _ _).comp continuous_snd))),
+          (isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont _ _ _ _).comp continuous_snd))),
         ⟨hxU, hx₀.1, hx₀.2.2⟩, hF.mono Set.inter_subset_left, ?_⟩
       intro x hx hg
       have hxD : x ∈ DomR P.k P.r z z' := ⟨hx.2.1, hg, hx.2.2⟩

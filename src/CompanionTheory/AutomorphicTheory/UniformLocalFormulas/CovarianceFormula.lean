@@ -159,7 +159,7 @@ theorem conj_levi {d : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (
     (he : ∀ a : Fin r, d *ᵥ bvec (eI k r a) = ((t : ℂ) ^ (r - a.val)) • bvec (eI k r a))
     (hf : ∀ a : Fin r, d *ᵥ bvec (esI k r a) = ((t : ℂ) ^ (r - a.val))⁻¹ • bvec (esI k r a)) :
     (haarLie (Nset k r) 1).map (conjM d) = ENNReal.ofReal ((t ^ B.kap k r)⁻¹) • haarLie (Nset k r) 1 := by
-  have hG := unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   have ha : B.aDil k r t ∈ B.GV k r := B4.aDil_mem k r t ht.ne'
   have hi := B2x7.aDil_inv_mul k r t ht.ne'
   have hρ : (B.aDil k r t)⁻¹ * d ∈ B2.UWb k r := by
@@ -242,7 +242,7 @@ theorem place_eq {n r k : ℕ} (hn : n = 2 * r + k + 1) (ε : Fin n → Bool) (e
     rw [hdi]
     simp only [Matrix.mul_assoc]
     rw [← Matrix.mul_assoc Q Q' P, h2, Matrix.one_mul, ← Matrix.mul_assoc Q Q', h2, Matrix.one_mul]
-  have hu : IsUnit (P' * Q).det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hd
+  have hu : IsUnit (P' * Q).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hd
   have hinj : Function.Injective (conjM (k := k) (r := r) (P' * Q)) := fun x y h => by
     have h' : P' * Q * Matrix.of x * (P' * Q)⁻¹ = P' * Q * Matrix.of y * (P' * Q)⁻¹ := h
     have := congrArg (fun m => (P' * Q)⁻¹ * m * (P' * Q)) h'

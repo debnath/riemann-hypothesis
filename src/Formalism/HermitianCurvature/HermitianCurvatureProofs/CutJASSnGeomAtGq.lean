@@ -93,28 +93,16 @@ variable (z z' : Fin (2 * r + k + 1) → ℂ) (c : Fin r → ℂ) (μ : Matrix (
 
 theorem gq_wb {v : Fin (2 * r + k + 1) → ℂ} (hv : inWb k r v) :
     bigCell k r c μ *ᵥ v = B2.embWb k r μ *ᵥ v := by
-  rw [(Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c μ).2, ← mulVec_mulVec, Formalism.FourierDecayAlt.P.BigCellDecomposition.bigCell_one_fixes_vector hv c]
-
-theorem jV_inWb (u : Fin (k + 1) → ℂ) : inWb k r (Formalism.FourierDecayAlt.P.TwoByOneBlock.jV k r u) := by
-  intro i hi
-  apply Formalism.FourierDecayAlt.P.TwoByOneBlock.jV_out
-  intro h
-  rcases hi with hi | hi <;> omega
-
-theorem Hb_sq : Hb k * Hb k = 1 := by
-  rw [Hb, diagonal_mul_diagonal, ← diagonal_one]
-  congr 1
-  funext j
-  split_ifs <;> norm_num
+  rw [(_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ).2, ← mulVec_mulVec, Formalism.FourierDecayAlt.P.BigCellDecomposition.bigCell_one_fixes_vector hv c]
 
 theorem isUnit_mu {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (h : μᴴ * Hb k * μ = Hb k) : IsUnit μ.det := by
   apply Matrix.isUnit_det_of_left_inverse (B := Hb k * μᴴ * Hb k)
-  rw [show Hb k * μᴴ * Hb k * μ = Hb k * (μᴴ * Hb k * μ) by simp only [Matrix.mul_assoc], h, Hb_sq]
+  rw [show Hb k * μᴴ * Hb k * μ = Hb k * (μᴴ * Hb k * μ) by simp only [Matrix.mul_assoc], h, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.Hb_sq]
 
 theorem isUnit_emb {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hc : ∀ a, c a ≠ 0) (h : μᴴ * Hb k * μ = Hb k) :
     IsUnit (B2.embWb k r μ).det := by
   have hg := Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh (big_cell_mem_holds k r c μ hc h)
-  rw [(Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c μ).2, det_mul] at hg
+  rw [(_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c μ).2, det_mul] at hg
   exact isUnit_of_mul_isUnit_left hg
 
 def wq (k r : ℕ) (z : Fin (2 * r + k + 1) → ℂ) (μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ) : Fin (2 * r + k + 1) → ℂ :=
@@ -128,7 +116,7 @@ theorem gq_wq {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hz : inWb k r z) (h
 
 theorem emb_wq {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hz : inWb k r z) (h : μᴴ * Hb k * μ = Hb k) :
     B2.embWb k r μ *ᵥ wq k r z μ = z := by
-  rw [← gq_wb (fun _ => (1 : ℂ)) μ (show inWb k r (wq k r z μ) from jV_inWb _), gq_wq z (fun _ => (1 : ℂ)) hz h]
+  rw [← gq_wb (fun _ => (1 : ℂ)) μ (show inWb k r (wq k r z μ) from _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.inWb_jV _), gq_wq z (fun _ => (1 : ℂ)) hz h]
 
 theorem embedded_inverse_mul_vec {μ : Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ} (hc : ∀ a, c a ≠ 0) (hz : inWb k r z)
     (h : μᴴ * Hb k * μ = Hb k) : (B2.embWb k r μ)⁻¹ *ᵥ z = wq k r z μ := by
@@ -236,7 +224,7 @@ theorem ioG_gq {z z' : Fin (2 * r + k + 1) → ℂ} (hz : C2.StdZ k r z) (hz' : 
       exact u_perp hz' hpW
     have hgu_wb : inWb k r (g *ᵥ u) := by
       rw [← Formalism.FourierDecayAlt.P.TwoByOneBlock.jV_wbPart huW.1, hgdef, Formalism.FourierDecayAlt.P.BigCellHermitian.bigCell_mulVec_jV]
-      exact jV_inWb _
+      exact _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.inWb_jV _
     have hguz : herm (Hpk k r) (g *ᵥ u) z = 0 := by
       rw [← gq_wq z c hz.1 h, ← hgdef, Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_UH hg, huwq]
     have hwv : wv k r z g u = 0 := by

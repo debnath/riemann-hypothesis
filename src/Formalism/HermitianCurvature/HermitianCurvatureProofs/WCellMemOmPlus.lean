@@ -64,7 +64,7 @@ lemma glev_last_uwb {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) : g ∈ B2.U
 
 lemma zetaL_last (z z' : Fin (2 * r + k + 1) → ℂ) (g : Mx k r) :
     zetaL k r z z' (Fin.last r) g = herm (Hpk k r) (g *ᵥ z') z := by
-  simp only [zetaL, Formalism.FourierDecayAlt.P.Qx5.fvec_last]
+  simp only [zetaL, _root_.Formalism.FourierDecayAlt.P.Qx8.fvec_last]
 
 theorem wCell_mem_omPlus {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z') {c : Fin r → ℂ}
     (hc : c ∈ OmX r) {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) (hG : 0 < GGl k r z z' g) :
@@ -73,9 +73,9 @@ theorem wCell_mem_omPlus {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) 
     intro i hi
     have hi0 := i.isLt
     rcases hi with hi | hi
-    · have e1 := Formalism.FourierDecayAlt.P.Qx5.herm_bvec_right (Hpk k r) (g *ᵥ z') (esI k r ⟨i.val, hi⟩)
-      rw [← (hg.2 ⟨i.val, hi⟩ (by simpa using hi)).2, Formalism.FourierDecayAlt.P.Qx5.herm_UH hg.1,
-        Formalism.FourierDecayAlt.P.Qx5.herm_bvec_right] at e1
+    · have e1 := _root_.Formalism.FourierDecayAlt.P.Qx8.herm_bvec_right (Hpk k r) (g *ᵥ z') (esI k r ⟨i.val, hi⟩)
+      rw [← (hg.2 ⟨i.val, hi⟩ (by simpa using hi)).2, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_UH hg.1,
+        _root_.Formalism.FourierDecayAlt.P.Qx8.herm_bvec_right] at e1
       have key : ∀ v : Fin (2 * r + k + 1) → ℂ, (Hpk k r *ᵥ v) (esI k r ⟨i.val, hi⟩) = v i := by
         intro v
         simp only [mulVec, dotProduct, Formalism.FourierDecayAlt.P.Qx3.hpk_row_es, ite_mul, one_mul, zero_mul,
@@ -85,9 +85,9 @@ theorem wCell_mem_omPlus {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) 
       rw [← e1]
       exact hz' i (Or.inl hi)
     · have ha : 2 * r + k - i.val < r := by omega
-      have e1 := Formalism.FourierDecayAlt.P.Qx5.herm_bvec_right (Hpk k r) (g *ᵥ z') (eI k r ⟨_, ha⟩)
-      rw [← (hg.2 ⟨_, ha⟩ (by simpa using ha)).1, Formalism.FourierDecayAlt.P.Qx5.herm_UH hg.1,
-        Formalism.FourierDecayAlt.P.Qx5.herm_bvec_right] at e1
+      have e1 := _root_.Formalism.FourierDecayAlt.P.Qx8.herm_bvec_right (Hpk k r) (g *ᵥ z') (eI k r ⟨_, ha⟩)
+      rw [← (hg.2 ⟨_, ha⟩ (by simpa using ha)).1, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_UH hg.1,
+        _root_.Formalism.FourierDecayAlt.P.Qx8.herm_bvec_right] at e1
       have hi' : esI k r ⟨_, ha⟩ = i := Fin.ext (by simp only [esI]; omega)
       have key : ∀ v : Fin (2 * r + k + 1) → ℂ, (Hpk k r *ᵥ v) (eI k r ⟨_, ha⟩) = v i := by
         intro v
@@ -140,14 +140,14 @@ theorem wCell_mem_omPlus {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) 
 
 theorem GGl_uw {z z' : Fin (2 * r + k + 1) → ℂ} {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z')
     (g : Mx k r) : GGl k r z z' (h * g * h') = GGl k r z z' g := by
-  simp only [GGl, Formalism.FourierDecayAlt.P.Qx5.zeta_inv hh hh']
+  simp only [GGl, _root_.Formalism.FourierDecayAlt.P.Qx8.zetaL_equiv hh hh']
 
 theorem domR_uw {z z' : Fin (2 * r + k + 1) → ℂ} {x : (Fin r → ℂ) × Mx k r} (hx : x ∈ DomR k r z z')
     {h h' : Mx k r} (hh : h ∈ UWset k r z) (hh' : h' ∈ UWset k r z') :
     (x.1, h * x.2 * h') ∈ DomR k r z z' := by
   obtain ⟨h1, h2, h3⟩ := hx
   refine ⟨h1, ?_, ?_⟩
-  · exact Formalism.FourierDecayAlt.P.Qx5.Glev_mul (Formalism.FourierDecayAlt.P.Qx5.Glev_mul (Formalism.FourierDecayAlt.P.Qx5.UW_Glev hh _) h2)
+  · exact _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Formalism.FourierDecayAlt.P.Qx5.UW_Glev hh _) h2)
       (Formalism.FourierDecayAlt.P.Qx5.UW_Glev hh' _)
   · simpa only [GGl_uw hh hh'] using h3
 
@@ -164,7 +164,7 @@ theorem sf_resG {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E] {D : Set 
     exact Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _
   have hG0 : ∀ x : (Fin r → ℂ) × Mx k r, x.1 ∈ OmX r → x.2 ∈ Glev k r (Fin.last r) →
       wCell k r (Fin.last r) x.1 * x.2 ∈ Glev k r 0 := fun x h1 h2 =>
-    Formalism.FourierDecayAlt.P.Qx3.glev_mul (hWG _ h1) (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) h2)
+    _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (hWG _ h1) (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) h2)
   intro x₀ hx₀ hg₀
   obtain ⟨U, F, hU, hmem, hF, hfF⟩ := hJ _ ⟨hG0 x₀ hx₀.1 hg₀, hx₀.2⟩
   have hM : ContDiffOn ℝ ∞ (fun x : (Fin r → ℂ) × Mx k r => wCell k r (Fin.last r) x.1 * x.2)

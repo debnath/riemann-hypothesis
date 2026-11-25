@@ -54,7 +54,7 @@ def blockDiagEmbedRingHom (k j ρ : ℕ) : B.Mat k ρ × Matrix (Fin j) (Fin j) 
   toFun x := blk3 x.2 0 0 0 x.1 0 0 0 x.2
   map_one' := Formalism.FourierDecayAlt.P.Ux4.block3_one.symm
   map_mul' x y := by
-    rw [Formalism.FourierDecayAlt.P.Ux4.block3_mul]
+    rw [_root_.Formalism.FourierDecayAlt.P.Ux3.block3_mul]
     simp
   map_zero' := Formalism.FourierDecayAlt.P.Ux4.block_three_zero_size_eq
   map_add' x y := by
@@ -95,7 +95,7 @@ theorem conj_exp {m : ℕ} (n X : Matrix (Fin m) (Fin m) ℂ) (hn : n * n⁻¹ =
 theorem conj_letter (x : RC k j ρ) (Y : B.Mat k ρ) (c : ℂ) :
     (Rn k j ρ x)⁻¹ * embG k j ρ (NormedSpace.exp (c • Y)) * Rn k j ρ x =
       NormedSpace.exp (c • cj k j ρ x Y) := by
-  rw [embG_exp, blockDiag3_smul_middle, conj_exp _ _ (_root_.Formalism.FourierDecayAlt.P.Ux4.Rn_mul_inv x), Matrix.mul_smul, Matrix.smul_mul]
+  rw [embG_exp, blockDiag3_smul_middle, conj_exp _ _ (_root_.Formalism.FourierDecayAlt.P.Ux3.rn_mul_inv x), Matrix.mul_smul, Matrix.smul_mul]
   rfl
 
 end words
@@ -364,7 +364,7 @@ theorem letterSize : LetterSize := by
   intro k j ρ
   refine ⟨((2 * (j + ρ) + k + 1 : ℕ) : ℝ) ^ 4 * (1 + 1), fun x Y hY => ?_⟩
   have hb : EB (blk3 (0 : Matrix (Fin j) (Fin j) ℂ) 0 0 0 Y 0 0 0 0 : B.Mat k (j + ρ)) 1 := EB_hat Y hY zero_le_one
-  exact lsz_conj_le (Rn k j ρ x) _ (Formalism.FourierDecayAlt.P.Ux4.Rn_unitary x) hb zero_le_one
+  exact lsz_conj_le (Rn k j ρ x) _ (_root_.Formalism.FourierDecayAlt.P.Ux3.rn_unitary x) hb zero_le_one
 
 lemma entry_bound_block_matrix_two {p s : ℕ} {A : Matrix (Fin p) (Fin p) ℂ} {B' : Matrix (Fin p) (Fin s) ℂ}
     {C' : Matrix (Fin s) (Fin p) ℂ} {D : Matrix (Fin s) (Fin s) ℂ} {c : ℝ}
@@ -431,7 +431,7 @@ theorem dirSize : DirSize := by
       positivity
     have hM := entry_bound_block3 (k := k) (ρ := ρ) (hQ.mono hc1) (EB_zero.mono hc) (EB_zero.mono hc) (EB_zero.mono hc)
       (EB_zero.mono hc) (EB_zero.mono hc) (EB_zero.mono hc) (EB_zero.mono hc) (EB_neg (hW.mono hc2))
-    have key := lsz_conj_le (Rn k (p + s) ρ ξ.1.2) _ (Formalism.FourierDecayAlt.P.Ux4.Rn_unitary ξ.1.2) hM hc
+    have key := lsz_conj_le (Rn k (p + s) ρ ξ.1.2) _ (_root_.Formalism.FourierDecayAlt.P.Ux3.rn_unitary ξ.1.2) hM hc
     unfold dirZ dmuP
     refine key.trans ?_
     have hg : (0 : ℝ) ≤ ((2 * (p + s + ρ) + k + 1 : ℕ) : ℝ) ^ 4 * B.gN (Rn k (p + s) ρ ξ.1.2) ^ 2 := by
@@ -1250,7 +1250,7 @@ lemma U_inv_mul {p s : ℕ} (b : Fin p → Fin s → ℂ) :
     (blk2 (1 : Matrix (Fin p) (Fin p) ℂ) (Matrix.of b) 0 (1 : Matrix (Fin s) (Fin s) ℂ))⁻¹ *
       blk2 1 (Matrix.of b) 0 1 = 1 := by
   apply Matrix.nonsing_inv_mul
-  rw [P.Ux4.block2_det_upper_triangular]
+  rw [_root_.Formalism.FourierDecayAlt.P.Ux3.block2_det_upper_triangular]
   simp
 
 lemma line_rep (hSZ : SliceZ) (ξ : Xi k p s ρ σ) {Z : G.Mat s} (hZ : G.detM Z ≠ 0) (γ : B.Mat k ρ) (W : G.Mat s)

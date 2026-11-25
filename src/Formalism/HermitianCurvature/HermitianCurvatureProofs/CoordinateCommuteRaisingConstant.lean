@@ -241,9 +241,6 @@ theorem mk_comm (X Xs Y Ys : D.Op) (h1 : X * Y = Y * X) (h2 : Xs * Ys = Ys * Xs)
   show MulOpposite.op (Ys * Xs) = MulOpposite.op (Xs * Ys)
   rw [h2]
 
-theorem vz_ne : (M.vz : M.Var r) ≠ M.vzb := by
-  intro h; have := congrArg (fun p : M.Var r => (ofLex p).2) h; simp [M.vz, M.vzb] at this
-
 variable {D} {TT : ℝ} (hL : D.Laws TT)
 include hL
 
@@ -295,10 +292,10 @@ theorem eci (v w : M.Var r) : D.ev v (D.inv (D.x w)) = if v = w then -(D.inv (D.
 
 theorem euler_GG_z : D.ev M.vz (D.gg TT) = D.x M.vz * D.x M.vzb := by
   unfold DAlg.gg
-  rw [map_sub, hL.leibniz, ec hL, ec hL, ev_const hL, ite_eq_left rfl, ite_eq_right vz_ne]; simp
+  rw [map_sub, hL.leibniz, ec hL, ec hL, ev_const hL, ite_eq_left rfl, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne]; simp
 theorem euler_gg_zb : D.ev M.vzb (D.gg TT) = D.x M.vz * D.x M.vzb := by
   unfold DAlg.gg
-  rw [map_sub, hL.leibniz, ec hL, ec hL, ev_const hL, ite_eq_left rfl, ite_eq_right vz_ne.symm]; simp
+  rw [map_sub, hL.leibniz, ec hL, ec hL, ev_const hL, ite_eq_left rfl, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm]; simp
 
 theorem euler_gamma_vanish (v : M.Var r) (h1 : v ≠ M.vz) (h2 : v ≠ M.vzb) : D.ev v (D.gg TT) = 0 := by
   unfold DAlg.gg
@@ -361,7 +358,7 @@ theorem nab_zi (a : ℝ) : nabE D a TT * D.ziP = D.ziP * nabE D a TT - D.ziP * D
   rw [DAlg.ziP, nabE_fn hL, eci hL, eci hL, ite_eq_left rfl, ite_eq_left rfl, multiplierPair_mul, sub_eq_add_neg, multiplierPair_neg]
   congr 2 <;> ring
 theorem nab_zb (a : ℝ) : nabE D a TT * D.zbP = D.zbP * nabE D a TT := by
-  rw [DAlg.zbP, nabE_fn hL, ec hL, ec hL, ite_eq_right vz_ne, ite_eq_right vz_ne.symm]
+  rw [DAlg.zbP, nabE_fn hL, ec hL, ec hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm]
   simp only [mul_zero]
   rw [multiplierPair_zero, add_zero]
 theorem nab_gg (a : ℝ) : nabE D a TT * D.ggP TT = D.ggP TT * nabE D a TT + D.zbP := by
@@ -478,8 +475,8 @@ theorem pbP_0 (l : Fin r) (f fb : D.R) (h1 : D.ev (M.vcb l) f = 0) (h2 : D.ev (M
 
 theorem dd_comm : (D.mulOp (D.inv (D.x M.vzb)) * D.ev M.vzb) * (D.mulOp (D.inv (D.x M.vz)) * D.ev M.vz) =
     (D.mulOp (D.inv (D.x M.vz)) * D.ev M.vz) * (D.mulOp (D.inv (D.x M.vzb)) * D.ev M.vzb) := by
-  have h1 : D.ev M.vzb (D.inv (D.x M.vz)) = 0 := by rw [eci hL, ite_eq_right vz_ne.symm]
-  have h2 : D.ev M.vz (D.inv (D.x M.vzb)) = 0 := by rw [eci hL, ite_eq_right vz_ne]
+  have h1 : D.ev M.vzb (D.inv (D.x M.vz)) = 0 := by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm]
+  have h2 : D.ev M.vz (D.inv (D.x M.vzb)) = 0 := by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne]
   have a1 := comm_eu hL M.vzb M.vz _ h1
   have a2 := comm_eu hL M.vz M.vzb _ h2
   calc (D.mulOp (D.inv (D.x M.vzb)) * D.ev M.vzb) * (D.mulOp (D.inv (D.x M.vz)) * D.ev M.vz)
@@ -566,7 +563,7 @@ theorem levNab : LevNab := by
   · rw [← Matrix.diagonal_one]; simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub]; congr 1; funext π; exact nabla_zeta_comm hL _
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_zi hL _
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_zb hL _
-  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_cf hL _ _ _ (by rw [eci hL, ite_eq_right vz_ne]) (by rw [eci hL, ite_eq_right vz_ne.symm])
+  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_cf hL _ _ _ (by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne]) (by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm])
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_gg hL _
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nab_ggi hL _
   · rintro x (((⟨m, rfl⟩ | ⟨m, rfl⟩) | ⟨m, rfl⟩) | ⟨m, rfl⟩)
@@ -581,8 +578,8 @@ theorem levNabs : LevNabs := by
   refine ⟨?_, ?_, ?_, ?_, ?_, ?_, ?_⟩
   · rw [← Matrix.diagonal_one]; simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub]; congr 1; funext π; exact nabs_zb hL _
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_zbi hL _
-  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_cf hL _ _ _ (by rw [ec hL, ite_eq_right vz_ne.symm]) (by rw [ec hL, ite_eq_right vz_ne])
-  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_cf hL _ _ _ (by rw [eci hL, ite_eq_right vz_ne.symm]) (by rw [eci hL, ite_eq_right vz_ne])
+  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_cf hL _ _ _ (by rw [ec hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm]) (by rw [ec hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne])
+  · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_cf hL _ _ _ (by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne.symm]) (by rw [eci hL, ite_eq_right _root_.Formalism.FourierDecayAlt.P.Mx4.vz_ne])
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_gg hL _
   · simp only [pA, pbA, cA, ciA, cbA, cbiA, zA, ziA, zbA, zbiA, ggA, ggiA, nabA, nabsA, sc, Matrix.scalar_apply, Matrix.diagonal_mul_diagonal, Matrix.diagonal_add, Matrix.diagonal_sub, Matrix.diagonal_one]; congr 1; funext π; exact nabs_ggi hL _
   · rintro x (((⟨m, rfl⟩ | ⟨m, rfl⟩) | ⟨m, rfl⟩) | ⟨m, rfl⟩)
@@ -1080,7 +1077,7 @@ theorem xEx_up (l : ℕ) (ex : Finset ℕ) (hl : l ∈ ex) (Y : ℂ) (π π' : T
   unfold xEx
   refine prod_congr rfl fun i hi => ?_
   rw [mem_sdiff] at hi
-  rw [rho_raise P l π π' h i hi.1, ite_eq_right (by rintro rfl; exact hi.2 hl)]
+  rw [_root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P l π π' h i hi.1, ite_eq_right (by rintro rfl; exact hi.2 hl)]
   simp
 
 theorem kap_ss (l : ℕ) (f : Ty P → ℂ) (h : ∀ π π', Up P l π π' → f π' = f π) :
@@ -1251,7 +1248,7 @@ theorem wC_id (hP : P.OK) (π : Ty P) (Y : ℂ) (h1 : xC P π (Y + 1) ≠ 0) :
     wC P π Y = qC P Y * (xC P π (Y + 1))⁻¹ +
       ∑ l ∈ Icc 1 (P.k - 1), xEx P {l} π Y * ((Nrm P l π : ℝ) : ℂ) * (Y + (rho P π l : ℂ) + 1)⁻¹ := by
   have hW : (wNum P π).eval Y = xC P π (Y + 1) * wC P π Y := by
-    have h := congrArg (eval Y) (weight_exact P hP π)
+    have h := congrArg (eval Y) (_root_.Formalism.FourierDecayAlt.P.Mx3.wExact P hP π)
     rw [eval_mul, eval_x_polynomial] at h
     exact h
   apply mul_left_cancel₀ h1
@@ -1270,11 +1267,11 @@ theorem wC_id (hP : P.OK) (π : Ty P) (Y : ℂ) (h1 : xC P π (Y + 1) ≠ 0) :
 
 theorem rho_up_same {l : ℕ} (hl : l ∈ Icc 1 (P.k - 1)) {π π' : Ty P} (h : Up P l π π') :
     rho P π' l = rho P π l + 1 := by
-  rw [rho_raise P l π π' h l hl, ite_eq_left rfl]
+  rw [_root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P l π π' h l hl, ite_eq_left rfl]
 
 theorem rho_up_ne {l j : ℕ} (hj : j ∈ Icc 1 (P.k - 1)) (hjl : j ≠ l) {π π' : Ty P} (h : Up P l π π') :
     rho P π' j = rho P π j := by
-  rw [rho_raise P l π π' h j hj, ite_eq_right hjl, add_zero]
+  rw [_root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P l π π' h j hj, ite_eq_right hjl, add_zero]
 
 theorem diag_term {l : ℕ} (hN : star (SS P D l) * SS P D l = kap P D fun π => ((Nrm P l π : ℝ) : ℂ)) (Y : ℂ)
     (hl : l ∈ Icc 1 (P.k - 1)) :
@@ -2915,7 +2912,6 @@ theorem cz_cc : cz P D * cc P D = cc P D * cz P D := by
 
 theorem G_sc : ggiA P D = sc P D (D.ggiP P.TT) := rfl
 
-theorem star_G : star (ggiA P D) = ggiA P D := (starGens P D).2.2.2.2.1
 alias star_alt := _root_.Formalism.FourierDecayAlt.P.MAx1.D5.star_alt
 alias star_zb := _root_.Formalism.FourierDecayAlt.P.MAx1.D5.star_zb
 theorem star_cc : star (cc P D) = cz P D := by
@@ -2979,7 +2975,6 @@ variable (P : Par) (D : DAlg P.r) [Fact (D.Laws P.TT)]
 theorem x_N (u : ℂ) : nabA P D * xA P D u = xA P D u * nabA P D := (kap_nab P D _).symm
 theorem x_Ns (u : ℂ) : nabsA P D * xA P D u = xA P D u * nabsA P D := (kap_nabs P D _).symm
 theorem kap_g (f : Ty P → ℂ) : kap P D f * ggA P D = ggA P D * kap P D f := kap_sc P D _ _
-theorem kap_G (f : Ty P → ℂ) : kap P D f * ggiA P D = ggiA P D * kap P D f := kap_sc P D _ _
 theorem kap_cc (f : Ty P → ℂ) : kap P D f * cc P D = cc P D * kap P D f := by rw [cc_sc]; exact kap_sc P D _ _
 theorem kap_cz (f : Ty P → ℂ) : kap P D f * cz P D = cz P D * kap P D f := by rw [cz_sc]; exact kap_sc P D _ _
 theorem Lam_cc (u : ℂ) : abelian₂ P D u * cc P D = cc P D * abelian₂ P D u := by rw [cc_sc]; exact Lam_sc P D _ _
@@ -3119,7 +3114,7 @@ theorem star_t22 (u : ℂ) : star (t22 P D (star u)) = t22 P D u := by
   exact star_xC P π u
 
 theorem star_dA (u : ℂ) : star (dA P D (star u)) = dA P D u := by
-  rw [dA, dA, star_smul, star_qC, star_mul, star_G, star_kap, kap_G]
+  rw [dA, dA, star_smul, star_qC, star_mul, _root_.Formalism.FourierDecayAlt.P.MAx1.D5.star_ggi, star_kap, _root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi]
   congr 3
   funext π
   have : star u + 1 = star (u + 1) := by simp
@@ -3149,7 +3144,7 @@ theorem raising_relation_self (hC : SSComm) (hS : NabSS) (hP : P.OK) (u v : ℂ)
   linear_combination (norm := module) (-1 : ℂ) • h
 
 theorem nf21 {u : ℂ} (hu : Good P u) : t21 P D u = t22 P D u * lA P D u := by
-  rw [t21, t22, lA_eq, diagonal_lowering_absorb (ggA P D) (ggiA P D) (xA P D u) _ _ (gG P D) (kap_G P D _), L4.xLam P D hu]
+  rw [t21, t22, lA_eq, diagonal_lowering_absorb (ggA P D) (ggiA P D) (xA P D u) _ _ (gG P D) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi P D _), L4.xLam P D hu]
 
 theorem nf12 {u : ℂ} (hu : Good P u) : t12 P D u = mt P D u * t22 P D u := by
   rw [t12, t22, mt_eq, raising_operator_absorb _ _ _ _ _ _ _ (Ns_g P D) (x_Ns P D u) (Gg P D) (cz_g P D) (kap_cz P D _).symm (Lams_sc P D _ _),
@@ -3157,17 +3152,9 @@ theorem nf12 {u : ℂ} (hu : Good P u) : t12 P D u = mt P D u * t22 P D u := by
   congr 4
   ring
 
-theorem coordinate_commute_raising_constant (u v : ℂ) : xA P D u * m0A P D v = m0A P D v * xA P D u := by
-  rw [raising_constant_eq_shift]
-  simp only [mul_sub, sub_mul, mul_neg, neg_mul, mul_smul_comm, smul_mul_assoc, x_Ns]
-  rw [xA, kap_cz]
-
-theorem S12_commute_GGinv (u : ℂ) : S12 P D u * ggiA P D = ggiA P D * S12 P D u := by
-  apply _root_.Formalism.FourierDecayAlt.P.MAx1.D5.upper_sum_gamma_inv_comm <;> assumption
-
 theorem nf11 (hN : SSNorm) (hP : P.OK) {u : ℂ} (hu : Good P u) :
     t11 P D u = dA P D u + mt P D u * t22 P D u * lA P D u := by
-  rw [← nf12 P D hu, t12, lA_eq, absN _ _ _ _ _ _ _ (coordinate_commute_raising_constant P D u u) (kap_G P D _) (S12_commute_GGinv P D u), L4.xLam P D hu,
+  rw [← nf12 P D hu, t12, lA_eq, absN _ _ _ _ _ _ _ (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.coordinate_commute_raising P D u u) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi P D _) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.upper_sum_gamma_inv_comm P D u), L4.xLam P D hu,
     L4.upper_sum_mul_lambda P D hP hu hN, t11, mul_add]
   have e : ggiA P D * (kap P D fun π => wC P π u) = dA P D u + ggiA P D * kap P D fun π =>
       ∑ l ∈ Icc 1 (P.k - 1), ((Nrm P l π : ℝ) : ℂ) * xEx P {l} π u / (u + (rho P π l : ℂ) + 1) := by
@@ -3184,11 +3171,11 @@ theorem comm_tt (u v : ℂ) : t22 P D v * t22 P D u = t22 P D u * t22 P D v :=
 
 theorem comm_dd (u v : ℂ) : dA P D v * dA P D u = dA P D u * dA P D v := by
   simp only [dA, smul_mul_assoc, mul_smul_comm]
-  rw [smul_comm, absCC _ _ _ _ rfl (kap_comm P D _ _) (kap_G P D _) (kap_G P D _)]
+  rw [smul_comm, absCC _ _ _ _ rfl (kap_comm P D _ _) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi P D _) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi P D _)]
 
 theorem comm_dt (u v : ℂ) : dA P D v * t22 P D u = t22 P D u * dA P D v := by
   simp only [dA, t22, xA, smul_mul_assoc, mul_smul_comm]
-  rw [absCC _ _ _ _ ((Gg P D).trans (gG P D).symm) (kap_comm P D _ _) (kap_g P D _) (kap_G P D _)]
+  rw [absCC _ _ _ _ ((Gg P D).trans (gG P D).symm) (kap_comm P D _ _) (kap_g P D _) (_root_.Formalism.FourierDecayAlt.P.MAx1.D5.kap_ggi P D _)]
 
 theorem generic (hN : SSNorm) (hC : SSComm) (hM : SSMixed) (hS : NabSS) (hK : Curvature) (hP : P.OK)
     (u v : ℂ) (hu : Good P u) (hv : Good P v) (h0 : u - v ≠ 0) (h1 : u - v ≠ 1) (h2 : u - v ≠ -1)
@@ -3392,10 +3379,6 @@ theorem absCombo {C : Type*} [CommRing C] [Algebra ℂ C] (κ : C →ₐ[ℂ] R)
   simp only [mul_add, mul_sub, mul_neg, mul_smul_comm]
   linear_combination (norm := module) -e1 + e2
 
-theorem sum_anti {M : Type*} [AddCommGroup M] [Module ℂ M] (s : Finset ℕ) (D : ℕ → ℕ → M)
-    (h : ∀ l ∈ s, ∀ j ∈ s, D l j + D j l = 0) : ∑ l ∈ s, ∑ j ∈ s, D l j = 0 := by
-  apply _root_.Formalism.FourierDecayAlt.P.MAx1.ModelAlgebraRelations.L3.sum_antisymm <;> assumption
-
 end abs
 
 theorem TT_eq (P : Par) (D : DAlg P.r) [Fact (D.Laws P.TT)] (l j : ℕ) (f g f' : Ty P → ℂ) (h : kap P D f * SS P D j = SS P D j * kap P D f') :
@@ -3497,7 +3480,7 @@ theorem compC (hSh : SSShift) (hC : SSComm) (hR : RhoUp) (P : Par) (D : DAlg P.r
   unfold weightedSumBis
   rw [Finset.sum_mul_sum, Finset.sum_mul_sum, ← sub_eq_zero, ← Finset.sum_sub_distrib]
   simp only [← Finset.sum_sub_distrib]
-  apply sum_anti
+  apply _root_.Formalism.FourierDecayAlt.P.MAx1.ModelAlgebraRelations.L3.sum_antisymm
   intro l hl j hj
   by_cases hjl : j = l
   · subst hjl
@@ -4761,10 +4744,10 @@ end Formalism.FourierDecayAlt.P.MAx1.D7
 namespace Formalism.FourierDecayAlt.P.MAx1
 
 theorem qQDet : QQDet :=
-  D7.qQDet_of sSScalar sSShift rho_raise levFns levNab levNabs starGens nabSS sSNorm sSMixed curvature qQNormal
+  D7.qQDet_of sSScalar sSShift _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp levFns levNab levNabs starGens nabSS sSNorm sSMixed curvature qQNormal
 
 theorem lower_left_commute : T21Commute :=
-  D7.lower_left_commute_of_laws sSScalar sSShift sSComm nabSS levNab levFns rho_raise
+  D7.lower_left_commute_of_laws sSScalar sSShift sSComm nabSS levNab levFns _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp
 
 end Formalism.FourierDecayAlt.P.MAx1
 
@@ -5575,7 +5558,7 @@ open Formalism.FourierDecayAlt.MA
 
 theorem startIsStart : StartIsStart := startIsStartAssemble qQHerm qQRTT qQDet
 
-theorem startOK : StartOK := startAssemble startIsStart lower_left_commute sSScalar sSShift rho_raise
+theorem startOK : StartOK := startAssemble startIsStart lower_left_commute sSScalar sSShift _root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp
 
 end Formalism.FourierDecayAlt.P.MAx1
 
@@ -5625,7 +5608,7 @@ theorem model_frame_of_parts : Formalism.FourierDecayAlt.MA.ModelFrameDOfParts :
 
 theorem model_frame_algebra : Formalism.FourierDecayAlt.MA.ModelFrameD :=
   model_frame_of_parts _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos
-    _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut frame_of_admissible_word frame_eq_word_module _root_.Formalism.FourierDecayAlt.P.Fr2.cDiag types_interlace realPoints_statement
+    _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut frame_of_admissible_word frame_eq_word_module _root_.Formalism.FourierDecayAlt.P.Fr2.cDiag _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces _root_.Formalism.FourierDecayAlt.P.Mx3.realPoints
     cut_admissible admissible_joint_alt level_exists_alt level_star_holds start_admissible
 
 theorem model_frame_analytic_of_parts : Formalism.FourierDecayAlt.MA.ModelFrameAnOfParts := by

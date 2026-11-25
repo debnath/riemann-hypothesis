@@ -39,14 +39,11 @@ variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type} [Normed
   [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wq]
   {π : Mx k r → (Wp →L[ℂ] Wp)} {π' : Mx k r → (Wq →L[ℂ] Wq)} {S : Type} [Fintype S] [DecidableEq S]
 
-theorem hsInner_smul_right (a : ℂ) (U V : Wq →L[ℂ] Wp) : B.hsInner U (a • V) = conj a * B.hsInner U V := by
-  apply _root_.Formalism.FourierDecayAlt.P5.HerB.hs_smul_right <;> assumption
-
 theorem pairAt_mulOp_right (μ : Measure (Mt k r)) (l : Fin r) (s : ℂ) (Wv : Module.End ℂ (RadSp k r z z' π π'))
     (hW : multiplicationOperator Wv (fun c _ => fsv s (c l))) (Φ Ψ : RadSp k r z z' π π') (c : Fin r → ℂ) :
     pairAt μ Φ (Wv Ψ) c = conj (fsv s (c l)) * pairAt μ Φ Ψ c := by
   unfold pairAt
-  simp only [hW Ψ c, hsInner_smul_right]
+  simp only [hW Ψ c, _root_.Formalism.FourierDecayAlt.P.B5.hs_smul_right]
   exact integral_const_mul _ _
 
 theorem form_mulOp_right (μ : Measure (Mt k r)) (l : Fin r) (s : ℂ) (Wv Wv' : Module.End ℂ (RadSp k r z z' π π'))
@@ -228,7 +225,7 @@ theorem topDens_wave_right (hD : IsData P z z' π π' X μ L st l0) (w : List (L
   rw [Finset.mul_sum]
   refine Finset.sum_congr rfl fun e _ => ?_
   rw [← act_mul, hFV, act_mul (io (mkP Wv Wv')) (Fr.ofWord L st w).F y, act_io,
-    show (mkP Wv Wv').1 = Wv from rfl, hW1, hsInner_smul_right]
+    show (mkP Wv Wv').1 = Wv from rfl, hW1, _root_.Formalism.FourierDecayAlt.P.B5.hs_smul_right]
 
 theorem rr_wave_B (hD : IsData P z z' π π' X μ L st l0) (hOn : ThmPOn (S := S) P z z' π π' μ L st K l0)
     (w : List (Letter ℂ S)) (hw : WordOK P z z' π π' st l0 w) (hr : P.r = 0) (s : ℂ)

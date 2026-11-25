@@ -42,9 +42,9 @@ theorem integrand_aesm' (Bs : B.RealPlaceData k r Wp Wq) {γ : B.Mat k r} {U : S
     {F : B.Mat k r → (Wq →L[ℂ] Wp)} (hF : ContinuousOn F U) :
     AEStronglyMeasurable (D.orbIntegrand Bs γ F) Bs.μSS := by
   set S : Set (B.SS k r) := {p | Bs.inSS p} with hS
-  have hWc := (P.weyl_subgroup_closed k r Bs.z).closed
-  have hWc' := (P.weyl_subgroup_closed k r Bs.z').closed
-  have hNc := (P.unipotent_radical_closed k r).closed
+  have hWc := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z).closed
+  have hWc' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   have hSc : IsClosed S := by
     have e : S = (fun p : B.SS k r => (p.1.1 : B.Mat k r)) ⁻¹' (UWset k r Bs.z) ∩
         ((fun p : B.SS k r => (p.1.2 : B.Mat k r)) ⁻¹' (Nset k r) ∩
@@ -516,7 +516,7 @@ theorem vecV_cut_empty : ∃ c₃ : ℝ, ∀ (k r : ℕ) (Wp Wq : Type) [NormedA
   obtain ⟨c₃, hc₃⟩ := vecV_tendsto
   refine ⟨c₃, ?_⟩
   intro k r Wp Wq _ _ _ _ Bs ν' m₀ q F A b₀ cut hA hb₀ hFck hcut
-  have hFc : ContinuousOn F (B.GV k r) := P.B5.ckOn_continuousOn hFck
+  have hFc : ContinuousOn F (B.GV k r) := _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn hFck
   have hGPG : B.GPos Bs ⊆ B.GV k r := fun g hg => hg.1
   have hb₀0 : 0 ≤ b₀ := P.JCx2.pd_ccle_nonneg hb₀
   have hFb : ∀ g ∈ B.GV k r, ‖F g‖ ≤ b₀ * B.gN g ^ (-A) := by
@@ -594,7 +594,7 @@ theorem vecV_cut_op : ∃ c₃ : ℝ, ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddC
       (ckOn_continuousOn' (UU := C6.domL Bs ∅) (fun g hg => hg.1) (hIn.1 T hT).1).mono
         (fun g hg => ⟨hg.1, hg.2, fun l hl => by simp at hl⟩)
     have h2 : ContinuousOn (B.Rw T.word G) (B.GPos Bs) :=
-      (P.B5.ckOn_continuousOn (P.JFxG.ckOn_Rw_top hG T.word T.word_lie)).mono hGPG
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (P.JFxG.ckOn_Rw_top hG T.word T.word_lie)).mono hGPG
     exact h1.clm_apply h2
   have hψck : ∀ n : ℕ, B.CkOn ⊤ (B.GV k r) (fun g => P.JCx2.pdPsi ((n : ℝ) + 1) g • F g) :=
     fun n => P.JCx2.pd_smooth_smul (P.JCx2.pd_psi_cd _) hFck

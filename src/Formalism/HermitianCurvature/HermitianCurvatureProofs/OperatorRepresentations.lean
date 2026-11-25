@@ -72,7 +72,7 @@ def hrmL (k r : ℕ) (w x : Fin (2 * r + k + 1) → ℂ) : Mx k r →L[ℝ] ℂ 
 
 theorem inv_of_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
   apply Matrix.inv_eq_left_inv
-  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, show gᴴ * Hpk k r * g = Hpk k r from hg, Qx2.hpk_sq']
+  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, show gᴴ * Hpk k r * g = Hpk k r from hg, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
 
 theorem smooth_yv (z : Fin (2 * r + k + 1) → ℂ) (c : Fin (mdim k r i)) :
     SmoothLev k r i D (fun g => yv k r z i g c) := fun _ _ =>

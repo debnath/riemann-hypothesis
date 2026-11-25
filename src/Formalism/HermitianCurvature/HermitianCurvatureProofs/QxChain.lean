@@ -1615,14 +1615,6 @@ variable {k r : ℕ}
 
 section CellPt
 
-theorem cell_hpk_e (l : Fin r) (v : Fin (2 * r + k + 1) → ℂ) :
-    (Hpk k r *ᵥ v) (eI k r l) = v (esI k r l) := by
-  simp [Matrix.mulVec, dotProduct, Qx3.hpk_row_e]
-
-theorem cell_hpk_es (l : Fin r) (v : Fin (2 * r + k + 1) → ℂ) :
-    (Hpk k r *ᵥ v) (esI k r l) = v (eI k r l) := by
-  simp [Matrix.mulVec, dotProduct, Qx3.hpk_row_es]
-
 theorem cell_herm_bvec (v : Fin (2 * r + k + 1) → ℂ) (q : Fin (2 * r + k + 1)) :
     herm (Hpk k r) v (bvec q) = (Hpk k r *ᵥ v) q := by
   simp [herm, bvec, dotProduct, Pi.single_apply]
@@ -1680,15 +1672,15 @@ theorem cell_es_fix (l : Fin r) {g₁ : Mx k r} (hg₁ : g₁ ∈ Glev k r l.suc
 
 theorem lower_level_matrix_unit_entry (l : Fin r) {g₁ : Mx k r} (hg₁ : g₁ ∈ Glev k r l.succ) (p : Fin (2 * r + k + 1)) :
     g₁ (eI k r l) p = if p = eI k r l then 1 else 0 := by
-  rw [← cell_mulVec_bvec g₁ (eI k r l) p, ← cell_hpk_es l (g₁ *ᵥ bvec p), ← cell_herm_bvec (g₁ *ᵥ bvec p) (esI k r l), ← cell_es_fix l hg₁, Qx2.herm_uh hg₁.1,
-    cell_herm_bvec, cell_hpk_es l]
+  rw [← cell_mulVec_bvec g₁ (eI k r l) p, ← _root_.Formalism.FourierDecayAlt.Q.TInvW.H_esI l (g₁ *ᵥ bvec p), ← cell_herm_bvec (g₁ *ᵥ bvec p) (esI k r l), ← cell_es_fix l hg₁, Qx2.herm_uh hg₁.1,
+    cell_herm_bvec, _root_.Formalism.FourierDecayAlt.Q.TInvW.H_esI l]
   simp [bvec, Pi.single_apply, eq_comm]
 
 theorem cell_ybv (z : Fin (2 * r + k + 1) → ℂ) (l : Fin r) (c : ℂ) {g₁ : Mx k r} (hg₁ : g₁ ∈ Glev k r l.succ)
     (j : Fin (mdim k r l.castSucc)) :
     ybv k r z l.castSucc (w1 k r l c * g₁) j = if j = e0 k l then c else 0 := by
   unfold ybv
-  rw [cell_fvec, cell_herm_bvec, cell_hpk_e, cell_mulVec_bvec, Qx3.weyl_cell_mul_apply, Qx3.sw_es, Qx3.dd_e,
+  rw [cell_fvec, cell_herm_bvec, _root_.Formalism.FourierDecayAlt.Q.TInvW.H_eI, cell_mulVec_bvec, Qx3.weyl_cell_mul_apply, Qx3.sw_es, Qx3.dd_e,
     lower_level_matrix_unit_entry l hg₁]
   by_cases h : j = e0 k l
   · subst h
@@ -1740,7 +1732,7 @@ theorem cell_xv (z' : Fin (2 * r + k + 1) → ℂ) (l : Fin r) (j : Fin (mdim k 
 theorem cell_xbv (z' : Fin (2 * r + k + 1) → ℂ) (l : Fin r) (j : Fin (mdim k r l.castSucc)) :
     xbv k r z' l.castSucc j = if j = es0 k l then 1 else 0 := by
   unfold xbv
-  rw [cell_fvec, cell_herm_bvec, cell_hpk_e]
+  rw [cell_fvec, cell_herm_bvec, _root_.Formalism.FourierDecayAlt.Q.TInvW.H_eI]
   by_cases h : j = es0 k l
   · subst h
     simp [level_position_last_basis, bvec]
@@ -2503,16 +2495,14 @@ end
 
 namespace Formalism.FourierDecayAlt.P
 
-theorem chain_descent_from_rules : Formalism.FourierDecayAlt.Q.ChainStepFromRules := Qx6.stp_chainStepFromRules
-
 theorem qx_chainStepBoth : Formalism.FourierDecayAlt.Q.ChainStepRaw ∧ Formalism.FourierDecayAlt.Q.ChainStep :=
-  chain_descent_from_rules border_first_expansion border_last_expansion border_full_expansion generator_gl_level
+  _root_.Formalism.FourierDecayAlt.P.Qx6.stp_chainStepFromRules border_first_expansion border_last_expansion border_full_expansion generator_gl_level
     generator_action_preserved quantum_minor_left_hermitian right_action_rule left_action_rule torus_action_rule weyl_level_element_properties
 
 theorem chain_descent_relation : Formalism.FourierDecayAlt.Q.ChainStep := qx_chainStepBoth.2
 
 theorem qx_chainAllBoth : Formalism.FourierDecayAlt.Q.ChainAll ∧ Formalism.FourierDecayAlt.Q.CVv :=
-  chain_recursion_from_single_descent chain_descent_relation restriction_mem restriction_good_family family_operators
+  _root_.Formalism.FourierDecayAlt.P.Qx6.chainFromStep chain_descent_relation restriction_mem restriction_good_family family_operators
     operator_preserves_fusion_forms transfer_linear_local weyl_level_element_properties
 
 theorem chain_recursion_all_levels : Formalism.FourierDecayAlt.Q.ChainAll := qx_chainAllBoth.1

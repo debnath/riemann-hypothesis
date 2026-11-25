@@ -134,20 +134,20 @@ theorem support_phi_zero_subset (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 *
     push Not at hno
     apply hZ
     unfold fibInt
-    have hW := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW
-    have hW' := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF Bs.haarW'
-    have hN := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0
-    have hN' := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF hμ0'
+    have hW := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+    have hW' := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+    have hN := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0
+    have hN' := _root_.Formalism.FourierDecayAlt.P.B7.sf hμ0'
     have b1 : ∀ᵐ q ∂(Bs.μW.prod μ0), Matrix.of q.1 ∈ UWset k r Bs.z :=
       (Measure.quasiMeasurePreserving_fst (μ := Bs.μW) (ν := μ0)).ae
-        (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem Bs.haarW)
+        (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW)
     have b2 : ∀ᵐ q ∂(Bs.μW.prod μ0), Matrix.of q.2 ∈ C2.N0set k r Bs.z :=
-      (Measure.quasiMeasurePreserving_snd (μ := Bs.μW) (ν := μ0)).ae (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem hμ0)
+      (Measure.quasiMeasurePreserving_snd (μ := Bs.μW) (ν := μ0)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ0)
     have c1 : ∀ᵐ q ∂(Bs.μW'.prod μ0'), Matrix.of q.1 ∈ UWset k r Bs.z' :=
       (Measure.quasiMeasurePreserving_fst (μ := Bs.μW') (ν := μ0')).ae
-        (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem Bs.haarW')
+        (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem Bs.haarW')
     have c2 : ∀ᵐ q ∂(Bs.μW'.prod μ0'), Matrix.of q.2 ∈ C2.N0set k r Bs.z' :=
-      (Measure.quasiMeasurePreserving_snd (μ := Bs.μW') (ν := μ0')).ae (Formalism.FourierDecayAlt.P.Dx2.OrbJ.ae_mem hμ0')
+      (Measure.quasiMeasurePreserving_snd (μ := Bs.μW') (ν := μ0')).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hμ0')
     have d1 : ∀ᵐ p ∂((Bs.μW.prod μ0).prod (Bs.μW'.prod μ0')),
         Matrix.of p.1.1 ∈ UWset k r Bs.z ∧ Matrix.of p.1.2 ∈ C2.N0set k r Bs.z :=
       (Measure.quasiMeasurePreserving_fst (μ := Bs.μW.prod μ0) (ν := Bs.μW'.prod μ0')).ae (b1.and b2)
@@ -156,8 +156,8 @@ theorem support_phi_zero_subset (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 *
       (Measure.quasiMeasurePreserving_snd (μ := Bs.μW.prod μ0) (ν := Bs.μW'.prod μ0')).ae (c1.and c2)
     apply integral_eq_zero_of_ae
     filter_upwards [d1, d2] with p h1 h2
-    have hGG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
-    have hNN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+    have hGG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
+    have hNN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
     have hz : C2.StdZ k r Bs.z := ⟨Bs.z_mem, Bs.T_pos⟩
     have hz' : C2.StdZ k r Bs.z' := ⟨Bs.z'_mem, Bs.T'_pos⟩
     set h := (Matrix.of p.1.1 : B.Mat k r)
@@ -177,9 +177,9 @@ theorem support_phi_zero_subset (Bs : B.RealPlaceData k r Wp Wq) (ν' : Fin (2 *
     have hS_h : h ∈ Sset k r Bs.z := ⟨h, h1.1, 1, hNN.one_mem, (Matrix.mul_one h).symm⟩
     have hS_h' : h' ∈ Sset k r Bs.z' := ⟨h', h2.1, 1, hNN.one_mem, (Matrix.mul_one h').symm⟩
     have hS_n : n ∈ Sset k r Bs.z :=
-      ⟨1, (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r Bs.z).one_mem, n, h1.2.1, (Matrix.one_mul n).symm⟩
+      ⟨1, (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z).one_mem, n, h1.2.1, (Matrix.one_mul n).symm⟩
     have hS_n' : n' ∈ Sset k r Bs.z' :=
-      ⟨1, (Formalism.FourierDecayAlt.P.weyl_subgroup_closed k r Bs.z').one_mem, n', h2.2.1, (Matrix.one_mul n').symm⟩
+      ⟨1, (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').one_mem, n', h2.2.1, (Matrix.one_mul n').symm⟩
     have e1 := Formalism.FourierDecayAlt.P.zhat_equivalence k r Bs.z Bs.z' hz hz' h hS_h h' hS_h' (n⁻¹ * g0 * n')
     have e2 := Formalism.FourierDecayAlt.P.zhat_equivalence k r Bs.z Bs.z' hz hz' n hS_n n' hS_n' g0
     have u1 : C2.uMap k r Bs.z h = 1 := (Formalism.FourierDecayAlt.P.unipotent_map_frame k r Bs.z hz).2 h h1.1

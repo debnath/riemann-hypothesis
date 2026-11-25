@@ -335,7 +335,7 @@ theorem muN_eq_haarLie (k r : ℕ) :
     ∃ κ₀ : ENNReal, κ₀ ≠ 0 ∧ κ₀ ≠ ⊤ ∧ Formalism.FourierDecayAlt.D.muN k r = haarLie (Nset k r) κ₀ := by
   have hH := Formalism.MainNotions.MeasFS.haar_lie_measure_on_nilpotent (k := k) (r := r) nLeft_holds 1 one_ne_zero ENNReal.one_ne_top
   have hM := _root_.Formalism.FourierDecayAlt.P.nilpotent_measure_is_haar k r
-  obtain ⟨c, hc⟩ := Formalism.FourierDecayAlt.P.haar_measure_unique_up_to_scalar k r (Nset k r) _ _ (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r) hH
+  obtain ⟨c, hc⟩ := _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique k r (Nset k r) _ _ (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) hH
     hM.conc hM.left hM.finite_compact
   refine ⟨(c : ENNReal), fun h => hM.ne_zero ?_, ENNReal.coe_ne_top, ?_⟩
   · rw [hc, ENNReal.coe_eq_zero.mp h, zero_smul]

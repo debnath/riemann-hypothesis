@@ -43,9 +43,6 @@ theorem ext_eB {M N : B.Mat k (j + ρ)} (h : ∀ x y : Ix k j ρ, M (eB k j ρ x
   ext i b
   simpa using h ((eB k j ρ).symm i) ((eB k j ρ).symm b)
 
-theorem hpk_conjTranspose (k r : ℕ) : (Hpk k r)ᴴ = Hpk k r := by
-  exact Formalism.FourierDecayAlt.P.Ux3.hpk_herm k r
-
 end blocks
 
 section rad
@@ -57,9 +54,6 @@ theorem w_w_mul (M : Matrix (Fin j) (Fin j) ℂ) : G.wMat j * (G.wMat j * M) = M
 
 theorem w_w_mul' {n : ℕ} (M : Matrix (Fin j) (Fin n) ℂ) : G.wMat j * (G.wMat j * M) = M := by
   rw [← Matrix.mul_assoc, wMat_mul_self, Matrix.one_mul]
-
-theorem Rn_unitary (x : RC k j ρ) : (Rn k j ρ x)ᴴ * Hpk k (j + ρ) * Rn k j ρ x = Hpk k (j + ρ) := by
-  exact Formalism.FourierDecayAlt.P.Ux3.rn_unitary x
 
 end rad
 
@@ -87,7 +81,7 @@ theorem skew_entry_le (x : RC k j ρ) (a b : Fin j) : ‖skewOf x.2 a b‖ ≤ B
   set X := (Matrix.of x.1)ᴴ * Hpk k ρ * Matrix.of x.1 with hXdef
   set W := (-(1 / 2 : ℂ)) • X + skewOf x.2 with hWdef
   have hX : Xᴴ = X := by
-    simp only [hXdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hpk_conjTranspose, Matrix.mul_assoc]
+    simp only [hXdef, Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, _root_.Formalism.FourierDecayAlt.P.Ux3.hpk_herm, Matrix.mul_assoc]
   have hWh : Wᴴ = (-(1 / 2 : ℂ)) • X - skewOf x.2 := by
     simp only [hWdef, Matrix.conjTranspose_add, Matrix.conjTranspose_smul, hX, skewOf_conjTranspose]
     have : star (-(1 / 2 : ℂ)) = -(1 / 2 : ℂ) := by simp
@@ -131,7 +125,7 @@ theorem norm_le_gN_Rn (x : RC k j ρ) : ‖x‖ ≤ B.gN (Rn k j ρ x) := by
     rw [hu, norm_mul, Complex.norm_I, one_mul, Complex.norm_real] at h
     exact h
 
-theorem Rn_mem (x : RC k j ρ) : Rn k j ρ x ∈ B.GV k (j + ρ) := Rn_unitary x
+theorem Rn_mem (x : RC k j ρ) : Rn k j ρ x ∈ B.GV k (j + ρ) := _root_.Formalism.FourierDecayAlt.P.Ux3.rn_unitary x
 
 end sizes
 
@@ -401,4 +395,3 @@ theorem coordinate_sizes_of_hypotheses (hSM : SliceMem) (hU1 : BigCellCoordinate
   coordinate_sizes_of_parts_holds hSM hU1 hU2 hZh detZj
 
 end Formalism.FourierDecayAlt.P.Ux6
-

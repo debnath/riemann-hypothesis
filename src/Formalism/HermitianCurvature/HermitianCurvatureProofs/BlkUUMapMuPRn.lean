@@ -23,13 +23,13 @@ section alg
 variable {k r : ℕ}
 
 theorem eI_eB' (a : Fin r) : eI k r a = eB k r 0 (Sum.inl (Sum.inl a)) := by
-  ext; rw [Ux3.block_index_first_val]; rfl
+  ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]; rfl
 
 theorem blkU_uMap (z : Fin (2 * r + k + 1) → ℂ) (g : B.Mat k r) :
     blkU (C2.uMap k r z g) = Matrix.of fun a b => g (eI k r a) (eI k r b) := by
   ext a b
   simp only [blkU, Matrix.submatrix_apply, C2.uMap, Matrix.of_apply]
-  rw [dite_eq_left (by simp), _root_.Formalism.FourierDecayAlt.P.Dx1.Rel.fvec_lt z b.castSucc (by simp), _root_.PI.StabPairsW.herm_es, mulVec_bvec_apply]
+  rw [dite_eq_left (by simp), _root_.Formalism.FourierDecayAlt.P.Dx1.Rel.fvec_lt z b.castSucc (by simp), _root_.PI.StabPairsW.herm_es, _root_.PI.QnLevBasicsW.mulVec_bvec]
   rfl
 
 theorem muP_Rn_blk (W : Matrix (Fin r) (Fin r) ℂ) (y : U.RC k r 0) (a b : Fin r) :
@@ -60,7 +60,7 @@ theorem leviElement_superdiagonal_entry (z : Fin (2 * r + k + 1) → ℂ) (hz : 
     simp only [Fintype.sum_sum_type, Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂,
       Matrix.fromRows_apply_inl, Matrix.zero_apply, zero_mul, Finset.sum_const_zero, add_zero]
     refine Finset.sum_eq_zero fun c _ => ?_
-    rw [hz _ (Or.inl (by rw [Ux3.block_index_first_val]; exact c.isLt)), mul_zero]
+    rw [hz _ (Or.inl (by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]; exact c.isLt)), mul_zero]
 
 theorem psi_muP (z : Fin (2 * r + k + 1) → ℂ) (hz : inWb k r z) (c : ℂ) (W : Matrix (Fin r) (Fin r) ℂ) :
     psi k r z c (U.muP k r 0 W) = C2.psiC c (C2.simpleUp W) := by

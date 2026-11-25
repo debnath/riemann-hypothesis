@@ -140,9 +140,6 @@ def nS {A : Type*} [Ring A] [Algebra ℂ A] {t : ℕ} (E : Fin t → Fin t → A
     (((eps a q : ℤ) : ℂ) * ((eps c p : ℤ) : ℂ) * (-1 : ℂ) ^ ((a : ℕ) + (q : ℕ) + (c : ℕ) + (p : ℕ))) •
       qminor E (skip2 (min a q) (max a q)) (skip2 (min c p) (max c p)) w
 
-theorem cast_mul_eq_smul {A : Type*} [Ring A] [Algebra ℂ A] (z : ℤ) (a : A) : ((z : ℤ) : A) * a = ((z : ℤ) : ℂ) • a := by
-  rw [← zsmul_eq_mul, Int.cast_smul_eq_zsmul]
-
 theorem zsmul_eq_csmul {A : Type*} [Ring A] [Algebra ℂ A] (z : ℤ) (a : A) : z • a = ((z : ℤ) : ℂ) • a := by
   rw [Int.cast_smul_eq_zsmul]
 
@@ -310,7 +307,7 @@ theorem J_signed (hJ : QJacobi) (hE : GlRel E) (u : ℂ) (i q l p : Fin t) :
   rw [a1, a2, ← smul_sub, h, nS]
   by_cases hc : i = q ∨ l = p
   · rw [ite_eq_left hc, ite_eq_left hc, smul_zero, mul_zero]
-  · rw [ite_eq_right hc, ite_eq_right hc, cast_mul_eq_smul, mul_smul_comm, smul_smul]
+  · rw [ite_eq_right hc, ite_eq_right hc, _root_.PI.QnCovDetW.intCast_mul_eq_smul, mul_smul_comm, smul_smul]
     congr 1
     push_cast
     ring
@@ -320,7 +317,7 @@ theorem DV_signed (hD : DetVec) (hE : GlRel E) (y : Fin t → A) (hy : IsVec E y
   rw [hD A t E y hE hy w j]
   congr 1
   refine Finset.sum_congr rfl fun l _ => ?_
-  rw [cast_mul_eq_smul, mS, mul_smul_comm]
+  rw [_root_.PI.QnCovDetW.intCast_mul_eq_smul, mS, mul_smul_comm]
   push_cast
   rfl
 
@@ -341,7 +338,7 @@ theorem MC_signed (hM : MinorCov) (hE : GlRel E) (η : Fin t → A) (hη : IsCov
     refine Finset.sum_congr rfl fun a _ => ?_
     by_cases ha : a = q
     · rw [ite_eq_left ha, nS, ite_eq_left (Or.inl ha), smul_zero, zero_mul]
-    · rw [ite_eq_right ha, nS, ite_eq_right (by tauto), cast_mul_eq_smul, smul_smul, smul_mul_assoc]
+    · rw [ite_eq_right ha, nS, ite_eq_right (by tauto), _root_.PI.QnCovDetW.intCast_mul_eq_smul, smul_smul, smul_mul_assoc]
       congr 1
       push_cast
       ring
@@ -353,7 +350,7 @@ theorem covariant_commutes_signed_column_sum (hE : GlRel E) (η : Fin t → A) (
   · have h := quantum_minor_move.2 A (t + 1) t E η hE hη hηη id (skip1 j) w
     have hs : ∀ i : Fin (t + 1), (id ∘ i.succAbove : Fin t → Fin (t + 1)) = skip1 i := fun i =>
       funext fun k => (skip_succ_identity t i k).symm
-    simp only [hs, id, cast_mul_eq_smul] at h
+    simp only [hs, id, _root_.PI.QnCovDetW.intCast_mul_eq_smul] at h
     push_cast at h
     have l1 : ∑ i, η i * mS E i j (w - 1) = ((-1 : ℂ) ^ (j : ℕ)) •
         ∑ i : Fin (t + 1), ((-1 : ℂ) ^ (i : ℕ)) • (η i * qminor E (skip1 i) (skip1 j) (w - 1)) := by
@@ -404,7 +401,7 @@ theorem covariant_commutes_signed_minor_sum (hE : GlRel E) (η : Fin t → A) (h
   · have h := quantum_minor_move.2 A (t + 2) t E η hE hη hηη (skip1 q) (skip2 (min c p) (max c p)) w
     have hs : ∀ k : Fin (t + 1), (skip1 q ∘ k.succAbove : Fin t → Fin (t + 1 + 1)) =
         skip2 (min (skip1 q k) q) (max (skip1 q k) q) := fun k => skip_comp t q k
-    simp only [hs, cast_mul_eq_smul] at h
+    simp only [hs, _root_.PI.QnCovDetW.intCast_mul_eq_smul] at h
     push_cast at h
     have key : ∀ (k : Fin (t + 1)) (w' : ℂ), nS E (q.succAbove k) q c p w' =
         ((((eps c p : ℤ) : ℂ) * (-1 : ℂ) ^ ((q : ℕ) + (c : ℕ) + (p : ℕ))) * (-1 : ℂ) ^ (k : ℕ)) •
@@ -991,10 +988,6 @@ section Rep2
 variable {k r : ℕ} {E : Type*} [NormedAddCommGroup E] [NormedSpace ℂ E]
 variable (β : ℂ) (n : ℤ) (l : Fin r)
 
-theorem isOpen_omX (r : ℕ) : IsOpen (OmX r) := by
-  rw [show OmX r = ⋂ l, {x : Fin r → ℂ | x l ≠ 0} by ext; simp [OmX]]
-  exact isOpen_iInter_of_finite fun l => isOpen_ne.preimage (continuous_apply l)
-
 def Rep (G : Set (Mx k r)) (Φ : Fn k r E) (L : List (Term k r E)) : Prop :=
   ∀ c ∈ OmX r, ∀ g ∈ G, Φ c g = ev β n l L c g
 
@@ -1040,7 +1033,7 @@ theorem Rep.pp {G : Set (Mx k r)} {Φ : Fn k r E} {L : List (Term k r E)} (h : R
     Rep β n l G (crd (fun f => Y • f + pOp l f) Φ) (sc (fun s _ => Y + (β + n - s)) L) := by
   intro c hc g hg
   have hev : (fun c' => Φ c' g) =ᶠ[nhds c] fun c' => ev β n l L c' g := by
-    filter_upwards [(isOpen_omX r).mem_nhds hc] with x hx using h x hx g hg
+    filter_upwards [(_root_.Formalism.QuantumDeterminants.WirtingerDerivatives.isOpen_omX r).mem_nhds hc] with x hx using h x hx g hg
   have h1 := (((WD_ev β n l L g (hc l)).congr l hev).pOp l hc).1
   show (Y • (fun c' => Φ c' g) + pOp l (fun c' => Φ c' g)) c = _
   rw [Pi.add_apply, Pi.smul_apply, h1, h c hc g hg]
@@ -1050,7 +1043,7 @@ theorem Rep.pb {G : Set (Mx k r)} {Φ : Fn k r E} {L : List (Term k r E)} (h : R
     Rep β n l G (crd (fun f => Y • f - pbOp l f) Φ) (sc (fun _ s' => Y - (β - s')) L) := by
   intro c hc g hg
   have hev : (fun c' => Φ c' g) =ᶠ[nhds c] fun c' => ev β n l L c' g := by
-    filter_upwards [(isOpen_omX r).mem_nhds hc] with x hx using h x hx g hg
+    filter_upwards [(_root_.Formalism.QuantumDeterminants.WirtingerDerivatives.isOpen_omX r).mem_nhds hc] with x hx using h x hx g hg
   have h1 := (((WD_ev β n l L g (hc l)).congr l hev).pOp l hc).2
   show (Y • (fun c' => Φ c' g) - pbOp l (fun c' => Φ c' g)) c = _
   rw [Pi.sub_apply, Pi.smul_apply, h1, h c hc g hg]
@@ -1189,30 +1182,16 @@ variable {k r : ℕ}
 
 local notation "⟪" u ", " v "⟫" => herm (Hpk k r) u v
 
-lemma Hh : (Hpk k r)ᴴ = Hpk k r := B2x8.Hpk_herm k r
-
-lemma eI_ne_esI (a b : Fin r) : eI k r a ≠ esI k r b := by
-  intro h; have := congrArg Fin.val h; simp only [eI, esI] at this; omega
-
-lemma eI_inj {a b : Fin r} : eI k r a = eI k r b ↔ a = b := by
-  exact ⟨fun h => Fin.ext (by simpa [eI] using congrArg Fin.val h), by rintro rfl; rfl⟩
-
-lemma esI_inj {a b : Fin r} : esI k r a = esI k r b ↔ a = b := by
-  constructor
-  · intro h; have := congrArg Fin.val h; simp only [esI] at this; exact Fin.ext (by omega)
-  · rintro rfl; rfl
+lemma Hh : (Hpk k r)ᴴ = Hpk k r := _root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r
 
 variable {l : Fin r}
 
 local notation "𝐞" => bvec (eI k r l)
 local notation "𝐬" => bvec (esI k r l)
 
-lemma weyl_cell_mem_level_group {c : ℂ} (hc : c ≠ 0) : w1 k r l c ∈ Glev k r l.castSucc := by
-  apply PI.IsotropicReflections.reflection_mem_Glev_castSucc <;> assumption
-
 lemma reflection_mul_mem_lower_level {c : ℂ} (hc : c ≠ 0) {g : Mx k r} (hg : g ∈ Glev k r l.succ) :
     w1 k r l c * g ∈ Glev k r l.castSucc := by
-  have hw := weyl_cell_mem_level_group (k := k) (r := r) (l := l) hc
+  have hw := _root_.Formalism.FourierDecayAlt.P.Qx4.weyl_cell_mem_level_group (k := k) (r := r) (l := l) hc
   have hlt : ∀ a : Fin r, a.val < l.castSucc.val → a.val < l.succ.val := fun a ha => by
     simp only [Fin.val_castSucc, Fin.val_succ] at *; omega
   exact ⟨B2x8.al_mul_mem hw.1 hg.1, fun a ha =>
@@ -1407,13 +1386,6 @@ theorem upper_from_steps : Formalism.FourierDecayAlt.Q.RTTUpperFromSteps := by
 
 end Formalism.FourierDecayAlt.P.Qx7
 
-namespace Formalism.FourierDecayAlt.P
-
-theorem quantum_determinant_from_rtt : Formalism.FourierDecayAlt.Q.QdetFromRTT := Qx7.qdet_main
-
-theorem rtt_upper_relations_from_descent : Formalism.FourierDecayAlt.Q.RTTUpperFromSteps := Qx7.upper_from_steps
-
-end Formalism.FourierDecayAlt.P
 end -- clump:auto
 end -- clump:auto
 end -- clump:auto
@@ -1436,17 +1408,17 @@ theorem casimir_under_jacquet_integral : Formalism.FourierDecayAlt.JF.CVUnderInt
   capelli_under_integral_of_parts jacquet_derivative_formula capelli_word_sum rewrite_rho_action
 
 theorem right_transfer_upper_levels : Formalism.FourierDecayAlt.Q.RTTUpper :=
-  rtt_upper_relations_from_descent chain_descent_relation resSurj_statement capelli_commutation operator_preserves_fusion_forms
+  _root_.Formalism.FourierDecayAlt.P.Qx7.upper_from_steps chain_descent_relation _root_.Formalism.FourierDecayAlt.P.Qx4.resSurj capelli_commutation operator_preserves_fusion_forms
     transfer_triples rtt_sandwich rtt_independence leading_term_alt transfer_linear_local
 
 theorem right_transfer_all_levels : Formalism.FourierDecayAlt.Q.RTTLevel :=
-  rtt_level_from_upper right_transfer_upper_levels level_transfer level_group_image flag_frame_transfer
+  rtt_level_from_upper right_transfer_upper_levels level_transfer level_group_image _root_.Formalism.FourierDecayAlt.P.Qx4.fFTransfer
     transfer_linear_local
 
 namespace JacquetIntegral
 
 theorem detCore : Formalism.FourierDecayAlt.Q.DetAt fun P => Fin.last P.r :=
-  determinant_capelli_from_descent right_transfer_all_levels quantum_determinant_from_rtt determinant_hat right_type_action
+  determinant_capelli_from_descent right_transfer_all_levels _root_.Formalism.FourierDecayAlt.P.Qx7.qdet_main determinant_hat right_type_action
     left_type_action operator_preserves_fusion_forms transfer_linear_local
 
 end JacquetIntegral
@@ -1466,7 +1438,7 @@ theorem normalFormActual_of_fromModule (h : Formalism.FourierDecayAlt.Q.NormalFo
   h actual_start zeta_commutes leading_term_alt spectral_two_by_two actual_operators_exist
 
 theorem levelStartActual_of_normalForm (h : Formalism.FourierDecayAlt.Q.NormalFormActual) : Formalism.FourierDecayAlt.Q.LevelStartActual :=
-  level_start_from_normal_form h actual_start model_is_normal_form interlace_sign_two
+  level_start_from_normal_form h actual_start model_is_normal_form _root_.Formalism.FourierDecayAlt.P.Mx3.interlaceSignTwo
 
 theorem levelStartActual_of_fromModule (h : Formalism.FourierDecayAlt.Q.NormalFormFromModule) : Formalism.FourierDecayAlt.Q.LevelStartActual :=
   levelStartActual_of_normalForm (normalFormActual_of_fromModule h)

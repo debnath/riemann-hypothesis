@@ -372,7 +372,7 @@ theorem Gam_cont [TopologicalSpace X] (S : Set (((Fin r → Fin r → ℂ) × X)
       ∑ c : Fin r, (∑ d : Fin r, p.1.1 a d * Wm (Matrix.of p.1.1) d c) * G.upper p.2 c b) S := by
     refine continuousOn_finsetSum _ fun c _ => ContinuousOn.mul (continuousOn_finsetSum _ fun d _ => ?_) ?_
     · exact (((continuous_apply_apply a d).comp (continuous_fst.comp continuous_fst)).continuousOn).mul (hW d c)
-    · exact ((continuous_apply_apply c b).comp (Formalism.FourierDecayAlt.P.Dx2.SL.cont_upper.comp continuous_snd)).continuousOn
+    · exact ((continuous_apply_apply c b).comp (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_snd)).continuousOn
   exact key.congr fun p _ => e p
 
 end gam
@@ -506,9 +506,9 @@ theorem bump_exists {k p ρ : ℕ} (z z' : Fin (2 * ρ + k + 1) → ℂ) (hz : i
     ((Formalism.FourierDecayAlt.P.MatrixMultiplicationContinuity.psi_cont _ _).comp (Formalism.FourierDecayAlt.P.Dx2.SplitF.rn_cont p ρ)).star
   have h0 : psi k (p + ρ) (liftVec k p ρ z) cStd (U.Rn k p ρ 0) = 1 := by
     rw [Formalism.FourierDecayAlt.P.LeftFubiniLemmas.rn_zero]
-    exact Formalism.FourierDecayAlt.P.Qx5.psi_one (Formalism.FourierDecayAlt.P.LeftFubiniLemmas.inWb_liftVec hz) _
+    exact _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one (Formalism.FourierDecayAlt.P.LeftFubiniLemmas.inWb_liftVec hz) _
   have h0' : star (psi k (p + ρ) (liftVec k p ρ z') cStd (U.Rn k p ρ 0)) = 1 := by
-    rw [Formalism.FourierDecayAlt.P.LeftFubiniLemmas.rn_zero, Formalism.FourierDecayAlt.P.Qx5.psi_one (Formalism.FourierDecayAlt.P.LeftFubiniLemmas.inWb_liftVec hz') _, star_one]
+    rw [Formalism.FourierDecayAlt.P.LeftFubiniLemmas.rn_zero, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one (Formalism.FourierDecayAlt.P.LeftFubiniLemmas.inWb_liftVec hz') _, star_one]
   have := @rcHaar k p ρ
   unfold U.muRC
   exact bump_two volume _ _ hc hc' h0 h0'
@@ -641,9 +641,9 @@ theorem krI_pt (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + ρ
         star (psi k (p + ρ) (liftVec k p ρ Bj.z') cStd (U.Rn k p ρ s.2.1))) • (Bj.π h⁻¹).comp (Φ Z y) := by
   obtain ⟨hh', hn'⟩ := hs
   set h'' : B.Mat k ρ := Matrix.of s.1.1 with hh''
-  have hW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z
-  have hW' := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k ρ Bj.z'
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k ρ
+  have hW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z
+  have hW' := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k ρ Bj.z'
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k ρ
   have hH : h''ᴴ * Hpk k ρ * h'' = Hpk k ρ := hh'.1
   have hNR : (Matrix.of (PsiR s).2 : B.Mat k (p + ρ)) =
       U.embG k p ρ 1 * U.muP k p ρ (G.upper s.2.2) * U.Rn k p ρ (rcAct h'' s.2.1) := by
@@ -679,7 +679,7 @@ theorem krI_pt (Bj : B.RealPlaceData k ρ Wp Wq) (B0 : B.RealPlaceData k (p + ρ
       psi k (p + ρ) (liftVec k p ρ Bj.z') cStd (U.muP k p ρ (G.upper s.2.2)) *
         psi k (p + ρ) (liftVec k p ρ Bj.z') cStd (U.Rn k p ρ s.2.1) := by
     rw [hz', psi_right_equivariant k p ρ Bj.z' 1 s.2.2 _ Bj.z'_mem hN.one_mem,
-      psi_right_action_comm k p ρ Bj.z' h'' s.2.1 Bj.z'_mem hh', Formalism.FourierDecayAlt.P.Qx5.psi_one Bj.z'_mem, one_mul]
+      psi_right_action_comm k p ρ Bj.z' h'' s.2.1 Bj.z'_mem hh', _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one Bj.z'_mem, one_mul]
   rw [e6, hps]
   simp only [ContinuousLinearMap.smul_comp, ContinuousLinearMap.comp_assoc, e7, ContinuousLinearMap.comp_id,
     smul_smul]
@@ -760,7 +760,7 @@ theorem left_average_formula : Formalism.FourierDecayAlt.P.CutMK.LeftAvg := by
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarW
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite Bj.haarN
   have := Formalism.FourierDecayAlt.P.Dx2.SplitF.sf_RC (k := k) p 0
-  have hWs := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k 0 Bj.z
+  have hWs := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k 0 Bj.z
   have hae : ∀ᵐ x ∂(PBQ.muXP (p := p) Bj), PBQ.GoodP Bj x ∧ (Matrix.of x.1.2 : B.Mat k 0) = 1 := by
     have h2 : ∀ᵐ x ∂(PBQ.muXP (p := p) Bj), (Matrix.of x.1.2 : B.Mat k 0) = 1 := by
       unfold PBQ.muXP
@@ -775,7 +775,7 @@ theorem left_average_formula : Formalism.FourierDecayAlt.P.CutMK.LeftAvg := by
     have uh : IsUnit (Matrix.of x.1.1 : B.Mat k 0).det := hWs.unit _ hh
     unfold PBQ.pbI PBQ.sP PBQ.cP
     rw [ite_eq_left hx, hν, inv_one, Matrix.mul_one, Formalism.FourierDecayAlt.P.Dx2.MN.castM_rfl, hK _ hh x.2,
-      Formalism.FourierDecayAlt.P.Qx5.psi_one Bj.z_mem, one_mul]
+      _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one Bj.z_mem, one_mul]
     have e : (Bj.π (Matrix.of x.1.1)).comp (Bj.π (Matrix.of x.1.1)⁻¹) = ContinuousLinearMap.id ℂ Wp := by
       rw [← Bj.π_rep.2 _ hh _ (hWs.inv_mem _ hh), Matrix.mul_nonsing_inv _ uh, Bj.π_rep.1]
       rfl

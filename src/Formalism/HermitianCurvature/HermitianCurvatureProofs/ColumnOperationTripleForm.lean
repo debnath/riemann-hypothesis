@@ -73,21 +73,17 @@ section
 
 variable {K : Type} [CommRing K] (R : Subring K) (ψ : AddChar K ℂ)
 
-theorem psiKR_mk (hψ : ∀ r ∈ R, ψ r = 1) (a : K) :
-    psiKR R ψ (Submodule.Quotient.mk a) = ψ a := by
-  apply _root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk <;> assumption
-
 noncomputable def psiB (hψ : ∀ r ∈ R, ψ r = 1) : AddChar (KR R) ℂ where
   toFun := psiKR R ψ
   map_zero_eq_one' := by
-    have := psiKR_mk R ψ hψ 0
+    have := _root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk R ψ hψ 0
     rw [AddChar.map_zero_eq_one] at this
     exact this
   map_add_eq_mul' := by
     intro x y
     obtain ⟨a, rfl⟩ := Submodule.Quotient.mk_surjective _ x
     obtain ⟨b, rfl⟩ := Submodule.Quotient.mk_surjective _ y
-    rw [← Submodule.Quotient.mk_add, psiKR_mk R ψ hψ, psiKR_mk R ψ hψ, psiKR_mk R ψ hψ,
+    rw [← Submodule.Quotient.mk_add, _root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk R ψ hψ, _root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk R ψ hψ, _root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk R ψ hψ,
       AddChar.map_add_eq_mul]
 
 theorem psiB_sep (hsd : ∀ a : K, (∀ r ∈ R, ψ (a * r) = 1) ↔ a ∈ R) (hψ : ∀ r ∈ R, ψ r = 1)
@@ -100,7 +96,7 @@ theorem psiB_sep (hsd : ∀ a : K, (∀ r ∈ R, ψ (a * r) = 1) ↔ a ∈ R) (h
     have h1 := hx ⟨r, hr⟩
     rw [← Submodule.Quotient.mk_smul] at h1
     have h2 : psiKR R ψ (Submodule.Quotient.mk ((⟨r, hr⟩ : R) • a)) = 1 := h1
-    rw [psiKR_mk R ψ hψ] at h2
+    rw [_root_.Formalism.FourierDecayAlt.P.A5x6.psiKR_mk R ψ hψ] at h2
     rwa [mul_comm]
   exact ⟨⟨a, this⟩, rfl⟩
 

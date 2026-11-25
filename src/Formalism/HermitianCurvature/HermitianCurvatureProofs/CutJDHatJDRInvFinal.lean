@@ -242,19 +242,13 @@ theorem uh_left_inv {S : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (Hpk k r * Sᴴ * Hpk k r) * S = 1 := by
   have h : Sᴴ * Hpk k r * S = Hpk k r := hS
   calc (Hpk k r * Sᴴ * Hpk k r) * S = Hpk k r * (Sᴴ * Hpk k r * S) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [h, _root_.Formalism.FourierDecayAlt.P.Ux1.hpk_sq']
+    _ = 1 := by rw [h, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
 
 theorem uh_inv_eq' {S : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hS : S ∈ UH (Hpk k r)) :
     S⁻¹ = Hpk k r * Sᴴ * Hpk k r := Matrix.inv_eq_left_inv (uh_left_inv hS)
 
-theorem uh_isUnit {S : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hS : S ∈ UH (Hpk k r)) :
-    IsUnit S.det := by
-  have h := congrArg Matrix.det (uh_left_inv hS)
-  rw [Matrix.det_mul, Matrix.det_one] at h
-  exact IsUnit.of_mul_eq_one _ (by rw [mul_comm]; exact h)
-
 theorem inv_mul_self' {S : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hS : S ∈ UH (Hpk k r)) :
-    S⁻¹ * S = 1 := Matrix.nonsing_inv_mul S (uh_isUnit hS)
+    S⁻¹ * S = 1 := Matrix.nonsing_inv_mul S (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hS)
 
 theorem det_inv_mul {S : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hS : S ∈ UH (Hpk k r)) :
     (S⁻¹).det * S.det = 1 := by
@@ -322,7 +316,7 @@ theorem ginvH_mul (g S : Q.Mx k r) : ginvH k r (g * S) = ginvH k r S * ginvH k r
   unfold ginvH
   rw [Matrix.conjTranspose_mul]
   calc Hpk k r * (Sᴴ * gᴴ) * Hpk k r = Hpk k r * Sᴴ * (Hpk k r * Hpk k r) * gᴴ * Hpk k r := by
-        rw [_root_.Formalism.FourierDecayAlt.P.Ux1.hpk_sq']; simp only [Matrix.mul_one, Matrix.mul_assoc]
+        rw [_root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]; simp only [Matrix.mul_one, Matrix.mul_assoc]
     _ = Hpk k r * Sᴴ * Hpk k r * (Hpk k r * gᴴ * Hpk k r) := by simp only [Matrix.mul_assoc]
 
 theorem coordinate_matrix_mul_unitary (z : Fin (2 * r + k + 1) → ℂ) (g S : Q.Mx k r) (hS : S ∈ UH (Hpk k r)) :
@@ -420,28 +414,9 @@ theorem det_Mr_lower (R0 R0' : Fin (2 * r + k + 1) → Fin (2 * r + k + 1) → �
       simp [hL, h1, h2]
   rw [hmul, Matrix.det_mul, hdet, one_mul]
 
-theorem uh_mul' {a b : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ UH (Hpk k r))
-    (hb : b ∈ UH (Hpk k r)) : a * b ∈ UH (Hpk k r) := by
-  have ha' : aᴴ * Hpk k r * a = Hpk k r := ha
-  have hb' : bᴴ * Hpk k r * b = Hpk k r := hb
-  show (a * b)ᴴ * Hpk k r * (a * b) = Hpk k r
-  rw [Matrix.conjTranspose_mul]
-  calc bᴴ * aᴴ * Hpk k r * (a * b) = bᴴ * (aᴴ * Hpk k r * a) * b := by simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [ha', hb']
-
-theorem uh_inv_mem' {a : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (ha : a ∈ UH (Hpk k r)) :
-    a⁻¹ ∈ UH (Hpk k r) := by
-  have ha' : aᴴ * Hpk k r * a = Hpk k r := ha
-  have h1 : a * a⁻¹ = 1 := Matrix.mul_nonsing_inv a (uh_isUnit ha)
-  show (a⁻¹)ᴴ * Hpk k r * a⁻¹ = Hpk k r
-  calc (a⁻¹)ᴴ * Hpk k r * a⁻¹ = (a⁻¹)ᴴ * (aᴴ * Hpk k r * a) * a⁻¹ := by rw [ha']
-    _ = (a * a⁻¹)ᴴ * Hpk k r * (a * a⁻¹) := by
-        rw [Matrix.conjTranspose_mul]; simp only [Matrix.mul_assoc]
-    _ = Hpk k r := by rw [h1, Matrix.conjTranspose_one, Matrix.one_mul, Matrix.mul_one]
-
 theorem herm_uh {A : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ} (hA : A ∈ UH (Hpk k r))
     (v w : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) (A *ᵥ v) w = herm (Hpk k r) v (A⁻¹ *ᵥ w) := by
-  have hi : (A⁻¹)ᴴ * Hpk k r * A⁻¹ = Hpk k r := uh_inv_mem' hA
+  have hi : (A⁻¹)ᴴ * Hpk k r * A⁻¹ = Hpk k r := _root_.Formalism.QuantumDeterminants.WeylGroupFacts.uh_inv hA
   have h2 : A⁻¹ * A = 1 := inv_mul_self' hA
   have key : Hpk k r * A = (A⁻¹)ᴴ * Hpk k r := by
     calc Hpk k r * A = (A⁻¹)ᴴ * Hpk k r * A⁻¹ * A := by rw [hi]
@@ -498,12 +473,12 @@ theorem nset_wv {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {m : Matrix 
 
 theorem A_uh {z : Fin (2 * r + k + 1) → ℂ} {h m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hh : h ∈ UWset k r z) (hm : m ∈ Nset k r) : h⁻¹ * m⁻¹ ∈ UH (Hpk k r) :=
-  uh_mul' (uh_inv_mem' hh.1) (uh_inv_mem' hm.1)
+  _root_.Formalism.QuantumDeterminants.WeylGroupFacts.uh_mul (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.uh_inv hh.1) (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.uh_inv hm.1)
 
 theorem A_inv {z : Fin (2 * r + k + 1) → ℂ} {h m : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hh : h ∈ UWset k r z) (hm : m ∈ Nset k r) : (h⁻¹ * m⁻¹)⁻¹ = m * h := by
-  rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (uh_isUnit hm.1),
-    Matrix.nonsing_inv_nonsing_inv _ (uh_isUnit hh.1)]
+  rw [Matrix.mul_inv_rev, Matrix.nonsing_inv_nonsing_inv _ (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hm.1),
+    Matrix.nonsing_inv_nonsing_inv _ (_root_.Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hh.1)]
 
 theorem h_wv {z : Fin (2 * r + k + 1) → ℂ} {h : Matrix (Fin (2 * r + k + 1)) (Fin (2 * r + k + 1)) ℂ}
     (hh : h ∈ UWset k r z) (p : Fin (2 * r + k + 1)) : h *ᵥ wv k r z p = wv k r z p := by
@@ -747,7 +722,7 @@ theorem herm_bvec (z' : Fin (2 * r + k + 1) → ℂ) (x : Fin (2 * r + k + 1)) :
 
 theorem zeta_full (hz' : inWb k r z') (hw : w ∈ UWset k r z') (hm : m ∈ Nset k r) (j : Fin (2 * r + k + 1))
     (hj : j.val ≤ r + k) : ((star z' ᵥ* Hpk k r) ᵥ* (m * w)⁻¹) j = (star z' ᵥ* Hpk k r) j := by
-  rw [charpoly_eq_of_isIso hw hm, Matrix.vecMul_vecMul, ← Matrix.mul_assoc, ← Matrix.mul_assoc, Formalism.FourierDecayAlt.P.Qx2.hpk_sq',
+  rw [charpoly_eq_of_isIso hw hm, Matrix.vecMul_vecMul, ← Matrix.mul_assoc, ← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq,
     Matrix.one_mul, ← Matrix.vecMul_vecMul, ← Matrix.star_mulVec]
   simp only [Matrix.vecMul, dotProduct]
   refine Finset.sum_congr rfl (fun l _ => ?_)
@@ -1093,10 +1068,6 @@ open Formalism.REAL Formalism.QuantumDeterminants Formalism.FourierDecayAlt Form
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq]
   [InnerProductSpace ℂ Wq]
 
-theorem one_GV : (1 : Mat k r) ∈ GV k r := by
-  show (1 : Mat k r)ᴴ * Hpk k r * 1 = Hpk k r
-  simp
-
 theorem left_GV (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) :
     (Matrix.of p.1.1 : Mat k r)⁻¹ * (Matrix.of p.1.2)⁻¹ ∈ GV k r := by
   have := WeylGroupFacts.uh_inv (Formalism.FourierDecayAlt.P.B5.inSS_left D hp)
@@ -1133,7 +1104,7 @@ theorem qminor_rho (D : RealPlaceData k r Wp Wq) {p : SS k r} (hp : D.inSS p) {F
     rwa [e] at this
   have hFa : Loc ((r + k : ℕ) : ℕ∞) (fun y => F ((Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * y))
       (g * (Matrix.of p.2.2 * Matrix.of p.2.1)) := by
-    have := Formalism.FourierDecayAlt.P.B5.ckOn_translate hF hAG (one_GV (k := k) (r := r))
+    have := Formalism.FourierDecayAlt.P.B5.ckOn_translate hF hAG (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_one (k := k) (r := r))
     have e : (fun x => F ((Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * x * 1)) =
         fun y => F ((Matrix.of p.1.1)⁻¹ * (Matrix.of p.1.2)⁻¹ * y) := by
       funext x; simp only [Matrix.mul_one]

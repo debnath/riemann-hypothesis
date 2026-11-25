@@ -137,7 +137,7 @@ theorem ad_unitB_conj {g : Mx k r} (hg : gᴴ * Hpk k r * g = Hpk k r) (hgi : g 
 theorem ad_hpart_conj {g : Mx k r} (hg : gᴴ * Hpk k r * g = Hpk k r) (hgi : g * g⁻¹ = 1) (Z : Mx k r) :
     hpart1 (Hpk k r) (g * Z * g⁻¹) = g * hpart1 (Hpk k r) Z * g⁻¹ ∧
       hpart2 (Hpk k r) (g * Z * g⁻¹) = g * hpart2 (Hpk k r) Z * g⁻¹ := by
-  have hH : Hpk k r * Hpk k r = 1 := hpk_sq'
+  have hH : Hpk k r * Hpk k r = 1 := _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
   have e1 : gᴴ * Hpk k r = Hpk k r * g⁻¹ := by
     calc gᴴ * Hpk k r = gᴴ * Hpk k r * (g * g⁻¹) := by rw [hgi, Matrix.mul_one]
       _ = (gᴴ * Hpk k r * g) * g⁻¹ := by simp only [Matrix.mul_assoc]
@@ -384,7 +384,7 @@ theorem left_ad (hz : inWb k r z) (hz' : inWb k r z') (hD : IsDom k r z z' (Fin.
   have hLI : (Hpk k r * gᴴ * Hpk k r) * g = 1 := by
     calc (Hpk k r * gᴴ * Hpk k r) * g = Hpk k r * (gᴴ * Hpk k r * g) := by
           simp only [Matrix.mul_assoc]
-      _ = 1 := by rw [hU, hpk_sq']
+      _ = 1 := by rw [hU, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   have hinv : g⁻¹ = Hpk k r * gᴴ * Hpk k r := Matrix.inv_eq_left_inv hLI
   have hgi : g⁻¹ * g = 1 := by rw [hinv, hLI]
   have hgi' : g * g⁻¹ = 1 := Matrix.mul_nonsing_inv g (Matrix.isUnit_det_of_left_inverse hLI)

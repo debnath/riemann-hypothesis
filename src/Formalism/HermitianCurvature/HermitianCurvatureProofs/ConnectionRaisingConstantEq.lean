@@ -1883,10 +1883,6 @@ theorem sc_isPF_xA (κ : (M.Ty P → ℂ) →ₐ[ℂ] A) : IsPF fun Y => xA κ Y
 theorem sc_isPF_xEx (κ : (M.Ty P → ℂ) →ₐ[ℂ] A) (ex : Finset ℕ) : IsPF fun Y => κ (fun ρ => M.xEx P ex ρ Y) :=
   sc_isPF_kap κ (fun ρ i => (M.rho P ρ i : ℂ)) (fun _ => Icc 1 (P.k - 1) \ ex)
 
-theorem sc_x_up {l : ℕ} (hl : l ∈ Icc 1 (P.k - 1)) {τ σ : M.Ty P} (hu : M.Up P l τ σ) (Y : ℂ) :
-    M.xC P σ Y = (Y + (M.rho P τ l : ℂ) + 1) * M.xEx P {l} τ Y := by
-  apply _root_.Formalism.FourierDecayAlt.P.NFx2.sn_x_up <;> assumption
-
 theorem sc_x_self {l : ℕ} (hl : l ∈ Icc 1 (P.k - 1)) (τ : M.Ty P) (Y : ℂ) :
     M.xC P τ Y = (Y + (M.rho P τ l : ℂ)) * M.xEx P {l} τ Y := by
   unfold M.xC M.xEx
@@ -1956,7 +1952,7 @@ theorem connection_lower_left_regular (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ 
       rw [sc_lup hF hY hl hu, Finset.sum_eq_single l, pj_ss_pj κ hR hu, mul_smul_comm, ← mul_assoc, ← mul_assoc,
         L0.GG_GGi, one_mul, smul_smul]
       · congr 1
-        have hx := sc_x_up hl hu Y
+        have hx := sn_x_up hl hu Y
         have hne : (Y + (M.rho P τ l : ℂ) + 1) ≠ 0 := by
           intro h0; apply hY σ; rw [hx, h0, zero_mul]
         rw [hx]; field_simp
@@ -2174,7 +2170,7 @@ theorem sc_keyN (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ κ b SS) (hR : Raises 
     have := congrArg (fun X => L0.GGi * X) c'
     simp only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] at this
     exact this
-  rw [sc_x_up hl hu u, sc_x_up hl hu v, sc_x_self hl ρ u, sc_x_self hl ρ v, connection_lowering_eq_nabla, connection_lowering_eq_nabla] at c2
+  rw [sn_x_up hl hu u, sn_x_up hl hu v, sc_x_self hl ρ u, sc_x_self hl ρ v, connection_lowering_eq_nabla, connection_lowering_eq_nabla] at c2
   have e2 : ∀ Y : ℂ, K * (-N - (Y + 1 / 2) • Z) = -(K * N) - (Y + 1 / 2) • (Z * K) := by
     intro Y; rw [mul_sub, mul_neg, mul_smul_comm, hKZ]
   have e3 : ∀ Y : ℂ, (-N - (Y + 1 / 2) • Z) * K = -(N * K) - (Y + 1 / 2) • (Z * K) := by
@@ -2318,7 +2314,7 @@ theorem upper_left_raising_block (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ κ b 
     have hPm : proj κ ρ' * ((sc_LL h hF).m0 v * K) = (sc_LL h hF).m0 v * K := by
       rw [← mul_assoc, connection_raising_projection h hF, mul_assoc, hPK]
     simp only [hHdef]; rw [mul_assoc, mul_assoc, sc_x_of_P hPm, mul_smul_comm]
-  rw [hHK, smul_smul, sc_x_self hl ρ (v + 1), sc_x_up hl hu v] at hE
+  rw [hHK, smul_smul, sc_x_self hl ρ (v + 1), sn_x_up hl hu v] at hE
   have hn1 : M.xEx P {l} ρ (v + 1) ≠ 0 := sc_xEx_ne P ρ {l} (by simpa using hv)
   have hn2 : (v + 1 + (M.rho P ρ l : ℂ)) ≠ 0 := by
     intro h0; apply hv; have := congrArg Complex.im h0; simpa using this
@@ -2464,7 +2460,7 @@ theorem sc_keyNs (h : SHyp P L0 QQ κ) (hF : SForm P L0 QQ κ b SS) (hR : Raises
     have := congrArg (fun X => L0.GGi * X) c'
     simp only [← mul_assoc, L0.GGi_GG, one_mul, mul_zero] at this
     exact this
-  rw [sc_x_up hl hu u, sc_x_up hl hu v, sc_x_self hl ρ u, connection_raising_constant_eq, connection_raising_constant_eq, connection_raising_constant_eq] at c2
+  rw [sn_x_up hl hu u, sn_x_up hl hu v, sc_x_self hl ρ u, connection_raising_constant_eq, connection_raising_constant_eq, connection_raising_constant_eq] at c2
   have e2 : ∀ Y : ℂ, K * (-Ns - (Y - 1 / 2) • W) = -(K * Ns) - (Y - 1 / 2) • (W * K) := by
     intro Y; rw [mul_sub, mul_neg, mul_smul_comm, hKW]
   have e3 : ∀ Y : ℂ, (-Ns - (Y - 1 / 2) • W) * K = -(Ns * K) - (Y - 1 / 2) • (W * K) := by

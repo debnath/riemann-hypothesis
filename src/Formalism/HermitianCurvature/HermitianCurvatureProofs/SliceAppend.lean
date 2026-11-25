@@ -30,8 +30,8 @@ theorem perm_append {h : C.LPt} {n : ℕ} {t : ℂ}
       (D.ptPerm (h ++ [(n + 1, t)]) q).val := by
   have hP := ptSize_append h (n + 1) t
   have hlocH := isLocPt_head hloc
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hlocH).1
+  have hspec := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hloc).1
+  have hspec' := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hlocH).1
   rw [hspec q, partner_append (n + 1) t h q.val (by have := q.isLt; omega)]
   by_cases h1 : q.val < D.ptSize h
   · rw [ite_eq_left h1]

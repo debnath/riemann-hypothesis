@@ -66,17 +66,17 @@ theorem unipotent_measure_left_invariant : MuNLeft := by
   have : SigmaFinite (volume : Measure (G.UT p → ℂ)) := by rw [MeasureTheory.volume_pi]; infer_instance
   have hs := Formalism.FourierDecayAlt.P.Dx2.SplitF.split_all (k := k) p ρ
   have hinv := Formalism.FourierDecayAlt.P.haar_measure_inversion k (p + ρ) (Nset k (p + ρ)) (D.muN k (p + ρ))
-    (Formalism.FourierDecayAlt.P.unipotent_radical_closed k (p + ρ)) (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) (p + ρ))
+    (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k (p + ρ)) (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) (p + ρ))
   have hinvρ := Formalism.FourierDecayAlt.P.haar_measure_inversion k ρ (Nset k ρ) (D.muN k ρ)
-    (Formalism.FourierDecayAlt.P.unipotent_radical_closed k ρ) (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) ρ)
+    (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k ρ) (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) ρ)
   set μ := (U.muRC k p ρ).prod ((volume : Measure (G.UT p → ℂ)).prod (D.muN k ρ)) with hμ
   set T : U.RC k p ρ × ((G.UT p → ℂ) × Mt k ρ) → U.RC k p ρ × ((G.UT p → ℂ) × Mt k ρ) :=
     fun z => (-z.1, (Formalism.FourierDecayAlt.P.PBM.utInv p z.2.1, B2.invM z.2.2)) with hT
   have hTmp : MeasurePreserving T μ μ :=
-    Formalism.FourierDecayAlt.P.PBM.negRC_mp.prod ((Formalism.FourierDecayAlt.P.PBM.utInv_mp p).prod ⟨Formalism.FourierDecayAlt.P.TwoByOneBlock.invM_meas, hinvρ⟩)
+    Formalism.FourierDecayAlt.P.PBM.negRC_mp.prod ((Formalism.FourierDecayAlt.P.PBM.utInv_mp p).prod ⟨_root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas, hinvρ⟩)
   have hae : ∀ᵐ z ∂μ, (Matrix.of z.2.2 : B.Mat k ρ) ∈ Nset k ρ :=
     Measure.quasiMeasurePreserving_snd.ae (Measure.quasiMeasurePreserving_snd.ae
-      (Formalism.FourierDecayAlt.P.B5.haar_ae (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) ρ)))
+      (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem (Formalism.FourierDecayAlt.P.Dx2.MN.haar (k := k) ρ)))
   have hfun : (B2.invM ∘ Formalism.FourierDecayAlt.P.Dx2.SplitF.Psi k p ρ) =ᵐ[μ] (psiL k p ρ ∘ T) := by
     filter_upwards [hae] with z hz
     obtain ⟨x, q, y⟩ := z
@@ -91,7 +91,7 @@ theorem unipotent_measure_left_invariant : MuNLeft := by
       Formalism.FourierDecayAlt.P.PBM.leviElement_inv _ hu, Formalism.FourierDecayAlt.P.PBM.upper_utInv, ← embG_inv hy]
     simp only [Matrix.mul_assoc]
     rfl
-  rw [← hinv, hs, Measure.map_map Formalism.FourierDecayAlt.P.TwoByOneBlock.invM_meas (Formalism.FourierDecayAlt.P.Dx2.SplitF.psi_meas p ρ),
+  rw [← hinv, hs, Measure.map_map _root_.Formalism.FourierDecayAlt.P.B2x1.invM_meas (Formalism.FourierDecayAlt.P.Dx2.SplitF.psi_meas p ρ),
     Measure.map_congr hfun, ← Measure.map_map (psiL_meas p ρ) hTmp.measurable, hTmp.map_eq]
   rfl
 
@@ -186,7 +186,7 @@ theorem right_measure_preserving : RightMP := by
     exact hc.measurable
   have hae : ∀ᵐ h' ∂μj, Measure.map (g h') ((D.muN k ρ).prod ((U.muRC k p ρ).prod volume)) =
       (U.muRC k p ρ).prod ((volume : Measure (G.UT p → ℂ)).prod (D.muN k ρ)) := by
-    filter_upwards [Formalism.FourierDecayAlt.P.B5.haar_ae hH] with h' hh'
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hH] with h' hh'
     have hdet : ‖(Matrix.of h' : B.Mat k ρ).det‖ = 1 :=
       Formalism.FourierDecayAlt.P.HermitianFormFactor.det_norm_one (Formalism.FourierDecayAlt.P.Ux3.hpk_det k ρ) hh'.1
     have a1 := Measure.measurePreserving_swap (μ := D.muN k ρ) (ν := (U.muRC k p ρ).prod (volume : Measure (G.UT p → ℂ)))

@@ -36,7 +36,7 @@ theorem tc_hsVec_sum {ι : Type} (s : Finset ι) (X : ι → (Wq →L[ℂ] Wp)) 
 theorem tc_gq (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (x : (Fin P.r → ℂ) × ℂ) :
     B.gq Bs x = Q.wCell P.k P.r (Fin.last P.r) x.1 * NF.muZ P.k P.r Bs.μsec x.2 := by
   show bigCell P.k P.r x.1 (Bs.μsec x.2) = _
-  rw [(Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization P.k P.r x.1 (Bs.μsec x.2)).1, Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq]
+  rw [(_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor P.k P.r x.1 (Bs.μsec x.2)).1, Formalism.FourierDecayAlt.P5.Rad.wCell_last_eq]
   rfl
 
 theorem tc_sqrt_wq (k r : ℕ) (TT : ℝ) (x : MA.E r) :
@@ -97,11 +97,11 @@ theorem tc_famR (P : M.Par) (Bs : B.RealPlaceData P.k P.r Wp Wq) (hpl : Q.IsPlac
     refine ⟨hD.1.preimage (continuous_const.matrix_mul continuous_id), ?_⟩
     rintro g ⟨hgG, hgD⟩ s ⟨h, hh, m, hm, rfl⟩ s' ⟨h', hh', m', hm', rfl⟩
     have hhm : h * m ∈ Q.Glev P.k P.r (Fin.last P.r) :=
-      Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.uw_glev _ hh) hm.2
+      _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev _ hh) hm.2
     have hcomm : Q.wCell P.k P.r (Fin.last P.r) c * (h * m) = (h * m) * Q.wCell P.k P.r (Fin.last P.r) c :=
       Formalism.FourierDecayAlt.P.Qx3.wlist_comm (Fin.last P.r) c _ (fun a _ => a.isLt) hhm
     have hwg : Q.wCell P.k P.r (Fin.last P.r) c * g ∈ Q.Glev P.k P.r 0 :=
-      Formalism.FourierDecayAlt.P.Qx3.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
+      _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (Formalism.FourierDecayAlt.P.Qx3.wlist_glev hc _)
         (Formalism.FourierDecayAlt.P.Qx3.glev_mono (Fin.zero_le _) hgG)
     have e : Q.wCell P.k P.r (Fin.last P.r) c * (h * m * g * (h' * m')) =
         h * m * (Q.wCell P.k P.r (Fin.last P.r) c * g) * (h' * m') := by

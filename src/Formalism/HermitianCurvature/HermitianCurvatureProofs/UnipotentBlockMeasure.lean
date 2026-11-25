@@ -404,15 +404,6 @@ section
 
 open Finset
 
-section
-variable {ι V : Type} [NormedAddCommGroup V] [InnerProductSpace ℂ V] [CompleteSpace V]
-
-theorem normsq_tsum (a : ι → V) (ha : Summable (fun i => ‖a i‖)) :
-    ‖∑' i, a i‖ ^ 2 = ∑' p : ι × ι, (inner ℂ (a p.1) (a p.2) : ℂ).re := by
-  apply Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.norm_sq_tsum <;> assumption
-
-end
-
 theorem t_ClassSquaresSum : Formalism.FourierDecayAlt.PN.ClassSquaresSum := by
   intro ι C V _ _ _ v cl hv
   classical
@@ -461,7 +452,7 @@ theorem t_ClassSquaresSum : Formalism.FourierDecayAlt.PN.ClassSquaresSum := by
     rw [this]; exact hFs
   have hrow : ∀ c, ∑' p : ι × ι, G (c, p) = ‖∑' i, A c i‖ ^ 2 := by
     intro c
-    exact (normsq_tsum (A c) (hAn c)).symm
+    exact (_root_.Formalism.FourierDecayAlt.P.GrowthPolynomialOperator.norm_sq_tsum (A c) (hAn c)).symm
   constructor
   · have := hGs.prod
     simpa only [hrow] using this

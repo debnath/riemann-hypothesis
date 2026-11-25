@@ -360,7 +360,7 @@ theorem blk_last_iff (l : List ℕ) (s j : ℕ) (hj : j < (l ++ [s]).sum) :
     by_contra hlt'
     have hlt := not_le.1 hlt'
     rw [A5x5.blk_append_lt l s j hlt] at h
-    exact (A5x5.blk_lt l j hlt).ne h
+    exact (_root_.Formalism.FourierDecayAlt.P.A5x7.blk_lt_length l j hlt).ne h
   · intro h
     obtain ⟨i, rfl⟩ := Nat.exists_eq_add_of_le h
     exact A5x5.blk_append_ge l s i (by omega)

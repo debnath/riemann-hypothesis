@@ -104,7 +104,7 @@ theorem compact_support_in_class_general (D : RealPlaceData k r Wp Wq) (Θ : Dif
       (integrableOn_const hfin).integrable_indicator (IsClosed.measurableSet (α := Mt k r) hC'c.isClosed)
     have hint : Integrable (fun g : Mt k r => G (Matrix.of g)) D.μG := by
       refine hind.mono' hGm ?_
-      filter_upwards [Formalism.FourierDecayAlt.P.B5.haar_ae D.haarG] with x hx
+      filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarG] with x hx
       by_cases hxC : x ∈ (C' : Set (Mt k r))
       · rw [Set.indicator_of_mem hxC, hGn]
         have h1 := hb₁ (Matrix.of x) hx

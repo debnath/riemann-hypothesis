@@ -316,7 +316,7 @@ theorem head_correspondence_of_parts : PBI.HeadCorrOfParts := by
     unfold D.ptG
     rw [e1, e0]
     simpa using hG
-  obtain ⟨γ₀, hγG, hγZ, hγF⟩ := Formalism.FourierDecayAlt.P.exists_isotropic_frame P.k (P.r - P.r) Wp Wq (p.T.bs P.r) ν'r m₀r
+  obtain ⟨γ₀, hγG, hγZ, hγF⟩ := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists P.k (P.r - P.r) Wp Wq (p.T.bs P.r) ν'r m₀r
     [(1, ζ)] hLev.2.2 hpt hptG
   have hγζ : Q.zetaL P.k (P.r - P.r) (p.T.bs P.r).z (p.T.bs P.r).z' (Fin.last _) γ₀ = ζ := by
     have hz1 : Q.zetaL P.k (P.r - P.r) (p.T.bs P.r).z (p.T.bs P.r).z' (Fin.last _) γ₀ =

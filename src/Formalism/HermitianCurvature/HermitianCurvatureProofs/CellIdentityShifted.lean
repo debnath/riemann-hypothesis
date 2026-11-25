@@ -125,7 +125,7 @@ theorem orbJ_swap (Ds : B.RealPlaceData k r Wp Wq) (Ds' : B.RealPlaceData k r Wp
   have hL : ∀ X, L X = X.comp (A γ) := fun X => rfl
   have hae : ∀ᵐ q ∂Ds.μSS,
       θ q • D.orbIntegrand Ds' γ F' q = L (θ q • D.orbIntegrand Ds γ f q) := by
-    filter_upwards [TBBx2.ae_inSS Ds] with q hq
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B5.ae_inSS Ds] with q hq
     rw [hL, ContinuousLinearMap.smul_comp, orbIntegrand_swap Ds Ds' hz hz' hπ A hA f γ hγ hGγ q hq]
   have hi' : Integrable (fun q => θ q • D.orbIntegrand Ds' γ F' q) Ds'.μSS := by
     rw [hμ]

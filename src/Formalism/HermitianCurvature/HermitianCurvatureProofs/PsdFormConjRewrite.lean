@@ -137,7 +137,4 @@ theorem t_PSDAgree : PSDAgree := by
 
 end Agree
 
-theorem t_BoxSumLattice : BoxSumLattice := by
-  apply Formalism.FourierDecayAlt.P.Jx2.t_BoxSumLattice
-
 end Formalism.FourierDecayAlt.P.Jx1

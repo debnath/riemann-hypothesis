@@ -34,9 +34,9 @@ theorem haarR_bi (k r : ℕ) (hk : 1 ≤ k) (L : Formalism.MainNotions.S.LocBess
   obtain ⟨w, d, hd, hZ⟩ := hmono
   obtain ⟨D, hDz, hDz'⟩ := bsetting_of k r hk L.z L.z' L.hz L.hz'
   have hγG : γ ∈ Formalism.FourierDecayAlt.B.GV k r := hγ
-  have hunit : IsUnit γ.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit γ hγG
+  have hunit : IsUnit γ.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit γ hγG
   have hcl := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (k := k) (r := r) hunit
-  have hν := Formalism.FourierDecayAlt.P.radial_measure_is_haar k r ℂ ℂ D γ w d hγG hd (by rw [hDz, hDz']; exact hZ)
+  have hν := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar k r ℂ ℂ D γ w d hγG hd (by rw [hDz, hDz']; exact hZ)
   exact Formalism.MainNotions.BridgeLemma₃.hu_general hcl hν hμ
 
 theorem rStabInv_of_k (k r : ℕ) (hk : 1 ≤ k) (L : Formalism.MainNotions.S.LocBessel k r)
@@ -47,9 +47,9 @@ theorem rStabInv_of_k (k r : ℕ) (hk : 1 ≤ k) (L : Formalism.MainNotions.S.Lo
   obtain ⟨w, d, hd, hZ⟩ := hmono
   obtain ⟨D, hDz, hDz'⟩ := bsetting_of k r hk L.z L.z' L.hz L.hz'
   have hγG : γ ∈ Formalism.FourierDecayAlt.B.GV k r := hγ
-  have hunit : IsUnit γ.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit γ hγG
+  have hunit : IsUnit γ.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit γ hγG
   have hcl := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (k := k) (r := r) hunit
-  have hν := Formalism.FourierDecayAlt.P.radial_measure_is_haar k r ℂ ℂ D γ w d hγG hd (by rw [hDz, hDz']; exact hZ)
+  have hν := _root_.Formalism.FourierDecayAlt.P.Dx2.Rad.muRHaar k r ℂ ℂ D γ w d hγG hd (by rw [hDz, hDz']; exact hZ)
   have hμ' : Formalism.FourierDecayAlt.B.IsHaarOn (Formalism.FourierDecayAlt.C6.Rset γ) μR := Formalism.MainNotions.BridgeLemma₃.hu_general hcl hν hμ
   exact Formalism.FourierDecayAlt.P.haar_measure_inversion k r _ μR hcl hμ'
 

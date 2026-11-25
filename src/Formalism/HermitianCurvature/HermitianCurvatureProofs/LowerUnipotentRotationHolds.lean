@@ -21,14 +21,14 @@ variable {k r : ℕ}
 
 theorem cW_mul (θ θ' : ℝ) : cW k r θ * cW k r θ' = cW k r (θ + θ') := by
   unfold cW
-  rw [← emb_mul, smul_mul_smul_comm, mul_one, ← Complex.exp_add]
+  rw [← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, smul_mul_smul_comm, mul_one, ← Complex.exp_add]
   congr 3
   push_cast
   ring
 
 theorem cW_zero : cW k r 0 = 1 := by
   unfold cW
-  simp [emb_one]
+  simp [_root_.Formalism.FourierDecayAlt.P.B2x3.emb_one]
 
 theorem cW_inv (θ : ℝ) : (cW k r θ)⁻¹ = cW k r (-θ) := by
   apply Matrix.inv_eq_right_inv

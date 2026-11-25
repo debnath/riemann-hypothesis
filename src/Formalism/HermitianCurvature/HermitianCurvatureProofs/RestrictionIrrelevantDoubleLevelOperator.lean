@@ -454,7 +454,7 @@ theorem nf_low_sum (d : NFData P 𝒜) (hR : d.Rel) (Y : ℂ) (hY : ∀ π, xC P
     unfold xEx
     refine Finset.prod_congr rfl fun i hi => ?_
     rw [Finset.mem_sdiff, Finset.mem_singleton] at hi
-    rw [rho_raise P j π π' hU i hi.1, ite_eq_right hi.2, add_zero]
+    rw [_root_.Formalism.FourierDecayAlt.P.Mx3.rhoUp P j π π' hU i hi.1, ite_eq_right hi.2, add_zero]
   show xC P π' Y * (Y + (rho P π' j : ℂ))⁻¹ = xEx P {j} π Y
   rw [h1, mul_assoc, mul_inv_cancel₀ h2, mul_one, h3]
 
@@ -598,24 +598,6 @@ theorem exp_lev {i : Fin (r + 1)} {X : Mx k r} (hX : inLieLev k r i X) (t : ℝ)
     NormedSpace.exp ((t : ℂ) • X) ∈ Glev k r i :=
   ⟨B5.exp_mem hX.1 t, fun a ha => ⟨exp_fix (hX.2 a ha).1 t, exp_fix (hX.2 a ha).2 t⟩⟩
 
-theorem hpk_e (a : Fin r) : Hpk k r *ᵥ bvec (eI k r a) = bvec (esI k r a) := by
-  funext p
-  simp only [bvec, Matrix.mulVec_single_one, Matrix.col_apply, Pi.single_apply]
-  unfold Hpk eI esI
-  simp only [Fin.ext_iff]
-  have := p.isLt
-  have := a.isLt
-  split_ifs <;> first | rfl | (exfalso; omega)
-
-theorem hpk_es (a : Fin r) : Hpk k r *ᵥ bvec (esI k r a) = bvec (eI k r a) := by
-  funext p
-  simp only [bvec, Matrix.mulVec_single_one, Matrix.col_apply, Pi.single_apply]
-  unfold Hpk eI esI
-  simp only [Fin.ext_iff]
-  have := p.isLt
-  have := a.isLt
-  split_ifs <;> first | rfl | (exfalso; omega)
-
 theorem hpk_herm : (Hpk k r)ᴴ = Hpk k r := (hermitian_pos_facts_hold k r).1
 
 theorem hpk_inv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_right_inv WeylGroupFacts.hpk_sq
@@ -682,17 +664,17 @@ theorem unitB_lie {m : ℕ} (Bs : Fin m → Fin (2 * r + k + 1) → ℂ) (hB : �
     hB a _ (Or.inr (by have := c.isLt; simp only [esI]; omega))
   have z1 : ∀ c : Fin r, unitB (Hpk k r) Bs a b *ᵥ bvec (eI k r c) = 0 := by
     intro c
-    rw [unitB_mulVec, herm_bvec_left, hpk_e, dot_bvec, Pi.star_apply, hes, star_zero, zero_smul]
+    rw [unitB_mulVec, herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, dot_bvec, Pi.star_apply, hes, star_zero, zero_smul]
   have z2 : ∀ c : Fin r, unitB (Hpk k r) Bs a b *ᵥ bvec (esI k r c) = 0 := by
     intro c
-    rw [unitB_mulVec, herm_bvec_left, hpk_es, dot_bvec, Pi.star_apply, he, star_zero, zero_smul]
+    rw [unitB_mulVec, herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, dot_bvec, Pi.star_apply, he, star_zero, zero_smul]
   have z3 : ∀ c : Fin r, ((Hpk k r)⁻¹ * (unitB (Hpk k r) Bs a b)ᴴ * Hpk k r) *ᵥ bvec (eI k r c) = 0 := by
     intro c
-    rw [← Matrix.mulVec_mulVec, hpk_e, ← Matrix.mulVec_mulVec, unitB_conj_bvec _ _ _ _ _ (hes c a),
+    rw [← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, ← Matrix.mulVec_mulVec, unitB_conj_bvec _ _ _ _ _ (hes c a),
       Matrix.mulVec_zero]
   have z4 : ∀ c : Fin r, ((Hpk k r)⁻¹ * (unitB (Hpk k r) Bs a b)ᴴ * Hpk k r) *ᵥ bvec (esI k r c) = 0 := by
     intro c
-    rw [← Matrix.mulVec_mulVec, hpk_es, ← Matrix.mulVec_mulVec, unitB_conj_bvec _ _ _ _ _ (he c a),
+    rw [← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, ← Matrix.mulVec_mulVec, unitB_conj_bvec _ _ _ _ _ (he c a),
       Matrix.mulVec_zero]
   refine ⟨⟨hs.1, fun c _ => ⟨?_, ?_⟩⟩, ⟨hs.2, fun c _ => ⟨?_, ?_⟩⟩⟩
   · unfold hpart1; rw [Matrix.smul_mulVec, Matrix.sub_mulVec, z1, z3]; simp
@@ -829,16 +811,6 @@ theorem herm_wI (a b : Fin (k + 1)) :
   · subst h; simp
   · rw [ite_eq_right (fun e => h e.symm), ite_eq_right h]
 
-theorem herm_smul_left' {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (c : ℂ) (x w : Fin m → ℂ) :
-    herm H (c • x) w = c * herm H x w := by
-  unfold herm
-  rw [Matrix.mulVec_smul, dotProduct_smul, smul_eq_mul]
-
-theorem herm_smul_right' {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (c : ℂ) (x w : Fin m → ℂ) :
-    herm H x (c • w) = star c * herm H x w := by
-  unfold herm
-  rw [star_smul, smul_dotProduct, smul_eq_mul]
-
 theorem frame_exists {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z) :
     ∃ Bs : Fin k → Fin (2 * r + k + 1) → ℂ, IsFrameOf k r [z] Bs := by
   set s : ℝ := Real.sqrt (Tz k r z) with hs
@@ -849,7 +821,7 @@ theorem frame_exists {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0
     intro i hi
     rw [ha, Pi.smul_apply, inWb_bvec_wI _ i hi, smul_zero]
   have haa : herm (Hpk k r) a a = ((-(Tz k r z) : ℝ) : ℂ) := by
-    rw [ha, herm_smul_left', herm_smul_right', herm_wI, ite_eq_left rfl, ite_eq_left rfl]
+    rw [ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_wI, ite_eq_left rfl, ite_eq_left rfl]
     have : star (s : ℂ) = s := Complex.conj_ofReal s
     rw [this]
     push_cast
@@ -861,7 +833,7 @@ theorem frame_exists {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0
       herm (Hpk k r) (bvec (eI k r c)) w = 0 ∧ herm (Hpk k r) (bvec (esI k r c)) w = 0 := by
     intro w hw c
     rw [inWb_iff] at hw
-    rw [herm_bvec_left, hpk_e, dot_bvec, herm_bvec_left, hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
+    rw [herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, dot_bvec, herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
       (hw c).2]
     simp
   have hgL : g ∈ Glev k r (Fin.last r) :=
@@ -874,7 +846,7 @@ theorem frame_exists {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0
     simp only [h1, ite_eq_right h2]
   · intro j v hv
     rw [List.mem_singleton] at hv
-    rw [hv, ← hga, herm_UH hgU, ha, herm_smul_right', herm_wI, ite_eq_right (Fin.castSucc_ne_last j), mul_zero]
+    rw [hv, ← hga, herm_UH hgU, ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_wI, ite_eq_right (Fin.castSucc_ne_last j), mul_zero]
 
 end Frames
 
@@ -1774,10 +1746,6 @@ theorem mat_ext {n : ℕ} {M N : Matrix (Fin n) (Fin n) ℂ} (h : ∀ v, M *ᵥ 
   ext i j
   rw [← mulVec_bvec M, h, mulVec_bvec]
 
-theorem herm_add_left' {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (x y w : Fin m → ℂ) :
-    herm H (x + y) w = herm H x w + herm H y w := by
-  unfold herm; rw [Matrix.mulVec_add, dotProduct_add]
-
 theorem herm_add_right' {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (x w w' : Fin m → ℂ) :
     herm H x (w + w') = herm H x w + herm H x w' := by
   unfold herm; rw [star_add, add_dotProduct]
@@ -1907,7 +1875,7 @@ variable {k r : ℕ}
 theorem orth_e {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) (c : Fin r) :
     herm (Hpk k r) (bvec (eI k r c)) w = 0 ∧ herm (Hpk k r) (bvec (esI k r c)) w = 0 := by
   rw [inWb_iff] at hw
-  rw [herm_bvec_left, hpk_e, dot_bvec, herm_bvec_left, hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
+  rw [herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_e, dot_bvec, herm_bvec_left, _root_.Formalism.FourierDecayAlt.P.B2x3.hpk_es, dot_bvec, Pi.star_apply, Pi.star_apply, (hw c).1,
     (hw c).2]
   simp
 
@@ -1936,7 +1904,7 @@ theorem frame2_exists (hk : 1 ≤ k) {z e : Fin (2 * r + k + 1) → ℂ} (hz : i
   set a : Fin (2 * r + k + 1) → ℂ := (s : ℂ) • bvec (wI k r (Fin.last k)) with ha
   have haW : inWb k r a := inWb_smul (inWb_bvec_wI _) _
   have haa : herm (Hpk k r) a a = ((-(Tz k r z) : ℝ) : ℂ) := by
-    rw [ha, herm_smul_left', herm_smul_right', herm_wI, ite_eq_left rfl, ite_eq_left rfl]
+    rw [ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_wI, ite_eq_left rfl, ite_eq_left rfl]
     have : star (s : ℂ) = s := Complex.conj_ofReal s
     rw [this]
     push_cast
@@ -1955,7 +1923,7 @@ theorem frame2_exists (hk : 1 ≤ k) {z e : Fin (2 * r + k + 1) → ℂ} (hz : i
   have hbb : herm (Hpk k r) b b = ((1 : ℝ) : ℂ) := by
     rw [hb, herm_UH hg₁.1, herm_wI, ite_eq_left rfl, ite_eq_right hpl]; simp
   have hzb : herm (Hpk k r) z b = 0 := by
-    rw [← hg₁a, hb, herm_UH hg₁.1, ha, herm_smul_left', herm_wI, ite_eq_right (Ne.symm hpl), mul_zero]
+    rw [← hg₁a, hb, herm_UH hg₁.1, ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, herm_wI, ite_eq_right (Ne.symm hpl), mul_zero]
   have hze : herm (Hpk k r) z e = 0 := by rw [← herm_conj, hez, star_zero]
   obtain ⟨g₂, hg₂, hg₂b, hfix⟩ := move hbW he 1 one_ne_zero hbb (by rw [hee]; simp)
   have hg₂z : g₂ *ᵥ z = z := hfix z hzb hze
@@ -1985,7 +1953,7 @@ theorem frame2_exists (hk : 1 ≤ k) {z e : Fin (2 * r + k + 1) → ℂ} (hz : i
     simp only [List.mem_cons, List.not_mem_nil, or_false] at hv
     rcases hv with rfl | rfl
     · conv_lhs => rw [← hg₂z, ← hg₁a]
-      rw [herm_UH hg₂.1, herm_UH hg₁.1, ha, herm_smul_right', herm_wI, ite_eq_right (hι1 j), mul_zero]
+      rw [herm_UH hg₂.1, herm_UH hg₁.1, ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_wI, ite_eq_right (hι1 j), mul_zero]
     · rw [← hg₂b, hb, herm_UH hg₂.1, herm_UH hg₁.1, herm_wI, ite_eq_right (hι2 j)]
 
 theorem orth_unit {a b : Fin (2 * r + k + 1) → ℂ} (ha : inWb k r a) (hb : inWb k r b) {A B : ℝ} (hB : 0 < B)
@@ -2005,29 +1973,26 @@ theorem orth_unit {a b : Fin (2 * r + k + 1) → ℂ} (ha : inWb k r a) (hb : in
   have htC : (t : ℂ) ≠ 0 := by exact_mod_cast htpos.ne'
   have hba : herm (Hpk k r) b a = star ζ := (herm_conj a b).symm
   have h1 : herm (Hpk k r) (a + c • b) b = 0 := by
-    rw [herm_add_left', herm_smul_left', hbb, ← hζ, hc]
+    rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, hbb, ← hζ, hc]
     field_simp
     ring
   have hnorm : ζ * star ζ = (Complex.normSq ζ : ℂ) := Complex.mul_conj ζ
   have h2 : herm (Hpk k r) (a + c • b) (a + c • b) = (G : ℂ) := by
-    rw [herm_add_right', herm_smul_right', h1, mul_zero, add_zero, herm_add_left', herm_smul_left', haa, hba, hc, hGd]
+    rw [herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, h1, mul_zero, add_zero, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, haa, hba, hc, hGd]
     push_cast
     rw [← hnorm]
     field_simp
     ring
   refine ⟨(t : ℂ)⁻¹ • (a + c • b), (t : ℂ)⁻¹, c, inv_ne_zero htC, rfl, inWb_smul (inWb_add ha (inWb_smul hb _)) _, ?_,
     ?_⟩
-  · rw [herm_smul_left', h1, mul_zero]
-  · rw [herm_smul_left', herm_smul_right', h2, ← htt]
+  · rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, h1, mul_zero]
+  · rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, h2, ← htt]
     have : star ((t : ℂ)⁻¹) = (t : ℂ)⁻¹ := by
       rw [star_inv₀]
       congr 1
       exact Complex.conj_ofReal t
     rw [this]
     field_simp
-
-theorem herm_self' (z : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) z z = -((Tz k r z : ℝ) : ℂ) :=
-  TwoByOneBlock.herm_self_eq z
 
 theorem GGl_pos {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z') (hT : 0 < Tz k r z)
     (hT' : 0 < Tz k r z') {g : Mx k r} (hg : g ∈ Glev k r (Fin.last r)) (hne : GGl k r z z' g ≠ 0) :
@@ -2061,7 +2026,7 @@ theorem geom_at (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
       rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ (WeylGroupFacts.isUnit_of_uh hg.1), Matrix.one_mulVec]
   have hyW : inWb k r y := inWb_mulVec hginv hz
   have hyy : herm (Hpk k r) y y = -((Tz k r z : ℝ) : ℂ) := by
-    rw [← herm_self', ← hgy, herm_UH hg.1]
+    rw [← _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq, ← hgy, herm_UH hg.1]
   have hζ : herm (Hpk k r) z' y = zetaL k r z z' (Fin.last r) g := by
     unfold zetaL
     rw [fvec_last, fvec_last, ← hgy, herm_UH hg.1]
@@ -2072,19 +2037,19 @@ theorem geom_at (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k
     have : Complex.normSq (star (zetaL k r z z' (Fin.last r) g)) = Complex.normSq (zetaL k r z z' (Fin.last r) g) :=
       Complex.normSq_conj _
     rw [this]; exact hpos
-  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := orth_unit hyW hz' hT' hyy (herm_self' z') hG2
-  obtain ⟨f, s₂, c₂, hs₂, hf, hfW, hfy, hff⟩ := orth_unit hz' hyW hT (herm_self' z') hyy hG1
+  obtain ⟨e', s, c, hs, he', he'W, he'z, he'e⟩ := orth_unit hyW hz' hT' hyy (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z') hG2
+  obtain ⟨f, s₂, c₂, hs₂, hf, hfW, hfy, hff⟩ := orth_unit hz' hyW hT (_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_self_eq z') hyy hG1
   obtain ⟨Bs, hBs⟩ := frame2_exists hk hz' hT' he'W he'z he'e
   have hBz : ∀ a, herm (Hpk k r) (Bs a) z' = 0 := fun a => hBs.2.2 a z' (by simp)
   have hBe : ∀ a, herm (Hpk k r) (Bs a) e' = 0 := fun a => hBs.2.2 a e' (by simp)
   have hBy : ∀ a, herm (Hpk k r) (Bs a) y = 0 := by
     intro a
     have h := hBe a
-    rw [he', herm_smul_right', herm_add_right', herm_smul_right', hBz, mul_zero, add_zero] at h
+    rw [he', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hBz, mul_zero, add_zero] at h
     exact (mul_eq_zero.1 h).resolve_left (star_ne_zero.2 hs)
   have hBf : ∀ a, herm (Hpk k r) (Bs a) f = 0 := by
     intro a
-    rw [hf, herm_smul_right', herm_add_right', herm_smul_right', hBz, hBy]; simp
+    rw [hf, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, hBz, hBy]; simp
   refine ⟨e', g *ᵥ f, Bs, ⟨he'W, he'z, he'e⟩, ⟨inWb_mulVec hg hfW, ?_, ?_⟩, hBs, ⟨hBs.1, hBs.2.1, ?_⟩,
     ⟨fun a => inWb_mulVec hg (hBs.1 a), ?_, ?_⟩⟩
   · rw [← hgy, herm_UH hg.1, hfy]
@@ -2199,7 +2164,7 @@ theorem prod_match (a b : ℕ → ℝ) (n : ℕ) (ha : ∀ i j, 1 ≤ i → i < 
 theorem rho_anti (h : P.OK) (π : Ty P) : ∀ i j, 1 ≤ i → i < j → j ≤ P.k - 1 → rho P π j < rho P π i := by
   apply anti_of_step
   intro i hi hn
-  have hI := types_interlace P h π
+  have hI := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P h π
   have h1 := hI i (Finset.mem_Icc.2 ⟨hi, by omega⟩)
   have h2 := hI (i + 1) (Finset.mem_Icc.2 ⟨by omega, hn⟩)
   linarith [h1.2.2.1, h2.1]
@@ -2221,7 +2186,7 @@ theorem rho_int (h : P.OK) (π : Ty P) (i : ℕ) (hi : i ∈ Finset.Icc 1 (P.k -
 
 theorem xC_sep (h : P.OK) {σ σ₀ : Ty P} (hne : σ ≠ σ₀) : ∃ Y, xC P σ Y ≠ xC P σ₀ Y := by
   by_contra! hcon
-  exact hne ((types_complete P h).2 σ σ₀
+  exact hne ((_root_.Formalism.FourierDecayAlt.P.Mx3.tyComplete P h).2 σ σ₀
     (prod_match _ _ _ (rho_anti h σ) (rho_anti h σ₀) hcon))
 
 end Params

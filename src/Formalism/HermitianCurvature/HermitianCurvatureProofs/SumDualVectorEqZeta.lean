@@ -63,26 +63,23 @@ section Lie
 
 variable {k r : ℕ}
 
-theorem hpk_sq' : Hpk k r * Hpk k r = 1 := by
-  apply ReciprocityTheory.ChartRestriction.DS.Mult1.InvChr.Hpk_sq
-
 theorem hpk_h : (Hpk k r)ᴴ = Hpk k r := by
   ext a b
   rw [Matrix.conjTranspose_apply]
   simp only [Hpk]
   split_ifs <;> (try simp only [Fin.ext_iff] at *) <;> first | (simp; done) | omega
 
-theorem hpk_inv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv hpk_sq'
+theorem hpk_inv : (Hpk k r)⁻¹ = Hpk k r := Matrix.inv_eq_left_inv _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq
 
 theorem hpart1_lie (Z : Mx k r) :
     (hpart1 (Hpk k r) Z)ᴴ * Hpk k r + Hpk k r * hpart1 (Hpk k r) Z = 0 := by
   have hH : (Hpk k r)ᴴ = Hpk k r := hpk_h
   have hS' : ∀ X : Mx k r, Hpk k r * (Hpk k r * X) = X := fun X => by
-    rw [← Matrix.mul_assoc, hpk_sq', Matrix.one_mul]
+    rw [← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
   have hc : star (1 / 2 : ℂ) = 1 / 2 := by simp
   rw [hpart1, hpk_inv, Matrix.conjTranspose_smul, hc, Matrix.conjTranspose_sub, Matrix.conjTranspose_mul,
     Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hH]
-  simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, hpk_sq', hS',
+  simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.sub_mul, Matrix.mul_sub, Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, hS',
     Matrix.mul_one]
   module
 
@@ -90,11 +87,11 @@ theorem hpart2_lie (Z : Mx k r) :
     (hpart2 (Hpk k r) Z)ᴴ * Hpk k r + Hpk k r * hpart2 (Hpk k r) Z = 0 := by
   have hH : (Hpk k r)ᴴ = Hpk k r := hpk_h
   have hS' : ∀ X : Mx k r, Hpk k r * (Hpk k r * X) = X := fun X => by
-    rw [← Matrix.mul_assoc, hpk_sq', Matrix.one_mul]
+    rw [← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
   have hc : star (1 / (2 * Complex.I)) = -(1 / (2 * Complex.I)) := by simp
   rw [hpart2, hpk_inv, Matrix.conjTranspose_smul, hc, Matrix.conjTranspose_add, Matrix.conjTranspose_mul,
     Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, hH]
-  simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.add_mul, Matrix.mul_add, Matrix.mul_assoc, hpk_sq', hS',
+  simp only [Matrix.smul_mul, Matrix.mul_smul, Matrix.add_mul, Matrix.mul_add, Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, hS',
     Matrix.mul_one]
   module
 
@@ -740,9 +737,6 @@ theorem herm_expand (M : Mx k r) (v w : Fin (2 * r + k + 1) → ℂ) :
   simp only [herm, Matrix.dotProduct_mulVec, bvec, dotProduct_single, mul_one]
   rfl
 
-theorem herm_star (v w : Fin (2 * r + k + 1) → ℂ) : star (herm (Hpk k r) v w) = herm (Hpk k r) w v := by
-  apply _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj <;> assumption
-
 theorem herm_uh {g : Mx k r} (hg : g ∈ UH (Hpk k r)) (x y : Fin (2 * r + k + 1) → ℂ) :
     herm (Hpk k r) (g *ᵥ x) (g *ᵥ y) = herm (Hpk k r) x y := by
   have hg' : (g)ᴴ * Hpk k r * g = Hpk k r := hg
@@ -772,7 +766,7 @@ theorem sum_xb_y (z : Fin (2 * r + k + 1) → ℂ) {z' : Fin (2 * r + k + 1) →
   have hdet : IsUnit g.det := by
     have h1 : (g)ᴴ * Hpk k r * g = Hpk k r := hg
     have h2 : (Hpk k r).det * (Hpk k r).det = 1 := by
-      rw [← Matrix.det_mul, hpk_sq', Matrix.det_one]
+      rw [← Matrix.det_mul, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.det_one]
     have h3 := congrArg Matrix.det h1
     rw [Matrix.det_mul, Matrix.det_mul] at h3
     refine isUnit_iff_ne_zero.mpr fun h0 => ?_
@@ -788,7 +782,7 @@ theorem sum_xb_y (z : Fin (2 * r + k + 1) → ℂ) {z' : Fin (2 * r + k + 1) →
     · rfl
     · intro p hp
       rw [herm_bvec_out hz' hp, zero_mul]
-  rw [e1, zetaL, herm_star, ← herm_uh hg (g⁻¹ *ᵥ fvec k r z i) (fvec k r z' i), Matrix.mulVec_mulVec, hgi,
+  rw [e1, zetaL, _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, ← herm_uh hg (g⁻¹ *ᵥ fvec k r z i) (fvec k r z' i), Matrix.mulVec_mulVec, hgi,
     Matrix.one_mulVec]
 
 end Lead

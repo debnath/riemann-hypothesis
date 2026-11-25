@@ -225,19 +225,6 @@ theorem mn_norm_mul_le (A B : Mat k r) : ‖A * B‖ ≤ ((2 * r + k + 1 : ℕ) 
     _ = ((2 * r + k + 1 : ℕ) : ℝ) * ‖A‖ * ‖B‖ := by
         rw [Finset.sum_const, Finset.card_univ, Fintype.card_fin, nsmul_eq_mul]; ring
 
-theorem mn_norm_le_gN (g : Mat k r) : ‖g‖ ≤ gN g := by
-  have e : gN g = Real.sqrt (∑ i, ∑ j, Complex.normSq (g i j)) := rfl
-  rw [e, Matrix.norm_le_iff (Real.sqrt_nonneg _)]
-  intro i j
-  rw [Complex.norm_def]
-  apply Real.sqrt_le_sqrt
-  calc Complex.normSq (g i j) ≤ ∑ j', Complex.normSq (g i j') :=
-        Finset.single_le_sum (f := fun j' => Complex.normSq (g i j')) (fun _ _ => Complex.normSq_nonneg _)
-          (Finset.mem_univ j)
-    _ ≤ ∑ i', ∑ j', Complex.normSq (g i' j') :=
-        Finset.single_le_sum (f := fun i' => ∑ j', Complex.normSq (g i' j'))
-          (fun _ _ => Finset.sum_nonneg fun _ _ => Complex.normSq_nonneg _) (Finset.mem_univ i)
-
 def mnP : List (Bool × Mat k r) → Mat k r → Mat k r
   | [], P => P
   | x :: w, P => if x.1 then mnP w P * -x.2 else mnP w P
@@ -349,7 +336,7 @@ theorem mn_dLR_lin_bound (Λ : Mat k r →L[ℝ] V) (K : ℝ) (hK : ∀ M, ‖Λ
   have hP := (norm_mnP_le w hw 1).trans (mul_le_of_le_one_right (by positivity) h1)
   have hQ := (mn_mnQ_norm w hw 1).trans (mul_le_of_le_one_right (by positivity) h1)
   have hpow : n ^ w.length ≤ n ^ m := pow_le_pow_right₀ hn hlen
-  have hg := mn_norm_le_gN g
+  have hg := _root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN g
   have hn0 : 0 ≤ n := by linarith
   have hPm : ‖mnP w 1‖ ≤ n ^ m := hP.trans hpow
   have hQm : ‖mnQ w 1‖ ≤ n ^ m := hQ.trans hpow
@@ -553,12 +540,6 @@ def mnLinInv (v : Fin (2 * r + k + 1) → ℂ) (p : Fin (2 * r + k + 1)) : Mat k
         intro c g
         simp [Matrix.conjTranspose_smul, Matrix.smul_mulVec] }
 
-theorem mn_inv_gv {g : Mat k r} (hg : g ∈ GV k r) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  have e : gᴴ * Hpk k r * g = Hpk k r := hg
-  calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [e, Formalism.FourierDecayAlt.P.Qx2.hpk_sq']
-
 theorem mn_good_herm (b v : Fin (2 * r + k + 1) → ℂ) :
     mnGood Bs ε (fun g => herm (Hpk k r) (g *ᵥ b) v) :=
   mn_good_lin (mnLinHerm b v)
@@ -567,7 +548,7 @@ theorem mn_good_inv (v : Fin (2 * r + k + 1) → ℂ) (p : Fin (2 * r + k + 1)) 
     mnGood Bs ε (fun g => (g⁻¹ *ᵥ v) p) :=
   mn_good_congr (fun g hg => by
     show ((Hpk k r * gᴴ * Hpk k r) *ᵥ v) p = (g⁻¹ *ᵥ v) p
-    rw [mn_inv_gv hg]) (mn_good_lin (mnLinInv v p))
+    rw [_root_.Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose hg]) (mn_good_lin (mnLinInv v p))
 
 def mnNP (Bs : RealPlaceData k r Wp Wq) (ε : ℝ)
     (Θ : (Mat k r → (Wq →L[ℂ] Wp)) → Mat k r → (Wq →L[ℂ] Wp)) : Prop :=
@@ -1378,7 +1359,7 @@ theorem rma_resFn_mem (hz : inWb k r z) (hz' : inWb k r z') (J : Mx k r → (Wq 
       ⟨hx₀.1, Formalism.FourierDecayAlt.P5.Rad.wCell_mem_omPlus hz hz' hx₀.1 hx₀.2.1 hx₀.2.2⟩ hx₀.2.1
     have hV : IsOpen {x : (Fin r → ℂ) × Mx k r | x.1 ∈ OmX r ∧ 0 < GGl k r z z' x.2} :=
       ((P.Qx3.isOpen_OmX r).preimage continuous_fst).inter
-        (isOpen_lt continuous_const ((P.Qx5.GGl_continuous k r z z').comp continuous_snd))
+        (isOpen_lt continuous_const ((_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z').comp continuous_snd))
     refine ⟨U ∩ {x | x.1 ∈ OmX r ∧ 0 < GGl k r z z' x.2}, Fe, hU.inter hV,
       ⟨hxU, hx₀.1, hx₀.2.2⟩, hFe.mono Set.inter_subset_left, fun x hx hxG => ?_⟩
     have hxD : (x.1, x.2) ∈ DomR k r z z' := ⟨hx.2.1, hxG, hx.2.2⟩
@@ -1394,11 +1375,11 @@ theorem rma_resFn_mem (hz : inWb k r z) (hz' : inWb k r z') (J : Mx k r → (Wq 
         h * (wCell k r (Fin.last r) x.1 * x.2) * h' := by
       have hc := P.Qx3.wlist_comm (k := k) (Fin.last r) x.1
         ((List.finRange r).filter fun a => a.val < (Fin.last r).val)
-        (fun a _ => a.isLt) (P.Qx3.uw_glev (Fin.last r) hh)
+        (fun a _ => a.isLt) (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev (Fin.last r) hh)
       change wCell k r (Fin.last r) x.1 * h = h * wCell k r (Fin.last r) x.1 at hc
       rw [← Matrix.mul_assoc, ← Matrix.mul_assoc, hc, Matrix.mul_assoc h]
     have hw : wCell k r (Fin.last r) x.1 * x.2 ∈ Glev k r 0 ∩ OmPlus k r z z' :=
-      ⟨P.Qx3.glev_mul (P.Qx3.wlist_glev hx.1 _) (P.Qx3.glev_mono (Fin.zero_le _) hx.2.1),
+      ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (P.Qx3.wlist_glev hx.1 _) (P.Qx3.glev_mono (Fin.zero_le _) hx.2.1),
         Formalism.FourierDecayAlt.P5.Rad.wCell_mem_omPlus hz hz' hx.1 hx.2.1 hx.2.2⟩
     rw [e, hJ.2.2.2 _ hw h hh h' hh']
     ext v
@@ -1677,7 +1658,7 @@ theorem rma_main (hz : inWb k r z) (hz' : inWb k r z') (X : ActualOps k r z z' �
     congr 1
     exact (rma_sandw X L hL Y r le_rfl _ _ (rma_base X Y) (rma_QL_loc Y)).2 a b _ _
       (fun y' hy' => (rma_res_apply hz hz' J hJ hy').symm) y hy
-  have key := P.module_of_words (Mx k r → (Wq →L[ℂ] Wp)) (rma_K k r z z' π π') (RadSp k r z z' π π')
+  have key := _root_.Formalism.FourierDecayAlt.P.Dx1.d_moduleOfWdOn (Mx k r → (Wq →L[ℂ] Wp)) (rma_K k r z z' π π') (RadSp k r z z' π π')
     (rma_res hz hz') (Pr (RadSp k r z z' π π')) S (rma_fst _) (rma_Qop k r z z' s) (P5.QQi L st 0) hyp w x hx
   obtain ⟨hmem, heq⟩ := key a
   have hΦres : ∀ b, Φ b = rma_res hz hz' (x b) := fun b => P.Qx8.rad_ext fun y hy => by
@@ -2213,7 +2194,7 @@ theorem rb_slice_sm (Φ : Q.RadSp k r z z' π π') (c : Fin r → ℂ) :
             (f := fun x : Mt k r => (Matrix.of x : Q.Mx k r)) continuous_id
         exact hcl.measurableSet
       · have hGc : Continuous fun x : Mt k r => Q.GGl k r z z' (Matrix.of x) :=
-          (Formalism.FourierDecayAlt.P.Qx5.GGl_continuous k r z z').comp (f := fun x : Mt k r => (Matrix.of x : Q.Mx k r)) continuous_id
+          (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z').comp (f := fun x : Mt k r => (Matrix.of x : Q.Mx k r)) continuous_id
         exact measurableSet_lt measurable_const hGc.measurable
     · have e : S = ∅ := by
         ext x
@@ -2288,7 +2269,7 @@ theorem rb_point (D : B.RealPlaceData k r Wp Wq) (F F' : B.Mat k r → (Wq →L[
     rw [rb_Psi_eq hζ]
     rfl
   rw [hP]
-  obtain ⟨hmem, hherm⟩ := Formalism.FourierDecayAlt.P.b2_rank_one_mem k r D.z D.z' D.μsec D.z_mem D.z'_mem D.sec ζ hζ
+  obtain ⟨hmem, hherm⟩ := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.rankOneMem k r D.z D.z' D.μsec D.z_mem D.z'_mem D.sec ζ hζ
     (Matrix.of x) hx (Matrix.of y) hy
   have hdom : (c, (Matrix.of x)⁻¹ * B2.embWb k r (D.μsec ζ) * Matrix.of y) ∈ Q.DomR k r D.z D.z' := by
     refine ⟨hc, rb_uwb_glev hmem, ?_⟩
@@ -2296,13 +2277,13 @@ theorem rb_point (D : B.RealPlaceData k r Wp Wq) (F F' : B.Mat k r → (Wq →L[
     rw [P5.Rad.zetaL_last, hherm]
     exact sub_pos.2 hζ
   have hinv : (Matrix.of x)⁻¹ ∈ UWset k r D.z := WeylGroupFacts.uw_inv hx
-  have hfacts := Formalism.FourierDecayAlt.P.unipotent_weyl_properties k r
+  have hfacts := _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.uWbFacts k r
   have hcomm : (Matrix.of x)⁻¹ * bigCell k r c 1 = bigCell k r c 1 * (Matrix.of x)⁻¹ :=
     hfacts.2.2 c _ (hfacts.2.1 D.z hinv)
   have hcell : Q.wCell k r (Fin.last r) c * ((Matrix.of x)⁻¹ * B2.embWb k r (D.μsec ζ) * Matrix.of y) =
       (Matrix.of x)⁻¹ * B.gq D (c, ζ) * Matrix.of y := by
     rw [P5.Rad.wCell_last_eq, ← Matrix.mul_assoc, ← Matrix.mul_assoc, ← hcomm, Matrix.mul_assoc _ (bigCell k r c 1),
-      ← (Formalism.FourierDecayAlt.P.bruhat_big_cell_factorization k r c (D.μsec ζ)).1]
+      ← (_root_.Formalism.FourierDecayAlt.P.LongWeylElement.t_bigcellfactor k r c (D.μsec ζ)).1]
     rfl
   rw [hΦ _ hdom, hΦ' _ hdom]
   simp only [Q.resG]
@@ -2391,16 +2372,10 @@ theorem rb_cw_eq {c : Fin r → ℂ} (hc : c ∈ OmX r) :
     zpow_two]
   field_simp
 
-theorem rb_bcWeight_nonneg (T T' : ℝ) (q : (Fin r → ℂ) × ℂ) : 0 ≤ bcWeight k r T T' q := by
-  unfold bcWeight
-  split_ifs with h
-  · exact mul_nonneg (Finset.prod_nonneg fun a _ => pow_nonneg (norm_nonneg _) _) (pow_nonneg (by linarith) _)
-  · exact le_rfl
-
 theorem rb_weight {c : Fin r → ℂ} (hc : c ∈ OmX r) (T T' : ℝ) (ζ : ℂ) (X : ℂ) :
     ((∏ a : Fin r, ‖c a‖ ^ (-2 : ℤ) : ℝ) : ℂ) * ((B2.zWeight k T T' ζ : ℂ) * (((rbGauge k r c ^ 2 : ℝ) : ℂ) * X)) =
       (bcWeight k r T T' (c, ζ) : ℂ) * X := by
-  rw [Formalism.FourierDecayAlt.P.weight_factorization k r T T' (c, ζ), ← rb_cw_eq hc]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.weightFactor k r T T' (c, ζ), ← rb_cw_eq hc]
   push_cast
   ring
 
@@ -2463,7 +2438,7 @@ theorem rb_int_sq (D : B.RealPlaceData k r Wp Wq) (F : B.Mat k r → (Wq →L[�
     rb_aesm D _ ((rb_contOn_bcW D).mul ((rb_contOn_J D F hF).norm.pow 2)) fun q h => by simp [h]
   refine ⟨hmeas, ?_⟩
   rw [hasFiniteIntegral_iff_ofReal (Filter.Eventually.of_forall fun q =>
-    mul_nonneg (rb_bcWeight_nonneg _ _ q) (sq_nonneg _))]
+    mul_nonneg (_root_.Formalism.FourierDecayAlt.P.B7.boundary_weight_nonneg _ _ q) (sq_nonneg _))]
   exact lt_of_le_of_ne le_top hfin
 
 theorem rb_int_pair (D : B.RealPlaceData k r Wp Wq) (F F' : B.Mat k r → (Wq →L[ℂ] Wp))
@@ -2480,7 +2455,7 @@ theorem rb_int_pair (D : B.RealPlaceData k r Wp Wq) (F F' : B.Mat k r → (Wq �
   set b := bcWeight k r (Tz k r D.z) (Tz k r D.z') q
   set u := ‖B.hsVec (B.JF D F (B.gq D q))‖
   set v := ‖B.hsVec (B.JF D F' (B.gq D q))‖
-  have hb : 0 ≤ b := rb_bcWeight_nonneg _ _ q
+  have hb : 0 ≤ b := _root_.Formalism.FourierDecayAlt.P.B7.boundary_weight_nonneg _ _ q
   rw [norm_mul, Complex.norm_real, Real.norm_of_nonneg hb]
   have h1 : ‖inner ℂ (B.hsVec (B.JF D F' (B.gq D q))) (B.hsVec (B.JF D F (B.gq D q)))‖ ≤ v * u :=
     norm_inner_le_norm _ _
@@ -2714,7 +2689,7 @@ theorem pd_good_inv (v : Fin (2 * r + k + 1) → ℂ) (p : Fin (2 * r + k + 1)) 
     pdGood Wp Wq 1 (fun g : Mat k r => (g⁻¹ *ᵥ v) p) :=
   pd_good_congr (fun g hg => by
     show ((Hpk k r * gᴴ * Hpk k r) *ᵥ v) p = (g⁻¹ *ᵥ v) p
-    rw [mn_inv_gv hg]) (pd_good_lin (mnLinInv v p))
+    rw [_root_.Formalism.FourierDecayAlt.P.B6.inv_eq_hermitian_form_conjTranspose hg]) (pd_good_lin (mnLinInv v p))
 
 end pdQuant
 
@@ -2796,7 +2771,7 @@ theorem pd_phi_support : HasCompactSupport (pdPhi (k := k) (r := r)) := by
     refine (Metric.isBounded_closedBall (x := (0 : Mat k r)) (r := 2)).subset fun M hM => ?_
     simp only [Set.mem_setOf_eq] at hM
     rw [Metric.mem_closedBall, dist_zero_right]
-    have h1 := mn_norm_le_gN M
+    have h1 := _root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN M
     have h2 : gN M ^ 2 ≤ 2 ^ 2 := by rw [← pd_sq_eq]; linarith
     have h0 : 0 ≤ gN M := Real.sqrt_nonneg _
     have h3 : gN M ≤ 2 := le_of_pow_le_pow_left₀ (by norm_num) (by norm_num) h2
@@ -3027,7 +3002,7 @@ theorem pd_cut_nice {E : Type} [NormedAddCommGroup E] [NormedSpace ℂ E] {R : �
     refine Metric.isCompact_of_isClosed_isBounded (isClosed_le pd_sq_cd.continuous continuous_const) ?_
     refine (Metric.isBounded_closedBall (x := (0 : Mat k r)) (r := 2 * R)).subset fun M hM => ?_
     rw [Metric.mem_closedBall, dist_zero_right]
-    exact (mn_norm_le_gN M).trans (pd_gN_le_of_sq (by positivity) hM)
+    exact (_root_.Formalism.FourierDecayAlt.P.WeakDominationMajorants.Asm.sup_le_gN M).trans (pd_gN_le_of_sq (by positivity) hM)
   refine Formalism.FourierDecayAlt.P.compact_support_finite_class k r E _ _ hck hK fun g hg => ?_
   simp only [Set.mem_setOf_eq, not_le] at hg
   have h4 : 4 ≤ pdSq (R⁻¹ • g) := by

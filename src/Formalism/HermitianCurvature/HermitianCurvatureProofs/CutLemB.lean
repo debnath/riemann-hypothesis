@@ -106,7 +106,7 @@ theorem hsVec_norm_V_bigPt (p : KB.Pl P Wp Wq) (F : B.Mat P.k P.r → (Wq →L[�
       ‖B.hsVec (B.JF p.T.base F (bigCell P.k P.r (fun i => d i.castSucc) (p.T.base.μsec (d (Fin.last P.r)))))‖ := by
   have hl : D.IsLocPt (Formalism.FourierDecayAlt.P.PBJ.bigPt d) (P.r + 1) := Formalism.FourierDecayAlt.P.PBJ.Dens.isLocPt_bigPt d hd
   have hG' : 0 < D.ptG (Tz P.k P.r p.T.base.z * Tz P.k P.r p.T.base.z') P.r (Formalism.FourierDecayAlt.P.PBJ.bigPt d) := hG
-  have h' := Formalism.FourierDecayAlt.P.exists_isotropic_frame P.k P.r Wp Wq p.T.base p.ν' p.m₀ _ p.hF hl hG'
+  have h' := _root_.Formalism.FourierDecayAlt.P.Dx2.dFrameExists P.k P.r Wp Wq p.T.base p.ν' p.m₀ _ p.hF hl hG'
   show ‖B.hsVec (D.vecV p.T.base p.ν' p.m₀ F (Formalism.FourierDecayAlt.P.PBJ.bigPt d))‖ = _
   unfold D.vecV
   rw [dite_eq_left ⟨hl, hG'⟩, dite_eq_left h']

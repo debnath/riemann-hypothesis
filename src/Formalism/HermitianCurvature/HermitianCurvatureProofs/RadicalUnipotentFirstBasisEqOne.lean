@@ -62,22 +62,22 @@ theorem hs (k j ρ : ℕ) : 2 * ((j + 1) + ρ) + k + 1 = 2 * (j + (1 + ρ)) + k 
 
 theorem qX (a : Fin j) : Fin.cast (hs k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inl a.castSucc))) =
     U.eB k j (1 + ρ) (Sum.inl (Sum.inl a)) := by
-  ext; simp [Ux3.block_index_first_val]
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]
 
 theorem qE : Fin.cast (hs k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inl (Fin.last j)))) =
     U.eB k j (1 + ρ) (Sum.inl (Sum.inr (U.eB k 1 ρ (Sum.inl (Sum.inl 0))))) := by
-  ext; simp [Ux3.block_index_first_val, Ux3.block_index_middle_val]
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]
 
 theorem qV (v : Fin (2 * ρ + k + 1)) : Fin.cast (hs k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inr v))) =
     U.eB k j (1 + ρ) (Sum.inl (Sum.inr (U.eB k 1 ρ (Sum.inl (Sum.inr v))))) := by
-  ext; simp [Ux3.block_index_middle_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; omega
 
 theorem qE' : Fin.cast (hs k j ρ) (U.eB k (j + 1) ρ (Sum.inr 0)) =
     U.eB k j (1 + ρ) (Sum.inl (Sum.inr (U.eB k 1 ρ (Sum.inr 0)))) := by
-  ext; simp [Ux3.block_index_middle_val, Ux3.block_index_last_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega
 
 theorem qS (b : Fin j) : Fin.cast (hs k j ρ) (U.eB k (j + 1) ρ (Sum.inr b.succ)) = U.eB k j (1 + ρ) (Sum.inr b) := by
-  ext; simp [Ux3.block_index_last_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega
 
 end Formalism.FourierDecayAlt.P.PBH
 
@@ -700,7 +700,7 @@ theorem GX (σ : Equiv.Perm (Fin j)) (d : Fin j → ℂ) (hd : ∀ i, d i ≠ 0)
   show D.castM (hs' k j ρ) ((U.Rn k j (1 + ρ) x)⁻¹ * ((U.embG k j (1 + ρ) (U.Rn k 1 ρ y))⁻¹ *
         U.mMap k j (1 + ρ) (U.headH σ d η.2.1 η.2.2) (U.mMap k 1 ρ (Matrix.of (Z1 c)) γ) *
         U.embG k j (1 + ρ) (U.Rn k 1 ρ y')) * U.Rn k j (1 + ρ) x') = _
-  rw [e, castM_mul, castM_mul, castM_invS, M1, M1, M2 _ hH c hc, Matrix.mul_inv_rev]
+  rw [e, _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, castM_invS, M1, M1, M2 _ hH c hc, Matrix.mul_inv_rev]
   have e2 : (U.Rn k (j + 1) ρ (XC x y))⁻¹ * (U.muP k (j + 1) ρ (qL x))⁻¹ *
         U.mMap k (j + 1) ρ (U.blk2 (U.headH σ d η.2.1 η.2.2) 0 0 (Matrix.of (Z1 c))) γ *
         (U.muP k (j + 1) ρ (qL x') * U.Rn k (j + 1) ρ (XC x' y')) =

@@ -52,7 +52,7 @@ theorem lpg_closed {m : ℕ} (P : Matrix (Fin m) (Fin m) ℂ) : IsClosed (LPg P)
   exact (ltset_closed m).inter ((ltset_closed m).preimage hc)
 
 theorem flagStab_closed (z : Fin (2 * r + k + 1) → ℂ) : IsClosed (FlagStab k r z) := by
-  have hG : IsClosed (Formalism.FourierDecayAlt.B.GV k r) := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).closed
+  have hG : IsClosed (Formalism.FourierDecayAlt.B.GV k r) := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).closed
   have hF : IsClosed {s : Formalism.FourierDecayAlt.B.Mat k r |
       ∀ a, s *ᵥ fvec k r z a - fvec k r z a ∈ flagSpan k r z a} := by
     simp only [Set.ofPred_forall]

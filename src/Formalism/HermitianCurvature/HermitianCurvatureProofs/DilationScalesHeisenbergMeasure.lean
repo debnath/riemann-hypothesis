@@ -115,21 +115,13 @@ lemma herm_smul_right {ι : Type*} [Fintype ι] (H : Matrix ι ι ℂ) (c : ℂ)
   unfold herm
   rw [star_smul, smul_dotProduct, smul_eq_mul]; rfl
 
-lemma herm_sum {m : ℕ} (H : Matrix (Fin m) (Fin m) ℂ) (u v : Fin m → ℂ) :
-    ∑ j, herm H (bvec j) v * u j = herm H u v := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x6.herm_sum <;> assumption
-
-lemma heisAct (v u : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
-    heisG k r' v b *ᵥ u = u - herm (Hpk k (1 + r')) u v • e0 k r' + herm (Hpk k (1 + r')) u (e0 k r') • (v + b • e0 k r') := by
-  apply _root_.Formalism.FourierDecayAlt.P.B2x6.heisAct <;> assumption
-
 lemma heisG_comm (g : Mat k (1 + r')) (hg : g ∈ GV k (1 + r')) (c : ℝ) (hc : g *ᵥ e0 k r' = (c : ℂ) • e0 k r')
     (v : Fin (2 * (1 + r') + k + 1) → ℂ) (b : ℂ) :
     g * heisG k r' v b = heisG k r' ((c : ℂ) • (g *ᵥ v)) ((c : ℂ) ^ 2 * b) * g := by
   apply Matrix.toLin'.injective
   apply LinearMap.ext
   intro u
-  rw [Matrix.toLin'_apply, Matrix.toLin'_apply, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, heisAct, heisAct]
+  rw [Matrix.toLin'_apply, Matrix.toLin'_apply, ← Matrix.mulVec_mulVec, ← Matrix.mulVec_mulVec, _root_.Formalism.FourierDecayAlt.P.B2x6.heisAct, _root_.Formalism.FourierDecayAlt.P.B2x6.heisAct]
   have h1 : herm (Hpk k (1 + r')) (g *ᵥ u) ((c : ℂ) • (g *ᵥ v)) = (c : ℂ) * herm (Hpk k (1 + r')) u v := by
     rw [herm_smul_right, herm_UH hg, Complex.conj_ofReal]
   have h2 : (c : ℂ) * herm (Hpk k (1 + r')) (g *ᵥ u) (e0 k r') = herm (Hpk k (1 + r')) u (e0 k r') := by
@@ -393,7 +385,7 @@ theorem dilJacAll_of (h : DilJacRaw) : DilJacAll := fun k r _ _ _ _ _ _ D t ht =
 end B2x7
 
 theorem dilation_jacobian_unipotent : Formalism.FourierDecayAlt.B2.DilJacRaw :=
-  B2x7.dilJacRaw_of haar_measure_unique_up_to_scalar unipotent_radical_closed unipotent_haar_recursion unipotent_haar_exists
+  B2x7.dilJacRaw_of _root_.Formalism.FourierDecayAlt.P.B2x1.haarUnique _root_.Formalism.FourierDecayAlt.P.B2x2.closedN unipotent_haar_recursion unipotent_haar_exists
 
 theorem dilation_jacobian_every_setting : Formalism.FourierDecayAlt.B2.DilJacAll := B2x7.dilJacAll_of dilation_jacobian_unipotent
 

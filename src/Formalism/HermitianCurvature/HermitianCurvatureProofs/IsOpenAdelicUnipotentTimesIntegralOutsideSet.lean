@@ -27,16 +27,13 @@ attribute [local instance] Matrix.normedAddCommGroup Matrix.normedSpace
 section gen
 variable {n : ℕ} (H : Matrix (Fin n) (Fin n) ℂ)
 
-lemma h_add_left (u u' v : Fin n → ℂ) : herm H (u + u') v = herm H u v + herm H u' v := B2x8.herm_add_left H u u' v
-lemma h_add_right (u v v' : Fin n → ℂ) : herm H u (v + v') = herm H u v + herm H u v' := B2x8.herm_add_right H u v v'
-lemma h_smul_left (c : ℂ) (u v : Fin n → ℂ) : herm H (c • u) v = c * herm H u v := B2x8.herm_smul_left H c u v
 lemma h_smul_right (c : ℂ) (u v : Fin n → ℂ) : herm H u (c • v) = conj c * herm H u v := B2x8.herm_smul_right H c u v
 lemma h_neg_left (u v : Fin n → ℂ) : herm H (-u) v = -herm H u v := B2x8.al_herm_neg_left H u v
 lemma h_neg_right (u v : Fin n → ℂ) : herm H u (-v) = -herm H u v := B2x8.al_herm_neg_right H u v
 lemma h_sub_left (u u' v : Fin n → ℂ) : herm H (u - u') v = herm H u v - herm H u' v := by
-  rw [sub_eq_add_neg, h_add_left, h_neg_left, sub_eq_add_neg]
+  rw [sub_eq_add_neg, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_left, h_neg_left, sub_eq_add_neg]
 lemma h_sub_right (u v v' : Fin n → ℂ) : herm H u (v - v') = herm H u v - herm H u v' := by
-  rw [sub_eq_add_neg, h_add_right, h_neg_right, sub_eq_add_neg]
+  rw [sub_eq_add_neg, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, h_neg_right, sub_eq_add_neg]
 lemma h_conj (hH : Hᴴ = H) (u v : Fin n → ℂ) : conj (herm H u v) = herm H v u := B2x8.herm_conj H hH u v
 
 def hs (p v : Fin n → ℂ) (σ : ℂ) : Matrix (Fin n) (Fin n) ℂ :=
@@ -51,7 +48,7 @@ lemma hs_act (p v u : Fin n → ℂ) (σ : ℂ) :
     intro w φ
     simp only [mulVec, dotProduct, vecMulVec_apply, Finset.sum_mul]
     apply Finset.sum_congr rfl; intro j _; ring
-  rw [h1, h1, B2x6.herm_sum, B2x6.herm_sum]
+  rw [h1, h1, _root_.Formalism.FourierDecayAlt.P.B2x5.herm_sum, _root_.Formalism.FourierDecayAlt.P.B2x5.herm_sum]
   simp only [Pi.add_apply, Pi.smul_apply, smul_eq_mul]
 
 lemma hs_mem (hH : Hᴴ = H) {p v : Fin n → ℂ} {σ : ℂ} (hpp : herm H p p = 0) (hvp : herm H v p = 0)
@@ -62,10 +59,8 @@ lemma hs_mem (hH : Hᴴ = H) {p v : Fin n → ℂ} {σ : ℂ} (hpp : herm H p p 
   have h1 : herm H p w = conj (herm H w p) := (h_conj H hH w p).symm
   have h2 : herm H v w = conj (herm H w v) := (h_conj H hH w v).symm
   rw [hs_act, hs_act]
-  simp only [h_add_left, h_add_right, h_sub_left, h_sub_right, h_smul_left, h_smul_right, hpp, hvp, hpv, h1, h2]
+  simp only [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_right, h_sub_left, h_sub_right, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, h_smul_right, hpp, hvp, hpv, h1, h2]
   linear_combination (herm H u p * conj (herm H w p)) * hσ
-
-lemma mat_ext {A B : Matrix (Fin n) (Fin n) ℂ} (h : ∀ u, A *ᵥ u = B *ᵥ u) : A = B := B2x6.mat_ext h
 
 end gen
 
@@ -73,7 +68,7 @@ variable {k r : ℕ}
 
 local notation "⟪" u ", " v "⟫" => herm (Hpk k r) u v
 
-lemma Hh : (Hpk k r)ᴴ = Hpk k r := B2x8.Hpk_herm k r
+lemma Hh : (Hpk k r)ᴴ = Hpk k r := _root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r
 
 lemma herm_bvec_right (u : Fin (2 * r + k + 1) → ℂ) (j : Fin (2 * r + k + 1)) :
     ⟪u, bvec j⟫ = (Hpk k r *ᵥ u) j := by
@@ -247,9 +242,9 @@ lemma hx_up {x : Fin (2 * r + k + 1) → ℂ} (hx' : IsX k r l x) : hx k r l x �
   have h1' : ⟪𝐞, x⟫ = 1 := by rw [← h_conj _ Hh, h1, map_one]
   have h4 : ⟪𝐬, x⟫ = conj ⟪x, 𝐬⟫ := (h_conj _ Hh _ _).symm
   have hvp : ⟪x - 𝐬 - ⟪x, 𝐬⟫ • 𝐞, 𝐞⟫ = 0 := by
-    simp only [h_sub_left, h_smul_left, h1, h_es_e, h_e_e, ite_true]; ring
+    simp only [h_sub_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, h1, h_es_e, h_e_e, ite_true]; ring
   refine ⟨hs_glev (h_e_e l l) hvp ?_ ?_ ?_, ?_, fun y hy => ?_⟩
-  · simp only [h_sub_left, h_sub_right, h_smul_left, h_smul_right, h1, h1', h2, h4, h_es_e, h_e_e, h_e_es, h_es_es, ite_true]
+  · simp only [h_sub_left, h_sub_right, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, h_smul_right, h1, h1', h2, h4, h_es_e, h_e_e, h_e_es, h_es_es, ite_true]
     ring
   · intro a ha
     exact ⟨h_e_e a l, by rw [h_es_e, ite_eq_right (ne_of_val_lt ha)]⟩
@@ -283,10 +278,10 @@ lemma isX_of_glev {g : Mx k r} (hg : g ∈ Glev k r l.castSucc) (he : g *ᵥ �
     rw [uh_herm hg.1, h_es_es]
 
 lemma up_unique {u u' : Mx k r} (hu : u ∈ UP k r l) (hu' : u' ∈ UP k r l) (h : u *ᵥ 𝐬 = u' *ᵥ 𝐬) : u = u' := by
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro y
   have hy0 : ⟪y - ⟪y, 𝐞⟫ • 𝐬, 𝐞⟫ = 0 := by
-    simp only [h_sub_left, h_smul_left, h_es_e, ite_true]; ring
+    simp only [h_sub_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, h_es_e, ite_true]; ring
   obtain ⟨t, ht⟩ := hu.2.2 _ hy0
   obtain ⟨t', ht'⟩ := hu'.2.2 _ hy0
   have e1 := uh_herm hu.1.1 (y - ⟪y, 𝐞⟫ • 𝐬) 𝐬
@@ -294,8 +289,8 @@ lemma up_unique {u u' : Mx k r} (hu : u ∈ UP k r l) (hu' : u' ∈ UP k r l) (h
   have e3 : ⟪𝐞, u' *ᵥ 𝐬⟫ = 1 := by
     conv_lhs => rw [← hu'.2.1]
     rw [uh_herm hu'.1.1, h_e_es, ite_eq_left rfl]
-  rw [ht, h, h_add_left, h_smul_left, e3] at e1
-  rw [ht', h_add_left, h_smul_left, e3] at e2
+  rw [ht, h, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, e3] at e1
+  rw [ht', _root_.Formalism.FourierDecayAlt.P.B2x6.herm_add_left, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, e3] at e2
   have htt : t = t' := by linear_combination e1 - e2
   have hy : y = (y - ⟪y, 𝐞⟫ • 𝐬) + ⟪y, 𝐞⟫ • 𝐬 := by simp
   rw [hy, Matrix.mulVec_add, Matrix.mulVec_add, Matrix.mulVec_smul, Matrix.mulVec_smul, ht, ht', h, htt]
@@ -371,7 +366,7 @@ lemma w1_commute_of_mem_Glev (c : ℂ) {g : Mx k r} (hg : g ∈ Glev k r l.succ)
 
 lemma weyl_cell_mul_conj {c : ℂ} (hc : c ≠ 0) : w1 k r l c * w1 k r l (conj c) = 1 := by
   have hc' : conj c ≠ 0 := (map_ne_zero _).2 hc
-  apply mat_ext
+  apply _root_.Formalism.FourierDecayAlt.P.B2x8.al_mat_ext
   intro y
   rw [← Matrix.mulVec_mulVec, Matrix.one_mulVec, weyl_cell_mulVec (conj c), Matrix.mulVec_add, Matrix.mulVec_add, Matrix.mulVec_smul,
     Matrix.mulVec_smul, w1_mulVec_bvec_eI, w1_mulVec_bvec_esI, weyl_cell_mulVec, Complex.conj_conj]
@@ -401,8 +396,8 @@ lemma dec_exists {g : Mx k r} (hg : g ∈ Glev k r l.castSucc) (hc : ⟪g *ᵥ �
   set c := ⟪g *ᵥ 𝐞, 𝐞⟫ with hcdef
   have hX : IsX k r l (c⁻¹ • (g *ᵥ 𝐞)) := by
     refine ⟨?_, ?_, fun a ha => ⟨?_, ?_⟩⟩
-    · rw [h_smul_left, ← hcdef, inv_mul_cancel₀ hc]
-    · rw [h_smul_left, h_smul_right, uh_herm hg.1, h_e_e]; simp
+    · rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, ← hcdef, inv_mul_cancel₀ hc]
+    · rw [_root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, h_smul_right, uh_herm hg.1, h_e_e]; simp
     · rw [h_smul_right]
       conv_lhs => rw [← (hg.2 a (by simpa using ha)).1]
       rw [uh_herm hg.1, h_e_e, mul_zero]
@@ -440,7 +435,7 @@ lemma iH_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : iH g = g⁻¹ := by
   apply Matrix.inv_eq_left_inv
   have h : gᴴ * Hpk k r * g = Hpk k r := hg
   unfold iH
-  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, h, B2x8.Hpk_sq]
+  rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc gᴴ, h, _root_.Formalism.QuantumDeterminants.GBasic.Hpk_sq]
 
 lemma inv_inv' {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹⁻¹ = g := Matrix.nonsing_inv_nonsing_inv _ (uh_unit hg)
 
@@ -455,7 +450,7 @@ lemma Dec.act_e {g u g₁ u' : Mx k r} {c : ℂ} (h : Dec k r l g c u g₁ u') :
 
 lemma Dec.cF_eq {g u g₁ u' : Mx k r} {c : ℂ} (h : Dec k r l g c u g₁ u') : cF k r l g = c := by
   unfold cF
-  rw [h.act_e, h_smul_left, (isX_of_glev h.hu.1 h.hu.2.1).1, mul_one]
+  rw [h.act_e, _root_.Formalism.FourierDecayAlt.P.B2x6.herm_smul_left, (isX_of_glev h.hu.1 h.hu.2.1).1, mul_one]
 
 lemma Dec.uL_eq {g u g₁ u' : Mx k r} {c : ℂ} (h : Dec k r l g c u g₁ u') : uL k r l g = u := by
   unfold uL
@@ -960,10 +955,3 @@ theorem fFTransfer : FFTransfer := by
 end transfer
 
 end Formalism.FourierDecayAlt.P.Qx4
-
-namespace Formalism.FourierDecayAlt.P
-
-theorem resSurj_statement : Formalism.FourierDecayAlt.Q.ResSurj := Qx4.resSurj
-theorem flag_frame_transfer : Formalism.FourierDecayAlt.Q.FFTransfer := Qx4.fFTransfer
-
-end Formalism.FourierDecayAlt.P

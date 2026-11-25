@@ -66,16 +66,6 @@ open scoped Matrix.Norms.Elementwise
 
 variable {k r : ℕ}
 
-lemma tr_gN_nonneg (g : B.Mat k r) : 0 ≤ B.gN g := Real.sqrt_nonneg _
-
-lemma gN_mul_le (X X' : B.Mat k r) : B.gN (X * X') ≤ B.gN X * B.gN X' := P.B6.gN_mul_le X X'
-
-lemma tr_inv_GV {n : B.Mat k r} (hn : n ∈ B.GV k r) : n⁻¹ = Hpk k r * nᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  have h : nᴴ * Hpk k r * n = Hpk k r := hn
-  calc Hpk k r * nᴴ * Hpk k r * n = Hpk k r * (nᴴ * Hpk k r * n) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [h, (hpkFacts k r).2.1]
-
 lemma gN_inv_GV {n : B.Mat k r} (hn : n ∈ B.GV k r) : B.gN n⁻¹ = B.gN n := by
   apply _root_.PI.PolynomialProperness.GN.gN_inv <;> assumption
 
@@ -92,10 +82,6 @@ lemma tr_meas_bigCell : @Measurable (Fin r → ℂ) (Mt k r) _ _ (fun c => bigCe
     | exact measurable_pi_apply (X := fun _ : Fin r => ℂ) _
     | exact (continuous_star.measurable.comp (measurable_pi_apply (X := fun _ : Fin r => ℂ) _)).inv
 
-lemma tr_cWeight_cont : Continuous (B2.cWeight k r) := by
-  unfold B2.cWeight
-  exact continuous_finsetProd _ fun a _ => (continuous_norm.comp (continuous_apply a)).pow _
-
 lemma tr_f_pos {A : ℝ} {g : B.Mat k r} (hg : g ∈ B.GV k r) : 0 < ENNReal.ofReal (B.gN g ^ (-A)) :=
   ENNReal.ofReal_pos.2 (Real.rpow_pos_of_pos (lt_of_lt_of_le one_pos (P.BetaSesquilinearity.gN_ge_one hg)) _)
 
@@ -105,10 +91,10 @@ lemma tr_bigCell_one_mem {c : Fin r → ℂ} (hc : ∀ a, c a ≠ 0) : bigCell k
 theorem intN_AB {μN : Measure (Mt k r)} (hN : IsHaarOn (Nset k r) μN) :
     ∫⁻ x, ENNReal.ofReal (B.gN (Matrix.of x : B.Mat k r) ^ (-(B.AB k r))) ∂μN < ⊤ := by
   classical
-  haveI := P.LongWeylElement.sf hN
-  obtain ⟨μG, hG⟩ := P.unitary_group_haar_exists k r
-  obtain ⟨μb, hb⟩ := P.opposite_weyl_haar_exists k r
-  haveI := P.LongWeylElement.sf hb
+  haveI := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hN
+  obtain ⟨μG, hG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
+  obtain ⟨μb, hb⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarWb k r
+  haveI := _root_.Formalism.FourierDecayAlt.P.B2x2.sfin hb
   set A := B.AB k r with hA
   have hA0 : 0 ≤ A := by
     rw [hA]; unfold B.AB; positivity
@@ -169,22 +155,22 @@ theorem intN_AB {μN : Measure (Mt k r)} (hN : IsHaarOn (Nset k r) μN) :
         lt_of_lt_of_le one_pos (P.BetaSesquilinearity.gN_ge_one hgG)
       have hle : B.gN (n⁻¹ * bigCell k r c 1 * m * n') ≤
           B.gN n * B.gN (bigCell k r c 1) * B.gN m * B.gN n' := by
-        calc B.gN (n⁻¹ * bigCell k r c 1 * m * n') ≤ B.gN (n⁻¹ * bigCell k r c 1 * m) * B.gN n' := gN_mul_le _ _
+        calc B.gN (n⁻¹ * bigCell k r c 1 * m * n') ≤ B.gN (n⁻¹ * bigCell k r c 1 * m) * B.gN n' := _root_.Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _
           _ ≤ (B.gN (n⁻¹ * bigCell k r c 1) * B.gN m) * B.gN n' :=
-              mul_le_mul_of_nonneg_right (gN_mul_le _ _) (tr_gN_nonneg _)
+              mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)
           _ ≤ ((B.gN n⁻¹ * B.gN (bigCell k r c 1)) * B.gN m) * B.gN n' :=
-              mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (gN_mul_le _ _) (tr_gN_nonneg _))
-                (tr_gN_nonneg _)
+              mul_le_mul_of_nonneg_right (mul_le_mul_of_nonneg_right (_root_.Formalism.FourierDecayAlt.P.B6.gN_mul_le _ _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _))
+                (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)
           _ = B.gN n * B.gN (bigCell k r c 1) * B.gN m * B.gN n' := by rw [gN_inv_GV hn]
       have hrp := Real.rpow_le_rpow_of_nonpos hgpos hle (by linarith : -A ≤ 0)
       have e1 : (B.gN n * B.gN (bigCell k r c 1) * B.gN m * B.gN n') ^ (-A) =
           B.gN n ^ (-A) * B.gN (bigCell k r c 1) ^ (-A) * B.gN m ^ (-A) * B.gN n' ^ (-A) := by
-        rw [Real.mul_rpow (mul_nonneg (mul_nonneg (tr_gN_nonneg _) (tr_gN_nonneg _)) (tr_gN_nonneg _))
-            (tr_gN_nonneg _),
-          Real.mul_rpow (mul_nonneg (tr_gN_nonneg _) (tr_gN_nonneg _)) (tr_gN_nonneg _),
-          Real.mul_rpow (tr_gN_nonneg _) (tr_gN_nonneg _)]
+        rw [Real.mul_rpow (mul_nonneg (mul_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _))
+            (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _),
+          Real.mul_rpow (mul_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _),
+          Real.mul_rpow (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _)]
       rw [e1] at hrp
-      have hnn : ∀ g : B.Mat k r, 0 ≤ B.gN g ^ (-A) := fun g => Real.rpow_nonneg (tr_gN_nonneg _) _
+      have hnn : ∀ g : B.Mat k r, 0 ≤ B.gN g ^ (-A) := fun g => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _
       calc β * ((f p.1.1 * f p.1.2) * f p.2)
           = ENNReal.ofReal (B.gN n ^ (-A) * B.gN (bigCell k r c 1) ^ (-A) * B.gN m ^ (-A) * B.gN n' ^ (-A)) := by
             rw [ENNReal.ofReal_mul (mul_nonneg (mul_nonneg (hnn _) (hnn _)) (hnn _)),
@@ -209,7 +195,7 @@ theorem intN_AB {μN : Measure (Mt k r)} (hN : IsHaarOn (Nset k r) μN) :
   set F : (Fin r → ℂ) → ENNReal := fun c => ENNReal.ofReal (B2.cWeight k r c) *
     ENNReal.ofReal (B.gN (bigCell k r c 1) ^ (-A)) with hFdef
   have hFm : Measurable F :=
-    (ENNReal.measurable_ofReal.comp tr_cWeight_cont.measurable).mul (hfm.comp tr_meas_bigCell)
+    (ENNReal.measurable_ofReal.comp _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.In.cW_cont.measurable).mul (hfm.comp tr_meas_bigCell)
   set K := ∫⁻ c, S.indicator F c with hKdef
   have hK : K ≠ 0 := by
     intro h0
@@ -250,7 +236,7 @@ theorem intN_AB {μN : Measure (Mt k r)} (hN : IsHaarOn (Nset k r) μN) :
 theorem intN (k r : ℕ) (μN : Measure (Mt k r)) (hN : IsHaarOn (Nset k r) μN) (a : ℝ) (ha : B.AB k r ≤ a) :
     Integrable (fun x : Mt k r => B.gN (Matrix.of x : B.Mat k r) ^ (-a)) μN := by
   refine ⟨((P.HaarUniquenessConjugation.gN_meas k r).pow_const _).aestronglyMeasurable, ?_⟩
-  rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun x => Real.rpow_nonneg (tr_gN_nonneg _) _)]
+  rw [hasFiniteIntegral_iff_ofReal (Eventually.of_forall fun x => Real.rpow_nonneg (_root_.Formalism.FourierDecayAlt.P.B6.gN_nonneg _) _)]
   refine lt_of_le_of_lt (lintegral_mono_ae ?_) (intN_AB hN)
   filter_upwards [P.LongWeylElement.haar_ae hN] with x hx
   have h1 : 1 ≤ B.gN (Matrix.of x : B.Mat k r) := P.BetaSesquilinearity.gN_ge_one hx.1

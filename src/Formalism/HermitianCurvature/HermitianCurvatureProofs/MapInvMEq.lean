@@ -83,9 +83,9 @@ theorem map_invP {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ W
     [SigmaFinite D.μW] [SigmaFinite D.μN] [SigmaFinite D.μW'] :
     D.μSS.map invP = D.μSS := by
   have hm := B2x1.invM_meas (k := k) (r := r)
-  have hW := map_invM_eq (weyl_subgroup_closed k r D.z) D.haarW
-  have hN := map_invM_eq (unipotent_radical_closed k r) D.haarN
-  have hW' := map_invM_eq (weyl_subgroup_closed k r D.z') D.haarW'
+  have hW := map_invM_eq (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z) D.haarW
+  have hN := map_invM_eq (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r) D.haarN
+  have hW' := map_invM_eq (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z') D.haarW'
   show ((D.μW.prod D.μN).prod (D.μW'.prod D.μN)).map
       (Prod.map (Prod.map B2.invM B2.invM) (Prod.map B2.invM B2.invM)) = (D.μW.prod D.μN).prod (D.μW'.prod D.μN)
   rw [← Measure.map_prod_map _ _ (hm.prodMap hm) (hm.prodMap hm), ← Measure.map_prod_map _ _ hm hm,
@@ -115,10 +115,10 @@ theorem la_fin (hNI : NormInv) {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProd
       G (invP p) = ‖B.gN (Matrix.of p.1.1 * Matrix.of p.1.2 * γ * (Matrix.of p.2.2)⁻¹ *
         (Matrix.of p.2.1)⁻¹) ^ (-b)‖ₑ := by
     filter_upwards [ae_SS D] with p hp
-    have u1 := (weyl_subgroup_closed k r D.z).unit _ hp.1
-    have u2 := (unipotent_radical_closed k r).unit _ hp.2.1
-    have u3 := (weyl_subgroup_closed k r D.z').unit _ hp.2.2.1
-    have u4 := (unipotent_radical_closed k r).unit _ hp.2.2.2
+    have u1 := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z).unit _ hp.1
+    have u2 := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).unit _ hp.2.1
+    have u3 := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r D.z').unit _ hp.2.2.1
+    have u4 := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).unit _ hp.2.2.2
     have ii : ∀ x : Formalism.QuantumDeterminants.Mt k r, IsUnit (Matrix.of x).det → B2.invM (B2.invM x) = x := by
       intro x hx
       show (((Matrix.of x)⁻¹)⁻¹ : B.Mat k r) = Matrix.of x

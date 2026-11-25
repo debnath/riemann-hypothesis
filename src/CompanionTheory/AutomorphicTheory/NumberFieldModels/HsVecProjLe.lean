@@ -353,7 +353,7 @@ theorem jf_mem_fib (H : B.Mat P.k P.r → (Wq →L[ℂ] Wp)) (x : (Fin P.r → �
   congr 1
   have hc := Formalism.FourierDecayAlt.P.Qx3.wlist_comm (k := P.k) (Fin.last P.r) x.1
     ((List.finRange P.r).filter fun a => a.val < (Fin.last P.r).val)
-    (fun a ha => by simpa using (List.mem_filter.1 ha).2) (Formalism.FourierDecayAlt.P.Qx3.uw_glev (Fin.last P.r) hh)
+    (fun a ha => by simpa using (List.mem_filter.1 ha).2) (_root_.Formalism.FourierDecayAlt.P.Qx8.uw_glev (Fin.last P.r) hh)
   change Q.wCell P.k P.r (Fin.last P.r) x.1 * h = h * Q.wCell P.k P.r (Fin.last P.r) x.1 at hc
   rw [tc_gq, ← Matrix.mul_assoc, ← hc, Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc h, hst]
 

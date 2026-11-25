@@ -1560,7 +1560,7 @@ theorem inCC_five_four' {A : ℝ} {f : Mat k r → E} (h : InCC A 5 f) : InCC A 
 
 theorem continuousOn_of_ckOn {m : ℕ∞} {f : Mat k r → E} (h : CkOn m (GV k r) f) :
     ContinuousOn f (GV k r) :=
-  _root_.Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn h
+  _root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn h
 
 theorem integrable_of_inCC (hInt : GNIntSharp) (hLow : GNLower) (hCl : ClosedG) {Wp Wq : Type}
     [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq]

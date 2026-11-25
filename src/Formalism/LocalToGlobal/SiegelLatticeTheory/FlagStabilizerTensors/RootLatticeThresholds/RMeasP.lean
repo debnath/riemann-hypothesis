@@ -46,7 +46,7 @@ theorem rMeas_exact (D : D7) (W : LocW D.R.k D.R.rS) (hz : inWb D.R.k D.R.rS W.z
   obtain ⟨μ₀', c, hH, hc0, hc1, hmap⟩ :=
     Formalism.L2.SG.Pf.RootHaarLoc.locRootHaar D.R.k D.R.rS hk W.z W.z' hz hT hz' hT' p g₀ hg hZ
   set K : ℝ≥0∞ := ENNReal.ofReal ((2 * D.host.ka / gg D / (2 * Real.pi)) ^ (rootPat p).card) with hK
-  have hu : IsUnit g₀.det := (Formalism.FourierDecayAlt.P.unitary_group_closed D.R.k D.R.rS).unit g₀ hg
+  have hu : IsUnit g₀.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG D.R.k D.R.rS).unit g₀ hg
   by_cases hK0 : K = 0
   ·
 
@@ -87,7 +87,7 @@ theorem rMeas_exact (D : D7) (W : LocW D.R.k D.R.rS) (hz : inWb D.R.k D.R.rS W.z
       funext x i j
       simp
     rw [this, Measure.map_id]
-  have hN1 : (1 : MatKR D.R.k D.R.rS) ∈ Nset D.R.k D.R.rS := (Formalism.FourierDecayAlt.P.unipotent_radical_closed D.R.k D.R.rS).one_mem
+  have hN1 : (1 : MatKR D.R.k D.R.rS) ∈ Nset D.R.k D.R.rS := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN D.R.k D.R.rS).one_mem
   have hsub : Formalism.MainNotions.S.Rset D.R.k D.R.rS g₀ ⊆ UH (Hpk D.R.k D.R.rS) := fun x hx => hx.1.1
   obtain ⟨ν, hν⟩ := Formalism.L2.SG.Pf.QuotMeasExists.quotM_exists (PI.QuotSetU.UnitaryGroupMassFormula.unitary_hermitian_group D.R.k D.R.rS)
     (rset_matGroup hu) hsub hG hH0

@@ -32,7 +32,7 @@ variable {k r : ℕ}
 def InW (k r : ℕ) (z x : Fin (2 * r + k + 1) → ℂ) : Prop := inWb k r x ∧ herm (Hpk k r) x z = 0
 
 theorem herm_alt {z : Fin (2 * r + k + 1) → ℂ} : herm (Hpk k r) z z = ((-(Tz k r z) : ℝ) : ℂ) := by
-  have h := P.Qx2.herm_star (k := k) (r := r) z z
+  have h := _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj (k := k) (r := r) z z
   apply Complex.ext
   · simp [Tz]
   · have := congrArg Complex.im h
@@ -71,13 +71,13 @@ theorem blockProjection_mem_block (x : Fin (2 * r + k + 1) → ℂ) : inWb k r (
 theorem prWv_add (z x y : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (x + y) = SSn.prWv k r z x + SSn.prWv k r z y := by
   unfold SSn.prWv
-  rw [blockProjection_add, P.Qx8.herm_add_left', add_div, add_smul]
+  rw [blockProjection_add, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, add_div, add_smul]
   abel
 
 theorem prWv_smul (z : Fin (2 * r + k + 1) → ℂ) (c : ℂ) (x : Fin (2 * r + k + 1) → ℂ) :
     SSn.prWv k r z (c • x) = c • SSn.prWv k r z x := by
   unfold SSn.prWv
-  rw [blockProjection_smul, P.Qx8.herm_smul_left', smul_add, smul_smul, mul_div_assoc]
+  rw [blockProjection_smul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, smul_add, smul_smul, mul_div_assoc]
 
 theorem inWb_smul (c : ℂ) {x : Fin (2 * r + k + 1) → ℂ} (hx : inWb k r x) : inWb k r (c • x) := by
   intro i hi; simp [hx i hi]
@@ -86,7 +86,7 @@ theorem prWv_inW {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < T
     InW k r z (SSn.prWv k r z y) := by
   refine ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.inWb_add (blockProjection_mem_block y) (inWb_smul _ hz), ?_⟩
   unfold SSn.prWv
-  rw [P.Qx8.herm_add_left', P.Qx8.herm_smul_left', herm_alt]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, herm_alt]
   have : ((Tz k r z : ℝ) : ℂ) ≠ 0 := by exact_mod_cast hT.ne'
   field_simp
   push_cast
@@ -98,7 +98,7 @@ theorem herm_z_w {z w : Fin (2 * r + k + 1) → ℂ} (hw : InW k r z w) : herm (
 theorem herm_prWv {z y w : Fin (2 * r + k + 1) → ℂ} (hw : InW k r z w) :
     herm (Hpk k r) y w = herm (Hpk k r) (SSn.prWv k r z y) w := by
   unfold SSn.prWv
-  rw [P.Qx8.herm_add_left', P.Qx8.herm_smul_left', herm_z_w hw, mul_zero, add_zero, herm_wbP hw.1]
+  rw [_root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, herm_z_w hw, mul_zero, add_zero, herm_wbP hw.1]
 
 theorem eq_sum_herm_smul_frame_of_inW {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hT : 0 < Tz k r z)
     {F : Fin k → Fin (2 * r + k + 1) → ℂ} (hF : Q.IsFrameOf k r [z] F) {v : Fin (2 * r + k + 1) → ℂ}
@@ -159,7 +159,7 @@ theorem ebM_add_right (v b b' : Fin (2 * r + k + 1) → ℂ) : ebM k r v (b + b'
   apply P.Qx8.mat_ext; intro x; simp only [Matrix.add_mulVec, ebM_mulVec, P.Qx8.herm_add_right', add_smul]
 
 theorem ebM_smul_right (c : ℂ) (v b : Fin (2 * r + k + 1) → ℂ) : ebM k r v (c • b) = star c • ebM k r v b := by
-  apply P.Qx8.mat_ext; intro x; simp only [Matrix.smul_mulVec, ebM_mulVec, P.Qx8.herm_smul_right', smul_smul]
+  apply P.Qx8.mat_ext; intro x; simp only [Matrix.smul_mulVec, ebM_mulVec, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, smul_smul]
 
 theorem ebM_zero_left (b : Fin (2 * r + k + 1) → ℂ) : ebM k r 0 b = 0 := by
   apply P.Qx8.mat_ext; intro x; simp [ebM_mulVec]
@@ -298,10 +298,10 @@ theorem hermitian_adjoint_conj_unitary {h : B.Mat k r} (hh : h ∈ UH (Hpk k r))
     (Hpk k r)⁻¹ * (h * Z * h⁻¹)ᴴ * Hpk k r = h * ((Hpk k r)⁻¹ * Zᴴ * Hpk k r) * h⁻¹ := by
   have hg : hᴴ * Hpk k r * h = Hpk k r := hh
   have e : ∀ M : B.Mat k r, Hpk k r * (Hpk k r * M) = M := by
-    intro M; rw [← Matrix.mul_assoc, P.Qx2.hpk_sq', Matrix.one_mul]
+    intro M; rw [← Matrix.mul_assoc, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq, Matrix.one_mul]
   have hinv : h⁻¹ = Hpk k r * hᴴ * Hpk k r := by
     apply Matrix.inv_eq_left_inv
-    rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc hᴴ, hg, P.Qx2.hpk_sq']
+    rw [Matrix.mul_assoc, Matrix.mul_assoc, ← Matrix.mul_assoc hᴴ, hg, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   rw [hinv, P.Qx2.hpk_inv]
   simp only [Matrix.conjTranspose_mul, Matrix.conjTranspose_conjTranspose, P.Qx2.hpk_h, Matrix.mul_assoc, e]
 
@@ -335,7 +335,7 @@ theorem herm_sum_right {ι : Type*} (s : Finset ι) (x : Fin (2 * r + k + 1) →
   induction s using Finset.induction_on with
   | empty => simp [herm]
   | insert a s ha ih =>
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, P.Qx8.herm_add_right', P.Qx8.herm_smul_right', ih]
+    rw [Finset.sum_insert ha, Finset.sum_insert ha, P.Qx8.herm_add_right', _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_right, ih]
 
 theorem herm_sum_left {ι : Type*} (s : Finset ι) (x : Fin (2 * r + k + 1) → ℂ) (c : ι → ℂ)
     (w : ι → Fin (2 * r + k + 1) → ℂ) :
@@ -344,7 +344,7 @@ theorem herm_sum_left {ι : Type*} (s : Finset ι) (x : Fin (2 * r + k + 1) → 
   induction s using Finset.induction_on with
   | empty => simp [herm]
   | insert a s ha ih =>
-    rw [Finset.sum_insert ha, Finset.sum_insert ha, P.Qx8.herm_add_left', P.Qx8.herm_smul_left', ih]
+    rw [Finset.sum_insert ha, Finset.sum_insert ha, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, ih]
 
 theorem prWv_sum (z : Fin (2 * r + k + 1) → ℂ) {ι : Type*} (s : Finset ι) (c : ι → ℂ)
     (v : ι → Fin (2 * r + k + 1) → ℂ) :
@@ -420,9 +420,9 @@ theorem cd_herm {k r : ℕ} (g : E → Fin (2 * r + k + 1) → ℂ) (hadd : ∀ 
     (hsmul : ∀ (c : ℝ) x, g (c • x) = (c : ℂ) • g x) (v : Fin (2 * r + k + 1) → ℂ) :
     ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => herm (Hpk k r) (g x) v) ∧
       ContDiff ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) (fun x => star (herm (Hpk k r) (g x) v)) := by
-  refine ⟨cd_lin _ (fun x y => by rw [hadd, P.Qx8.herm_add_left']) (fun c x => by rw [hsmul, P.Qx8.herm_smul_left']),
-    cd_lin _ (fun x y => by rw [hadd, P.Qx8.herm_add_left', star_add])
-      (fun c x => by rw [hsmul, P.Qx8.herm_smul_left', star_mul', Complex.star_def, Complex.conj_ofReal])⟩
+  refine ⟨cd_lin _ (fun x y => by rw [hadd, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left]) (fun c x => by rw [hsmul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left]),
+    cd_lin _ (fun x y => by rw [hadd, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_add_left, star_add])
+      (fun c x => by rw [hsmul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.herm_smul_left, star_mul', Complex.star_def, Complex.conj_ofReal])⟩
 
 end smooth
 

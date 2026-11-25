@@ -86,9 +86,9 @@ set_option synthInstance.maxSize 2000 in
 theorem besselJ_family_aestronglyMeasurable : ∀ (k r : ℕ) (Wp Wq : Type) [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp] [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq] [FiniteDimensional ℂ Wp] [FiniteDimensional ℂ Wq] (Bs : B.RealPlaceData k r Wp Wq) (α : Type) [TopologicalSpace α] [MeasurableSpace α] [OpensMeasurableSpace α] [SecondCountableTopology α] (μ : Measure α) [SFinite μ] (U : Set α) (γ : α → B.Mat k r) (V : Set (B.Mat k r)) (H : B.Mat k r → (Wq →L[ℂ] Wp)), IsOpen U → ContinuousOn γ U → (∀ x ∈ U, ∀ q, Bs.inSS q → B.sgs q (γ x) ∈ V) → ContinuousOn H V → AEStronglyMeasurable (fun x => B.JF Bs H (γ x)) (μ.restrict U) := by
   intro k r Wp Wq _ _ _ _ _ _ Bs α _ _ _ _ μ _ U γ V H hU hγ hV hH
   set S : Set (B.SS k r) := {p | Bs.inSS p} with hS
-  have hWc := (P.weyl_subgroup_closed k r Bs.z).closed
-  have hWc' := (P.weyl_subgroup_closed k r Bs.z').closed
-  have hNc := (P.unipotent_radical_closed k r).closed
+  have hWc := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z).closed
+  have hWc' := (_root_.Formalism.FourierDecayAlt.P.B2x3.closedW k r Bs.z').closed
+  have hNc := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).closed
   have hSc : IsClosed S := by
     have e : S = (fun p : B.SS k r => (p.1.1 : B.Mat k r)) ⁻¹' (UWset k r Bs.z) ∩
         ((fun p : B.SS k r => (p.1.2 : B.Mat k r)) ⁻¹' (Nset k r) ∩
@@ -126,9 +126,9 @@ theorem besselJ_family_aestronglyMeasurable : ∀ (k r : ℕ) (Wp Wq : Type) [No
   have hcont : ContinuousOn (fun y : α × B.SS k r => D.orbIntegrand Bs (γ y.1) H y.2) (U ×ˢ S) := by
     unfold D.orbIntegrand B.rho
     exact (up hxi.continuousOn).smul ((up hπ).clm_comp (hFs.clm_comp (up hπ')))
-  have hW : SigmaFinite Bs.μW := P.Dx2.MN.sigma_of_haar Bs.haarW
-  have hW' : SigmaFinite Bs.μW' := P.Dx2.MN.sigma_of_haar Bs.haarW'
-  have hN : SigmaFinite Bs.μN := P.Dx2.MN.sigma_of_haar Bs.haarN
+  have hW : SigmaFinite Bs.μW := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW
+  have hW' : SigmaFinite Bs.μW' := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarW'
+  have hN : SigmaFinite Bs.μN := _root_.Formalism.FourierDecayAlt.P.B7.sf Bs.haarN
   have hsf : SFinite Bs.μSS := by unfold B.RealPlaceData.μSS; infer_instance
   have h1 := hcont.aestronglyMeasurable (μ := μ.prod Bs.μSS) (hU.measurableSet.prod hSc.measurableSet)
   have hae : ∀ᵐ p ∂Bs.μSS, p ∈ S := P.Dx2.OrbJ.ae_inSS Bs
@@ -396,7 +396,7 @@ theorem liftedWord_continuousOn_GPos : ∀ (Wp Wq : Type) [NormedAddCommGroup Wp
     have h1 : ContinuousOn T.coef (B.GPos p.T.base) :=
       (Formalism.FourierDecayAlt.P.PBE.ckOn_continuousOn' (UU := C6.domL p.T.base ∅) (fun g hg => hg.1) (hIn.1 T hT).1).mono hsub
     have h2 : ContinuousOn (B.Rw T.word F) (B.GPos p.T.base) :=
-      (Formalism.FourierDecayAlt.P.B5.ckOn_continuousOn (Formalism.FourierDecayAlt.P.JFxG.ckOn_Rw_top hF T.word T.word_lie)).mono hGPG
+      (_root_.Formalism.FourierDecayAlt.P.B7.contOn_of_CkOn (Formalism.FourierDecayAlt.P.JFxG.ckOn_Rw_top hF T.word T.word_lie)).mono hGPG
     exact h1.clm_apply h2
   exact hcont.congr (fun g hg => hEq F g (hsub hg))
 

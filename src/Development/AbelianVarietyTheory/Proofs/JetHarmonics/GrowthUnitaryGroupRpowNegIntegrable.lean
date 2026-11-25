@@ -59,7 +59,7 @@ theorem _root_.GlobalTheory.gN_rpow_neg_integrable_haar : _root_.Formalism.Fouri
   intro k r μG A hμ hA
   have hW : _root_.Formalism.FourierDecayAlt.B.IsHaarOn (_root_.Formalism.FourierDecayAlt.B.GV k r) μG :=
     (_root_.GlobalTheory.HaarNotions.isHaarOn_iff_groups k r μG).1.1 hμ
-  have hvol := _root_.Formalism.FourierDecayAlt.P.norm_ball_volume_sharp
+  have hvol := _root_.Formalism.FourierDecayAlt.P.HermitianFormFactor.volSharp
   unfold _root_.Formalism.FourierDecayAlt.B2.VolSharp at hvol
   obtain ⟨C, hC⟩ := hvol k r μG hW
   have hU : ∀ᵐ x ∂μG, Matrix.of x ∈ _root_.Formalism.QuantumDeterminants.UH (_root_.Formalism.QuantumDeterminants.Hpk k r) := by

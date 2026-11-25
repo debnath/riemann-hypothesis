@@ -1614,16 +1614,16 @@ theorem lemma_b_from_norm_bound : Formalism.FourierDecayAlt.B2.LemmaBAnyFromNorm
 theorem compact_conjugation : Formalism.FourierDecayAlt.B2.CompactConj := Formalism.FourierDecayAlt.P.compact_subgroup_conjugation
 theorem dilation_jacobian_formula : Formalism.FourierDecayAlt.B2.DilJacRaw := Formalism.FourierDecayAlt.P.dilation_jacobian_unipotent
 theorem dilation_jacobian_all : Formalism.FourierDecayAlt.B2.DilJacAll := Formalism.FourierDecayAlt.P.dilation_jacobian_every_setting
-theorem closed_subgroup_general_linear : Formalism.FourierDecayAlt.B2.ClosedG := Formalism.FourierDecayAlt.P.unitary_group_closed
-theorem closed_subgroup_unipotent_radical : Formalism.FourierDecayAlt.B2.ClosedN := Formalism.FourierDecayAlt.P.unipotent_radical_closed
+theorem closed_subgroup_general_linear : Formalism.FourierDecayAlt.B2.ClosedG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG
+theorem closed_subgroup_unipotent_radical : Formalism.FourierDecayAlt.B2.ClosedN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN
 theorem conjugation_invariance_all : Formalism.FourierDecayAlt.B2.ConjInvAll := Formalism.FourierDecayAlt.P.conjugation_invariance_every_setting
 theorem integral_norm_bound_variant_b : Formalism.FourierDecayAlt.B2.IntNormB := Formalism.FourierDecayAlt.P.normalisation_unique_every_setting
 theorem integral_bound_all : Formalism.FourierDecayAlt.B2.CCIntAll := Formalism.FourierDecayAlt.P.matrix_coefficient_integrable_all
 theorem jf_jqSmooth : Formalism.FourierDecayAlt.JF.JqSmooth := Formalism.FourierDecayAlt.P.jacquet_smooth_coordinates
 theorem d_ptRelevant : Formalism.FourierDecayAlt.D.PtRelevant := Formalism.FourierDecayAlt.P.relevant_points_holds
-theorem tbb_stepOne : Formalism.FourierDecayAlt.TBB.StepOne := Formalism.FourierDecayAlt.P.lemma_s_induction_base
-theorem tbb_stepUp : Formalism.FourierDecayAlt.TBB.StepUp := Formalism.FourierDecayAlt.P.lemma_s_induction_up
-theorem tbb_lemmaSOfSteps : Formalism.FourierDecayAlt.TBB.LemmaSOfSteps := Formalism.FourierDecayAlt.P.lemma_s_of_parts
+theorem tbb_stepOne : Formalism.FourierDecayAlt.TBB.StepOne := _root_.Formalism.FourierDecayAlt.P.TBBx1.stepOne
+theorem tbb_stepUp : Formalism.FourierDecayAlt.TBB.StepUp := _root_.Formalism.FourierDecayAlt.P.TBBx1.stepUp
+theorem tbb_lemmaSOfSteps : Formalism.FourierDecayAlt.TBB.LemmaSOfSteps := _root_.Formalism.FourierDecayAlt.P.TBBx1.lemmaSOfSteps
 theorem tbb_ptBoundOfCorS : Formalism.FourierDecayAlt.TBB.PtBoundOfCorS := Formalism.FourierDecayAlt.P.point_bound_of_corollary_s
 theorem tbb_thmBpOfParts : Formalism.FourierDecayAlt.TBB.ThmBpOfParts := Formalism.FourierDecayAlt.P.theorem_b_of_parts
 

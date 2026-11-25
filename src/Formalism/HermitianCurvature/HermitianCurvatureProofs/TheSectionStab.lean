@@ -267,12 +267,12 @@ theorem stab_sub (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb 
   have hblock : μ * theSecB k (wbPart k r z) (wbPart k r z') (Tz k r z) (Tz k r z') ζ * μ' =
       theSecB k (wbPart k r z) (wbPart k r z') (Tz k r z) (Tz k r z') ζ := by
     apply emb_inj (r := r)
-    rw [emb_mul, emb_mul, ← hp1, ← hp2]
+    rw [_root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← hp1, ← hp2]
     exact heq
   have hc := (block_iff hk hT hT' ha hb hζ hμ hμ' hμa hμb).1 hblock
   have hblock' := (block_iff hk hT hT' ha hb hζ' hμ hμ' hμa hμb).2 hc
   show p.1 * embWb k r (theSection k r z z' ζ') * p.2 = embWb k r (theSection k r z z' ζ')
-  rw [hp1, hp2, ← emb_mul, ← emb_mul]
+  rw [hp1, hp2, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul, ← _root_.Formalism.FourierDecayAlt.P.RankOneEmbeddings.Wb.emb_mul]
   exact congrArg (embWb k r) hblock'
 
 theorem theSection_csec (hk : 1 ≤ k) {z z' : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) (hz' : inWb k r z')

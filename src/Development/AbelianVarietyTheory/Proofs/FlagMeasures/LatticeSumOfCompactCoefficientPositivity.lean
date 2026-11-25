@@ -217,7 +217,7 @@ theorem isLocPt_germPt (s : ℕ) (hs : 2 ≤ s) (b : ℕ) (hb : 1 ≤ b) (h : C.
 def nHead (k r : ℕ) (h : C.LPt) : ℝ := C.nAux k r 0 (fun _ _ => 1) 1 h
 
 theorem nHead_nonneg (k r : ℕ) (h : C.LPt) : 0 ≤ nHead k r h :=
-  GermRateSplit.weight_product_nonneg k r _ (fun _ _ => zero_le_one) 1 h
+  _root_.Formalism.FourierDecayAlt.P.FormNormSumIdentities.weight_product_nonneg k r _ (fun _ _ => zero_le_one) 1 h
 
 theorem nPt_append (k r : ℕ) (TT : ℝ) (h L : C.LPt) (hh : D.ptSize h ≤ r) :
     TBB.nPt k r TT (h ++ L) =

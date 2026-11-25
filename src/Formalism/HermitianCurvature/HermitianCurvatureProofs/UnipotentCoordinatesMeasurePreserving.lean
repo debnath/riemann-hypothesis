@@ -56,14 +56,11 @@ section
 variable {k r : ℕ}
 
 theorem isUnit_of_N {g : Formalism.FourierDecayAlt.B.Mat k r} (hg : g ∈ Nset k r) : IsUnit g.det :=
-  (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).unit g hg
-
-theorem isUnit_of_G {g : Formalism.FourierDecayAlt.B.Mat k r} (hg : g ∈ Formalism.FourierDecayAlt.B.GV k r) : IsUnit g.det :=
-  (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit g hg
+  (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).unit g hg
 
 theorem closedR {γ : Formalism.FourierDecayAlt.B.Mat k r} (hγ : IsUnit γ.det) :
     Formalism.FourierDecayAlt.B2.IsClosedSubgroup (Formalism.FourierDecayAlt.C6.Rset γ) := by
-  have hN := Formalism.FourierDecayAlt.P.unipotent_radical_closed k r
+  have hN := _root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r
   refine ⟨⟨hN.one_mem, ?_⟩, ?_, ?_, ?_, ?_⟩
   · rw [Matrix.mul_one, Matrix.nonsing_inv_mul _ hγ]; exact hN.one_mem
   · rintro a ⟨ha, ha'⟩ b ⟨hb, hb'⟩
@@ -83,18 +80,6 @@ theorem closedR {γ : Formalism.FourierDecayAlt.B.Mat k r} (hγ : IsUnit γ.det)
 
 theorem fmoc {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Mt k r)} (h : Formalism.FourierDecayAlt.B.IsHaarOn U μ) :
     IsFiniteMeasureOnCompacts μ := ⟨fun K hK => h.finite_compact K hK⟩
-
-theorem sigmaF {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Mt k r)} (h : Formalism.FourierDecayAlt.B.IsHaarOn U μ) :
-    SigmaFinite μ := by
-  have := fmoc h; infer_instance
-
-theorem ae_mem {U : Set (Formalism.FourierDecayAlt.B.Mat k r)} {μ : Measure (Mt k r)} (h : Formalism.FourierDecayAlt.B.IsHaarOn U μ) :
-    ∀ᵐ x ∂μ, Matrix.of x ∈ U := by
-  rw [ae_iff]; exact h.conc
-
-theorem contL (a : Formalism.FourierDecayAlt.B.Mat k r) : Continuous (lmulM (k := k) (r := r) a) := by
-  unfold lmulM
-  exact continuous_const.matrix_mul continuous_id
 
 theorem contT (γ : Formalism.FourierDecayAlt.B.Mat k r) :
     Continuous fun z : Formalism.FourierDecayAlt.B.SS k r × Mt k r => Formalism.FourierDecayAlt.C6.actR γ (Matrix.of z.2) z.1 := by
@@ -119,20 +104,16 @@ section
 variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace ℂ Wp]
   [NormedAddCommGroup Wq] [InnerProductSpace ℂ Wq]
 
-theorem sfSS (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) : SigmaFinite D.μSS := by
-  have := sigmaF D.haarW; have := sigmaF D.haarN; have := sigmaF D.haarW'
-  unfold Formalism.FourierDecayAlt.B.RealPlaceData.μSS; infer_instance
-
 theorem ae_inSS (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) : ∀ᵐ p ∂D.μSS, D.inSS p := by
-  have := sigmaF D.haarW; have := sigmaF D.haarN; have := sigmaF D.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW; have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarN; have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW'
   have b1 : ∀ᵐ q ∂(D.μW.prod D.μN), Matrix.of q.1 ∈ UWset k r D.z :=
-    (Measure.quasiMeasurePreserving_fst (μ := D.μW) (ν := D.μN)).ae (ae_mem D.haarW)
+    (Measure.quasiMeasurePreserving_fst (μ := D.μW) (ν := D.μN)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarW)
   have b2 : ∀ᵐ q ∂(D.μW.prod D.μN), Matrix.of q.2 ∈ Nset k r :=
-    (Measure.quasiMeasurePreserving_snd (μ := D.μW) (ν := D.μN)).ae (ae_mem D.haarN)
+    (Measure.quasiMeasurePreserving_snd (μ := D.μW) (ν := D.μN)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarN)
   have c1 : ∀ᵐ q ∂(D.μW'.prod D.μN), Matrix.of q.1 ∈ UWset k r D.z' :=
-    (Measure.quasiMeasurePreserving_fst (μ := D.μW') (ν := D.μN)).ae (ae_mem D.haarW')
+    (Measure.quasiMeasurePreserving_fst (μ := D.μW') (ν := D.μN)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarW')
   have c2 : ∀ᵐ q ∂(D.μW'.prod D.μN), Matrix.of q.2 ∈ Nset k r :=
-    (Measure.quasiMeasurePreserving_snd (μ := D.μW') (ν := D.μN)).ae (ae_mem D.haarN)
+    (Measure.quasiMeasurePreserving_snd (μ := D.μW') (ν := D.μN)).ae (_root_.Formalism.FourierDecayAlt.P.B7.ae_mem D.haarN)
   have d1 : ∀ᵐ p ∂((D.μW.prod D.μN).prod (D.μW'.prod D.μN)),
       Matrix.of p.1.1 ∈ UWset k r D.z ∧ Matrix.of p.1.2 ∈ Nset k r :=
     (Measure.quasiMeasurePreserving_fst (μ := D.μW.prod D.μN) (ν := D.μW'.prod D.μN)).ae (b1.and b2)
@@ -145,9 +126,9 @@ theorem ae_inSS (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) : ∀�
 
 theorem mp_act (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) (γ : Formalism.FourierDecayAlt.B.Mat k r) {ρ : Formalism.FourierDecayAlt.B.Mat k r}
     (hρ : ρ ∈ Formalism.FourierDecayAlt.C6.Rset γ) : MeasurePreserving (Formalism.FourierDecayAlt.C6.actR γ ρ) D.μSS D.μSS := by
-  have := sigmaF D.haarW; have := sigmaF D.haarN; have := sigmaF D.haarW'
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW; have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarN; have := _root_.Formalism.FourierDecayAlt.P.B7.sf D.haarW'
   have hl : ∀ a ∈ Nset k r, MeasurePreserving (lmulM (k := k) (r := r) a) D.μN D.μN := fun a ha =>
-    ⟨(contL a).measurable, D.haarN.left a ha⟩
+    ⟨(_root_.Formalism.FourierDecayAlt.P.B2x1.lmulM_cont a).measurable, D.haarN.left a ha⟩
   have e : Formalism.FourierDecayAlt.C6.actR γ ρ =
       Prod.map (Prod.map id (lmulM (k := k) (r := r) ρ)) (Prod.map id (lmulM (k := k) (r := r) (γ⁻¹ * ρ * γ))) := by
     funext p; rfl
@@ -213,7 +194,7 @@ theorem integrand_act (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) 
     {ρ : Formalism.FourierDecayAlt.B.Mat k r} (hρ : ρ ∈ Formalism.FourierDecayAlt.C6.Rset γ) (p : Formalism.FourierDecayAlt.B.SS k r)
     (hn : Matrix.of p.1.2 ∈ Nset k r) (hn' : Matrix.of p.2.2 ∈ Nset k r) :
     Formalism.FourierDecayAlt.D.orbIntegrand D γ F (Formalism.FourierDecayAlt.C6.actR γ ρ p) = Formalism.FourierDecayAlt.D.orbIntegrand D γ F p := by
-  have hγ := isUnit_of_G hrel.1
+  have hγ := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hrel.1
   have hρu := isUnit_of_N hρ.1
   unfold Formalism.FourierDecayAlt.D.orbIntegrand Formalism.FourierDecayAlt.B.rho
   rw [xiTau_act D γ hrel hρ p hn hn', sgs_act γ hγ hρu p]
@@ -226,7 +207,7 @@ theorem fub (D : Formalism.FourierDecayAlt.B.RealPlaceData k r Wp Wq) (γ : Form
     Integrable (fun z : Formalism.FourierDecayAlt.B.SS k r × Mt k r => θ' (Formalism.FourierDecayAlt.C6.actR γ (Matrix.of z.2) z.1) • G z.1)
         (D.μSS.prod μR) ∧
       ∫ p, G p ∂D.μSS = ∫ x, ∫ p, θ' (Formalism.FourierDecayAlt.C6.actR γ (Matrix.of x) p) • G p ∂D.μSS ∂μR := by
-  have := sfSS D
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
   have hm : Measurable fun z : Formalism.FourierDecayAlt.B.SS k r × Mt k r => θ' (Formalism.FourierDecayAlt.C6.actR γ (Matrix.of z.2) z.1) :=
     hθ'.1.comp (contT γ).measurable
   have hAE : AEStronglyMeasurable
@@ -274,9 +255,9 @@ theorem orbital_integral_indep_choice : Formalism.FourierDecayAlt.D.OrbJIndep :=
   by_cases hE : CompleteSpace (Wq →L[ℂ] Wp)
   swap
   · simp only [integral_of_not_completeSpace hE]
-  have : SigmaFinite μR := sigmaF hR
-  have := sfSS D
-  have hγ := isUnit_of_G hrel.1
+  have : SigmaFinite μR := _root_.Formalism.FourierDecayAlt.P.B7.sf hR
+  have := _root_.Formalism.FourierDecayAlt.P.B7.sfSS D
+  have hγ := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hrel.1
   obtain ⟨-, E1⟩ := fub D γ μR (fun p => θ p • Formalism.FourierDecayAlt.D.orbIntegrand D γ F p) hi θ' hθ'
   obtain ⟨I2, E2⟩ := fub D γ μR (fun p => θ' p • Formalism.FourierDecayAlt.D.orbIntegrand D γ F p) hi' θ hθ
   rw [E1, E2]
@@ -291,7 +272,7 @@ theorem orbital_integral_indep_choice : Formalism.FourierDecayAlt.D.OrbJIndep :=
       (θ p • Formalism.FourierDecayAlt.D.orbIntegrand D γ F p) ∂D.μSS) =
       ∫ q, θ (Formalism.FourierDecayAlt.C6.actR γ (Matrix.of (Formalism.FourierDecayAlt.B2.invM x)) q) •
         (θ' q • Formalism.FourierDecayAlt.D.orbIntegrand D γ F q) ∂D.μSS := by
-    filter_upwards [ae_mem hR] with x hx
+    filter_upwards [_root_.Formalism.FourierDecayAlt.P.B7.ae_mem hR] with x hx
     have hmp := mp_act D γ hx
     have hρu : IsUnit (Matrix.of x : Formalism.FourierDecayAlt.B.Mat k r).det := isUnit_of_N hx.1
     have hKm : AEStronglyMeasurable (fun q => θ (Formalism.FourierDecayAlt.C6.actR γ (Matrix.of (Formalism.FourierDecayAlt.B2.invM x)) q) •
@@ -332,12 +313,12 @@ namespace Formalism.FourierDecayAlt.P.Dx2.MN
 variable {k ρ : ℕ}
 
 theorem eB_mid (i : Fin (2 * ρ + k + 1)) : U.eB k 1 ρ (Sum.inl (Sum.inr i)) = levPos k 1 ρ i := by
-  ext; rw [Ux3.block_index_middle_val]; simp [levPos]; omega
+  ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; simp [levPos]; omega
 
-theorem eB_first_val : (U.eB k 1 ρ (Sum.inl (Sum.inl 0))).val = 0 := by rw [Ux3.block_index_first_val]; rfl
+theorem eB_first_val : (U.eB k 1 ρ (Sum.inl (Sum.inl 0))).val = 0 := by rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]; rfl
 
 theorem eB_last_eq : U.eB k 1 ρ (Sum.inr 0) = B2x4.lastI k ρ := by
-  ext; rw [Ux3.block_index_last_val]; simp [B2x4.lastI]; omega
+  ext; rw [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; simp [B2x4.lastI]; omega
 
 theorem herm_bvec_lift (y : Fin (2 * ρ + k + 1) → ℂ) (q : Fin (2 * (1 + ρ) + k + 1)) :
     herm (Hpk k (1 + ρ)) (bvec q) (liftVec k 1 ρ y) = ∑ j, star (y j) * Hpk k (1 + ρ) (levPos k 1 ρ j) q := by
@@ -358,16 +339,6 @@ theorem hpk_lev_last (j : Fin (2 * ρ + k + 1)) :
   have := j.isLt
   unfold Hpk levPos B2x4.lastI
   split_ifs with h1 h2 h3 <;> first | rfl | (exfalso; simp only [Fin.ext_iff] at *; omega)
-
-theorem herm_self_real (y : Fin (2 * ρ + k + 1) → ℂ) :
-    (((herm (Hpk k ρ) y y).re : ℝ) : ℂ) = herm (Hpk k ρ) y y := by
-  have h := B2x4.herm_symm _ (B2x4.Hpk_herm k ρ) y y
-  apply Complex.ext
-  · simp
-  · have : (herm (Hpk k ρ) y y).im = 0 := by
-      have h2 := congrArg Complex.im h
-      simp at h2; linarith
-    simp [this]
 
 theorem cHc (c : Matrix (Fin (2 * ρ + k + 1)) (Fin 1) ℂ) :
     (cᴴ * Hpk k ρ * c) 0 0 = herm (Hpk k ρ) (fun i => c i 0) (fun i => c i 0) := by
@@ -413,7 +384,7 @@ theorem rn_heis (x : U.RC k 1 ρ) : U.Rn k 1 ρ x = B2.heis0 k ρ (fun i => x.1 
     have hw : G.wMat 1 0 0 = 1 := by simp [G.wMat]
     have hs : G.strictUpper q1 0 0 = 0 := by simp [G.strictUpper]
     simp only [hpk_lev_last, ite_eq_right h1, eB_first_val, B2x4.liftVec_out k ρ _ _ (by rw [eB_first_val]; omega), hlast]
-    simp [Ux3.wMat_mul_apply, U.skewOf, B2.hb, hs, cHc, herm_self_real]
+    simp [Ux3.wMat_mul_apply, U.skewOf, B2.hb, hs, cHc, _root_.PI.StabPairsW.herm_self_re]
     ring
   ·
     have hb : b = 0 := Subsingleton.elim _ _
@@ -488,7 +459,7 @@ theorem embG_eq (y : B.Mat k ρ) : U.embG k 1 ρ y = ιLev k 1 ρ y := by
   generalize (U.eB k 1 ρ).symm q = b
   rw [U.embG, Ux3.block3_apply]
   rcases a with ((a | a) | a) <;> rcases b with ((b | b) | b) <;>
-    simp [ιLev, Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val, Matrix.one_apply]
+    simp [ιLev, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r, Matrix.one_apply]
   all_goals (have := a.isLt; have := b.isLt; rw [ite_eq_left (by omega), ite_eq_left (by omega)])
 
 def heisM (x : B2.HPar k ρ) : Mt k (1 + ρ) := B2.heis0 k ρ x
@@ -558,10 +529,6 @@ theorem muN_succ (ρ : ℕ) [SigmaFinite (D.muN k ρ)] :
     (Measure.map_map hh0 phi_mp.measurable).symm
   rw [this, U.muRC, phi_mp.map_eq]; rfl
 
-theorem sigma_of_haar {a : ℕ} {S : Set (B.Mat k a)} {μ : Measure (Mt k a)} (h : B.IsHaarOn S μ) : SigmaFinite μ := by
-  have : IsFiniteMeasureOnCompacts μ := ⟨h.finite_compact⟩
-  infer_instance
-
 theorem haar_zero : B.IsHaarOn (Nset k 0) (D.muN k 0) := by
   rw [Formalism.FourierDecayAlt.P.unipotent_haar_base_case k]
   refine ⟨?_, ?_, ?_, ?_, ?_⟩
@@ -584,7 +551,7 @@ theorem haar : ∀ r : ℕ, B.IsHaarOn (Nset k r) (D.muN k r)
   | 0 => haar_zero
   | ρ + 1 => by
     have ih := haar ρ
-    have := sigma_of_haar ih
+    have := _root_.Formalism.FourierDecayAlt.P.B7.sf ih
     rw [muN_succ]
     exact haar_cast _ _ (Formalism.FourierDecayAlt.P.unipotent_haar_recursion k ρ _ ih)
 
@@ -606,8 +573,8 @@ theorem finrank_CV (E : Type) [Field E] [NumberField E] [IsCMField E] :
 
 theorem nhat : D.NhatCovol := by
   intro E _ _ _ hU g ν s hg
-  obtain ⟨hd, hs, hc⟩ := Formalism.FourierDecayAlt.P.block_frame Formalism.FourierDecayAlt.P.lattice_facts_general
-    Formalism.FourierDecayAlt.P.euclidean_frame E hU g ν s hg
+  obtain ⟨hd, hs, hc⟩ := _root_.Formalism.FourierDecayAlt.P.Jx3.t_BlockFrame Formalism.FourierDecayAlt.P.lattice_facts_general
+    _root_.Formalism.FourierDecayAlt.P.Jx2.t_EuclidFrame E hU g ν s hg
   have hrd : 0 < S6.rd E := Formalism.FourierDecayAlt.P.Jx4.rd_pos E
   set c : ℝ := S6.rd E ^ (-ν) with hcdef
   have hc0 : c ≠ 0 := (zpow_pos hrd _).ne'
@@ -661,7 +628,7 @@ theorem lev_eq_embG (o ρ : ℕ) (y : B.Mat k ρ) : ιLev k o ρ y = U.embG k o 
   generalize (U.eB k o ρ).symm q = b
   rw [U.embG, Ux3.block3_apply]
   rcases a with ((a | a) | a) <;> rcases b with ((b | b) | b) <;>
-    simp [ιLev, Ux3.block_index_first_val, Ux3.block_index_middle_val, Ux3.block_index_last_val, Matrix.one_apply]
+    simp [ιLev, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r, Matrix.one_apply]
   all_goals (first | (have := a.isLt; have := b.isLt; rw [ite_eq_left (by omega), ite_eq_left (by omega)]) | (intros; exfalso; omega))
 
 theorem lev_one (o ρ : ℕ) : ιLev k o ρ (1 : B.Mat k ρ) = 1 := by
@@ -672,7 +639,7 @@ theorem lev_mul (o ρ : ℕ) (a b : B.Mat k ρ) : ιLev k o ρ (a * b) = ιLev k
   congr 1 <;> simp
 
 theorem lev_GV (o ρ : ℕ) (y : B.Mat k ρ) (hy : y ∈ B.GV k ρ) : ιLev k o ρ y ∈ B.GV k (o + ρ) := by
-  rw [lev_eq_embG]; exact (Formalism.FourierDecayAlt.P.slice_membership k o ρ).2.2 y hy
+  rw [lev_eq_embG]; exact (_root_.Formalism.FourierDecayAlt.P.Ux2.sliceMem k o ρ).2.2 y hy
 
 theorem lev_cont (o ρ : ℕ) : Continuous (ιLev k o ρ) := by
   refine continuous_pi fun p => continuous_pi fun q => ?_
@@ -1051,7 +1018,7 @@ theorem wb_esI {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) (a : Fin r) :
   hw _ (Or.inr (by have := a.isLt; simp [esI]; omega))
 
 theorem herm_symm' (u w : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) w u = star (herm (Hpk k r) u w) :=
-  (B2x4.herm_symm _ (B2x4.Hpk_herm k r) u w).symm
+  (B2x4.herm_symm _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) u w).symm
 
 @[simp] theorem h_w_ee {w : Fin (2 * r + k + 1) → ℂ} (hw : inWb k r w) (a : Fin r) :
     herm (Hpk k r) w (ee k r a) = 0 := by rw [herm_ee, wb_esI hw]
@@ -1066,7 +1033,7 @@ theorem herm_symm' (u w : Fin (2 * r + k + 1) → ℂ) : herm (Hpk k r) w u = st
     herm (Hpk k r) (es k r a) w = 0 := by rw [herm_symm', h_w_es hw]; simp
 
 theorem herm_self_alt {z : Fin (2 * r + k + 1) → ℂ} : herm (Hpk k r) z z = -((Tz k r z : ℝ) : ℂ) := by
-  have h := B2x4.herm_symm _ (B2x4.Hpk_herm k r) z z
+  have h := B2x4.herm_symm _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) z z
   have him : (herm (Hpk k r) z z).im = 0 := by
     have h2 := congrArg Complex.im h; simp at h2; linarith
   apply Complex.ext <;> simp [Tz, him]
@@ -1398,7 +1365,7 @@ theorem sig_UH (hz : inWb k r z') (hν : inWb k r ν') (hs : 0 < s)
     (h3 : ∀ i j, herm (Hpk k r) (Y i) (Y j) = herm (Hpk k r) (uB z' ν' i) (uB z' ν' j))
     (h4 : ∀ x, (∀ j, herm (Hpk k r) x (uB z' ν' j) = 0) → ∀ i, herm (Hpk k r) x (Y i) = 0) :
     smat (Hpk k r) (uB z' ν') (wB z' ν' s) Y ∈ UH (Hpk k r) :=
-  smat_UH _ (B2x4.Hpk_herm k r) _ _ _ (uw_complete hz hν hs hzz hνz hνν) h3 h4
+  smat_UH _ (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) _ _ _ (uw_complete hz hν hs hzz hνz hνν) h3 h4
 
 theorem sig_u (hz : inWb k r z') (hν : inWb k r ν') (hs : 0 < s)
     (hzz : herm (Hpk k r) z' z' = -((s : ℂ) ^ 2)) (hνz : herm (Hpk k r) ν' z' = 0)
@@ -1733,8 +1700,8 @@ private theorem exists_frame_of_moves_last {Wp Wq : Type} [NormedAddCommGroup Wp
           · intro h; exact (Fin.castSucc_injective _ h).symm
           · rintro rfl; rfl
         simp [hYdef, YA, C2.monoP, hb', e, hdb b' hb', B2x4.herm_smul_left, B2x4.herm_smul_right, herm_rsmul_left, herm_rsmul_right, B2x4.herm_add_left, B2x4.herm_add_right, B2x4.herm_sub_left, B2x4.herm_sub_right, herm_neg_left, herm_neg_right, h_w_ee hz', h_w_ee hν, h_w_es hz', h_w_es hν, h_ee_w hz', h_ee_w hν, h_es_w hz', h_es_w hν, hzz, hνz, hνν, hzν, Complex.conj_ofReal]
-  have hγu : IsUnit (m₀ * σ).det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hγ
-  have hm0u : IsUnit m₀.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hmU
+  have hγu : IsUnit (m₀ * σ).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hγ
+  have hm0u : IsUnit m₀.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hmU
   have hDl : d0 (Fin.last r) ≠ 0 := hd0 _
   have hDc : conj (d0 (Fin.last r)) ≠ 0 := by simpa using hDl
   refine ⟨σ, hγ, hZ, ⟨?_, ?_, ?_⟩, hσU, ?_, ?_⟩
@@ -1980,8 +1947,8 @@ theorem frameFixLast_spec {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSp
         · intro h; exact (Fin.castSucc_injective _ h).symm
         · rintro rfl; rfl
       simp [hYdef, YB, C2.monoP, e, hdb b', B2x4.herm_smul_left, B2x4.herm_smul_right, herm_rsmul_left, herm_rsmul_right, B2x4.herm_add_left, B2x4.herm_add_right, B2x4.herm_sub_left, B2x4.herm_sub_right, herm_neg_left, herm_neg_right, h_w_ee hz', h_w_ee hν, h_w_es hz', h_w_es hν, h_ee_w hz', h_ee_w hν, h_es_w hz', h_es_w hν, hzz, hνz, hνν, hzν, Complex.conj_ofReal]
-  have hγu : IsUnit (m₀ * σ).det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hγ
-  have hm0u : IsUnit m₀.det := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit _ hmU
+  have hγu : IsUnit (m₀ * σ).det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hγ
+  have hm0u : IsUnit m₀.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).unit _ hmU
   have hDl : d0 (Fin.last r) ≠ 0 := hd0 _
   have hDc : conj (d0 (Fin.last r)) ≠ 0 := by simpa using hDl
   dsimp only
@@ -2371,22 +2338,22 @@ theorem castM_apply {a b : ℕ} (h : a = b) (g : B.Mat k a) (p q : Fin (2 * b + 
 theorem hh (k j ρ : ℕ) : 2 * ((j + 1) + ρ) + k + 1 = 2 * (1 + (j + ρ)) + k + 1 := by omega
 
 theorem pos0 : Fin.cast (hh k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inl 0))) = U.eB k 1 (j + ρ) (Sum.inl (Sum.inl 0)) := by
-  ext; simp [Ux3.block_index_first_val]
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll]
 
 theorem posX (a : Fin j) : Fin.cast (hh k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inl a.succ))) =
     U.eB k 1 (j + ρ) (Sum.inl (Sum.inr (U.eB k j ρ (Sum.inl (Sum.inl a))))) := by
-  ext; simp [Ux3.block_index_first_val, Ux3.block_index_middle_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_ll, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; omega
 
 theorem posV (v : Fin (2 * ρ + k + 1)) : Fin.cast (hh k j ρ) (U.eB k (j + 1) ρ (Sum.inl (Sum.inr v))) =
     U.eB k 1 (j + ρ) (Sum.inl (Sum.inr (U.eB k j ρ (Sum.inl (Sum.inr v))))) := by
-  ext; simp [Ux3.block_index_middle_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr]; omega
 
 theorem posS (b : Fin j) : Fin.cast (hh k j ρ) (U.eB k (j + 1) ρ (Sum.inr b.castSucc)) =
     U.eB k 1 (j + ρ) (Sum.inl (Sum.inr (U.eB k j ρ (Sum.inr b)))) := by
-  ext; simp [Ux3.block_index_middle_val, Ux3.block_index_last_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr, _root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega
 
 theorem posL : Fin.cast (hh k j ρ) (U.eB k (j + 1) ρ (Sum.inr (Fin.last j))) = U.eB k 1 (j + ρ) (Sum.inr 0) := by
-  ext; simp [Ux3.block_index_last_val]; omega
+  ext; simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_r]; omega
 
 theorem lhs_form (x1 : U.RC k 1 (j + ρ)) (Q : B.Mat k (j + ρ)) :
     U.Rn k 1 (j + ρ) x1 * U.embG k 1 (j + ρ) Q =
@@ -2581,8 +2548,8 @@ theorem kl0 (x1 : U.RC k 1 (j + ρ)) (x : U.RC k j ρ) :
         simp only [Z_lc, Z_ll]
         have hw1 : G.wMat 1 = 1 := by ext a b; fin_cases a; fin_cases b; simp [G.wMat]
         rw [hw1, Matrix.one_mul]
-        have hH : (Hpk k ρ)ᴴ = Hpk k ρ := Ux4.hpk_conjTranspose k ρ
-        have hw : (G.wMat j)ᴴ = G.wMat j := Ux4.wMat_conjTranspose j
+        have hH : (Hpk k ρ)ᴴ = Hpk k ρ := _root_.Formalism.FourierDecayAlt.P.Ux3.hpk_herm k ρ
+        have hw : (G.wMat j)ᴴ = G.wMat j := _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_conjTranspose j
         have hS : (U.skewOf x.2)ᴴ = -U.skewOf x.2 := Ux2.skewOf_ct x.2
         set c := Matrix.of x.1 with hc
         set S := U.skewOf x.2 with hSdef
@@ -2656,8 +2623,8 @@ theorem kl0 (x1 : U.RC k 1 (j + ρ)) (x : U.RC k j ρ) :
         simp only [Matrix.fromBlocks_apply₁₁, Matrix.fromBlocks_apply₁₂, Matrix.fromBlocks_apply₂₁, Matrix.fromBlocks_apply₂₂, Matrix.fromRows_apply_inl, Matrix.fromRows_apply_inr, Matrix.fromCols_apply_inl, Matrix.fromCols_apply_inr, Matrix.neg_mul, Matrix.neg_apply]
         rw [rowP, hrn_form, vecMul_block3_last_coord, e1, e2, e3, Matrix.mul_assoc (G.wMat (j + 1)), Ux3.wMat_mul_apply, Fin.rev_zero,
           mul_unitriangular_castSucc_col, Z_lc]
-        have hH : (Hpk k ρ)ᴴ = Hpk k ρ := Ux4.hpk_conjTranspose k ρ
-        have hw : (G.wMat j)ᴴ = G.wMat j := Ux4.wMat_conjTranspose j
+        have hH : (Hpk k ρ)ᴴ = Hpk k ρ := _root_.Formalism.FourierDecayAlt.P.Ux3.hpk_herm k ρ
+        have hw : (G.wMat j)ᴴ = G.wMat j := _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_conjTranspose j
         have hS : (U.skewOf x.2)ᴴ = -U.skewOf x.2 := Ux2.skewOf_ct x.2
         have key : -(Matrix.vecMul (star (cX x1)) (G.wMat j) + Matrix.vecMul (star (cV x1)) (Hpk k ρ * Matrix.of x.1) +
             Matrix.vecMul (star (cS x1)) ((-(1 / 2 : ℂ)) • ((Matrix.of x.1)ᴴ * Hpk k ρ * Matrix.of x.1) + U.skewOf x.2)) =
@@ -2733,9 +2700,6 @@ theorem kl0 (x1 : U.RC k 1 (j + ρ)) (x : U.RC k j ρ) :
       cases b' using Fin.lastCases with
       | last => simp only [posS, posL, Ux3.block3_apply]; simp [Ut0, c1v, cS]
       | cast b' => simp only [posS, Ux3.block3_apply]; simp [Ut0, Ux3.rn_eq, Ux3.block3_apply]
-
-theorem castM_mul {a b : ℕ} (h : a = b) (A B' : B.Mat k a) : D.castM h (A * B') = D.castM h A * D.castM h B' := by
-  simp only [D.castM, Matrix.reindex_apply, Matrix.submatrix_mul_equiv]
 
 theorem embG_mul {j' ρ' : ℕ} (A B' : B.Mat k ρ') : U.embG k j' ρ' (A * B') = U.embG k j' ρ' A * U.embG k j' ρ' B' := by
   rw [U.embG, U.embG, U.embG, Ux3.block3_mul]; congr 1 <;> simp
@@ -2848,7 +2812,7 @@ theorem kl (x1 : U.RC k 1 (j + ρ)) (x : U.RC k j ρ) (u : G.UT j → ℂ) (y : 
     D.castM (by omega : 1 + (j + ρ) = (j + 1) + ρ)
         (U.Rn k 1 (j + ρ) x1 * U.embG k 1 (j + ρ) (U.Rn k j ρ x * U.muP k j ρ (G.upper u) * U.embG k j ρ y)) =
       U.Rn k (j + 1) ρ (TX x1 x) * U.muP k (j + 1) ρ (G.upper (TUU x1 u)) * U.embG k (j + 1) ρ y := by
-  rw [embG_mul, embG_mul, ← Matrix.mul_assoc, ← Matrix.mul_assoc, castM_mul, castM_mul, kl0, emb_muP _ (upper_det u),
+  rw [embG_mul, embG_mul, ← Matrix.mul_assoc, ← Matrix.mul_assoc, _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, kl0, emb_muP _ (upper_det u),
     emb_emb, Matrix.mul_assoc (U.Rn k (j + 1) ρ (TX x1 x)), leviElement_mul, upper_TUU]
 
 end Formalism.FourierDecayAlt.P.Dx2.Split
@@ -2901,13 +2865,6 @@ theorem norm_det_w (j : ℕ) : ‖(G.wMat j).det‖ = 1 := by
   have h2 : ‖(G.wMat j).det‖ ^ 2 = 1 := by rw [sq, ← norm_mul, h, norm_one]
   have h3 : 0 ≤ ‖(G.wMat j).det‖ := norm_nonneg _
   nlinarith [sq_nonneg (‖(G.wMat j).det‖ - 1)]
-
-theorem det_upper (u : G.UT j → ℂ) : (G.upper u).det = 1 := by
-  have hu := Ux2.upper_uni u
-  rw [Matrix.det_of_isUpperTriangular]
-  · simp [hu.1]
-  · intro a b hab
-    exact hu.2 a b (Ux2.kU_lt.mpr hab)
 
 theorem middle_four_swap_measure_preserving {α β γ δ : Type*} [MeasurableSpace α] [MeasurableSpace β] [MeasurableSpace γ] [MeasurableSpace δ]
     (μa : Measure α) (μb : Measure β) (μc : Measure γ) (μd : Measure δ) [SigmaFinite μa] [SigmaFinite μb]
@@ -2968,7 +2925,7 @@ theorem continuous_skew : Continuous (U.skewOf (j := j)) := by
 theorem unipotent_coordinates_measure_preserving (b : Bs k j ρ) : MeasurePreserving (unipotentTranslateCoord b) volume volume := by
   set Mx := G.wMat j * G.upper b.2
   have hdet : ‖(-Mxᵀ).det‖ = 1 := by
-    rw [Matrix.det_neg, Matrix.det_transpose, Matrix.det_mul, det_upper, mul_one, norm_mul, norm_pow, norm_neg,
+    rw [Matrix.det_neg, Matrix.det_transpose, Matrix.det_mul, _root_.Formalism.FourierDecayAlt.P.Ux3.det_upper, mul_one, norm_mul, norm_pow, norm_neg,
       norm_one, one_pow, one_mul, norm_det_w]
   have h := (mp_vec (-Mxᵀ) hdet).comp vconj_mp
   convert h using 1
@@ -3334,7 +3291,7 @@ theorem castM_castM {a b c : ℕ} (h1 : a = b) (h2 : b = c) (g : B.Mat k a) :
     D.castM h2 (D.castM h1 g) = D.castM (h1.trans h2) g := by
   subst h1 h2; rw [castM_rfl, castM_rfl]
 
-theorem sf_muN (ρ : ℕ) : SigmaFinite (D.muN k ρ) := sigma_of_haar (haar ρ)
+theorem sf_muN (ρ : ℕ) : SigmaFinite (D.muN k ρ) := _root_.Formalism.FourierDecayAlt.P.B7.sf (haar ρ)
 
 theorem block_three_zero_size_eq {ρ : ℕ} (A11 : Matrix (Fin 0) (Fin 0) ℂ) (A12 : Matrix (Fin 0) (Fin (2 * ρ + k + 1)) ℂ)
     (A13 : Matrix (Fin 0) (Fin 0) ℂ) (A21 : Matrix (Fin (2 * ρ + k + 1)) (Fin 0) ℂ) (A22 : B.Mat k ρ)
@@ -3346,11 +3303,11 @@ theorem block_three_zero_size_eq {ρ : ℕ} (A11 : Matrix (Fin 0) (Fin 0) ℂ) (
   all_goals first | exact a.elim0 | exact b.elim0 | skip
   rw [Ux3.block3_apply, Split.castM_apply]
   simp only [Matrix.fromBlocks_apply₂₂, Matrix.fromBlocks_apply₁₁]
-  try (congr 1 <;> ext <;> simp [Ux3.block_index_middle_val])
+  try (congr 1 <;> ext <;> simp [_root_.Formalism.FourierDecayAlt.P.Ux2.eB_lr])
 
 theorem psi_zero (ρ : ℕ) (z : U.RC k 0 ρ × ((G.UT 0 → ℂ) × Mt k ρ)) :
     Psi k 0 ρ z = castMt (by omega : ρ = 0 + ρ) z.2.2 := by
-  simp only [Psi, castMt, Ux3.rn_eq, U.muP, U.embG, block_three_zero_size_eq, ← castM_mul, Matrix.one_mul]
+  simp only [Psi, castMt, Ux3.rn_eq, U.muP, U.embG, block_three_zero_size_eq, ← _root_.Formalism.FourierDecayAlt.P.Dx2.Tower.castM_mul, Matrix.one_mul]
 
 theorem radial_measure_is_probability (ρ : ℕ) : IsProbabilityMeasure (U.muRC k 0 ρ) := by
   haveI : IsEmpty (G.UT 0) := ⟨fun ⟨⟨a, _⟩, _⟩ => a.elim0⟩
@@ -3404,7 +3361,7 @@ theorem rn_cont (j ρ : ℕ) : Continuous (fun x : U.RC k j ρ => U.Rn k j ρ x)
     · exact continuous_skew.comp continuous_snd
 
 theorem inv_upper_eq {j : ℕ} (u : G.UT j → ℂ) : (G.upper u)ᴴ⁻¹ = ((G.upper u)ᴴ).adjugate := by
-  rw [Matrix.inv_def, Matrix.det_conjTranspose, det_upper]; simp
+  rw [Matrix.inv_def, Matrix.det_conjTranspose, _root_.Formalism.FourierDecayAlt.P.Ux3.det_upper]; simp
 
 theorem mup_cont (j ρ : ℕ) : Continuous (fun u : G.UT j → ℂ => U.muP k j ρ (G.upper u)) := by
   have h : Continuous fun u : G.UT j → ℂ => (G.upper u)ᴴ⁻¹ := by
@@ -3565,15 +3522,12 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 
 theorem std : C2.Std k r D.z D.z' := ⟨D.k_pos, ⟨D.z_mem, D.T_pos⟩, ⟨D.z'_mem, D.T'_pos⟩⟩
 
-theorem isUnit_G {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) : IsUnit γ.det :=
-  (Formalism.FourierDecayAlt.P.unitary_group_closed k r).unit γ hγ
-
 variable {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) (hpos : 0 < Gf k r D.z D.z' γ)
 include hγ hpos
 
 theorem rset_eq : C6.Rset γ = C2.Rst k r D.z D.z' γ := by
   rw [(Formalism.FourierDecayAlt.P.stabilizer_split k r D.z D.z' γ (std D) ⟨hγ, hpos⟩).2.1]
-  have hu := isUnit_G hγ
+  have hu := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ
   ext ρ
   simp only [C6.Rset, Set.mem_ofPred_eq]
   constructor
@@ -3682,7 +3636,7 @@ theorem continuous_radial_phi : Continuous (phi0 D w : Mt k r → C2.Lstidx w �
 
 theorem rhoF_meas : Measurable fun x : C2.Lstidx w → ℂ => (Matrix.of.symm (rhoF D γ w x) : Mt k r) := by
   set S : Set (Mt k r) := {x | Matrix.of x ∈ C6.Rset γ} with hS
-  have hcl : IsClosed S := (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (isUnit_G hγ)).closed
+  have hcl : IsClosed S := (Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ)).closed
   have hemb := ContinuousOn.measurableEmbedding hcl.measurableSet (continuous_radial_phi D (w := w)).continuousOn
     (fun a ha b hb hab => by
       have e1 := u_eq_low D hγ hd hG (ρ := Matrix.of a) ha
@@ -3811,7 +3765,7 @@ include hγ hd hG
 
 theorem left_shift {a : B.Mat k r} (ha : a ∈ C6.Rset γ) (x : C2.Lstidx w → ℂ) :
     a * rhoF D γ w x = rhoF D γ w (Tl w (C2.uMap k r D.z a)ᴴ x) := by
-  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (isUnit_G hγ)
+  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ)
   obtain ⟨hx1, hx2⟩ := rhoF_spec D hγ hd hG x
   apply rhoF_unique D hγ hd hG _ (hR.mul_mem a ha _ hx1)
   have hl := lstg_mul w d hd (low_mem w d hd x) (hG.lst _ ha)
@@ -3821,7 +3775,7 @@ theorem left_shift {a : B.Mat k r} (ha : a ∈ C6.Rset γ) (x : C2.Lstidx w → 
 
 theorem right_shift {a : B.Mat k r} (ha : a ∈ C6.Rset γ) (x : C2.Lstidx w → ℂ) :
     rhoF D γ w x * a = rhoF D γ w (Tr w (C2.uMap k r D.z a)ᴴ x) := by
-  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (isUnit_G hγ)
+  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ)
   obtain ⟨hx1, hx2⟩ := rhoF_spec D hγ hd hG x
   apply rhoF_unique D hγ hd hG _ (hR.mul_mem _ hx1 a ha)
   have hl := lstg_mul w d hd (hG.lst _ ha) (low_mem w d hd x)
@@ -3830,7 +3784,7 @@ theorem right_shift {a : B.Mat k r} (ha : a ∈ C6.Rset γ) (x : C2.Lstidx w →
     Matrix.conjTranspose_conjTranspose]
 
 theorem haar_good : B.IsHaarOn (C6.Rset γ) (Formalism.FourierDecayAlt.D.muR D γ w) := by
-  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (isUnit_G hγ)
+  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ)
   have hm := rhoF_meas D hγ hd hG
   have hmu : Formalism.FourierDecayAlt.D.muR D γ w = (volume : Measure (C2.Lstidx w → ℂ)).map
       (fun x => (Matrix.of.symm (rhoF D γ w x) : Mt k r)) := rfl
@@ -3890,12 +3844,6 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 
 def yv (γ : B.Mat k r) (b : Fin r) : Fin (2 * r + k + 1) → ℂ := γ *ᵥ DF.ee k r b
 
-theorem fvec_cs (z : Fin (2 * r + k + 1) → ℂ) (b : Fin r) : fvec k r z b.castSucc = DF.ee k r b := by
-  simp only [fvec, Fin.val_castSucc, dite_eq_left b.isLt]
-
-theorem fvec_last (z : Fin (2 * r + k + 1) → ℂ) : fvec k r z (Fin.last r) = z := by
-  simp [fvec]
-
 include hZ in
 theorem pz (a b : Fin (r + 1)) :
     herm (Hpk k r) (γ *ᵥ fvec k r D.z' b) (fvec k r D.z a) = if a = w b then d b else 0 := by
@@ -3922,7 +3870,7 @@ theorem sX_apply (b : Fin r) : sX hB b = DF.piX w b := rfl
 include hZ hB in
 theorem y_ee (a b : Fin r) : herm (Hpk k r) (yv γ b) (DF.ee k r a) = if a = sX hB b then d b.castSucc else 0 := by
   have := pz D hZ a.castSucc b.castSucc
-  rw [fvec_cs, fvec_cs] at this
+  rw [_root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs] at this
   rw [yv, this, sX_apply, ← w_cs' hB b]
   simp [Fin.castSucc_inj]
 
@@ -3933,7 +3881,7 @@ theorem y_y (b c : Fin r) : herm (Hpk k r) (yv γ b) (yv γ c) = 0 := by
 include hZ hB in
 theorem y_z (b : Fin r) : herm (Hpk k r) (yv γ b) D.z = 0 := by
   have := pz D hZ (Fin.last r) b.castSucc
-  rw [fvec_cs, fvec_last] at this
+  rw [_root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_lastI] at this
   rw [yv, this, ite_eq_right (fun h => w_cs hB b h.symm)]
 
 end degen
@@ -4089,7 +4037,7 @@ theorem hrelD (x : C2.Lstidx w → ℂ) (a b : Fin r) :
   have hyE : ∀ c e : Fin r, herm (Hpk k r) (yv γ c) (DF.ee k r e) = C2.monoP w d e.castSucc c.castSucc := by
     intro c e
     have := pz D hZ e.castSucc c.castSucc
-    rw [fvec_cs, fvec_cs] at this
+    rw [_root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs] at this
     rw [yv, this]; rfl
   have hM : ((low w x)ᴴ)ᴴ * C2.monoP w d * uP w d x = C2.monoP w d := by
     rw [Matrix.conjTranspose_conjTranspose, uP]
@@ -4108,7 +4056,7 @@ theorem hrelD (x : C2.Lstidx w → ℂ) (a b : Fin r) :
   ring
 
 theorem rhoD_UH (x : C2.Lstidx w → ℂ) : rhoD γ hB d x ∈ UH (Hpk k r) :=
-  DF.smat_UH (Hpk k r) (B2x4.Hpk_herm k r) _ _ _ (h2D D hγ hd hZ hB) (h3D D hγ hd hZ hB _ _ (hrelD D hγ hd hZ hB x))
+  DF.smat_UH (Hpk k r) (_root_.Formalism.QuantumDeterminants.GBasic.Hpk_herm k r) _ _ _ (h2D D hγ hd hZ hB) (h3D D hγ hd hZ hB _ _ (hrelD D hγ hd hZ hB x))
     (h4D hγ _ _)
 
 theorem rhoD_mulVec (x : C2.Lstidx w → ℂ) (v : Fin (2 * r + k + 1) → ℂ) :
@@ -4201,8 +4149,8 @@ theorem rhoD_N (x : C2.Lstidx w → ℂ) : rhoD γ hB d x ∈ Nset k r := by
     simp only [ee_apply_hi _ i hi, mul_zero, Finset.sum_const_zero, sub_zero]
 
 theorem rhoD'_N (x : C2.Lstidx w → ℂ) : γ⁻¹ * rhoD γ hB d x * γ ∈ Nset k r := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
-  have hu := isUnit_G hγ
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
+  have hu := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ
   have hinv : ∀ v, γ⁻¹ *ᵥ (γ *ᵥ v) = v := fun v => by
     rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu, Matrix.one_mulVec]
   refine mem_N _ (hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem γ hγ) _ (rhoD_UH D hγ hd hZ hB x)) γ hγ) _ (upperUnipotent_mem_upperTriangular hd x) ?_ ?_
@@ -4258,20 +4206,20 @@ theorem uMap_rhoD (x : C2.Lstidx w → ℂ) : C2.uMap k r D.z (rhoD γ hB d x) =
   ext a b
   rcases DF.cast_or_last b with hb | ⟨b', rfl⟩ <;> rcases DF.cast_or_last a with ha | ⟨a', rfl⟩
   · subst ha hb
-    simp only [C2.uMap, Fin.val_last, lt_irrefl, dite_eq_right, not_false_eq_true, fvec_last, rhoD_alt D hγ hd hZ hB x]
+    simp only [C2.uMap, Fin.val_last, lt_irrefl, dite_eq_right, not_false_eq_true, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_lastI, rhoD_alt D hγ hd hZ hB x]
     rw [div_self (herm_zz_ne D hγ hd hZ hB), Matrix.conjTranspose_apply, low_apply]
     simp
   · subst hb
-    simp only [C2.uMap, Fin.val_castSucc, a'.isLt, dite_eq_left, fvec_last, rhoD_alt D hγ hd hZ hB x]
+    simp only [C2.uMap, Fin.val_castSucc, a'.isLt, dite_eq_left, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_lastI, rhoD_alt D hγ hd hZ hB x]
     rw [show (bvec (esI k r ⟨a'.val, a'.isLt⟩)) = DF.es k r a' from rfl, DF.h_w_es D.z_mem,
       Matrix.conjTranspose_apply, low_last' hB x]; simp
   · subst ha
-    simp only [C2.uMap, Fin.val_last, lt_irrefl, dite_eq_right, not_false_eq_true, fvec_cs]
+    simp only [C2.uMap, Fin.val_last, lt_irrefl, dite_eq_right, not_false_eq_true, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs]
     rw [show DF.ee k r b' = uvD γ (Sum.inl b') from rfl, rhoD_u D hγ hd hZ hB x (Sum.inl b')]
     simp only [YD, DF.herm_sum_left, B2x4.herm_smul_left, DF.h_ee_w D.z_mem, mul_zero, Finset.sum_const_zero,
       zero_div]
     rw [Matrix.conjTranspose_apply, low_last x b']; simp
-  · simp only [C2.uMap, Fin.val_castSucc, a'.isLt, dite_eq_left, fvec_cs]
+  · simp only [C2.uMap, Fin.val_castSucc, a'.isLt, dite_eq_left, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs]
     rw [show DF.ee k r b' = uvD γ (Sum.inl b') from rfl, rhoD_u D hγ hd hZ hB x (Sum.inl b'),
       show (bvec (esI k r ⟨a'.val, a'.isLt⟩)) = DF.es k r a' from rfl]
     simp only [YD, DF.herm_sum_left, B2x4.herm_smul_left, DF.h_ee_es, mul_ite, mul_one, mul_zero,
@@ -4291,8 +4239,8 @@ variable {k r : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerProductSpace �
 
 theorem rel_uu' {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hγ : γ ∈ B.GV k r) :
     (C2.uMap k r D.z ρ)ᴴ * Zhat k r D.z D.z' γ * C2.uMap k r D.z' (γ⁻¹ * ρ * γ) = Zhat k r D.z D.z' γ := by
-  have hu := isUnit_G hγ
-  have hρu : IsUnit ρ.det := (Formalism.FourierDecayAlt.P.unipotent_radical_closed k r).unit ρ hρ.1
+  have hu := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ
+  have hρu : IsUnit ρ.det := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedN k r).unit ρ hρ.1
   have e := Formalism.FourierDecayAlt.P.zhat_equivalence k r D.z D.z' ⟨D.z_mem, D.T_pos⟩ ⟨D.z'_mem, D.T'_pos⟩ ρ
     (N_sub_S D.z hρ.1) _ (N_sub_S D.z' hρ.2) γ
   have e2 : ρ⁻¹ * γ * (γ⁻¹ * ρ * γ) = γ := by
@@ -4347,7 +4295,7 @@ theorem uMap_one (z : Fin (2 * r + k + 1) → ℂ) (hz : C2.StdZ k r z) : C2.uMa
 include hγ hd hZ hB
 
 theorem trivial_of_u_one {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hu1 : C2.uMap k r D.z ρ = 1) : ρ = 1 := by
-  have hu := isUnit_G hγ
+  have hu := _root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ
   have hP := Formalism.FourierDecayAlt.P.C2x2.isUnit_det_monomialMatrix w d hd
   have hρU : ρᴴ * Hpk k r * ρ = Hpk k r := hρ.1.1
 
@@ -4355,9 +4303,9 @@ theorem trivial_of_u_one {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hu1 : C2.uM
   have hee : ∀ b : Fin r, ρ *ᵥ DF.ee k r b = DF.ee k r b := by
     intro b
     have := hF b.castSucc
-    rw [hu1, fvec_cs] at this
+    rw [hu1, _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs] at this
     rw [this]
-    simp [Matrix.one_apply, ite_smul, Finset.sum_ite_eq', fvec_cs]
+    simp [Matrix.one_apply, ite_smul, Finset.sum_ite_eq', _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs]
 
   have hu' : C2.uMap k r D.z' (γ⁻¹ * ρ * γ) = 1 := by
     have e := rel_uu' D hρ hγ
@@ -4369,9 +4317,9 @@ theorem trivial_of_u_one {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hu1 : C2.uM
   have hy : ∀ b : Fin r, ρ *ᵥ yv γ b = yv γ b := by
     intro b
     have := hF' b.castSucc
-    rw [hu', fvec_cs] at this
+    rw [hu', _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs] at this
     have h1 : (γ⁻¹ * ρ * γ) *ᵥ DF.ee k r b = DF.ee k r b := by
-      rw [this]; simp [Matrix.one_apply, ite_smul, Finset.sum_ite_eq', fvec_cs]
+      rw [this]; simp [Matrix.one_apply, ite_smul, Finset.sum_ite_eq', _root_.Formalism.FourierDecayAlt.P.Dx2.DF.fvec_cs]
     have h2 : ρ *ᵥ yv γ b = γ *ᵥ ((γ⁻¹ * ρ * γ) *ᵥ DF.ee k r b) := by
       rw [yv, Matrix.mulVec_mulVec, Matrix.mulVec_mulVec]
       congr 1
@@ -4449,7 +4397,7 @@ theorem trivial_of_u_one {ρ : B.Mat k r} (hρ : ρ ∈ C6.Rset γ) (hu1 : C2.uM
 
 theorem inj_degen : Set.InjOn (C2.uMap k r D.z) (C6.Rset γ) := by
   intro ρ1 h1 ρ2 h2 heq
-  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (isUnit_G hγ)
+  have hR := Formalism.FourierDecayAlt.P.Dx2.OrbJ.closedR (_root_.Formalism.FourierDecayAlt.P.BetaSesquilinearity.gv_unit hγ)
   have hu1 : IsUnit ρ1.det := hR.unit ρ1 h1
   have hi := hR.inv_mem ρ1 h1
   have hm := hR.mul_mem _ hi ρ2 h2
@@ -4599,9 +4547,9 @@ theorem Tp_eq : Tp hA nA hB nB = Prod.map (Prod.map (lmulM hA) (conjM hA ∘ lmu
 
 theorem mp_Tp (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB ∈ UWset k r S.z') (hnB : nB ∈ Nset k r) :
     MeasurePreserving (Tp hA nA hB nB) S.μSS S.μSS := by
-  have sW := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF S.haarW
-  have sN := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF S.haarN
-  have sW' := Formalism.FourierDecayAlt.P.Dx2.OrbJ.sigmaF S.haarW'
+  have sW := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW
+  have sN := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarN
+  have sW' := _root_.Formalism.FourierDecayAlt.P.B7.sf S.haarW'
   have hci := Formalism.FourierDecayAlt.P.conjugation_invariance_every_setting k r Wp Wq S
   have m1 : MeasurePreserving (lmulM (k := k) (r := r) hA) S.μW S.μW :=
     ⟨B2x5.measurable_lmulM _, S.haarW.left hA hhA⟩
@@ -4746,8 +4694,8 @@ theorem inSS_Tp (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB �
 theorem inSS_Tq (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB ∈ UWset k r S.z') (hnB : nB ∈ Nset k r)
     {p : B.SS k r} (hp : S.inSS p) : S.inSS (Tq hA nA hB nB p) := by
   obtain ⟨h1, h2, h3, h4⟩ := hp
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   refine ⟨?_, ?_, ?_, ?_⟩ <;> simp only [Tq, Equiv.apply_symm_apply]
   · exact WeylGroupFacts.uw_mul (WeylGroupFacts.uw_inv hhA) h1
   · have := (uWNormal k r S.z S.z_mem hA⁻¹ (WeylGroupFacts.uw_inv hhA) _ h2).1
@@ -4764,8 +4712,8 @@ theorem cut_Tp (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB �
     {γ : B.Mat k r} (uγ : IsUnit γ.det) {μR : Measure (Mt k r)} {θ : B.SS k r → ℝ}
     (hθ : Formalism.FourierDecayAlt.D.IsNormCut S γ μR θ) :
     Formalism.FourierDecayAlt.D.IsNormCut S ((hA * nA)⁻¹ * γ * (hB * nB)) (μR.map (conjA hA nA)) (θ ∘ Tp hA nA hB nB) := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   refine ⟨hθ.1.comp (cont_Tp _ _ _ _).measurable, fun p => hθ.2.1 _, fun p hp => ?_⟩
@@ -4782,8 +4730,8 @@ theorem cut_Tq (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB �
     {γ : B.Mat k r} (uγ : IsUnit γ.det) {μR : Measure (Mt k r)} {θ : B.SS k r → ℝ}
     (hθ : Formalism.FourierDecayAlt.D.IsNormCut S ((hA * nA)⁻¹ * γ * (hB * nB)) (μR.map (conjA hA nA)) θ) :
     Formalism.FourierDecayAlt.D.IsNormCut S γ μR (θ ∘ Tq hA nA hB nB) := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   refine ⟨hθ.1.comp (cont_Tq _ _ _ _).measurable, fun p => hθ.2.1 _, fun q hq => ?_⟩
@@ -4815,8 +4763,8 @@ theorem CinL_apply (hA hB : B.Mat k r) (X : Wq →L[ℂ] Wp) : CinL S hA hB X = 
 
 theorem CinL_inv (hhA : hA ∈ UWset k r S.z) (hhB : hB ∈ UWset k r S.z') (X : Wq →L[ℂ] Wp) :
     CinL S hA⁻¹ hB⁻¹ (CinL S hA hB X) = X := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have e1 : ∀ w, S.π hA⁻¹ (S.π hA w) = w := by
     intro w
     have := congrArg (fun L : Wp →L[ℂ] Wp => L w) (S.π_rep.2 _ (WeylGroupFacts.uw_inv hhA) _ hhA)
@@ -4846,8 +4794,8 @@ theorem orbJ_law (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hfA : ∀
     (hInd : IndepAt S ((hA * nA)⁻¹ * γ * (hB * nB)) (μR.map (conjA hA nA))) (F : B.Mat k r → (Wq →L[ℂ] Wp)) :
     CinL S hA hB (Formalism.FourierDecayAlt.D.orbJ S ((hA * nA)⁻¹ * γ * (hB * nB)) (μR.map (conjA hA nA)) F) =
       Formalism.FourierDecayAlt.D.orbJ S γ μR F := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   have hmp := mp_Tp S hhA hnA hhB hnB
@@ -4916,7 +4864,7 @@ variable {hA nA hB nB : B.Mat k r}
 
 theorem conjN_in {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {h n x : B.Mat k r} (hh : h ∈ UWset k r z)
     (hn : n ∈ Nset k r) (hx : x ∈ Nset k r) : (h * n)⁻¹ * x * (h * n) ∈ Nset k r := by
-  have uh := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hh.1
+  have uh := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hh.1
   have h1 := (uWNormal k r z hz h⁻¹ (WeylGroupFacts.uw_inv hh) x hx).1
   rw [Matrix.nonsing_inv_nonsing_inv _ uh] at h1
   rw [Matrix.mul_inv_rev, show n⁻¹ * h⁻¹ * x * (h * n) = n⁻¹ * (h⁻¹ * x * h) * n by simp only [Matrix.mul_assoc]]
@@ -4931,8 +4879,8 @@ theorem conjN_out {z : Fin (2 * r + k + 1) → ℂ} (hz : inWb k r z) {h n x : B
 theorem rset_conj (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r) (hhB : hB ∈ UWset k r S.z') (hnB : nB ∈ Nset k r)
     {γ : B.Mat k r} (uγ : IsUnit γ.det) (ρ : B.Mat k r) :
     ρ ∈ C6.Rset γ ↔ (hA * nA)⁻¹ * ρ * (hA * nA) ∈ C6.Rset ((hA * nA)⁻¹ * γ * (hB * nB)) := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   have sA : IsUnit (hA * nA).det := by rw [Matrix.det_mul]; exact uA.mul vA
@@ -4989,7 +4937,7 @@ theorem rhoOfU_conj (hz : C2.StdZ k r S.z) (hhA : hA ∈ UWset k r S.z) (hnA : n
     (hinj : Set.InjOn (C2.uMap k r S.z) (C6.Rset ((hA * nA)⁻¹ * γ * (hB * nB))))
     (u : Matrix (Fin (r + 1)) (Fin (r + 1)) ℂ) :
     Formalism.FourierDecayAlt.D.rhoOfU S ((hA * nA)⁻¹ * γ * (hB * nB)) u = (hA * nA)⁻¹ * Formalism.FourierDecayAlt.D.rhoOfU S γ u * (hA * nA) := by
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have sA : IsUnit (hA * nA).det := by rw [Matrix.det_mul]; exact uA.mul vA
   unfold Formalism.FourierDecayAlt.D.rhoOfU
@@ -5082,7 +5030,7 @@ theorem zhat_conj {hA nA hB nB : B.Mat k r} (hhA : hA ∈ UWset k r S.z) (hnA : 
 theorem mem_GV_conj {hA nA hB nB : B.Mat k r} (hhA : hA ∈ UWset k r S.z) (hnA : nA ∈ Nset k r)
     (hhB : hB ∈ UWset k r S.z') (hnB : nB ∈ Nset k r) {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) :
     (hA * nA)⁻¹ * γ * (hB * nB) ∈ B.GV k r := by
-  have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+  have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
   exact hG.mul_mem _ (hG.mul_mem _ (hG.inv_mem _ (hG.mul_mem _ hhA.1 _ hnA.1)) _ hγ) _ (hG.mul_mem _ hhB.1 _ hnB.1)
 
 theorem gf_eq {γ γ' : B.Mat k r} (h : Zhat k r S.z S.z' γ = Zhat k r S.z S.z' γ') :
@@ -5101,7 +5049,7 @@ theorem orbJ_pt (p : C.LPt) (hp : Formalism.FourierDecayAlt.D.IsLocPt p (r + 1))
   obtain ⟨hw, hd⟩ := ptMatN_monoP' p (r + 1) hp.2 hp.1
   set w := hp.2 ▸ Formalism.FourierDecayAlt.D.ptPerm p with hwdef
   set d := hp.2 ▸ Formalism.FourierDecayAlt.D.ptDiag p with hddef
-  have uγ := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ
+  have uγ := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ
   have hZ1 := zhat_conj S hhA hnA hfA hhB hnB hfB γ
   have hγ1 := mem_GV_conj S hhA hnA hhB hnB hγ
   have hpos1 : 0 < Gf k r S.z S.z' ((hA * nA)⁻¹ * γ * (hB * nB)) := by rw [gf_eq S hZ1]; exact hpos
@@ -5251,8 +5199,8 @@ theorem cofR_free (γ : B.Mat k r) (a : Fin r) : Formalism.FourierDecayAlt.D.cof
 
 theorem cofL_free {γ : B.Mat k r} (hγ : γ ∈ B.GV k r) (a : Fin r) :
     (γ⁻¹ *ᵥ Formalism.FourierDecayAlt.D.cofL S γ) (esI k r a) = 0 := by
-  have hu := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγ
-  have hinv : γ⁻¹ ∈ UH (Hpk k r) := (Formalism.FourierDecayAlt.P.unitary_group_closed k r).inv_mem _ hγ
+  have hu := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hγ
+  have hinv : γ⁻¹ ∈ UH (Hpk k r) := (_root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r).inv_mem _ hγ
   rw [← herm_ee (γ⁻¹ *ᵥ Formalism.FourierDecayAlt.D.cofL S γ) a]
   have e : ee k r a = γ⁻¹ *ᵥ (γ *ᵥ ee k r a) := by
     rw [Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ hu, Matrix.one_mulVec]
@@ -5332,12 +5280,12 @@ theorem frame_fix (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r) (hbase 
   have hμ : 0 < μ := Real.sqrt_pos.2 (div_pos S.T'_pos S.T_pos)
   set γe := m₀ * σ with hγedef
   have hZ1 := zhat_conj S hhA hnA hfA hhB hnB hfB γe
-  have uA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhA.1
-  have uB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hhB.1
+  have uA := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhA.1
+  have uB := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hhB.1
   have vA := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnA
   have vB := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_N hnB
   have sA : IsUnit (hA * nA).det := by rw [Matrix.det_mul]; exact uA.mul vA
-  have uγ := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hγe
+  have uγ := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hγe
   have hsfA := mul_fix hhA hfA
   have hsfB := mul_fix hhB hfB
   obtain ⟨hAiU, hAie, hAis, hAiz⟩ := uw_parts (WeylGroupFacts.uw_inv hhA)
@@ -5383,7 +5331,7 @@ theorem frame_fix (ν' : Fin (2 * r + k + 1) → ℂ) (m₀ : B.Mat k r) (hbase 
     have hγw : γe⁻¹ *ᵥ (m₀ *ᵥ w) = w := by
       have : γe *ᵥ w = m₀ *ᵥ w := by rw [hγedef, ← Matrix.mulVec_mulVec, hσw]
       rw [← this, Matrix.mulVec_mulVec, Matrix.nonsing_inv_mul _ uγ, Matrix.one_mulVec]
-    have hG := Formalism.FourierDecayAlt.P.unitary_group_closed k r
+    have hG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k r
     have hsAiU : (hA * nA)⁻¹ ∈ UH (Hpk k r) := hG.inv_mem _ (hG.mul_mem _ hhA.1 _ hnA.1)
     have hfAi : ∀ b, fvec k r S.z b = (hA * nA)⁻¹ *ᵥ fvec k r S.z b := by
       intro b; conv_rhs => rw [← hsfA b]
@@ -5475,7 +5423,7 @@ theorem stabilizer_decomp_unitary_mul_unipotent {z : Fin (2 * r + k + 1) → ℂ
     rw [(((Formalism.FourierDecayAlt.P.unipotent_map_frame k r z hz).1 (h * n) ⟨h, hh, n, hn, rfl⟩).1 b), hu]
     simp [Matrix.one_apply]
   intro b
-  have uh := Formalism.FourierDecayAlt.P.Dx2.OrbJ.isUnit_of_G hh.1
+  have uh := _root_.PI.StabPairsW.isUnit_det_of_mem_GV hh.1
   have e : n = h⁻¹ * (h * n) := by rw [← Matrix.mul_assoc, Matrix.nonsing_inv_mul _ uh, Matrix.one_mul]
   rw [e, ← Matrix.mulVec_mulVec, hsf b]
   obtain ⟨_, _, _, hfz⟩ := uw_parts (WeylGroupFacts.uw_inv hh)
@@ -5656,17 +5604,8 @@ def utEquiv : G.UT (ph + (n + 1)) ≃ (G.UT ph ⊕ (Fin ph × Fin (n + 1))) ⊕ 
 section blocks
 variable {p s : ℕ}
 
-theorem b_cc (A : Matrix (Fin p) (Fin p) ℂ) (B : Matrix (Fin p) (Fin s) ℂ) (C : Matrix (Fin s) (Fin p) ℂ)
-    (D : Matrix (Fin s) (Fin s) ℂ) (i j : Fin p) : U.blk2 A B C D (Fin.castAdd s i) (Fin.castAdd s j) = A i j := by
-  simp [U.blk2]
 theorem b_cn (A : Matrix (Fin p) (Fin p) ℂ) (B : Matrix (Fin p) (Fin s) ℂ) (C : Matrix (Fin s) (Fin p) ℂ)
     (D : Matrix (Fin s) (Fin s) ℂ) (i : Fin p) (j : Fin s) : U.blk2 A B C D (Fin.castAdd s i) (Fin.natAdd p j) = B i j := by
-  simp [U.blk2]
-theorem b_nc (A : Matrix (Fin p) (Fin p) ℂ) (B : Matrix (Fin p) (Fin s) ℂ) (C : Matrix (Fin s) (Fin p) ℂ)
-    (D : Matrix (Fin s) (Fin s) ℂ) (i : Fin s) (j : Fin p) : U.blk2 A B C D (Fin.natAdd p i) (Fin.castAdd s j) = C i j := by
-  simp [U.blk2]
-theorem b_nn (A : Matrix (Fin p) (Fin p) ℂ) (B : Matrix (Fin p) (Fin s) ℂ) (C : Matrix (Fin s) (Fin p) ℂ)
-    (D : Matrix (Fin s) (Fin s) ℂ) (i j : Fin s) : U.blk2 A B C D (Fin.natAdd p i) (Fin.natAdd p j) = D i j := by
   simp [U.blk2]
 
 theorem one_cn (i : Fin p) (j : Fin s) : (1 : Matrix (Fin (p + s)) (Fin (p + s)) ℂ) (Fin.castAdd s i) (Fin.natAdd p j) = 0 := by
@@ -5687,16 +5626,16 @@ theorem permutationMatrix_extend_eq_fromBlocks (σ : Equiv.Perm (Fin ph)) : U.wP
   induction a using Fin.addCases with
   | left i =>
     induction b using Fin.addCases with
-    | left j => rw [b_cc]; simp [U.wP, blockPerm_castAdd, Fin.castAdd_inj]
+    | left j => rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_upper_left]; simp [U.wP, blockPerm_castAdd, Fin.castAdd_inj]
     | right j =>
       rw [b_cn]; simp only [U.wP, Matrix.of_apply, blockPerm_castAdd, Matrix.zero_apply]
       rw [ite_eq_right]; intro h; have := congrArg Fin.val h; simp at this; omega
   | right i =>
     induction b using Fin.addCases with
     | left j =>
-      rw [b_nc]; simp only [U.wP, Matrix.of_apply, blockPerm_natAdd, Matrix.zero_apply]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_left]; simp only [U.wP, Matrix.of_apply, blockPerm_natAdd, Matrix.zero_apply]
       rw [ite_eq_right]; intro h; have := congrArg Fin.val h; simp at this; omega
-    | right j => rw [b_nn]; simp [U.wP, blockPerm_natAdd, G.wMat, eq_comm]
+    | right j => rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_right]; simp [U.wP, blockPerm_natAdd, G.wMat, eq_comm]
 
 theorem diag_dP (d : Fin ph → ℂ) (t : ℂ) :
     Matrix.diagonal (dP (n := n) d t) = U.blk2 (Matrix.diagonal d) 0 0 (t • 1) := by
@@ -5704,14 +5643,14 @@ theorem diag_dP (d : Fin ph → ℂ) (t : ℂ) :
   induction a using Fin.addCases with
   | left i =>
     induction b using Fin.addCases with
-    | left j => rw [b_cc]; simp [Matrix.diagonal_apply, dP, Fin.castAdd_inj]
+    | left j => rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_upper_left]; simp [Matrix.diagonal_apply, dP, Fin.castAdd_inj]
     | right j => rw [b_cn, Matrix.diagonal_apply_ne]; · rfl
                  intro h; have := congrArg Fin.val h; simp at this; omega
   | right i =>
     induction b using Fin.addCases with
-    | left j => rw [b_nc, Matrix.diagonal_apply_ne]; · rfl
+    | left j => rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_left, Matrix.diagonal_apply_ne]; · rfl
                 intro h; have := congrArg Fin.val h; simp at this; omega
-    | right j => rw [b_nn]; simp [Matrix.diagonal_apply, dP, Matrix.one_apply, Fin.natAdd_inj]
+    | right j => rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_right]; simp [Matrix.diagonal_apply, dP, Matrix.one_apply, Fin.natAdd_inj]
 
 theorem lowW_sigP (σ : Equiv.Perm (Fin ph)) (v : U.LW (sigP (n := n) σ) → ℂ) :
     U.lowW (sigP σ) v = U.blk2 (U.lowW σ (fun q => v (lwIn σ (Sum.inl q)))) 0
@@ -5721,7 +5660,7 @@ theorem lowW_sigP (σ : Equiv.Perm (Fin ph)) (v : U.LW (sigP (n := n) σ) → �
   | left i =>
     induction b using Fin.addCases with
     | left j =>
-      rw [b_cc]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_upper_left]
       simp only [U.lowW, Matrix.add_apply, Matrix.of_apply, one_cc]
       congr 1
       by_cases h : j < i ∧ σ.symm j < σ.symm i
@@ -5740,7 +5679,7 @@ theorem lowW_sigP (σ : Equiv.Perm (Fin ph)) (v : U.LW (sigP (n := n) σ) → �
   | right i =>
     induction b using Fin.addCases with
     | left j =>
-      rw [b_nc]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_left]
       simp only [U.lowW, Matrix.add_apply, Matrix.of_apply, one_nc, zero_add]
       have h' : Fin.castAdd (n + 1) j < Fin.natAdd ph i ∧
           (sigP σ).symm (Fin.castAdd (n + 1) j) < (sigP σ).symm (Fin.natAdd ph i) := by
@@ -5750,7 +5689,7 @@ theorem lowW_sigP (σ : Equiv.Perm (Fin ph)) (v : U.LW (sigP (n := n) σ) → �
         have := (σ.symm j).isLt; omega
       rw [dite_eq_left h']; rfl
     | right j =>
-      rw [b_nn]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_right]
       simp only [U.lowW, Matrix.add_apply, Matrix.of_apply, one_nn]
       rw [dite_eq_right, add_zero]
       rintro ⟨h1, h2⟩
@@ -5767,7 +5706,7 @@ theorem upper_split (u : G.UT (ph + (n + 1)) → ℂ) :
   | left i =>
     induction b using Fin.addCases with
     | left j =>
-      rw [b_cc]; simp only [G.upper, Matrix.add_apply, one_cc, G.strictUpper, Matrix.of_apply]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_upper_left]; simp only [G.upper, Matrix.add_apply, one_cc, G.strictUpper, Matrix.of_apply]
       congr 1
     | right j =>
       rw [b_cn]; simp only [G.upper, Matrix.add_apply, one_cn, G.strictUpper, Matrix.of_apply, zero_add]
@@ -5775,11 +5714,11 @@ theorem upper_split (u : G.UT (ph + (n + 1)) → ℂ) :
   | right i =>
     induction b using Fin.addCases with
     | left j =>
-      rw [b_nc]; simp only [G.upper, Matrix.add_apply, one_nc, G.strictUpper, Matrix.of_apply, zero_add,
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_left]; simp only [G.upper, Matrix.add_apply, one_nc, G.strictUpper, Matrix.of_apply, zero_add,
         Matrix.zero_apply]
       rw [dite_eq_right]; intro h; have : ph + i.val < j.val := h; omega
     | right j =>
-      rw [b_nn]; simp only [G.upper, Matrix.add_apply, one_nn, G.strictUpper, Matrix.of_apply]
+      rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_lower_right]; simp only [G.upper, Matrix.add_apply, one_nn, G.strictUpper, Matrix.of_apply]
       congr 1
       by_cases h : i < j
       · rw [dite_eq_left h, dite_eq_left (show Fin.natAdd ph i < Fin.natAdd ph j from show ph + i.val < ph + j.val by
@@ -5813,7 +5752,6 @@ theorem headH_split (v : U.LW (sigP (n := n) σ) → ℂ) (u : G.UT (ph + (n + 1
   rfl
 
 theorem isUnit_low (v : U.LW σ → ℂ) : IsUnit (U.lowW σ v).det := by rw [Ux3.det_lowW]; exact isUnit_one
-theorem isUnit_up {m : ℕ} (u : G.UT m → ℂ) : IsUnit (G.upper u).det := by rw [Ux3.det_upper]; exact isUnit_one
 theorem isUnit_wP {m : ℕ} (τ : Equiv.Perm (Fin m)) : IsUnit (U.wP τ).det :=
   Matrix.isUnit_det_of_right_inverse (Ux2.permutationMatrix_mul_symm τ)
 
@@ -5824,7 +5762,7 @@ theorem zj_zero {P : ℕ} (a : Fin 0 → Fin P → ℂ) (b : Fin P → Fin 0 →
   have hi : i = Fin.castAdd 0 i := Fin.ext rfl
   have hj : j = Fin.castAdd 0 j := Fin.ext rfl
   conv_lhs => rw [hi, hj]
-  rw [b_cc]
+  rw [_root_.Formalism.FourierDecayAlt.P.Ux2.block2_apply_upper_left]
 
 theorem zj_split (v : U.LW (sigP (n := n) σ) → ℂ) (u : G.UT (ph + (n + 1)) → ℂ) :
     U.headH (sigP σ) (dP d t) v u =
@@ -5833,7 +5771,7 @@ theorem zj_split (v : U.LW (sigP (n := n) σ) → ℂ) (u : G.UT (ph + (n + 1)) 
   rw [headH_split, Ux4.ux_zjAffine]
   have hL := Matrix.nonsing_inv_mul _ (isUnit_low σ (v1 σ v))
   have hW := Matrix.nonsing_inv_mul _ (isUnit_wP σ)
-  have hU := Matrix.mul_nonsing_inv _ (isUnit_up (u1 u))
+  have hU := Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det (u1 u))
   simp only [Equiv.apply_symm_apply, U.headH, aN, bN]
   congr 1
   · rw [show U.wP σ * U.lowW σ (v1 σ v) * Matrix.diagonal d * G.upper (u1 u) * ((G.upper (u1 u))⁻¹ * Bm u) =
@@ -5902,7 +5840,7 @@ theorem upper_fact (u : G.UT (ph + (n + 1)) → ℂ) :
   simp only [Matrix.mul_zero, Matrix.zero_mul, add_zero, zero_add, Matrix.mul_one, Equiv.apply_symm_apply]
   congr 1
   unfold bN
-  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (isUnit_up (u1 u)), Matrix.one_mul]; rfl
+  rw [← Matrix.mul_assoc, Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det (u1 u)), Matrix.one_mul]; rfl
 
 theorem psiH_split (β : ℂ) (a0 : Fin 0 → Fin (ph + (n + 1)) → ℂ) (b0 : Fin (ph + (n + 1)) → Fin 0 → ℂ)
     (v : U.LW (sigP (n := n) σ) → ℂ) (u : G.UT (ph + (n + 1)) → ℂ) :
@@ -5912,13 +5850,13 @@ theorem psiH_split (β : ℂ) (a0 : Fin 0 → Fin (ph + (n + 1)) → ℂ) (b0 : 
   unfold U.psiH
   simp only
   rw [← psi_add, conj_split, upper_fact, cornerA_zero, cornerB_zero]
-  have hlow := ((Formalism.FourierDecayAlt.P.low_weight_specialisation ph σ (U.lowW σ (v1 σ v))).mpr ⟨v1 σ v, rfl⟩)
+  have hlow := ((_root_.Formalism.FourierDecayAlt.P.Ux2.lowWSpec ph σ (U.lowW σ (v1 σ v))).mpr ⟨v1 σ v, rfl⟩)
   have huh : G.IsUpperUni (G.upper (u1 u)) := (Ux2.upper_iff _).mpr (Ux2.upper_uni _)
   have hu2 : G.IsUpperUni (G.upper (u2 u)) := (Ux2.upper_iff _).mpr (Ux2.upper_uni _)
   have h1 : G.IsLowerUni (1 : Matrix (Fin (n + 1)) (Fin (n + 1)) ℂ) := by
     refine ⟨fun i => by simp, fun i j h => ?_⟩
     rw [Matrix.transpose_one, Matrix.one_apply_ne (ne_of_lt h).symm]
-  obtain ⟨cA, cB⟩ := Formalism.FourierDecayAlt.P.character_on_blocks ph (n + 1) (Matrix.of.symm (aN σ v)) (Matrix.of.symm (bN u))
+  obtain ⟨cA, cB⟩ := _root_.Formalism.FourierDecayAlt.P.Ux2.charBlock ph (n + 1) (Matrix.of.symm (aN σ v)) (Matrix.of.symm (bN u))
     (U.wP σ * U.lowW σ (v1 σ v) * (U.wP σ)⁻¹) (G.upper (u1 u)) 1 (G.upper (u2 u)) hlow.2 h1 huh hu2
   rw [cA, cB, subS_one, supS_superSum]
   congr 1
@@ -6086,15 +6024,6 @@ theorem cont_lowW : Continuous (U.lowW σ) := by
   · exact continuous_apply _
   · exact continuous_const
 
-theorem cont_upper {m : ℕ} : Continuous (G.upper (d := m)) := by
-  unfold G.upper G.strictUpper
-  refine continuous_const.add ?_
-  refine continuous_pi fun a => continuous_pi fun b => ?_
-  show Continuous fun v : G.UT m → ℂ => if h : a < b then v ⟨(a, b), h⟩ else 0
-  split_ifs with h
-  · exact continuous_apply _
-  · exact continuous_const
-
 theorem inv_adj {m : ℕ} (A : Matrix (Fin m) (Fin m) ℂ) (h : A.det = 1) : A⁻¹ = A.adjugate := by
   rw [Matrix.inv_def, h, Ring.inverse_one, one_smul]
 
@@ -6111,7 +6040,7 @@ def shG (x : (U.LW σ → ℂ) × (G.UT ph → ℂ)) (y : (Fin (n + 1) → Fin p
 theorem shG_shF (x) (y : (Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) : shG σ x (shF σ x y) = y := by
   have hL := Matrix.nonsing_inv_mul _ (isUnit_low σ x.1)
   have hW := Matrix.nonsing_inv_mul _ (isUnit_wP σ)
-  have hU := Matrix.mul_nonsing_inv _ (isUnit_up x.2)
+  have hU := Matrix.mul_nonsing_inv _ (_root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det x.2)
   ext1
   · simp only [shG, shF, Equiv.apply_symm_apply]
     apply (Matrix.of).symm.injective.eq_iff.mpr
@@ -6124,7 +6053,7 @@ theorem shG_shF (x) (y : (Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n 
 theorem shF_shG (x) (y : (Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) : shF σ x (shG σ x y) = y := by
   have hL := Matrix.mul_nonsing_inv _ (isUnit_low σ x.1)
   have hW := Matrix.mul_nonsing_inv _ (isUnit_wP σ)
-  have hU := Matrix.nonsing_inv_mul _ (isUnit_up x.2)
+  have hU := Matrix.nonsing_inv_mul _ (_root_.Formalism.FourierDecayAlt.P.Dx2.Split.upper_det x.2)
   ext1
   · simp only [shG, shF, Equiv.apply_symm_apply]
     apply (Matrix.of).symm.injective.eq_iff.mpr
@@ -6147,7 +6076,7 @@ theorem cont_shF : Continuous (fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) 
   · exact (continuous_const.matrix_mul (continuous_snd.fst : Continuous fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) ×
       ((Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) => (Matrix.of p.2.1 : Matrix _ _ ℂ))).matrix_mul
       (((cont_lowW σ).comp continuous_fst.fst).matrix_adjugate.matrix_mul continuous_const)
-  · exact ((cont_upper.comp continuous_fst.snd).matrix_adjugate).matrix_mul
+  · exact ((_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst.snd).matrix_adjugate).matrix_mul
       (continuous_snd.snd : Continuous fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) ×
       ((Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) => (Matrix.of p.2.2 : Matrix _ _ ℂ))
 
@@ -6157,7 +6086,7 @@ theorem cont_shG : Continuous (fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) 
   · exact (continuous_const.matrix_mul (continuous_snd.fst : Continuous fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) ×
       ((Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) => (Matrix.of p.2.1 : Matrix _ _ ℂ))).matrix_mul
       (continuous_const.matrix_mul ((cont_lowW σ).comp continuous_fst.fst))
-  · exact (cont_upper.comp continuous_fst.snd).matrix_mul
+  · exact (_root_.Formalism.FourierDecayAlt.P.Dx2.SplitM.continuous_upper.comp continuous_fst.snd).matrix_mul
       (continuous_snd.snd : Continuous fun p : ((U.LW σ → ℂ) × (G.UT ph → ℂ)) ×
       ((Fin (n + 1) → Fin ph → ℂ) × (Fin ph → Fin (n + 1) → ℂ)) => (Matrix.of p.2.2 : Matrix _ _ ℂ))
 
@@ -6511,8 +6440,8 @@ theorem sliceOm : D.SliceOm := by
   intro k r E _ _ _ z z' F h p n t hp hle γ hloc hint
   subst hp
   have hP : D.ptSize (h ++ [(n + 1, t)]) = D.ptSize h + (n + 1) := ptSize_append h (n + 1) t
-  have hspec := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ hloc).1
-  have hspec' := (Formalism.FourierDecayAlt.P.ptPerm_spec _ _ (isLocPt_head hloc)).1
+  have hspec := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ hloc).1
+  have hspec' := (_root_.Formalism.FourierDecayAlt.P.Dx1.d_ptPermSpec _ _ (isLocPt_head hloc)).1
   have hσ : ∀ a : Fin (D.ptSize (h ++ [(n + 1, t)])),
       ((sigP (n := n) (D.ptPerm h)) (Fin.cast hP a)).val = (D.ptPerm (h ++ [(n + 1, t)]) a).val := by
     intro a
@@ -6561,10 +6490,6 @@ theorem nilpotent_measure_is_haar : Formalism.FourierDecayAlt.D.MuNHaar := fun k
 theorem unipotent_dual_lattice_covolume : Formalism.FourierDecayAlt.D.NhatCovol := Dx2.NH.nhat
 
 theorem exists_level_tower : Formalism.FourierDecayAlt.D.TowerExists := Dx2.Tower.towerExists
-
-theorem exists_isotropic_frame : Formalism.FourierDecayAlt.D.DFrameExists := Dx2.dFrameExists
-
-theorem radial_measure_is_haar : Formalism.FourierDecayAlt.D.MuRHaar := Dx2.Rad.muRHaar
 
 theorem slice_measure_identity : Formalism.FourierDecayAlt.D.SliceOm := Dx2.SL.sliceOm
 

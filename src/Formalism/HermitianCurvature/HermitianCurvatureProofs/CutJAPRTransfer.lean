@@ -103,8 +103,8 @@ theorem fib_tr (hπ : IsCRepOn (UWset k r z) π) (hπ' : IsCRepOn (UWset k r z')
   intro p hp
   obtain ⟨hp1, hp2, hp3⟩ := hp
   have hst : (h * p.1 * h⁻¹, h'⁻¹ * p.2 * h') ∈ NF.Stab k r z z' μ ζ := by
-    refine ⟨Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hh hp1) hhi,
-      Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hhi' hp2) hh', ?_⟩
+    refine ⟨_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hh hp1) hhi,
+      _root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hhi' hp2) hh', ?_⟩
     show h * p.1 * h⁻¹ * NF.muZ k r μ ζ * (h'⁻¹ * p.2 * h') = NF.muZ k r μ ζ
     rw [hd]
     calc h * p.1 * h⁻¹ * (h * NF.muZ k r μ0 ζ * h') * (h'⁻¹ * p.2 * h')
@@ -118,8 +118,8 @@ theorem fib_tr (hπ : IsCRepOn (UWset k r z) π) (hπ' : IsCRepOn (UWset k r z')
   intro x
   have h1 := congrArg (fun T : Wq →L[ℂ] Wp => T (π' h'⁻¹ x)) hfix
   simp only [ContinuousLinearMap.comp_apply] at h1
-  rw [hπ.2 _ (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hh hp1) _ hhi, hπ.2 _ hh _ hp1,
-    hπ'.2 _ (Formalism.FourierDecayAlt.P.NFRadRedS.uw_mul hhi' hp2) _ hh', hπ'.2 _ hhi' _ hp2] at h1
+  rw [hπ.2 _ (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hh hp1) _ hhi, hπ.2 _ hh _ hp1,
+    hπ'.2 _ (_root_.Formalism.FourierDecayAlt.P.SkewHermitianParts.uw_mul hhi' hp2) _ hh', hπ'.2 _ hhi' _ hp2] at h1
   simp only [ContinuousLinearMap.comp_apply] at h1
   rw [rep_inv_r hπ' hh'] at h1
   simp only [ContinuousLinearMap.comp_apply]

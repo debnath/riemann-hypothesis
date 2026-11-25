@@ -251,11 +251,11 @@ theorem block_two_identity_conjTranspose {p s : ℕ} (A : Matrix (Fin p) (Fin p)
   split_ifs <;> simp [Matrix.one_apply, Fin.ext_iff, eq_comm]
 
 theorem w_inv (d : ℕ) : (G.wMat d)⁻¹ = G.wMat d :=
-  Matrix.inv_eq_left_inv (Ux4.wMat_mul_self d)
+  Matrix.inv_eq_left_inv (_root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_self d)
 
 theorem exp_w_conj (d : ℕ) (M : Matrix (Fin d) (Fin d) ℂ) :
     NormedSpace.exp (G.wMat d * M * G.wMat d) = G.wMat d * NormedSpace.exp M * G.wMat d := by
-  have hu : IsUnit (G.wMat d) := ⟨⟨G.wMat d, G.wMat d, Ux4.wMat_mul_self d, Ux4.wMat_mul_self d⟩, rfl⟩
+  have hu : IsUnit (G.wMat d) := ⟨⟨G.wMat d, G.wMat d, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_self d, _root_.Formalism.FourierDecayAlt.P.Ux3.wMat_mul_self d⟩, rfl⟩
   have e := Matrix.exp_conj (G.wMat d) M hu
   rw [w_inv] at e
   exact e

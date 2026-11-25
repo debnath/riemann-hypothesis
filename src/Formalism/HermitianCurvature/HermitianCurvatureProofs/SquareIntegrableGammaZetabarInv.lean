@@ -401,7 +401,7 @@ theorem famPos (P : M.Par) (l : ℕ) (L : R.LevelData (A P (DQ P)) P.r) (j : M.T
       rw [e]
       exact ⟨Complex.ofReal_im _, by rw [Complex.ofReal_re]; exact hcut _ (hYI b)⟩
     set ix := ixOf P (List.ofFn Y).length (cast (iota_len P N Y) i)
-    have hπ := Formalism.FourierDecayAlt.P.types_interlace P hOK ix.2
+    have hπ := _root_.Formalism.FourierDecayAlt.P.Mx3.tyInterlaces P hOK ix.2
     have hpos := _root_.Formalism.FourierDecayAlt.P.Fr2.cPosCut _root_.Formalism.FourierDecayAlt.P.Interlace.interlaceSign _root_.Formalism.FourierDecayAlt.P.Interlace.qPositive
       _root_.Formalism.FourierDecayAlt.P.Fr2.qPositiveShift _root_.Formalism.FourierDecayAlt.P.Fr2.cPos (Fin (List.ofFn Y).length) P.k P.u P.u'
       (M.rho P ix.2) l P.T P.T' (wordP (List.ofFn Y)) hl1 hlk hπ hOK.T_pos hOK.T'_pos hcutw

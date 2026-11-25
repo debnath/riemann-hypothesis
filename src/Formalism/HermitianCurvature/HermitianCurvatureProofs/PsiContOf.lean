@@ -32,8 +32,8 @@ theorem krI_aesm {k p ρ : ℕ} {Wp Wq : Type} [NormedAddCommGroup Wp] [InnerPro
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite B0.haarW'
   have := Formalism.FourierDecayAlt.P.B5.haar_sigmaFinite B0.haarN
   set S := {ξ : Mt k (p + ρ) × Mt k (p + ρ) | Formalism.FourierDecayAlt.P.PBG.InR B0 ξ} with hS
-  have hcG := Formalism.FourierDecayAlt.P.unitary_group_closed k (p + ρ)
-  have hcW := Formalism.FourierDecayAlt.P.weyl_subgroup_closed k (p + ρ) B0.z'
+  have hcG := _root_.Formalism.FourierDecayAlt.P.B2x2.closedG k (p + ρ)
+  have hcW := _root_.Formalism.FourierDecayAlt.P.B2x3.closedW k (p + ρ) B0.z'
   have hmem : ∀ ξ ∈ S, y₀ * Matrix.of ξ.2 * Matrix.of ξ.1 ∈ {x | x ∈ B.GV k (p + ρ) ∧ U.DjU k p ρ x ≠ 0} := by
     intro ξ hξ
     refine ⟨hcG.mul_mem _ (hcG.mul_mem _ hy₀ _ hξ.2.1) _ hξ.1.1, ?_⟩

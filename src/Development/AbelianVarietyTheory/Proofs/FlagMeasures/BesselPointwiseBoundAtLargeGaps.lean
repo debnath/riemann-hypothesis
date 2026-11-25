@@ -705,7 +705,7 @@ open scoped InnerProductSpace
 theorem exists_isStdOf (k r : ℕ) (L : Formalism.MainNotions.S.LocBessel k r) (μsec : ℂ → Matrix (Fin (k + 1)) (Fin (k + 1)) ℂ)
     (hk : 1 ≤ k) (hsec : IsSection k r L.z L.z' μsec) :
     ∃ Bs : B.RealPlaceData k r L.Wp L.Wq, IsStdOf L μsec Bs := by
-  obtain ⟨μG, hμG⟩ := P.unitary_group_haar_exists k r
+  obtain ⟨μG, hμG⟩ := _root_.Formalism.FourierDecayAlt.P.B2x3.haarG k r
   obtain ⟨χ, hχs, hχsupp, hχint⟩ := P.character_exists_alt
   have h1 := _root_.GlobalTheory.ThA.hcType_rep k r L.z L.u L.Wp L.π L.hz.1 L.hz.2 L.hπ
   have h1' := _root_.GlobalTheory.ThA.hcType_rep k r L.z' L.u' L.Wq L.π' L.hz'.1 L.hz'.2 L.hπ'

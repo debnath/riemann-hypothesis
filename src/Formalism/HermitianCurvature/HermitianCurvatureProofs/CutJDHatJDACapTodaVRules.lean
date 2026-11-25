@@ -46,7 +46,7 @@ theorem mirror_right_rule_holds : RightRuleEv := by
     have := hR (g * x) ⟨glev0 hg.1 hx.1, hx.2⟩ n (nlev_mono (zero_le' _) hn)
     simpa [Matrix.mul_assoc] using this
   have h1 : (1 : Mx k r) ∈ Glev k r b.castSucc ∩ {x | g * x ∈ D} :=
-    ⟨glev_one _, by simpa using hg.2⟩
+    ⟨_root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, by simpa using hg.2⟩
   have hrule := (Formalism.FourierDecayAlt.P.right_action_rule E k r z' b {x | g * x ∈ D} (fun x => f (g * x)) hz' hD' hS' hR'
     1 h1).2.1
   have hjlt : 2 * r + k - a.val - b.val - 1 < mdim k r b.succ := by simp [mdim]; omega
@@ -80,21 +80,21 @@ theorem mirror_torus_cell_holds : TorusCellv := by
       intro i hi
       have : i = l.succ := Fin.ext (by simpa using hi)
       subst i
-      exact ⟨1, glev_one _, fun _ _ => by simp⟩
+      exact ⟨1, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun _ _ => by simp⟩
     | succ n ih =>
       intro i hi
       let j : Fin r := ⟨l.val + 1 + n, by have := i.isLt; omega⟩
       rw [show i = j.succ from Fin.ext (by simpa [j, Nat.add_assoc] using hi)]
       obtain ⟨T, hTG, hTc⟩ := ih j.castSucc (by simp [j])
       have hlj : l.val < j.val := by simp [j]; omega
-      refine ⟨T * w1 k r j (c j), glev_mul hTG ?_, ?_⟩
+      refine ⟨T * w1 k r j (c j), _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG ?_, ?_⟩
       · exact glev_mono (by simpa [Fin.le_def] using hlj)
           (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r j (c j) (hcne j)).1
       · intro c' hc'
         rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ, hTc c' hc', hc' j hlj, Matrix.mul_assoc]
   obtain ⟨T, hTG, hTc⟩ := htail (r - l.val - 1) (Fin.last r) (by simp; omega)
   have hT := hTc c (fun _ _ => rfl)
-  have hg₁ : T * g ∈ Glev k r l.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r l.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r l.castSucc c * (w1 k r l (c l) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r l.castSucc, wCell k r l.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -110,12 +110,12 @@ theorem mirror_torus_cell_holds : TorusCellv := by
   have hd₂ : DifferentiableAt ℝ (fun c' => f (wCell k r (Fin.last r) c' * g)) c := by
     refine diff_comp hS (φ := fun c' => wCell k r (Fin.last r) c' * g)
       (cdo_mul (wlist_smooth _) contDiffOn_const)
-      (fun _ hc' => glev_mul (wlist_glev hc' _) (glev_mono (zero_le' _) hg)) hc hWD
+      (fun _ hc' => _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (wlist_glev hc' _) (glev_mono (zero_le' _) hg)) hc hWD
   have hd₁ : DifferentiableAt ℝ (fun c' => f (wCell k r l.castSucc c * (w1 k r l (c' l) * (T * g)))) c := by
     refine diff_comp hS (φ := fun c' => wCell k r l.castSucc c * (w1 k r l (c' l) * (T * g)))
       (Formalism.FourierDecayAlt.P.Qx6.cd_matmul contDiffOn_const
-        (Formalism.FourierDecayAlt.P.Qx6.cd_matmul (Formalism.FourierDecayAlt.P.Qx6.contDiffOn_weyl_cell l) contDiffOn_const)) (fun c' hc' => ?_) hc ?_
-    · refine glev_mul hW0 (glev_mul (glev_mono (zero_le' _) (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c' l) (hc' l)).1)
+        (Formalism.FourierDecayAlt.P.Qx6.cd_matmul (_root_.Formalism.FourierDecayAlt.P.Qx3.weyl_cell_contDiffOn l) contDiffOn_const)) (fun c' hc' => ?_) hc ?_
+    · refine _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hW0 (_root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul (glev_mono (zero_le' _) (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r l (c' l) (hc' l)).1)
         (glev_mono (zero_le' _) hg₁))
     · rw [← hsplit]; exact hWD
   congr 1
@@ -150,7 +150,7 @@ theorem mirror_left_rule_cell_holds : LeftRuleCellv := by
       intro i hi
       have : i = b.succ := Fin.ext (by simpa using hi)
       subst i
-      refine ⟨1, by simp, glev_one _, fun a ha => ?_, fun _ _ => by simp⟩
+      refine ⟨1, by simp, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_one _, fun a ha => ?_, fun _ _ => by simp⟩
       rw [ite_eq_right (by simp; omega), Matrix.one_mulVec]
     | succ n ih =>
       intro i hi
@@ -158,7 +158,7 @@ theorem mirror_left_rule_cell_holds : LeftRuleCellv := by
       rw [show i = j.succ from Fin.ext (by simpa [j, Nat.add_assoc] using hi)]
       obtain ⟨T, hT, hTG, hTe, hTs⟩ := ih j.castSucc (by simp [j])
       have hbj : b.val + 1 ≤ j.val := by simp [j]
-      refine ⟨T * w1 k r j (c j), ?_, glev_mul hTG ?_, ?_, ?_⟩
+      refine ⟨T * w1 k r j (c j), ?_, _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG ?_, ?_, ?_⟩
       · rw [Formalism.FourierDecayAlt.P.Qx6.wCell_succ, hT, Matrix.mul_assoc]
       · exact glev_mono (by simpa [Fin.le_def] using hbj)
           (Formalism.FourierDecayAlt.P.weyl_level_element_properties k r j (c j) (hcne j)).1
@@ -185,7 +185,7 @@ theorem mirror_left_rule_cell_holds : LeftRuleCellv := by
         rw [← Matrix.mulVec_mulVec, weyl_cell_mulVec_basis, sw_o j h₁ h₂, dd_o j _ h₁ h₂, one_smul,
           hTs a (by simp at ha ⊢; omega)]
   obtain ⟨T, hT, hTG, hTe, -⟩ := htail (r - b.val - 1) (Fin.last r) (by simp; omega)
-  have hg₁ : T * g ∈ Glev k r b.succ := glev_mul hTG (glev_mono (Fin.le_last _) hg)
+  have hg₁ : T * g ∈ Glev k r b.succ := _root_.Formalism.FourierDecayAlt.P.Qx8.glev_mul hTG (glev_mono (Fin.le_last _) hg)
   have hsplit : wCell k r (Fin.last r) c * g = wCell k r b.castSucc c * (w1 k r b (c b) * (T * g)) := by
     simp only [hT, Formalism.FourierDecayAlt.P.Qx6.wCell_succ, Matrix.mul_assoc]
   have hWx : ∀ x ∈ Glev k r b.castSucc, wCell k r b.castSucc c * x ∈ Glev k r 0 := fun x hx => glev0 hW0 hx
@@ -225,7 +225,7 @@ theorem mirror_left_rule_cell_holds : LeftRuleCellv := by
     rw [← Formalism.FourierDecayAlt.P.SignAntidiagonal.herm_bvec_eI ((T * g)⁻¹ *ᵥ bvec (eI k r ⟨b.val + 1, by omega⟩)) a,
       ← Formalism.FourierDecayAlt.P.Qx2.herm_uh hU, Matrix.mulVec_mulVec,
       Matrix.mul_nonsing_inv _ (Formalism.QuantumDeterminants.WeylGroupFacts.isUnit_of_uh hU), Matrix.one_mulVec, ← Matrix.mulVec_mulVec, hga, hTa,
-      herm_smul_right', ← Formalism.FourierDecayAlt.P.Qx2.herm_star, Formalism.FourierDecayAlt.P.SignAntidiagonal.herm_bvec_eI]
+      herm_smul_right', ← _root_.Formalism.FourierDecayAlt.P.Qx8.herm_conj, Formalism.FourierDecayAlt.P.SignAntidiagonal.herm_bvec_eI]
     by_cases hh : a.val = b.val + 1
     · rw [ite_eq_left hh]
       have : (bvec (esI k r a) : Fin (2 * r + k + 1) → ℂ) (esI k r ⟨b.val + 1, by omega⟩) = 1 := by

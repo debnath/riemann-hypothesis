@@ -22,14 +22,6 @@ variable (P : M.Par)
 
 theorem ann_open : IsOpen (Ann P) := isOpen_lt continuous_const Complex.continuous_normSq
 
-theorem ev_inv' (f : SmQ P.r P.TT) (hf : IsUnit f) (q : Qp P.r P.TT) :
-    ((Ring.inverse f : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q = ((f : Qp P.r P.TT → ℂ) q)⁻¹ := by
-  obtain ⟨u, rfl⟩ := hf
-  rw [Ring.inverse_unit]
-  have h := congrArg (fun g : SmQ P.r P.TT => (g : Qp P.r P.TT → ℂ) q) u.mul_inv
-  simp only [Subalgebra.coe_mul, Pi.mul_apply, OneMemClass.coe_one, Pi.one_apply] at h
-  exact eq_inv_of_mul_eq_one_right h
-
 theorem smZ {v : ℂ → ℂ} (hv : ContDiffOn ℝ ((⊤ : ℕ∞) : WithTop ℕ∞) v (Ann P)) :
     (fun q : Qp P.r P.TT => v q.1.2) ∈ smSub P.r P.TT := by
   show ContDiffOn ℝ MA.sm (MA.ext (fun q : MA.Qp P.r P.TT => v q.1.2)) (MA.Qset P.r P.TT)
@@ -49,7 +41,7 @@ theorem dzQ_apply (hTT : 0 ≤ P.TT) (f : SmQ P.r P.TT) (q : Qp P.r P.TT) :
     ((dzQ P f : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q = wirt M.vz (MA.ext (f : Qp P.r P.TT → ℂ)) q.1 := by
   show ((Ring.inverse (coordQ M.vz : SmQ P.r P.TT) : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q *
       (MA.coordE M.vz q.1 * wirt M.vz (MA.ext (f : Qp P.r P.TT → ℂ)) q.1) = _
-  rw [ev_inv' P _ (coordQ_unit P hTT M.vz) q]
+  rw [_root_.Formalism.FourierDecayAlt.P.MAx2.Jet.ev_inverse P _ (coordQ_unit P hTT M.vz) q]
   have hz : q.1.2 ≠ 0 := by
     intro h0
     have h2 := q.2.2
@@ -67,7 +59,7 @@ theorem dzbQ_apply (hTT : 0 ≤ P.TT) (f : SmQ P.r P.TT) (q : Qp P.r P.TT) :
     ((dzbQ P f : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q = wirt M.vzb (MA.ext (f : Qp P.r P.TT → ℂ)) q.1 := by
   show ((Ring.inverse (coordQ M.vzb : SmQ P.r P.TT) : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q *
       (MA.coordE M.vzb q.1 * wirt M.vzb (MA.ext (f : Qp P.r P.TT → ℂ)) q.1) = _
-  rw [ev_inv' P _ (coordQ_unit P hTT M.vzb) q]
+  rw [_root_.Formalism.FourierDecayAlt.P.MAx2.Jet.ev_inverse P _ (coordQ_unit P hTT M.vzb) q]
   have hz : q.1.2 ≠ 0 := by
     intro h0
     have h2 := q.2.2
@@ -239,7 +231,7 @@ theorem ggiP_apply (f : SmQ P.r P.TT) (q : Qp P.r P.TT) :
     rw [hval q']
     exact mul_inv_cancel₀ (hne q')
   show ((Ring.inverse (show SmQ P.r P.TT from (MA.DQ P).gg P.TT) : SmQ P.r P.TT) : Qp P.r P.TT → ℂ) q * (f : Qp P.r P.TT → ℂ) q = _
-  rw [ev_inv' P _ hu q, hval q]
+  rw [_root_.Formalism.FourierDecayAlt.P.MAx2.Jet.ev_inverse P _ hu q, hval q]
 
 end gaugeCalc
 

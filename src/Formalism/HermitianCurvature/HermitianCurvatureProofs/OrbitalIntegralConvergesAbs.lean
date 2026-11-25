@@ -39,16 +39,12 @@ theorem muPi_eq (β : ℂ) (ι : Type) [Fintype ι] :
   simp only [mu, Measure.smul_apply, volume_pi_pi, ENNReal.smul_def, smul_eq_mul, Finset.prod_mul_distrib,
     Finset.prod_const, Finset.card_univ, ENNReal.coe_pow]
 
-theorem map_mulVec_volume {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℂ) (h : ‖M.det‖ = 1) :
-    Measure.map (fun x : ι → ℂ => M *ᵥ x) volume = volume := by
-  apply _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.map_mulVec_volume <;> assumption
-
 theorem mp_mulVec (β : ℂ) {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℂ) (h : ‖M.det‖ = 1) :
     MeasurePreserving (fun x : ι → ℂ => M *ᵥ x) (muPi β ι) (muPi β ι) := by
   have hm : Measurable (fun x : ι → ℂ => M *ᵥ x) :=
     (Continuous.matrix_mulVec continuous_const continuous_id).measurable
   refine ⟨hm, ?_⟩
-  rw [muPi_eq, Measure.map_smul, map_mulVec_volume M h]
+  rw [muPi_eq, Measure.map_smul, _root_.Formalism.FourierDecayAlt.P.TwoByOneBlock.map_mulVec_volume M h]
   exact hm.aemeasurable
 
 theorem mp_vecMul (β : ℂ) {ι : Type} [Fintype ι] [DecidableEq ι] (M : Matrix ι ι ℂ) (h : ‖M.det‖ = 1) :

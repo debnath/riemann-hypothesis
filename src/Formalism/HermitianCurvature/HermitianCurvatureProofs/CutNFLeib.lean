@@ -332,9 +332,6 @@ lemma W_lin (ℓ : Mat k r →ₗ[ℝ] ℂ) :
     obtain ⟨ℓ', he⟩ := ih
     exact ⟨ℓ'.comp (vf x.1 x.2).toLinearMap, by rw [W_cons, he, op_lin]⟩
 
-lemma entry_le_gN (g : Mat k r) (i j : Fin (2 * r + k + 1)) : ‖g i j‖ ≤ gN g := by
-  apply _root_.ReciprocityTheory.ChartRestriction.DS.Xi.DetB.entry_le_gN <;> assumption
-
 lemma polyClass_lin (ℓ : Mat k r →ₗ[ℝ] ℂ) : PolyClass 1 (fun g => ℓ g) := by
   refine ⟨?_, fun a _ => ?_⟩
   · intro g₀ _
@@ -358,7 +355,7 @@ lemma polyClass_lin (ℓ : Mat k r →ₗ[ℝ] ℂ) : PolyClass 1 (fun g => ℓ 
       unfold co; split_ifs
       · exact Complex.abs_im_le_norm _
       · exact Complex.abs_re_le_norm _
-    exact hco.trans (entry_le_gN g _ _)
+    exact hco.trans (_root_.ReciprocityTheory.ChartRestriction.DS.Xi.DetB.entry_le_gN g _ _)
 
 def varIn (p : Fin (2 * r + k + 1) × Fin (2 * r + k + 1)) : Mat k r →ₗ[ℝ] ℂ where
   toFun g := g p.1 p.2
