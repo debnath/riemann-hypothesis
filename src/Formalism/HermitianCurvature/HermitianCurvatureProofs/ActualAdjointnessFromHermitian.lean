@@ -307,24 +307,16 @@ theorem place_alt_alt {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ W
 
 section Geo
 
-theorem Nlev_last {k r : ℕ} {n : Mx k r} (hn : n ∈ Nlev k r (Fin.last r)) : n = 1 := by
-  apply Formalism.FourierDecayAlt.P.Qx8.Nlev_last <;> assumption
-
 def Dp (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : Set (Mx k r) := {g | 0 < GGl k r z z' g}
 
 theorem Dp_open (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : IsOpen (Dp k r z z') :=
   isOpen_lt continuous_const (_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_cont k r z z')
 
-theorem Slev_last {k r : ℕ} {z : Fin (2 * r + k + 1) → ℂ} {s : Mx k r} (hs : s ∈ Slev k r z (Fin.last r)) :
-    s ∈ UWset k r z := by
-  obtain ⟨h, hh, m, hm, rfl⟩ := hs
-  simpa only [Nlev_last hm, mul_one] using hh
-
 theorem Dp_dom (k r : ℕ) (z z' : Fin (2 * r + k + 1) → ℂ) : IsDom k r z z' (Fin.last r) (Dp k r z z') := by
   refine ⟨Dp_open k r z z', ?_⟩
   rintro g ⟨-, hg⟩ s hs s' hs'
   show 0 < GGl k r z z' (s * g * s')
-  rw [_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv (Slev_last hs) (Slev_last hs')]
+  rw [_root_.Formalism.FourierDecayAlt.P.Qx8.GGl_equiv (_root_.Formalism.FourierDecayAlt.P.Qx8.Slev_last hs) (_root_.Formalism.FourierDecayAlt.P.Qx8.Slev_last hs')]
   exact hg
 
 variable {k r : ℕ} {z z' : Fin (2 * r + k + 1) → ℂ} {Wp Wq : Type*} [NormedAddCommGroup Wp] [NormedSpace ℂ Wp]
@@ -342,9 +334,9 @@ theorem slice_FF (hz : inWb k r z) (hz' : inWb k r z') {Φ : Fn k r (Wq →L[ℂ
     {c : Fin r → ℂ} (hc : c ∈ OmX r) : Φ c ∈ FFl k r z z' π π' (Fin.last r) (Dp k r z z') := by
   refine ⟨slice_smooth hΦ hc, ?_, ?_, ?_⟩
   · intro g _ n hn
-    rw [Nlev_last hn, one_mul, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz, one_smul]
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx8.Nlev_last hn, one_mul, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz, one_smul]
   · intro g _ n hn
-    rw [Nlev_last hn, mul_one, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz', one_smul]
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx8.Nlev_last hn, mul_one, _root_.Formalism.FourierDecayAlt.P.Qx8.psi_one hz', one_smul]
   · rintro g ⟨hg, hD⟩ h hh h' hh'
     exact hΦ.2.2 (c, g) ⟨hc, hg, hD⟩ h hh h' hh'
 
@@ -1348,11 +1340,6 @@ theorem eh_inv (Λ : (Fin (2 * r + k + 1) → ℂ) →ₗ[ℂ] ℂ) (v : Fin (2 
   rw [rd_inv, rd_inv, smul_neg, ← neg_add, ← map_smul, ← map_add (f := _), ← Matrix.smul_mulVec, ← Matrix.add_mulVec,
     hpart_sum]
 
-theorem uh_inv_eq {g : Mx k r} (hg : g ∈ UH (Hpk k r)) : g⁻¹ = Hpk k r * gᴴ * Hpk k r := by
-  apply Matrix.inv_eq_left_inv
-  calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
-    _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
-
 theorem smooth_inv (Λ : (Fin (2 * r + k + 1) → ℂ) →ₗ[ℂ] ℂ) (v : Fin (2 * r + k + 1) → ℂ) :
     SmoothLev k r i D (fun y => Λ (y⁻¹ *ᵥ v)) := by
   let L : Mx k r →ₗ[ℝ] ℂ :=
@@ -1365,7 +1352,7 @@ theorem smooth_inv (Λ : (Fin (2 * r + k + 1) → ℂ) →ₗ[ℂ] ℂ) (v : Fin
   refine ⟨Set.univ, fun y => L y, isOpen_univ, trivial, (LinearMap.toContinuousLinearMap L).contDiff.contDiffOn,
     fun y _ hy => ?_⟩
   show Λ (y⁻¹ *ᵥ v) = Λ ((Hpk k r * yᴴ * Hpk k r) *ᵥ v)
-  rw [uh_inv_eq hy.1]
+  rw [_root_.Formalism.FourierDecayAlt.P.Qx8.uh_inv_eq hy.1]
 
 end Leib
 
@@ -1593,7 +1580,7 @@ theorem eh_zb (a b : Fin (mdim k r i)) (g : Mx k r) :
 
 theorem zb_eq {g : Mx k r} (hg : g ∈ Glev k r i) : star (zetaL k r z z' i g) = zbF k r z z' i g := by
   have h1 : g⁻¹ * g = 1 := by
-    rw [uh_inv_eq hg.1]
+    rw [_root_.Formalism.FourierDecayAlt.P.Qx8.uh_inv_eq hg.1]
     calc Hpk k r * gᴴ * Hpk k r * g = Hpk k r * (gᴴ * Hpk k r * g) := by simp only [Matrix.mul_assoc]
       _ = 1 := by rw [show gᴴ * Hpk k r * g = Hpk k r from hg.1, _root_.Formalism.QuantumDeterminants.WeylGroupFacts.hpk_sq]
   have h2 : g * g⁻¹ = 1 := mul_eq_one_comm.1 h1
