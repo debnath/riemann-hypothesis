@@ -589,31 +589,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 
 namespace GlobalTheory.StrInert
 
-theorem not_isSplitPl_of_inert (D : D7) (w : HeightOneSpectrum (𝓞 D.host.E))
-    (hin : Formalism.UG.IsInertAt D.host.F D.host.E (w.under (𝓞 D.host.F)) w) : ¬ IsSplitPl D.host w := by
-  rw [GlobalTheory.ConjPlaceOff.isSplitPl_iff]
-  rintro ⟨x, hx, hcx⟩
-  apply hcx
-  unfold Formalism.UG.IsInertAt at hin
-  rw [← hin] at hx ⊢
-  have key : Ideal.map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) (w.under (𝓞 D.host.F)).asIdeal ≤
-      (Ideal.map (algebraMap (𝓞 D.host.F) (𝓞 D.host.E)) (w.under (𝓞 D.host.F)).asIdeal).comap
-        (Formalism.HermitianLattices.Ext.L3.conjO D.host.E) := by
-    rw [Ideal.map_le_iff_le_comap]
-    intro a ha
-    rw [Ideal.mem_comap, Ideal.mem_comap]
-    have e : Formalism.HermitianLattices.Ext.L3.conjO D.host.E (algebraMap (𝓞 D.host.F) (𝓞 D.host.E) a) =
-        algebraMap (𝓞 D.host.F) (𝓞 D.host.E) a := by
-      apply RingOfIntegers.ext
-      rw [Formalism.HermitianLattices.Ext.L3.conjO_coe]
-      have : ((algebraMap (𝓞 D.host.F) (𝓞 D.host.E) a : 𝓞 D.host.E) : D.host.E) =
-          algebraMap D.host.F D.host.E (a : D.host.F) := rfl
-      rw [this]
-      exact Formalism.IndefR.Eqv.star_algebraMapF D _
-    rw [e]
-    exact Ideal.mem_map_of_mem _ ha
-  exact key hx
-
 theorem not_mem_badPl {D : D7} {G : Type} [Group G] [Fintype G] {Pl0 T : Type} {A : DIV.FamIn D.what₂.LL G Pl0 T D.R.m}
     {Ks : Type} [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : Formalism.IndefR.Links.RealDat D A Ks) (t : T)
     (w : HeightOneSpectrum (𝓞 D.host.E)) (hw : GlobalTheory.Hk3.Good R t w)
@@ -1481,7 +1456,7 @@ attribute [local instance] GlobalTheory.LocalData.complRel GlobalTheory.LocalDat
 theorem GlobalTheory.StrInert.param_eq_ubc_satV_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), ∀ (X : GlobalTheory.NJoin.RealAt D P.cf P.C P.tp) (_ : GlobalTheory.NJoin.Agree X P.M P.rep), _root_.Formalism.MainNotions.SumRepresentations.provisionFortyOne D → _root_.Formalism.MainNotions.SumRepresentations.adm7_alt D → Formalism.MainNotions.SumRepresentations.tieLab D → ∀ (i : D.nd.Loc) (hμ : Formalism.IndefR.RecTie.Used0 D (D.nd.mu i)) (j : Fin D.R.m) (hj : j.1 + 1 = D.nd.j i), ∀ x ∈ ZgoodN D.nd D.naut i, ∀ f : D.what₂.Mt (D.nd.mu i) (j.1 + 1), (hj ▸ f : D.what₂.Mt (D.nd.mu i) (D.nd.j i)) ∈ eigC D.nd D.naut i x → ∀ y, X.R.extV j (X.tupT (D.nd.mu i)) y = X.fn hμ j f → y ≠ 0 → ∀ h, GlobalTheory.Hk3.IsOpsV X.R j (X.tupT (D.nd.mu i)) h → ∀ (s : GlobalTheory.DownLift.Sys D) (B : GlobalTheory.LFun.Fam D.host.E), GlobalTheory.DownLift.IsEigV X.R j (X.tupT (D.nd.mu i)) h s y → GlobalTheory.LFun.IsSysParamD D (GlobalTheory.IndefiniteRowSideFullHecke.LabelSettingScalars.badPl X.R (X.tupT (D.nd.mu i))) (Formalism.IndefR.Links.Vc D j).rank s B → ∀ w : HeightOneSpectrum (𝓞 D.host.E), GlobalTheory.Hk3.Good X.R (X.tupT (D.nd.mu i)) w → Formalism.UG.IsInertAt D.host.F D.host.E (w.under (𝓞 D.host.F)) w → ∀ P', D.naut.ptV i P' = some x → (B w).map (fun a : ℂˣ => (a : ℂ)) = ubc D.R.nV (D.naut.satV i P' w) := by
   intro hA hL D P X hX h41 h7 htie i hμ j hj x hx f hf y hy hy0 h hh s B hs hB w hw hin P' hP'
   have hv := GlobalTheory.StrInert.not_mem_badPl X.R (X.tupT (D.nd.mu i)) w hw hin
-  have hns := GlobalTheory.StrInert.not_isSplitPl_of_inert D w hin
+  have hns := _root_.GlobalTheory.not_isSplitPl_of_isInertAt D w hin
   obtain ⟨P₀, hP₀, α₀, hsat, hev⟩ := _root_.GlobalTheory.InertEigSat.eig_eq_satU_alt hA hL D P X hX h41 h7 htie i hμ j hj x hx f hf y hy hy0 h hh s hs w hw hin
   have hBw := hB _ hv w rfl
   rcases hBw with ⟨hsp, -⟩ | ⟨-, τ, ϖ, α, hU, hτ, hBeq, hc⟩
@@ -1548,12 +1523,6 @@ theorem notSplit (D : D7) (w : HeightOneSpectrum (𝓞 D.host.E)) (h : IsConjPl 
     ⟨RingOfIntegers.mapRingHom (D.host.conj : D.host.E →+* D.host.E) x, rfl⟩
   exact hy y hy' ((h x y hy').1 hx)
 
-theorem xi_eq {D : D7} {nch : NChoice D} {C C' : CharFrame D} (h : C = C') (T : TupTied D C nch) (T' : TupTied D C' nch)
-    (h' : HEq T T') : T.xi = T'.xi := by
-  subst h
-  cases h'
-  rfl
-
 end GlobalTheory.ValInert
 end -- clump:auto
 end -- clump:auto
@@ -1586,7 +1555,7 @@ theorem val_inert_alt : GlobalTheory.Published.AutomorphicFormsFiniteGL → ∀ 
     · exact (hG w (Or.inr h)).1 rfl
     · exact (hG PP (Or.inr h)).2 hc
   have hxi : X.R.xiH (X.tupT (D.nd.mu i)) = P.tp.xi (D.nd.mu i) := by
-    rw [X.recR.tupXi _ hμ, xi_eq X.cfEq X.Tp P.tp X.tpEq]
+    rw [X.recR.tupXi _ hμ, _root_.GlobalTheory.TieFrob.xi_eq_of_heq X.cfEq X.Tp P.tp X.tpEq]
   have hmu : (P.chr.e1 (D.naut.muC i)).1 = X.R.C.mu0 j * X.R.xiH (X.tupT (D.nd.mu i)) := by
     rw [P.chr.muC i j hj, hxi, X.cfEq]
     rfl

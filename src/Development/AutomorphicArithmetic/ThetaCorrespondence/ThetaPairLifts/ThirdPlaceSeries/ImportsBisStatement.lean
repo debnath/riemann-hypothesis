@@ -144,7 +144,7 @@ theorem step {χS χT : (AE D)ˣ →* Circle} {om : Om S T} (hθ : IsInfFam θ) 
   have hth : IsThetaFunO ψ S T (pureTensorO ψ θ S T sS sT BS BT vac Pol) := by
     have := (hvac 1 (one_mem _) 1 (one_mem _)).1
     rwa [show ((1, 1) : GA D S × GA D T) = 1 from rfl, map_one, Module.End.one_apply] at this
-  have hg := (hPQ.2.1 dG hdG).2 LS LT _ (_root_.GlobalTheory.DatumTopAt.vac_mono' Q (hvac a ha a' ha'))
+  have hg := (hPQ.2.1 dG hdG).2 LS LT _ (_root_.GlobalTheory.MidDatum.vac_true_mono Q (hvac a ha a' ha'))
   have e1 : ((a * b, a' * b') : GA D S × GA D T) = (b, b') * (a, a') := by
     rw [Formalism.IndefR.Eqv.Act.comm_inf_fin ha hb, Formalism.IndefR.Eqv.Act.comm_inf_fin ha' hb']
     rfl

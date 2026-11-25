@@ -715,13 +715,6 @@ section Gen
 
 variable {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} {K : Type} [Field K]
 
-theorem awf_eval_aeval {σ₁ σ₂ : Type} (f : σ₁ → MvPolynomial σ₂ K) (d : σ₂ → K) (P : MvPolynomial σ₁ K) :
-    MvPolynomial.eval d (MvPolynomial.aeval f P) = MvPolynomial.eval (fun x => MvPolynomial.eval d (f x)) P := by
-  induction P using MvPolynomial.induction_on with
-  | C a => simp
-  | add p q hp hq => simp only [map_add (f := _), hp, hq]
-  | mul_X p x hp => simp only [map_mul, hp, MvPolynomial.aeval_X, MvPolynomial.eval_X]
-
 def awfPt (γ₀ : Matrix (Fin n) (Fin n) L) : (L →+* K) × Fin n × Fin n → K := fun p => p.1 (γ₀ p.2.1 p.2.2)
 
 def awfLin {κ : Type} [Fintype κ] (e : Module.Basis κ ℚ L) (p : (L →+* K) × Fin n × Fin n) :
@@ -749,7 +742,7 @@ theorem isAlgWeightF_of_embPoly {W : Type} [AddCommGroup W] [Module K W] (ρ : R
   obtain rfl := ratHom_eq_of_match γ γ₀ hm
   rw [hQ γ]
   ext i j
-  rw [awf_eval_aeval]
+  rw [_root_.GlobalTheory.AlgWtF.DDHw.eval_aeval']
   refine congrArg (fun f => MvPolynomial.eval f (Q i j)) (funext fun p => ?_)
 
   simp only [awfLin, awfPt, map_sum, MvPolynomial.eval_mul, MvPolynomial.eval_C, MvPolynomial.eval_X]
@@ -864,7 +857,7 @@ def awfTenP (emb : ι → L →+* K) (lam : ι → DomWeight n) (i j : VVIdx lam
 theorem awfTenP_eval (emb : ι → L →+* K) (lam : ι → DomWeight n) (i j : VVIdx lam) (y : (L →+* K) × Fin n × Fin n → K) :
     MvPolynomial.eval y (awfTenP emb lam i j) = MvPolynomial.eval y (awfTwP emb lam) *
       awfCoord lam i (Formalism.GradedWeylDivisibility.blockAct K (fun τ => (Matrix.of fun a b => y (emb τ, a, b))ᵀ) (bVVfun K lam j)) := by
-  rw [awfTenP, MvPolynomial.eval_mul, awf_eval_aeval, ← awfCoef_eval]
+  rw [awfTenP, MvPolynomial.eval_mul, _root_.GlobalTheory.AlgWtF.DDHw.eval_aeval', ← awfCoef_eval]
   simp
 
 theorem tenRepF_toMatrix (emb : ι → L →+* K) (lam : ι → DomWeight n) (γ : GQ L n) :

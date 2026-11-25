@@ -1340,9 +1340,6 @@ open Classical
 open Formalism.L2.Forms GlobalTheory.Core.Rk.Top Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.IndefR.Lev
 variable {D : D7}
 
-theorem domWeight_ext {n : ℕ} : ∀ a b : DomWeight n, a.w = b.w → a = b := by
-  rintro ⟨a, _⟩ ⟨b, _⟩ h; cases h; rfl
-
 theorem sg_eq {u : D.what₂.Word} {C : ColumnChain D.R D.what₂.Tau (D.hcW u)} {A : ColumnsAtT D.R C} {Pm : PeriodMap D.R C}
     {M : MemberForms D.what₂.LL D.what₂.embLL D.what₂.places D.what₂.Tau (D.hcW u) C A Pm}
     {bad : Set (IsDedekindDomain.HeightOneSpectrum (𝓞 D.host.F))} {K : ClassesAtPrimes M bad} {okW : D.what₂.places.Pl → Prop}
@@ -1350,7 +1347,7 @@ theorem sg_eq {u : D.what₂.Word} {C : ColumnChain D.R D.what₂.Tau (D.hcW u)}
   funext τ
   unfold sgTG sgT
   congr 1
-  apply domWeight_ext
+  apply _root_.PI.WGL.dominant_weight_ext
   funext i
   have a := V.sg τ i
   have b := V0.sg τ i

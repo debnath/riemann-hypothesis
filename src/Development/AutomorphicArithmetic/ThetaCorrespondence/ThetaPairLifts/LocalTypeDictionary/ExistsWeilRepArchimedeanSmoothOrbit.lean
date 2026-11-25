@@ -379,14 +379,6 @@ theorem intInd_mem (κ : Type) [Fintype κ] :
   exact HasCompactSupport.intro' (isCompact_univ_pi fun _ => hOc) hU.isClosed
     fun x hx => Set.indicator_of_notMem hx _
 
-theorem snd_eq_zero_of_at {κ : Type} {z : κ → AF F} (hz : At (evI F) z) (i : κ) : (z i).2 = 0 := by
-  let u : AF F := ((0 : InfiniteAdeleRing F), (1 : FiniteAdeleRing (𝓞 F) F))
-  have hu : evI F u = 0 := map_zero (InfiniteAdeleRing.ringEquiv_mixedSpace F)
-  have h0 : u * z i = 0 := congrFun (hz u hu) i
-  have h1 : (u * z i).2 = (1 : FiniteAdeleRing (𝓞 F) F) * (z i).2 := rfl
-  rw [h0, one_mul] at h1
-  exact h1.symm
-
 def refFun (κ : Type) : (κ → AF F) → ℂ := fun x => intInd κ (fun i => (x i).2)
 
 theorem refFun_rest {κ : Type} [Fintype κ] (f : SInf F κ) :
@@ -396,7 +388,7 @@ theorem refFun_rest {κ : Type} [Fintype κ] (f : SInf F κ) :
   congr 1
   funext i
   change (x i).2 + (z i).2 = (x i).2
-  rw [snd_eq_zero_of_at hz i, add_zero]
+  rw [_root_.GlobalTheory.ArchHeis.snd_eq_zero_of_at hz i, add_zero]
 
 theorem refFun_lift {κ : Type} (t : κ → mixedEmbedding.mixedSpace F) : refFun κ (liftV t) = 1 := by
   show intInd κ (fun i => (liftV t i).2) = 1

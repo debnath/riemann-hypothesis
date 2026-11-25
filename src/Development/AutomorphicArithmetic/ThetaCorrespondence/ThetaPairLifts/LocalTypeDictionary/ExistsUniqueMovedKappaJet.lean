@@ -346,46 +346,6 @@ namespace GlobalTheory.RatMoveFock
 section SlopeTestRemainingChoices
 open Matrix
 variable {D : D7}
-private theorem mem_globLat_mul {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E] {n : ℕ}
-    (g h : GL (Fin n) (E ⊗[F] FiniteAdeleRing (𝓞 F) F)) (A : Matrix (Fin n) (Fin n) E)
-    (hg : g.val = A.map (Formalism.UG.inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F))) (Λ : Submodule (𝓞 E) (Fin n → E))
-    (y : Fin n → E) : A *ᵥ y ∈ Formalism.UG.CS.globLat (g * h) Λ ↔ y ∈ Formalism.UG.CS.globLat h Λ := by
-  have e : (fun i => Formalism.UG.inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F) ((A *ᵥ y) i)) =
-      g.val *ᵥ fun i => Formalism.UG.inclE (F := F) (E := E) (FiniteAdeleRing (𝓞 F) F) (y i) := by
-    funext i
-    rw [hg]
-    exact RingHom.map_mulVec _ _ _ i
-  unfold Formalism.UG.CS.globLat
-  simp only [Submodule.mem_mk, AddSubmonoid.mem_mk, AddSubsemigroup.mem_mk, Set.mem_setOf_eq]
-  rw [e, _root_.mul_inv_rev, Matrix.mulVec_mulVec, Units.val_mul, Matrix.mul_assoc, Units.inv_mul, Matrix.mul_one]
-private theorem latAt_rat {T : Type} {L : LevCh D T} {sc : Consts} {G : GlobalTheory.ChiGrid.GridData L sc} {W : G.Weil}
-    (S : GridChoice W Set.univ) (X : Node) (r : FinPt G X) (U : Matrix.unitaryGroup (Fin (G.V X).rank) D.host.E)
-    (h : RatCoord (G.V X) (S.N.fr X) r U) (x : FinPt G X) :
-    GlobalTheory.SumSize.latAt S X (r * x) = SDLat.smulLat U.1 (GlobalTheory.SumSize.latAt S X x) := by
-  obtain ⟨γ, -, h2, h3⟩ := h
-  have hg : (finG (G.V X) r).val = ((S.N.fr X).1 * U.1 * ((S.N.fr X)⁻¹ : GL _ _).1).map
-      (Formalism.UG.inclE (F := D.host.F) (E := D.host.E) (FiniteAdeleRing (𝓞 D.host.F) D.host.F)) := by
-    have e : (finG (G.V X) r).val = (Formalism.L2.Theta.mt (G.V X) γ).map (toEAf D) :=
-      Matrix.ext fun i j => congrArg (fun x : GL (Fin (G.V X).rank) _ =>
-        Algebra.TensorProduct.comm D.host.F (Af D.host.F) D.host.E (x.1 i j)) h2.symm
-    rw [e, h3]
-    rfl
-  have key : ∀ y, U.1 *ᵥ y ∈ GlobalTheory.SumSize.latAt S X (r * x) ↔ y ∈ GlobalTheory.SumSize.latAt S X x := fun y => by
-    unfold GlobalTheory.SumSize.latAt
-    rw [Submodule.mem_comap, Submodule.mem_comap, map_mul, LinearMap.restrictScalars_apply,
-      LinearMap.restrictScalars_apply, Matrix.mulVecLin_apply, Matrix.mulVecLin_apply]
-    have e : (S.N.fr X).1 *ᵥ (U.1 *ᵥ y) =
-        ((S.N.fr X).1 * U.1 * ((S.N.fr X)⁻¹ : GL _ _).1) *ᵥ ((S.N.fr X).1 *ᵥ y) := by
-      rw [Matrix.mulVec_mulVec, Matrix.mulVec_mulVec, Matrix.mul_assoc _ _ (S.N.fr X).1, Units.inv_mul, Matrix.mul_one]
-    rw [e]
-    exact mem_globLat_mul _ _ _ hg (G.Λ X) _
-  ext z
-  constructor
-  · intro hz
-    have e : U.1 *ᵥ (star U.1 *ᵥ z) = z := by rw [Matrix.mulVec_mulVec, U.2.2, Matrix.one_mulVec]
-    exact ⟨_, (key _).1 (e.symm ▸ hz), e⟩
-  · rintro ⟨y, hy, rfl⟩
-    exact (key y).2 hy
 private def NormOne {F : Type} [NormedField F] (lam : Qbar →+* F) (x : ℂ) : Prop := ∃ h : x ∈ Qbar, ‖lam ⟨x, h⟩‖ = 1
 section
 variable {F : Type} [NormedField F] {lam : Qbar →+* F}
@@ -748,8 +708,8 @@ theorem fock_jetTheta_rational : _root_.GlobalTheory.FunPr.ThetaLocalInputs → 
   have hθ := ch.W.θ_is
   have hv := _root_.GlobalTheory.MovedDict.moved_vacuum_isVacuumIntegral hP hI ch hch p hp x y
   have hv' := _root_.GlobalTheory.MovedDict.moved_vacuum_isVacuumIntegral hP hI ch hch p hp (r * x) (r' * y)
-  have hlx := latAt_rat ch.S.toGridChoice _ r U hU x
-  have hly := latAt_rat ch.S.toGridChoice _ r' U' hU' y
+  have hlx := _root_.GlobalTheory.RatMoveLat.latAt_rat ch.S.toGridChoice _ r U hU x
+  have hly := _root_.GlobalTheory.RatMoveLat.latAt_rat ch.S.toGridChoice _ r' U' hU' y
   obtain ⟨γ, g1, g2, g3, g4, g5⟩ := coord_data hθ hU
   obtain ⟨γ', h1, h2, h3, h4, h5⟩ := coord_data hθ hU'
   rw [hlx, hly]
@@ -1319,8 +1279,6 @@ open scoped TensorProduct
 open GlobalTheory.MovedDict Formalism.L2.Ker GlobalTheory.SignedHC
 noncomputable section
 namespace GlobalTheory.MovedVacRoot
-private theorem mem_algebraic_of_root_of_unity {c : ℂ} {m : ℕ} (hm : 0 < m) (h : c ^ m = 1) : c ∈ Qbar :=
-  mem_algebraicClosure_iff'.2 (IsIntegral.of_pow hm (h ▸ isIntegral_one))
 private theorem norm_root_of_unity_eq_one {K : Type} [NormedField K] (σ : Qbar →+* K) {c : ℂ} {m : ℕ} (hm : 0 < m) (h : c ^ m = 1)
     (hc : c ∈ Qbar) : ‖σ ⟨c, hc⟩‖ = 1 := by
   have e : (⟨c, hc⟩ : Qbar) ^ m = 1 := Subtype.ext h
@@ -1415,24 +1373,6 @@ private theorem exists_root_of_unity_factor {D : D7} {ψ : AddChar (AF D.host.F)
   have e5 := congrFun (e4.symm.trans e3) w
   rw [Pi.smul_apply, smul_eq_mul] at e5
   exact mul_right_cancel₀ hw (e5.trans (one_mul _).symm)
-private theorem inverse_image_standard_lattice {D : D7} {n : ℕ} (B : GL (Fin n) D.host.E) :
-    inV B (stdL D n) = (colLat B : Set (Fin n → D.host.E)) := by
-  ext y
-  simp only [inV, Set.mem_image, SetLike.mem_coe]
-  unfold colLat
-  rw [Submodule.mem_span_range_iff_exists_fun]
-  constructor
-  · rintro ⟨z, hz, rfl⟩
-    have hz' : ∀ i, ∃ c : 𝓞 D.host.E, algebraMap _ D.host.E c = z i := fun i =>
-      Submodule.mem_one.1 (hz i (Set.mem_univ i))
-    choose c hc using hz'
-    refine ⟨c, funext fun a => ?_⟩
-    simp only [Finset.sum_apply, Pi.smul_apply, Algebra.smul_def, hc, Matrix.mulVec, dotProduct]
-    exact Finset.sum_congr rfl fun j _ => mul_comm _ _
-  · rintro ⟨c, rfl⟩
-    refine ⟨fun j => algebraMap _ D.host.E (c j), fun i _ => Submodule.mem_one.2 ⟨c i, rfl⟩, funext fun a => ?_⟩
-    simp only [Finset.sum_apply, Pi.smul_apply, Algebra.smul_def, Matrix.mulVec, dotProduct]
-    exact Finset.sum_congr rfl fun j _ => mul_comm _ _
 
 
 theorem movedVacuum_root_exists_algebraic (hP : _root_.GlobalTheory.FunPr.ThetaLocalInputs) (hI : ∀ D, GlobalTheory.NormSum.Inp D) {D : D7} {Γ : Type} [Group Γ] [Fintype Γ] {Pl0 T : Type}
@@ -1457,9 +1397,9 @@ theorem movedVacuum_root_exists_algebraic (hP : _root_.GlobalTheory.FunPr.ThetaL
   have gx := GlobalTheory.MovedHomLat.movedLat_eq ch.S.toGridChoice _ h1 x
   have gy := GlobalTheory.MovedHomLat.movedLat_eq ch.S.toGridChoice _ h2 y
   have ix : inV (ch.S.N.fr p.small) (GlobalTheory.SumSize.latAt ch.S.toGridChoice p.small x) = (colLat (ch.S.N.fr p.small) : Set _) := by
-    rw [hx, inverse_image_standard_lattice]
+    rw [hx, _root_.GlobalTheory.MovedKappaNorm.inV_stdL]
   have iy : inV (ch.S.N.fr p.big) (GlobalTheory.SumSize.latAt ch.S.toGridChoice p.big y) = (colLat (ch.S.N.fr p.big) : Set _) := by
-    rw [hy, inverse_image_standard_lattice]
+    rw [hy, _root_.GlobalTheory.MovedKappaNorm.inV_stdL]
   have fx := SetLike.coe_injective (gx.symm.trans ix)
   have fy := SetLike.coe_injective (gy.symm.trans iy)
   cases p with
@@ -1490,7 +1430,7 @@ theorem _root_.GlobalTheory.T.moved_vacuum_has_algebraic_root : _root_.GlobalThe
   intro hP hI D Γ _ _ Pl0 T A Ks _ _ _ R ch hch p hp x y hx hy
   obtain ⟨c, m, hm, h1, hc⟩ := _root_.GlobalTheory.MovedVacRoot.movedVacuum_root_exists_algebraic hP hI ch hch p hp x y hx hy
   have h2 : (opp p c) ^ m = 1 := by rw [← map_pow, h1, map_one]
-  have h3 := mem_algebraic_of_root_of_unity hm h2
+  have h3 := _root_.GlobalTheory.SplitMoveKappa.qbar_of_root hm h2
   refine ⟨opp p c, ⟨h3, fun σ => norm_root_of_unity_eq_one σ hm h2 h3⟩, fun q _ lam => ?_, fun k => ?_⟩
   · rw [lamC, dite_eq_left h3]
     exact norm_root_of_unity_eq_one lam hm h2 h3

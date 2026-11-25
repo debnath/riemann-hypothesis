@@ -386,17 +386,11 @@ theorem exists_hom {V K : Type} [CommRing V] [IsDomain V] [IsDiscreteValuationRi
   refine ⟨F, hF, ?_⟩
   rw [← h₁, Category.assoc, ← a, hFf, ← Category.assoc, ← Over.comp_left, e.hom_inv_id_assoc, h₂]
 
-theorem dual_w {R R' : Type} [CommRing R] [CommRing R'] (f : R →+* R') :
-    spMap (dualMap f) ≫ spMap (algebraMap R (DualNumber R)) = spMap (algebraMap R' (DualNumber R')) ≫ spMap f := by
-  rw [spMap_spMap, spMap_spMap]
-  congr 1
-  ext s <;> simp [dualMap, TrivSqZeroExt.algebraMap_eq_inl]
-
 theorem exists_pull {V O : Type} [CommRing V] [CommRing O] {G : Over (Sp V)} [GrpObj G] {G' : Over (Sp O)} [GrpObj G']
     {f : V →+* O} {π : G'.left ⟶ G.left} (h : IsGrpPullback G' G (spMap f) π) {u : epsOver V V ⟶ G} (hu : IsTan u) :
     ∃ x : LieG G', x.1.left ≫ π = spMap (dualMap f) ≫ u.left := by
   have w : (spMap (dualMap f) ≫ u.left) ≫ G.hom = spMap (algebraMap O (DualNumber O)) ≫ spMap f := by
-    rw [Category.assoc, Over.w u, ← dual_w]
+    rw [Category.assoc, Over.w u, ← _root_.GlobalTheory.ArcQ.FrUniq.dual_alg]
     rfl
   refine ⟨⟨Over.homMk (h.1.lift _ _ w) (h.1.lift_snd _ _ w), ?_⟩, h.1.lift_fst _ _ w⟩
   refine Over.OverMorphism.ext (h.1.hom_ext ?_ ((Over.w _).trans (Over.w _).symm))
@@ -474,11 +468,11 @@ theorem exists_lieTie_of_frMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
       inferInstance
     rw [← cancel_mono (spMap (algebraMap T.V T.Fr)), Category.assoc, Category.assoc, ← m₂.cart.1.w,
       ← Category.assoc e.hom.left, ← h₃, Category.assoc, Over.w F, ← Category.assoc, h6, Category.assoc,
-      Over.w (ub τ j), ← dual_w]
+      Over.w (ub τ j), ← _root_.GlobalTheory.ArcQ.FrUniq.dual_alg]
     rfl
   have w : (spMap (dualMap k.toRingHom) ≫ u' ≫ e.hom.left) ≫ t'.G.hom =
       spMap (algebraMap C (DualNumber C)) ≫ spMap k.toRingHom := by
-    rw [Category.assoc, hu, dual_w]
+    rw [Category.assoc, hu, _root_.GlobalTheory.ArcQ.FrUniq.dual_alg]
   refine ⟨⟨x, (existsUnique_left (P := P) hp₀ inferInstance 1).unique h7 Corr.one⟩, xG,
     Over.homMk (hφ.1.lift _ _ w) (hφ.1.lift_snd _ _ w), hc, ?_, hπ.1.hom_ext ?_ ?_⟩
   · change hφ.1.lift _ _ w ≫ _ = _
@@ -493,7 +487,7 @@ theorem exists_lieTie_of_frMap : ∀ (E : Type) [Field E] [NumberField E] [IsCMF
     · simpa [dualMap, Algebra.algebraMap_eq_smul_one] using (hk s.snd).symm
   · change (hφ.1.lift _ _ w ≫ _) ≫ _ = _
     rw [Category.assoc, P.gen_pull.1.w, hφ.1.lift_snd_assoc, Category.assoc, Over.w xG.1]
-    exact (dual_w _).symm
+    exact (_root_.GlobalTheory.ArcQ.FrUniq.dual_alg _).symm
 
 end GlobalTheory.CompHt.TieFrame
 end -- clump:auto

@@ -960,36 +960,6 @@ theorem fV_rt (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m) (hcv :
   show (R.cV i).ρ x⁻¹ _ = _
   simp only [LinearMap.coe_mk, AddHom.coe_mk, preF_mul, hF, NG.rt]
 
-theorem fV_rat (Ad : GlobalTheory.HeightCounting.MtAd Y M) (i : Fin D.R.m)
-    (Fm : ↥(NG.AFall D.host.E D.R.nV (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.ρ))
-    (γ : Formalism.L2.Theta.GA D (Vc D i)) (hγ : γ ∈ Formalism.L2.Theta.GQ (Vc D i)) (x : Formalism.L2.Theta.GA D (Vc D i)) :
-    RefTheta.fV Ad i Fm (γ * x) = RefTheta.fV Ad i Fm x := by
-  obtain ⟨y, hy⟩ := fin_frame_surj (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ)
-  obtain ⟨z, hz⟩ := fin_frame_surj (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x)
-  have he : Formalism.L2.Theta.finHom (Vc D i) γ = Formalism.L2.Theta.finHom (Vc D i) ((Ad.PV i).ψ y) :=
-    (congrArg Subtype.val hy).symm
-  have hh' : y ∈ ReciprocityTheory.Aut.GQ D.host.E D.R.nV := (Ad.rat i _).2 ⟨γ, hγ, he⟩
-  show (R.cV i).ρ (γ * x)⁻¹ (Ad.eW D.what₂.mu0 (reference_tuple_used D) i ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W)
-      (preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (γ * x))))) =
-    (R.cV i).ρ x⁻¹ (Ad.eW D.what₂.mu0 (reference_tuple_used D) i ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W)
-      (preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x))))
-  have hprod : (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ * (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x =
-      (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict ((Ad.PV i).ψ (y * z)) :=
-    (congrArg₂ (· * ·) hy.symm hz.symm).trans
-      ((map_mul (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict _ _).symm.trans
-        (congrArg (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (map_mul (Ad.PV i).ψ y z).symm))
-  have key : preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict (γ * x)) = y * z :=
-    (congrArg (preF (Ad.PV i)) ((map_mul (Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict γ x).trans hprod)).trans (preF_frame _ _)
-  have hz' : preF (Ad.PV i) ((Formalism.L2.Theta.finHom (Vc D i)).rangeRestrict x) = z :=
-    (congrArg (preF (Ad.PV i)) hz.symm).trans (preF_frame _ _)
-  rw [key, hz']
-  have e1 := Fm.2.1 ⟨y, hh'⟩ z
-  have e2 := Ad.wt D.what₂.mu0 (reference_tuple_used D) i ⟨y, hh'⟩ γ hγ he
-    ((Fm : Formalism.AUTREP.GAf D.host.E D.R.nV → (M D.what₂.mu0 (i.1 + 1) (by omega) (by omega)).wt.W) z)
-  rw [e1, e2, _root_.mul_inv_rev,
-    map_mul, Module.End.mul_apply, ← Module.End.mul_apply ((R.cV i).ρ γ⁻¹), ← map_mul, inv_mul_cancel, map_one,
-    Module.End.one_apply]
-
 theorem yv_apply {rep : D.what₂.FT → NG.FinTyp D.host.E D.R.r} {i : Fin D.R.m} {j : ℕ} {hj : i.1 + 1 = j}
     {X : GlobalTheory.NPin.RowMod D rep j} (hc : IsCanonR Y i hj X) (y : ↥X.C) (x : Formalism.L2.Theta.GA D (Wc D i)) :
     RefTheta.yv hc y x = PiTensorProduct.lift (RefTheta.eC hc (y : X.A)) (PiTensorProduct.map
@@ -1050,7 +1020,7 @@ theorem lamV_inv : ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 I0 T : Typ
     refine (Formalism.IndefR.Eqv.rightInv_holds _ (Formalism.L2.Theta.GQ (Vc D i)) _ _ hV.2
       (fun h₁ => thetaKO (R.ωP i (t0 Y)) h₁ (g₀ * (Y.PW i).ψ g) (φ (RefTheta.fV Ad i Fm h₁))) ?_ _).2
     intro γ hγ h₁
-    rw [RefTheta.fV_rat Ad i Fm γ hγ h₁]
+    rw [RefTheta.fV_invariant Ad i Fm γ hγ h₁]
     have := (GlobalTheory.thetaKO_rat_left_and_eigen_right _ _ _ _ _ _ hW _ (hth (RefTheta.fV Ad i Fm h₁))).1 γ hγ 1
       (one_mem _) h₁ (g₀ * (Y.PW i).ψ g)
     rwa [one_mul] at this

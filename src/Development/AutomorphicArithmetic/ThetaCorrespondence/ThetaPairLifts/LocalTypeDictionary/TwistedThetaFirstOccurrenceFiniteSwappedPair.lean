@@ -891,20 +891,6 @@ namespace GlobalTheory.CosetRow
 section ThetaExt
 variable {D : D7} {m n : ℕ}
 
-theorem isHalf_add_right_iff {e : AE D} {t x : Mx D m n} (hx : IsHalf e x) :
-    IsHalf e (t + x) ↔ IsHalf e t := by
-  constructor
-  · intro h i j
-    have h1 := h i j
-    have h2 := hx i j
-    simp only [Matrix.add_apply, mul_add] at h1
-    linear_combination h1 - h2
-  · intro h i j
-    have h1 := h i j
-    have h2 := hx i j
-    simp only [Matrix.add_apply, mul_add]
-    linear_combination h1 + h2
-
 theorem smul_of_isHalf {e : AE D} {x : Mx D m n} (hx : IsHalf e x) : e • x = x := by
   ext i j
   simp only [Matrix.smul_apply, smul_eq_mul]
@@ -933,7 +919,7 @@ theorem extFn_shift {e₀ e₁ : AE D} (h10 : e₁ * e₀ = 0) (Λ : AddSubgroup
   have hx' : IsHalf (e₀ + e₁) x := by
     rw [add_comm]; exact GlobalTheory.VecProd.half_add_of_right h10 hx
   simp only [extFn]
-  rw [isHalf_add_right_iff hx', smul_add, smul_add, smul_of_isHalf hx, smul_eq_zero_of_isHalf h10 hx, add_zero]
+  rw [_root_.GlobalTheory.ExtDatTheta.half_add_iff hx', smul_add, smul_add, smul_of_isHalf hx, smul_eq_zero_of_isHalf h10 hx, add_zero]
 
 theorem extFn_modul {e₀ e₁ : AE D} (Λ : AddSubgroup (Mx D m n)) (Φ : Mx D m n → ℂ) (g : Mx D m n → ℂ)
     (hg : ∀ t, IsHalf (e₀ + e₁) t → g t = g (e₀ • t)) :
@@ -1236,18 +1222,6 @@ open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.Glob
 open IsDedekindDomain NumberField MeasureTheory GlobalTheory.ChiGrid GlobalTheory.FunObj GlobalTheory.RowTest GlobalTheory.StdFrames GlobalTheory.RowClaim GlobalTheory.FlipRun
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.LocalData.complRel GlobalTheory.LocalData.isLocalField borelKw borelSpaceKw
 
-theorem _root_.GlobalTheory.T.isThetaAt_enlarge_placeIdempotent_latticeIndicator : ∀ {D : D7} {S T : HSp D} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
-    {sS : D.what₂.Tau → Matrix (Fin S.rank) (Fin S.rank) ℂ} {sT : D.what₂.Tau → Matrix (Fin T.rank) (Fin T.rank) ℂ}
-    {ΛS : Submodule (𝓞 D.host.E) (Fin S.rank → D.host.E)} {ΛT : Submodule (𝓞 D.host.E) (Fin T.rank → D.host.E)},
-    IsSelfDualC S ΛS → IsSelfDualC T ΛT → ∀ {f₀ : WO S T → ℂ}, IsVacO ψ θ S T sS sT (ΛS : Set _) (ΛT : Set _) f₀ →
-    ∀ {e e' : AE D} {P P' : Finset (Pl D.host.E)}, IsIdemSum e P → IsIdemSum e' P' → P' ⊆ P →
-    ∀ {Φ g : WO S T → ℂ}, IsSBHalf e' (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True) Φ →
-    IsThetaAt ψ (symplO S T) (heisO ψ S T) e' (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True) 1 f₀ Φ g →
-    IsSBHalf e (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True)
-        (GlobalTheory.HalfProd.prodHalf e' (e - e') (halfInd (e - e') (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True)) Φ) ∧
-      IsThetaAt ψ (symplO S T) (heisO ψ S T) e (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True) 1 f₀
-        (GlobalTheory.HalfProd.prodHalf e' (e - e') (halfInd (e - e') (latO S T (ΛS : Set _) (ΛT : Set _) fun _ => True)) Φ) g := by
-  first | exact @GlobalTheory.ThetaEnlarge.isThetaAt_enlarge
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.TwistedOperators.IsThetaAtEnlargePlaceIdempotentLatticeIndicatorStatement =====
@@ -1367,7 +1341,7 @@ theorem flipStart_highestVector : _root_.GlobalTheory.FunPr.ThetaLocalInputs →
     rcases Finset.mem_union.1 hw with h | h
     · exact Finset.mem_union_left _ (levelChainTypePlaces_subset_chosenPlaces ch.G hL t h)
     · exact Finset.mem_union_right _ h
-  obtain ⟨h1, h2⟩ := GlobalTheory.T.isThetaAt_enlarge_placeIdempotent_latticeIndicator hS hT hv he he' hsub (GlobalTheory.FlipTop.isSBHalf_topFn ch.G ch.S.B hL t he' j j.2) hθ
+  obtain ⟨h1, h2⟩ := _root_.GlobalTheory.ThetaEnlarge.isThetaAt_enlarge hS hT hv he he' hsub (GlobalTheory.FlipTop.isSBHalf_topFn ch.G ch.S.B hL t he' j j.2) hθ
   have hAA : ∀ w ∈ locPl ch.G t, w ∉ GlobalTheory.FlipTop.topPl R.toLevCh t →
       ((∀ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) ≤ 1) ∧
         ∃ a ∈ D.host.AA, Valued.v (algebraMap D.host.E (Kw w) a) = 1) := by

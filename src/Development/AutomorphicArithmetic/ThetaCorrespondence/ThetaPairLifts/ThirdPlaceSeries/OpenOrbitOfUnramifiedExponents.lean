@@ -955,30 +955,12 @@ theorem selJ_of_bWit (hR : GlobalTheory.Published.DiscreteSeriesCover ∧ Global
   rw [← w.y.eq] at h
   exact h
 end Wit
-section Constructions₂
-variable {hL : _root_.UpperTheory.Zero.LLC.RecTExists} {p : _root_.GlobalTheory.Mem.Top.Bl.Parameters hL}
-theorem of_built_of_bWit {R : BdP _root_.GlobalTheory.Fc.BundleCondition} {Q : V4.Slot} {κ : Par}
-    (h : ∀ (K : Ctx) (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c), _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b → R _ _ c b)
-    {D : D7} {O : Obj D} {c : ℝ} {b : _root_.GlobalTheory.Fc.BundleCondition D O c} (hb : GlobalTheory.Fc.Built Q (_root_.GlobalTheory.Mem.Top.Bl.BundleLinkage p) κ D O c b) : R D O c b := by
-  refine GlobalTheory.Fc.Built.ind (R := R) (fun K β c b _ _ hl => ?_) hb
-  obtain ⟨q, b', ⟨w⟩, he⟩ := hl
-  have := congrArg (fun s : Σ (D : D7) (O : Obj D), _root_.GlobalTheory.Fc.BundleCondition D O c => R s.1 s.2.1 c s.2.2) he
-  exact cast this.symm (h K q c b' w)
-theorem linked_atAll_of_imp {A R : BdP _root_.GlobalTheory.Fc.BundleCondition}
-    (h : ∀ (K : Ctx) (q : WPt p.s K) (c : ℝ) (b : _root_.GlobalTheory.Fc.BundleCondition (q.w.D q.Z) q.O c), _root_.GlobalTheory.Mem.Top.Bl.BundleWitness q b → A _ _ c b → R _ _ c b)
-    (hA : _root_.GlobalTheory.Fc.RL.LinkedAt p fun S L => Row S L (AtAll A)) : _root_.GlobalTheory.Fc.RL.LinkedAt p fun S L => Row S L (AtAll R) := by
-  obtain ⟨S, hS, hA⟩ := hA
-  refine ⟨S, hS, Row.imp hA fun 𝒜 σ s H => ?_⟩
-  intro eps Fm hc x hx i
-  obtain ⟨κ, -, -, t⟩ := s Fm hc
-  exact _root_.GlobalTheory.Fc.JoinLinked.of_built_of_bWit (R := fun D O c b => A D O c b → R D O c b) h (t x hx i).1 (H Fm hc x hx i)
-end Constructions₂
 theorem at_selJ_alt : GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.DiscreteSeriesExists → GlobalTheory.Published.DiscreteSeriesCover →
     GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay →
     ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (N : _root_.GlobalTheory.Mem.Top.Bl.NormChoiceExtension hL) (S : SExt), _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S) _root_.GlobalTheory.Fc.R1.SlotPrimitivityCondition →
     _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S) _root_.GlobalTheory.Fc.R1.SlotDecompositionPointCondition → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S) _root_.GlobalTheory.Fc.RL.Row_tie_alt → _root_.GlobalTheory.Fc.RL.LinkedAt (_root_.GlobalTheory.Mem.Top.Bl.parametersOfExtension N S) _root_.GlobalTheory.Fc.R1.SlotSelectionJumpCondition :=
   fun _ _ h1 h2 h3 h4 h5 _ _ _ _ _ hT =>
-    _root_.GlobalTheory.Fc.JoinLinked.linked_atAll_of_imp (A := _root_.GlobalTheory.Fc.HasCompatibility) (R := _root_.GlobalTheory.Fc.R1.SelectionJumpBundleCondition) (fun _ _ _ _ w ht => _root_.GlobalTheory.Fc.JoinLinked.selJ_of_bWit ⟨h1, h2, h3, h4, h5⟩ w (Classical.choice ht)) hT
+    _root_.GlobalTheory.Fc.DivLinked.linked_atAll_of_imp (A := _root_.GlobalTheory.Fc.HasCompatibility) (R := _root_.GlobalTheory.Fc.R1.SelectionJumpBundleCondition) (fun _ _ _ _ w ht => _root_.GlobalTheory.Fc.JoinLinked.selJ_of_bWit ⟨h1, h2, h3, h4, h5⟩ w (Classical.choice ht)) hT
 end GlobalTheory.Fc.JoinLinked
 end
 end

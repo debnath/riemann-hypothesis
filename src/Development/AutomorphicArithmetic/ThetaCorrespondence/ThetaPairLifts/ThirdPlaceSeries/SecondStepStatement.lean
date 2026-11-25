@@ -885,16 +885,12 @@ noncomputable section
 
 namespace GlobalTheory.PdPlace
 
-theorem exists_place_over_prime (E : Type) [Field E] [NumberField E] (p : ℕ) (hp : p.Prime) :
-    (Formalism.BasicNotions.placesOver E p).Nonempty := by
-  apply _root_.GlobalTheory.TwRing.placesOver_nonempty <;> assumption
-
 theorem pD_nonempty : ∀ (D : D7) (T : TwR D.LL0 D.nd) (i : T.Tw), (T.pD i).Nonempty := by
   intro D T i
   have hp : (if T.l i = D.host.pde then D.host.pde' else D.host.pde).Prime := by
     split_ifs
     exacts [D.host.pde'_prime, D.host.pde_prime]
-  obtain ⟨v, hv⟩ := exists_place_over_prime D.host.E _ hp
+  obtain ⟨v, hv⟩ := _root_.GlobalTheory.TwRing.placesOver_nonempty D.host.E _ hp
   rw [← T.pD_eq i] at hv
   exact ⟨v, hv⟩
 

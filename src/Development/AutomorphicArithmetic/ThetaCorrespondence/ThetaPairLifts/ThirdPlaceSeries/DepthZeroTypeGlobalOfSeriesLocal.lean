@@ -1066,24 +1066,6 @@ open GlobalTheory.GLq.Opp
 
 variable {g : ℕ} [Fact g.Prime] {k l n : ℕ}
 
-theorem blk_eq (x : Gn g k) (y : Gn g l) : blk k l (k + l) x y = par finSumFinEquiv x 0 y := by
-  have h : (fun i j : Fin (k + l) => if (i : ℕ) < k ∧ (j : ℕ) < k then entN (x : Mt g k) i j
-      else if k ≤ (i : ℕ) ∧ k ≤ (j : ℕ) then entN (y : Mt g l) (i - k) (j - k) else 0) =
-      ((par finSumFinEquiv x 0 y : Gn g (k + l)) : Mt g (k + l)) := by
-    funext i j
-    obtain ⟨i, rfl⟩ := finSumFinEquiv.surjective i
-    obtain ⟨j, rfl⟩ := finSumFinEquiv.surjective j
-    rw [par_apply]
-    rcases i with i | i <;> rcases j with j | j
-    · simp [entN]
-    · have := i.2
-      simp [entN]
-    · have := j.2
-      simp [entN]
-    · simp [entN]
-  unfold blk
-  rw [h, toG, dite_eq_left (Units.isUnit _), IsUnit.unit_of_val_units]
-
 theorem eq_par (z : Gn g (k + l)) (h0 : InPar k (z : Mt g (k + l))) (h1 : tl k (z : Mt g (k + l)) = 1)
     (h2 : br k l (z : Mt g (k + l)) = 1) : ∃ B, z = par finSumFinEquiv 1 B 1 := by
   have e1 : ∀ (M : Mt g (k + l)) (i j : Fin k), tl k M i j = M (finSumFinEquiv (.inl i)) (finSumFinEquiv (.inl j)) := by
@@ -1160,8 +1142,8 @@ theorem has_mul_of_isParVec : ∀ (g : ℕ) [Fact g.Prime] (S : Sys g) (n : ℕ)
   subst hn
   obtain ⟨hvK, hrad, hy⟩ := hv
   let v' : fixK1 π := ⟨v, hvK⟩
-  have hA : ∀ x : Gn g a, blk a b (a + b) x 1 = inA finSumFinEquiv x := fun x => blk_eq x 1
-  have hB : ∀ y : Gn g b, blk a b (a + b) 1 y = inB finSumFinEquiv y := fun y => blk_eq 1 y
+  have hA : ∀ x : Gn g a, blk a b (a + b) x 1 = inA finSumFinEquiv x := fun x => _root_.GlobalTheory.SerSys.Prod.blk_eq_par x 1
+  have hB : ∀ y : Gn g b, blk a b (a + b) 1 y = inB finSumFinEquiv y := fun y => _root_.GlobalTheory.SerSys.Prod.blk_eq_par 1 y
   let ρA : Representation ℂ (Gn g a) (fixK1 π) := (repK π).comp (inA (g := g) (finSumFinEquiv : Fin a ⊕ Fin b ≃ Fin (a + b)))
   let ρB : Representation ℂ (Gn g b) (fixK1 π) := (repK π).comp (inB (g := g) (finSumFinEquiv : Fin a ⊕ Fin b ≃ Fin (a + b)))
   let u : fixK1 π := ρA.asAlgebraHom (S.e a f) v'

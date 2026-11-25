@@ -72,24 +72,10 @@ attribute [local instance] GlobalTheory.TypeRec.factG
 
 namespace GlobalTheory.TypeVec
 
-theorem pi_ind {ι : Type} [Fintype ι] [DecidableEq ι] {M : ι → Type} [∀ i, Group (M i)] (P : (∀ i, M i) → Prop) (h1 : P 1)
-    (hm : ∀ g i (m : M i), P g → P (Pi.mulSingle i m * g)) : ∀ g, P g :=
-  GlobalTheory.TypeVecConj.pi_ind P h1 hm
-
 def conjL {X : Type} : (X → ℂ) →ₛₗ[starRingEnd ℂ] (X → ℂ) where
   toFun f := fun g => star (f g)
   map_add' f f' := by funext g; simp
   map_smul' c f := by funext g; simp
-
-theorem loc_piece {L : Type} [Field L] [NumberField L] [IsCMField L] {n g : ℕ} [Fact g.Prime] (π : NG.FinTyp L n)
-    (s : SplitPlace L) {w : HeightOneSpectrum (𝓞 L)} (h : s.w = w)
-    (τ : GlobalTheory.SmGL.IrrRep (GL (Fin n) (w.adicCompletion L))) (hτ : GlobalTheory.HeightCounting.IsLocS π.S s (h ▸ τ))
-    (ii : ℚ_[g] ≃+* w.adicCompletion L) (hii : Continuous ii) :
-    ∃ j : ℚ_[g] ≃+* s.v.adicCompletion (maximalRealSubfield L), Continuous j ∧
-      ∀ f ∈ π.S, f ≠ 0 → ∃ p : (GAf L n → ℂ) →ₗ[ℂ] τ.V, p f ≠ 0 ∧
-        ∀ (y : GL (Fin n) ℤ_[g]) (x : GAf L n), IsLiftAt s j y x → ∀ f' ∈ π.S,
-          p (NG.rt L n x f') = τ.ρ (Matrix.GeneralLinearGroup.map ii.toRingHom (GlobalTheory.GLp.inc g n y)) (p f') :=
-  GlobalTheory.TypeVecConj.loc_piece π s h τ hτ ii hii
 
 theorem isotIn_stable {D : D7} {n : ℕ} {A : Type} [AddCommGroup A] [Module ℂ A] (ρ : GAf D.host.E n →* Module.End ℂ A)
     (C : Submodule ℂ A) (π : NG.FinTyp D.host.E n) (h : GAf D.host.E n) :

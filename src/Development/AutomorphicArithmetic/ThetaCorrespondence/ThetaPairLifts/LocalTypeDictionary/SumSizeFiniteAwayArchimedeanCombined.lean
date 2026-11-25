@@ -700,14 +700,11 @@ theorem lossLe_inv (w : PlL D) {g : ℕ} (hg : g = 0 ∨ g ∣ mk D) :
   push_cast
   exact_mod_cast neg_le_neg this
 
-theorem lossLe_one (w : PlL D) : LossLe w 1 0 :=
-  ⟨1, map_one _, Or.inr (by rw [Formalism.DivisionValues.ValuationRepresentative.vw_one]; simp)⟩
-
 theorem lossLe_prod (w : PlL D) {ι : Type} (s : Finset ι) (z : ι → ℂ) {a : ℝ} (h : ∀ i ∈ s, LossLe w (z i) a) :
     LossLe w (∏ i ∈ s, z i) (s.card * a) := by
   classical
   induction s using Finset.induction_on with
-  | empty => simpa using lossLe_one w
+  | empty => simpa using _root_.GlobalTheory.FunDat.lossLe_one w
   | insert i s hi ih =>
     rw [Finset.prod_insert hi, Finset.card_insert_of_notMem hi]
     have := GlobalTheory.SumSize.Model.lossLe_mul (h i (Finset.mem_insert_self _ _))

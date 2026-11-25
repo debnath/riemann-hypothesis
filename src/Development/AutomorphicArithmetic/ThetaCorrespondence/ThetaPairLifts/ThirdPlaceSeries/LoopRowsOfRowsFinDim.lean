@@ -805,14 +805,12 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.S
 
 namespace GlobalTheory.AmpFamGap
 
-theorem cellConv : GlobalTheory.CellAmp.CellConv := Formalism.MainNotions.S.Pv.AmpDDPf.cell_convergence
-
 theorem amplitudeNormDegree_along_family_of_kFiniteIdentity : GlobalTheory.GapIn.Hyp → GlobalTheory.GapIn.AmpKF0 → ∀ Cg cb Cu cT CT C0 C1 : ℝ, ∃ thr : ℝ,
     ∀ (eps : ℝ) (Fm : FamP eps), thr ≤ sC' Fm → thr ≤ sCl Fm → PX.RanksF Fm C0 Cg cb Cu cT CT →
       VanishingOnXAndXPlusBranching.admF9 Fm Cg cb Cu cT CT C0 C1 := by
   intro hH hA Cg cb Cu cT CT C0 C1
   refine ⟨1000, fun eps Fm hC' hCl _ Cn => ?_⟩
-  obtain ⟨m₀, hm⟩ := _root_.GlobalTheory.Amp.OpenCellNormGap.norm_eq_const_div_deg_gap hH hA cellConv Cg cb Cu cT CT C0 C1 Cn
+  obtain ⟨m₀, hm⟩ := _root_.GlobalTheory.Amp.OpenCellNormGap.norm_eq_const_div_deg_gap hH hA _root_.GlobalTheory.CellMaj.cellConv Cg cb Cu cT CT C0 C1 Cn
   obtain ⟨x0, hx0⟩ := GlobalTheory.family_sizes_eventually_large eps Fm m₀
   refine ⟨x0, fun x hx i hZ => ?_⟩
   obtain ⟨-, hm0, -, -, hrd, -⟩ := hx0 x hx i
@@ -1494,21 +1492,6 @@ theorem sq_le_two_pow (k : ℕ) (hk : 4 ≤ k) : k ^ 2 ≤ 2 ^ k := by
   | base => norm_num
   | succ k hk ih => rw [pow_succ 2 k]; nlinarith
 
-theorem sizes_low {D : D7} (L : SizeData₂ D) (h : SizesAt L) : L.sc.x ≤ D.R.k ∧ Real.sqrt L.sc.b ≤ L.sc.b' := by
-  obtain ⟨-, -, hK, -, -, -, -, -, -, -, -, -, -, -, -, -, -, hW, -⟩ := h
-  have hx := L.sc.one_lt_alt
-  have he := L.sc.eps_pos
-  refine ⟨le_trans ?_ hK.1, le_trans hW ?_⟩
-  · refine Real.self_le_rpow_of_one_le hx.le ?_
-    unfold szTh
-    linarith
-  · have hn : (1 : ℝ) ≤ D.R.n := by
-      have : 1 ≤ D.R.n := Formalism.HC.Frame.ord_pos _
-      exact_mod_cast this
-    refine div_le_self ?_ (one_le_mul_of_one_le_of_one_le hx.le hn)
-    unfold Scale.b' Scale.a Scale.b Scale.X'
-    positivity
-
 theorem err_le (D : D7) {δ : ℝ} (hδ : 0 < δ) (h : 8 / Real.log (1 + δ) ≤ D.R.k) :
     Real.exp ((D.R.f : ℝ) * (2 : ℝ) ^ ((3 : ℝ) - D.R.k)) - 1 ≤ δ := by
   have hk := D.R.m_add_three_le_k
@@ -1591,11 +1574,11 @@ theorem along_family :
         (by exact_mod_cast h1.trans hg1)
     · refine ⟨max (8 / Real.log (1 + δ)) (Fm.x1 + 1), fun x hx i _ => ?_⟩
       have hx1 : Fm.x1 < x := lt_of_lt_of_le (lt_add_one _) ((le_max_right _ _).trans hx)
-      have h1 := (sizes_low _ (Fm.sizes x hx1 i)).1
+      have h1 := (_root_.GlobalTheory.CritLevel.sizes_low _ (Fm.sizes x hx1 i)).1
       rw [Fm.L_x x i hx1] at h1
       exact err_le _ hδ (((le_max_left _ _).trans hx).trans h1)
   · refine ⟨Fm.x1 + 1, fun x hx i => ?_⟩
-    have h1 := sizes_low _ (Fm.sizes x (lt_of_lt_of_le (lt_add_one _) hx) i)
+    have h1 := _root_.GlobalTheory.CritLevel.sizes_low _ (Fm.sizes x (lt_of_lt_of_le (lt_add_one _) hx) i)
     exact tcrit_low_of_dsig hDs _ _ _ _ _ _ _ _ _ _ hCl (Fm.ties x i) h1.2 h1.1
   · exact (GlobalTheory.WeylDimU.weyl_dimension _ _ (isHCParam_uS (Fm.D x i) w τ)).2
 

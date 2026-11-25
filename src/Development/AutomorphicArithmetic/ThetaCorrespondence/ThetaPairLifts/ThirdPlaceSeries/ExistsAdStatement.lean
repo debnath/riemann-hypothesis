@@ -1187,24 +1187,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 attribute [local instance] GlobalTheory.TypeRec.factG
 open Formalism.L2.DIV Formalism.IndefR Formalism.IndefR.Links Formalism.IndefR.Lev
 
-theorem _root_.GlobalTheory.T.conjugate_blockUpper_of_eigenfunction_unipotentType : ∀ {E : Type} [Field E] [NumberField E] [IsCMField E] {n r t : ℕ}, n = r + t → 2 ≤ r →
-    ∀ (s : ReciprocityTheory.Aut.SplitPlace E) {k : Type} [Field k] (φ : GlobalTheory.CenFrame.Os s →+* k), GlobalTheory.CenFrame.IsResidue s φ →
-    (∃ c : k, c ≠ 0 ∧ c ≠ 1) → ∀ (f : Formalism.AUTREP.GAf E n → ℂ), f ≠ 0 →
-    ∀ (J : Subgroup (Formalism.AUTREP.GAf E n)) (χ : J →* ℂˣ)
-    (ψ₀ : AddChar (s.v.adicCompletion (NumberField.maximalRealSubfield E)) ℂ)
-    (ξ : (s.v.adicCompletion (NumberField.maximalRealSubfield E))ˣ →* ℂˣ),
-    Formalism.L2.NG.IsPsi0 s ψ₀ → Formalism.L2.NG.LevelUni J χ s r ψ₀ ξ →
-    (∀ κ (h : κ ∈ J) g, f (g * κ) = ((χ ⟨κ, h⟩ : ℂˣ) : ℂ) * f g) →
-    ∀ (b : GL (Fin n) k),
-    (∀ κ ∈ ReciprocityTheory.Aut.Umax E n, ReciprocityTheory.Aut.TrivOutside {s.v} κ → ∀ y : GL (Fin n) (GlobalTheory.CenFrame.Os s),
-        GlobalTheory.CenFrame.IsCompOf s κ y →
-      ((∀ i j : Fin n, (r ≤ i.val → j.val < r → (b * Matrix.GeneralLinearGroup.map φ y * b⁻¹).val i j = 0) ∧
-        (i.val < r → j.val < i.val → (b * Matrix.GeneralLinearGroup.map φ y * b⁻¹).val i j = 0) ∧
-        (i.val < r → i = j → (b * Matrix.GeneralLinearGroup.map φ y * b⁻¹).val i j = 1)) →
-        ∃ c : ℂ, ∀ g, f (g * κ) = c * f g) ∧
-      (Matrix.GeneralLinearGroup.map φ y = 1 → ∀ g, f (g * κ) = f g)) →
-    b ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 r) := by
-  first | exact @GlobalTheory.CenFrameGen.block_upper_of_eigen
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.ConjugateBlockUpperOfEigenfunctionUnipotentTypeStatement =====
@@ -1552,7 +1534,7 @@ theorem blockTri_at_alt : ∀ hL : _root_.UpperTheory.Zero.LLC.RecTExists, _root
     have h2 := (w.st Z).toD7.R.m_add_three_le_k
     unfold Formalism.BasicNotions.Ranks.r
     omega
-  exact GlobalTheory.T.conjugate_blockUpper_of_eigenfunction_unipotentType (t := (w.st Z).toD7.R.t) rfl hr s' φ hres (h.2 _ hP) F hF J χ ψ₀ ξ hψ hJ hFJ b hS
+  exact _root_.GlobalTheory.CenFrameGen.block_upper_of_eigen (t := (w.st Z).toD7.R.t) rfl hr s' φ hres (h.2 _ hP) F hF J χ ψ₀ ξ hψ hJ hFJ b hS
 end GlobalTheory.FrameBlockTriangular
 end
 end

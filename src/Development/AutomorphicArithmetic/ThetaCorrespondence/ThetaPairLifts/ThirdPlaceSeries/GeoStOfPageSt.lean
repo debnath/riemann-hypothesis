@@ -412,12 +412,6 @@ theorem exists_rem_of_concl {D : D7} {B : WeightFamilies.Prov D} {P6 : ModuliInt
     Submodule.IsFullLattice.span_eq_top h4 inf_le_left v e (r (v.under (𝓞 B.KO))) (ramOver (K := B.KO) v * e)
     (by rw [hram]; push_cast; rfl) (h5 e (by rw [Int.cast_natCast, ← hpl]; exact he)) _ hTh W
 
-theorem starRing_eq {R : Type} [CommRing R] (s t : StarRing R) (h : ∀ a : R, s.star a = t.star a) : s = t := by
-  obtain @⟨@⟨@⟨⟨f⟩, _⟩, _⟩, _⟩ := s
-  obtain @⟨@⟨@⟨⟨g⟩, _⟩, _⟩, _⟩ := t
-  obtain rfl : f = g := funext h
-  rfl
-
 theorem exists_rem_of_tie {D : D7} {B : WeightFamilies.Prov D} {P6 : ModuliIntegralCharts.Prov D} {j : ℕ} {X : WeightAlgebra.PJ D B P6 j}
     {hinj : Function.Injective D.what₂.OtoLL} {EX : ErrX D} {p : ℕ} {ka wL wF : WeightFamilies.Wt D j} {T : ℕ}
     {nus : HeightOneSpectrum (𝓞 B.KO) → ℝ} {a b c d : ℝ}
@@ -458,7 +452,7 @@ theorem hasIndexBound_of_runs : ∀ CK : ℝ, ∀ (D : D7) (G : Type) [Group G] 
   obtain ⟨hc, hinj, z, act, y, ht⟩ := hO.tied
   obtain ⟨st, hd⟩ := hO.depth
   let _ := hostAlg D
-  obtain rfl : st = J.toCore.Q.H.starRing := starRing_eq _ _ hd.star_eq
+  obtain rfl : st = J.toCore.Q.H.starRing := _root_.GlobalTheory.ShortTimesTheta.starRing_eq _ _ hd.star_eq
   let _ := J.toCore.Q.H.starRing
   let _ : ∀ s : RunData J, Algebra s.full.J.Q.c.F D.what₂.LL := fun _ => inst
   let _ : ∀ (s : RunData J) (h : LawsP s.full.toTop), Algebra (recB h.toLawsCore).KO D.what₂.LL := fun _ _ => inst

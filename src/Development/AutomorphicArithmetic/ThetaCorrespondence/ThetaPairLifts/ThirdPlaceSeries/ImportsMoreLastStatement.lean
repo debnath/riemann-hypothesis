@@ -333,10 +333,6 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 
 namespace GlobalTheory.SplitCompat
 
-theorem compAt_eq_zero_of_proj_eq_zero {L : Type} [Field L] [NumberField L] [IsCMField L] (s : SplitPlace L)
-    (z : AL L) (hp : s.proj z = 0) (hq : s.proj (conjAL L z) = 0) : compAt L s.v z = 0 :=
-  GlobalTheory.SplitAdelic.compAt_eq_zero_of_proj s z hp hq
-
 theorem compAt_map_eq_of_loc_eq : ∀ {L : Type} [Field L] [NumberField L] [IsCMField L] {n : ℕ} (s : SplitPlace L)
     (x y : GAf L n), s.loc n x = s.loc n y →
       (x.1 : Matrix (Fin n) (Fin n) (AL L)).map (compAt L s.v) =
@@ -345,7 +341,7 @@ theorem compAt_map_eq_of_loc_eq : ∀ {L : Type} [Field L] [NumberField L] [IsCM
   refine Matrix.ext fun i j => ?_
   simp only [Matrix.map_apply]
   rw [← sub_eq_zero, ← map_sub]
-  apply compAt_eq_zero_of_proj_eq_zero s
+  apply _root_.GlobalTheory.SplitAdelic.compAt_eq_zero_of_proj s
   · rw [map_sub, GlobalTheory.SplitLocEq.proj_entry, GlobalTheory.SplitLocEq.proj_entry, h, sub_self]
   · rw [map_sub, map_sub, GlobalTheory.SplitLocEq.conj_entry, GlobalTheory.SplitLocEq.conj_entry, GlobalTheory.SplitLocEq.proj_entry,
       GlobalTheory.SplitLocEq.proj_entry, map_inv, map_inv, h, sub_self]

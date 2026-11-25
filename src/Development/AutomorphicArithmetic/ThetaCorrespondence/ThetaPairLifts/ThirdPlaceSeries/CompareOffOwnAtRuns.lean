@@ -280,10 +280,6 @@ theorem isBe_unique {𝔞 : Ideal (𝓞 E)} (h0 : 𝔞 ≠ ⊥) {β β' : c.F} (
     exact mul_right_cancel₀ h2 (h1.trans (one_mul _).symm)
   exact ⟨m, hm, h⟩
 
-theorem mult_add_mult_conjugate (τ : E →+* ℂ) :
-    Dw.mult τ + Dw.mult (ComplexEmbedding.conjugate τ) = Dw.p + Dw.q := by
-  apply GlobalTheory.PeriodTorus.mult_add_mult_conj
-
 theorem norm_reflexNorm (γ : E) (s : c.F →+* ℂ) :
     ‖s (reflexNorm Dw c γ)‖ ^ 2 = |(Algebra.norm ℚ γ : ℝ)| ^ (Dw.p + Dw.q) := by
   have h1 : ∀ σ : E →+* ℂ, ‖s (embF c (ComplexEmbedding.conjugate σ) γ)‖ = ‖s (embF c σ γ)‖ := fun σ => by
@@ -308,7 +304,7 @@ theorem norm_reflexNorm (γ : E) (s : c.F →+* ℂ) :
   simp only [map_pow, norm_pow]
   nth_rewrite 2 [h2]
   rw [← Finset.prod_mul_distrib, ← Finset.prod_pow]
-  exact Finset.prod_congr rfl fun σ _ => by rw [← pow_add, mult_add_mult_conjugate]
+  exact Finset.prod_congr rfl fun σ _ => by rw [← pow_add, _root_.GlobalTheory.PeriodTorus.mult_add_mult_conj]
 
 theorem isBe_principal (γ : 𝓞 E) : IsBe Dw c (Ideal.span {γ}) (reflexNorm Dw c (γ : E)) := by
   refine ⟨⟨∏ σ : E →+* ℂ, RingOfIntegers.mapRingHom (embF c σ) γ ^ Dw.mult σ, ?_, ?_⟩, fun s => ?_⟩
@@ -404,28 +400,6 @@ open scoped nonZeroDivisors
 
 variable {E : Type} [Field E] [NumberField E] [IsCMField E] {n : ℕ}
 
-theorem unimod_act {h : Matrix (Fin n) (Fin n) E} (hu : IsUnitaryM h) {Λ : GenLat E n} (hΛ : Λ.Unimod) :
-    (actLat h Λ).Unimod := by
-  have h1 : adjM h * h = 1 := hu
-  have h2 : h * adjM h = 1 := mul_eq_one_comm.1 h1
-  intro v
-  have e : v ∈ (actLat h Λ).La ↔ (adjM h).mulVec v ∈ Λ.La := by
-    constructor
-    · rintro ⟨u, hu, rfl⟩
-      change (adjM h).mulVec (h.mulVec u) ∈ _
-      rwa [Matrix.mulVec_mulVec, h1, Matrix.one_mulVec]
-    · intro hv
-      refine ⟨_, hv, ?_⟩
-      change h.mulVec _ = _
-      rw [Matrix.mulVec_mulVec, h2, Matrix.one_mulVec]
-  rw [e, hΛ]
-  constructor
-  · rintro hv _ ⟨u, hu, rfl⟩
-    exact (GlobalTheory.IsomLift.form_adj h v u).symm ▸ hv u hu
-  · intro hv w hw
-    rw [← GlobalTheory.IsomLift.form_adj]
-    exact hv _ ⟨w, hw, rfl⟩
-
 variable {H : Host E} (Dw : Datum H) {l : Geo.Tor.Level H} (c : Coeff l)
 
 theorem reflexNorm_mul_conj (g : 𝓞 E) :
@@ -490,7 +464,7 @@ theorem coeI_span (u : 𝓞 E) : coeI E (Ideal.span {u}) = Submodule.span (𝓞 
 
 theorem beta_sq_compare : ∀ (E : Type) [Field E] [NumberField E] [IsCMField E] (H : Host E) (Dw : Datum H) (l : Geo.Tor.Level H) (c : Coeff l), ∀ (n : ℕ) (Λ : GenLat E n) (h : Matrix (Fin n) (Fin n) E) (b b' : c.F), Λ.Unimod → IsUnitaryM h → IsBeta Dw c Λ b → IsBeta Dw c (actLat h Λ) b' → ∃ m : ℕ, 0 < m ∧ (b ^ 2 * ((((actLat h Λ).Ln.toAddSubgroup.addSubgroupOf (actLat h Λ).La.toAddSubgroup).index ^ (Dw.p + Dw.q) : ℕ) : c.F)) ^ m = (b' ^ 2 * ((((Λ).Ln.toAddSubgroup.addSubgroupOf (Λ).La.toAddSubgroup).index ^ (Dw.p + Dw.q) : ℕ) : c.F) * ∏ τ : E →+* ℂ, embF c τ h.det ^ Dw.mult τ) ^ m := by
   intro E _ _ _ H Dw l c n Λ h b b' hΛ hu hb hb'
-  have hΛ' := unimod_act hu hΛ
+  have hΛ' := _root_.GlobalTheory.RepCompare.unimod_act hu hΛ
   obtain ⟨J, hJ0, hN, hJ1, hJ2, hdet⟩ := GlobalTheory.DetIdeal.detIdeal_selfDual E n Λ hΛ
   obtain ⟨J', hJ0', hN', hJ1', hJ2', -⟩ := GlobalTheory.DetIdeal.detIdeal_selfDual E n _ hΛ'
   have hB := isBe_of_isBeta Dw c hΛ hb hN hJ1

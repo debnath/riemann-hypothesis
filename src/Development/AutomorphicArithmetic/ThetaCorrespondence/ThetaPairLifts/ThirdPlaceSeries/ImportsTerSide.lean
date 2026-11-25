@@ -385,21 +385,11 @@ open CategoryTheory
 
 variable {Γ : Type} [Group Γ] [Fintype Γ]
 
-theorem eq_sum_single (e : MonoidAlgebra ℂ Γ) : e = ∑ q : Γ, MonoidAlgebra.single q (e.coeff q) := by
-  classical
-  ext x
-  simp [MonoidAlgebra.coeff_sum]
-
-theorem coeff_mul_fin (a b : MonoidAlgebra ℂ Γ) (x : Γ) :
-    (a * b).coeff x = ∑ q, a.coeff q * b.coeff (q⁻¹ * x) := by
-  rw [MonoidAlgebra.coeff_mul_apply_left, Finsupp.sum_fintype]
-  intro q; simp
-
 theorem exists_scalar (e : MonoidAlgebra ℂ Γ) (he : ∀ w, e * w = w * e) (ρ : FDRep ℂ Γ) [Simple ρ] :
     ∃ c : ℂ, ∀ v : ρ, (∑ q : Γ, e.coeff q • ρ.ρ q) v = c • v := by
   let T : ρ →ₗ[ℂ] ρ := ∑ q : Γ, e.coeff q • ρ.ρ q
   have hTA : T = Representation.asAlgebraHom ρ.ρ e := by
-    conv_rhs => rw [eq_sum_single e]
+    conv_rhs => rw [_root_.CompanionTheory.Member.TraceCoefficientSum.eq_sum_single e]
 
     simp only [T, map_sum, Representation.asAlgebraHom_single]
   have hcomm : ∀ h : Γ, ∀ v : ρ, T (ρ.ρ h v) = ρ.ρ h (T v) := by
@@ -421,7 +411,7 @@ theorem mul_zIdem_eq_smul (e : MonoidAlgebra ℂ Γ) (ρ : FDRep ℂ Γ) (c : �
     (hc : ∀ v : ρ, (∑ q : Γ, e.coeff q • ρ.ρ q) v = c • v) :
     e * Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ = c • Formalism.IrreducibleCountingLemmas.TYPES.zIdem ρ := by
   ext x
-  rw [coeff_mul_fin, MonoidAlgebra.coeff_smul_apply, smul_eq_mul]
+  rw [_root_.GlobalTheory.MemN.TypesInhab.coeff_mul_sum, MonoidAlgebra.coeff_smul_apply, smul_eq_mul]
   simp only [Formalism.IrreducibleCountingLemmas.TYPES.zIdem_coeff]
   have hT : (∑ q : Γ, e.coeff q • ρ.ρ q) = c • (1 : Module.End ℂ ρ) := LinearMap.ext fun v => by simp [hc v]
   have h1 : ∀ q : Γ, ρ.ρ (q⁻¹ * x)⁻¹ = ρ.ρ x⁻¹ * ρ.ρ q := fun q => by rw [mul_inv_rev, inv_inv, map_mul]
@@ -974,27 +964,6 @@ open Formalism Formalism.MainNotions Formalism.BasicNotions Formalism.BasicNotio
 
 namespace GlobalTheory.TwistLabel
 
-theorem teich_zero' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
-    (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : t 0 = 0 := by
-  classical
-  obtain ⟨x, hx⟩ := Infinite.exists_notMem_finset ({0, 1} : Finset (Formalism.CyclotomicNorms.Fbar g))
-  simp only [Finset.mem_insert, Finset.mem_singleton, not_or] at hx
-  by_contra h0
-  have h1 : t 0 * t x = t 0 * t 1 := by rw [← map_mul, ← map_mul, zero_mul, zero_mul]
-  exact hx.2 (ht x 1 hx.1 one_ne_zero (mul_left_cancel₀ h0 h1))
-
-theorem teich_injective' {g : ℕ} [Fact g.Prime] (t : Formalism.CyclotomicNorms.Fbar g →* ℂ)
-    (ht : ∀ x y, x ≠ 0 → y ≠ 0 → t x = t y → x = y) : Function.Injective t := by
-  have h0 := teich_zero' t ht
-  have hne : ∀ x, x ≠ 0 → t x ≠ 0 := fun x hx => ((IsUnit.mk0 x hx).map t).ne_zero
-  intro x y h
-  by_cases hx : x = 0
-  · by_contra hxy
-    exact hne y (fun hy => hxy (hx.trans hy.symm)) (by rw [← h, hx, h0])
-  · by_cases hy : y = 0
-    · exact absurd (by rw [h, hy, h0]) (hne x hx)
-    · exact ht x y hx hy h
-
 theorem prod_scaleRoots {α : Type*} (s : Multiset α) (f : α → ℂ) (c : ℂ) :
     ((s.map fun x => X - C (f x)).prod).scaleRoots c = (s.map fun x => X - C (f x * c)).prod := by
   induction s using Multiset.induction_on with
@@ -1038,7 +1007,7 @@ theorem main : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D
   rw [hG k w hw L hL, prod_scaleRoots, hG k w hw _ (hfull.trans hdim.symm)] at hsc
   have hr := congrArg Polynomial.roots hsc
   rw [roots_prod_map, roots_prod_map] at hr
-  have hinj := teich_injective' (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
+  have hinj := _root_.GlobalTheory.TameLabels.teich_injective (D.ntypes.teichC k) (D.ntypes.teichC_inj k)
   apply Multiset.map_injective hinj
   rw [hr, Multiset.map_map]
   apply Multiset.map_congr rfl
@@ -1052,15 +1021,6 @@ end -- clump:auto
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabelsStatement =====
 -- clump-header: {"m": "Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabelsStatement", "h": "module\n\npublic import Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CoeffRingsHaveRootsOfUnity\npublic import Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabels\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.Normed.Algebra.GelfandRadius\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Mathlib.Topology.Sheaves.Init\nimport Development.AbelianVarietyTheory.Definitions.NonGaloisDescent.CentralIdemCoeff\n\n"}
-section -- clump:auto
-@[expose] public section
-
-open Formalism Formalism.MainNotions Formalism.BasicNotions Formalism.BasicNotions.Loc Formalism.MainNotions.N Formalism.WeaklyAdmissibleFiltrations Formalism.L2 NumberField IsDedekindDomain Formalism.ConjugateSelfDual ReciprocityTheory.Gal Module Polynomial GlobalTheory.Pass GlobalTheory.PendOf
-
-theorem _root_.GlobalTheory.T.labelTwistMultipliesRoots_of_tame_labels : ∀ D : D7, SumRepresentations.tie0 D → IneRep D → LabDepth D → LabGen D → LabChar D := by
-  first | exact @GlobalTheory.TwistLabel.main
-end -- clump:auto
-end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.LabelTwistMultipliesRootsOfTameLabelsStatement =====
 
 -- ===== clump member: Development.AbelianVarietyTheory.Proofs.InertiaEigenvalues.NonemptyLocalisedFormsTypeSectionHecke =====
@@ -1516,7 +1476,7 @@ theorem main : ∀ (D : D7) (M : MtFam D), HeckeTied D M → HeckeRational D M �
     _root_.GlobalTheory.PendOf.SecProof.main D M i hT hR hA hSU (_root_.GlobalTheory.HeckeScalarAll.heckeScalar_all D M hT hA i)
   obtain ⟨lz, hlz⟩ := _root_.GlobalTheory.LzExist.exists_lz_serEq D
   obtain ⟨Ω, hΩ⟩ := _root_.GlobalTheory.PendOf.LabIneAll.main D hIne hDep hGen
-  have hChar : LabChar D := GlobalTheory.T.labelTwistMultipliesRoots_of_tame_labels D h0 hIne hDep hGen
+  have hChar : LabChar D := _root_.GlobalTheory.TwistLabel.main D h0 hIne hDep hGen
   obtain ⟨Z⟩ := _root_.GlobalTheory.CenOAct.cenO_nonempty D hSec hZL hCI hCT
   have hPr : PrType D := _root_.GlobalTheory.PendOf.PrTypeProof.main D hSec
   have hSplit : ∀ (k : Fin 2) (v : D.nd.PlG k), IsSplitPl D.host (D.naut.plGw k v) := fun k v =>

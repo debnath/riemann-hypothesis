@@ -556,17 +556,12 @@ end Columns
 section Split
 variable {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
 
-theorem adAt_of_pr (q : GlobalTheory.FinPl.SplitPt D k) (PP : HeightOneSpectrum (𝓞 D.host.E)) (he : Formalism.L2.NTheta.IsIdemAt q.e PP)
-    (z : AE D) (x : D.host.E) (h : q.pr z = q.pr (incA D x)) :
-    adAt D.host.F PP (toEAf D z) = algebraMap D.host.E (PP.adicCompletion D.host.E) x :=
-  GlobalTheory.LevProd.Bwd.adAt_eq_of_pr q PP he z x h
-
 theorem locM_of_pr (q : GlobalTheory.FinPl.SplitPt D k) (PP : HeightOneSpectrum (𝓞 D.host.E)) (he : Formalism.L2.NTheta.IsIdemAt q.e PP)
     (V : HSp D) {n : ℕ} (hn : V.rank = n) (g : GA D V) (x : GL (Fin n) (Formalism.L2.DIV.AfE D.host.F D.host.E)) (hx : x.1 = finM V hn g)
     (y : Formalism.L2.Col.Sp D.host.E n ≃ₗ[D.host.E] Formalism.L2.Col.Sp D.host.E n)
     (hy : ∀ r s, q.pr (mt V g (Fin.cast hn.symm r) (Fin.cast hn.symm s)) = q.pr (incA D (y (Pi.single s 1) r))) :
     GlobalTheory.Mem.ColAd.locM PP x = GlobalTheory.Mem.ColAd.ratM PP y :=
-  Matrix.ext fun r s => (congrArg (adAt D.host.F PP) (congrFun (congrFun hx r) s)).trans (adAt_of_pr q PP he _ _ (hy r s))
+  Matrix.ext fun r s => (congrArg (adAt D.host.F PP) (congrFun (congrFun hx r) s)).trans (_root_.GlobalTheory.LevProd.Bwd.adAt_eq_of_pr q PP he _ _ (hy r s))
 
 theorem locHom_std (q : GlobalTheory.FinPl.SplitPt D k) (S : HSp D) {Y : Type} [Fintype Y] [DecidableEq Y] (F : Frame k S.rank Y)
     (e : Y ≃ Fin S.rank) (hF : F.β = (1 : Matrix (Fin S.rank) (Fin S.rank) k).submatrix id e) (g : GA D S) (r b : Y) :
@@ -748,21 +743,6 @@ theorem prV_comm (v : GlobalTheory.FinPl.Pl D) (z : Af ↥D.host.F ⊗[↥D.host
       (Algebra.TensorProduct.comm _ _ _) (GlobalTheory.IndefiniteRowSideFullHecke.UnramifiedCharacter.compFin D v z) :=
   GlobalTheory.PenLevPrime.prV_comm v z
 
-theorem prV_toEAf_congr (v : GlobalTheory.FinPl.Pl D) {y y' : AE D} (h : GlobalTheory.FinPl.compAt D v y = GlobalTheory.FinPl.compAt D v y') :
-    Formalism.UG.prV (E := D.host.E) v (toEAf D y) = Formalism.UG.prV (E := D.host.E) v (toEAf D y') :=
-  GlobalTheory.PenLevPrime.prV_toEAf_congr v h
-
-theorem bc_congr (V : HSp D) {n : ℕ} (hn : V.rank = n) (v : GlobalTheory.FinPl.Pl D) {g h : GA D V} {x y : GL (Fin n) (EF D)}
-    (hx : x.1 = finM V hn g) (hy : y.1 = finM V hn h)
-    (e : ∀ i j, GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V g i j) = GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V h i j)) :
-    Formalism.UG.bc (Formalism.UG.prV (E := D.host.E) v) x = Formalism.UG.bc (Formalism.UG.prV (E := D.host.E) v) y :=
-  GlobalTheory.PenLevOff.bc_congr V hn v hx hy e
-
-theorem bc_eq_one (V : HSp D) {n : ℕ} (hn : V.rank = n) {P : GlobalTheory.FinPl.Pl D → Prop} {v : GlobalTheory.FinPl.Pl D} (hv : ¬ P v) {g : GA D V}
-    (hg : g ∈ grpAt V P) {x : GL (Fin n) (EF D)} (hx : x.1 = finM V hn g) :
-    Formalism.UG.bc (Formalism.UG.prV (E := D.host.E) v) x = 1 :=
-  GlobalTheory.PenLevOff.bc_eq_one V hn hv hg hx
-
 abbrev cutAt (V : HSp D) (v : GlobalTheory.FinPl.Pl D) : GA D V →* GA D V := cutG V _ (idemQ_mul_self {v})
 
 theorem cutAt_mem (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) : cutAt V v g ∈ grpAt V (· ∈ ({v} : Finset (GlobalTheory.FinPl.Pl D))) :=
@@ -771,9 +751,6 @@ theorem cutAt_mem (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) : cutAt
 theorem compAt_cutAt (V : HSp D) (v : GlobalTheory.FinPl.Pl D) (g : GA D V) (i j) :
     GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V (cutAt V v g) i j) = GlobalTheory.FinPl.compAt D v (Formalism.L2.Theta.mt V g i j) :=
   GlobalTheory.PenLevOff.compAt_cutAt V v g i j
-
-theorem grpAt_mono (V : HSp D) {P Q : GlobalTheory.FinPl.Pl D → Prop} (h : ∀ v, P v → Q v) : grpAt V P ≤ grpAt V Q :=
-  GlobalTheory.PenLevOff.grpAt_mono V h
 
 theorem cutAt_eq_one (V : HSp D) {P : GlobalTheory.FinPl.Pl D → Prop} {v : GlobalTheory.FinPl.Pl D} (hv : ¬ P v) {g : GA D V} (hg : g ∈ grpAt V P) :
     cutAt V v g = 1 :=
@@ -816,31 +793,6 @@ section Std
 open Formalism.L2.Col Formalism.L2.Ker Formalism.UG GlobalTheory.Mem.Chr GlobalTheory.Mem.Col2.TC GlobalTheory.Mem.Col2.MemChart
 variable {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} (I : TC B X)
 
-theorem fr_eq {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-    {hc : Formalism.BasicNotions.CMData F E} {n : ℕ} {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))} {g g' : GL (Fin n) (AfE F E)}
-    {p p' : DecoF E n ST SG Q} (h : IsPtOf hc g p) (h' : IsPtOf hc g' p') (P : Q)
-    (e0 : ∀ i j, adAt F P.1 (g.1 i j) = adAt F P.1 (g'.1 i j)) : p.fr P = p'.fr P :=
-  GlobalTheory.PenLevTyp.fr_eq h h' P e0
-
-theorem exists_pt {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [StarRing E] [Algebra F E]
-    {hc : Formalism.BasicNotions.CMData F E} {n : ℕ} [NeZero n] {ST SG Q : Finset (HeightOneSpectrum (𝓞 E))} {g g' : GL (Fin n) (AfE F E)}
-    {p : DecoF E n ST SG Q} (h : IsPtOf hc g p) (hg' : g' ∈ UAd hc n)
-    (e0 : ∀ P ∈ Q, ∀ i j, adAt F P (g'.1 i j) = adAt F P (g.1 i j)) : ∃ p' : DecoF E n ST SG Q, IsPtOf hc g' p' :=
-  GlobalTheory.PenLevTyp.exists_pt h hg' e0
-
-theorem levGAt_eq (hTw : I.IsTw) (a : I.ι) (j : ℕ) (hj : j < B.R.m) (b : Idx I.sel (I.tup a) (I.idx a) j) :
-    levGAt I.sel (I.tup a) (I.idx a) (I.Tp a) j b = colLevSym I.Ch j := by
-  have h1 : levGAt I.sel (I.tup a) (I.idx a) (I.Tp a) j b = (I.idx a).levG j (b.get hj) := by
-    unfold levGAt
-    rw [← Idx.some_get b hj]
-    rfl
-  have h2 : ∀ b', (I.idx a).levG j b' = colLevSym I.Ch j := by
-    rw [hTw.idx_eq a]
-    exact fun _ => rfl
-  rw [h1, h2]
-
-
-
 theorem mem_lev_iff (hI : I.Ok) (hTw : I.IsTw) (hPr : (B.primes X).Ok) (u : B.Word) (a : I.ι) (j : ℕ) (hj : j + 1 < B.R.m)
     [NeZero (B.R.N j)] {Ch : Type} {chOf : (I.stp u a j).Cl → Ch}
     {Lb : Ch → Submodule (𝓞 B.host.E) (Fin (B.R.N j) → B.host.E)} {U : Ch → Subgroup (TC.GA B (B.R.N j))} {chi : ∀ β, U β →* ℂˣ}
@@ -863,10 +815,10 @@ theorem mem_lev_iff (hI : I.Ok) (hTw : I.IsTw) (hPr : (B.primes X).Ok) (u : B.Wo
     have e' : (y c * x * TC.kStd X u (B.R.N j)).1.map (adAt B.host.F P) = (y c * TC.kStd X u (B.R.N j)).1.map (adAt B.host.F P) := by
       rw [Units.val_mul, Units.val_mul, Units.val_mul, Matrix.map_mul, Matrix.map_mul, Matrix.map_mul, e, Matrix.mul_one]
     exact congrFun (congrFun e' r) s
-  obtain ⟨q, hq⟩ := exists_pt hy (mul_mem (mul_mem hg.1 hx) hk) e0
-  have hfr : ∀ P, q.fr P = ((I.stp u a j).rep c).1.1.fr P := fun P => fr_eq hq hy P (e0 P.1 P.2)
+  obtain ⟨q, hq⟩ := _root_.GlobalTheory.PenLevTyp.exists_pt hy (mul_mem (mul_mem hg.1 hx) hk) e0
+  have hfr : ∀ P, q.fr P = ((I.stp u a j).rep c).1.1.fr P := fun P => _root_.GlobalTheory.PenLevTyp.fr_eq hq hy P (e0 P.1 P.2)
   have hxq := dia_of_pt hPr u hq
-  have hΛ := levGAt_eq I hTw a j (by omega) c.1
+  have hΛ := _root_.GlobalTheory.PenLevTyp.levGAt_eq I hTw a j (by omega) c.1
   have hcos : ∀ p p' : PtAt B.R I.sel (I.tup a) (I.cst a) u j, cosetIn p = cosetIn p' := fun p p' => by
     have key : ∀ p : PtAt B.R I.sel (I.tup a) (I.cst a) u j, p.1.2 = ∅ := fun p => by
       have := p.2
@@ -982,7 +934,7 @@ theorem relax_mem_sup_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {
     · have h4 := _root_.GlobalTheory.LevProd.Supp.cutAt_mem_U_of_mem_relax_not_twAt hW ha hTr j hj J hJ α J' hJ' α' hg v fun h => hv ((hQ v).2 h)
       rwa [← e, map_mul, cutAt_eq_one _ (P := (· ∈ Q)) hv h1, one_mul] at h4
   rw [← e]
-  exact mul_mem (Subgroup.mem_sup_right (grpAt_mono _ (fun v hv => (hQ v).1 hv) h1)) (Subgroup.mem_sup_left h3)
+  exact mul_mem (Subgroup.mem_sup_right (_root_.GlobalTheory.PenLev.CongruenceSubgroupLevelSupport.grpAt_mono _ (fun v hv => (hQ v).1 hv) h1)) (Subgroup.mem_sup_left h3)
 end GlobalTheory.LevProd.Supp
 
 namespace GlobalTheory.LevProd
@@ -1052,14 +1004,6 @@ theorem _root_.GlobalTheory.T.true_geometry_lattice_transport_alt : ∀ {B : Glo
   first | exact @_root_.GlobalTheory.LevProd.loc_level_alt
 
 namespace GlobalTheory.LevOnto
-
-theorem list_prod_map_mulSingle {n : ℕ} {G : Fin n → Type*} [∀ i, Monoid (G i)] (x : ∀ i, G i) (k : Fin n) :
-    ∀ l : List (Fin n), l.Nodup → ((l.map fun i => Pi.mulSingle i (x i) k).prod = if k ∈ l then x k else 1) :=
-  GlobalTheory.LevProd.Fwd.list_prod_map_mulSingle x k
-
-theorem list_prod_mulSingle {n : ℕ} {G : Fin n → Type*} [∀ i, Monoid (G i)] (x : ∀ i, G i) :
-    ((List.finRange n).map fun i => Pi.mulSingle i (x i)).prod = x :=
-  GlobalTheory.LevProd.Fwd.list_prod_mulSingle x
 
 theorem map_pr_eq_one {D : D7} {k k' : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
     [Field k'] [ValuativeRel k'] [TopologicalSpace k'] [IsNonarchimedeanLocalField k']
@@ -1159,16 +1103,10 @@ theorem onto_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B 
         refine locHom_eq_one (J.G i).q (J.G i').q _ _ _ (hglp i (x i)).1 fun hv => h ?_
         exact hJ.inj (_root_.GlobalTheory.LevOnto.pl_eq_of_quadratic_data_same_place hW ha hTr J hJ J hJ i' i hv.symm)
     simp only [Function.comp_def, hphi]
-    exact list_prod_mulSingle x
+    exact _root_.GlobalTheory.LevProd.Fwd.list_prod_mulSingle x
 end GlobalTheory.LevOnto
 
 namespace GlobalTheory.LevProd
-
-theorem locHom_eq_one_of_grpAt {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    {Y : Type} [Fintype Y] [DecidableEq Y] (q : GlobalTheory.FinPl.SplitPt D k) (S : HSp D) (F : GlobalTheory.LocMod.Frame k S.rank Y)
-    {P : GlobalTheory.FinPl.Pl D → Prop} (hP : ¬ P q.v) {x : GA D S} (hx : x ∈ GlobalTheory.FinPl.grpAt S P) :
-    GlobalTheory.LevIdx.locHom q S F x = 1 :=
-  locHom_eq_one_of_grpAt' q S F hP hx
 
 theorem up_phi_mem_KO_alt : ∀ {B : GlobalTheory.Mem.Base} {X : PreX B.toPre} {I : TC B X} {l : I.Laws} {Z : TC.Later B (I.cols l)} {L : SizeData₂ (I.rec7 l Z)} {hT : GatTies (I.rec7 l Z)} {Gi : Formalism.MainNotions.G.Inst (I.rec7 l Z) L} {Gl : Formalism.MainNotions.G.LatInst (I.rec7 l Z)} {Kc : Formalism.MainNotions.G.Consts} {Yd : DivX (I.rec7 l Z)} {cX : ExtraC} {ex : Extra (I.rec7 l Z) L hT Gi Gl Kc Yd cX} (W : _root_.GlobalTheory.MiS.RealPackAlt ex), _root_.GlobalTheory.Fam.AllFamilyConditions W → ∀ (u : B.Word) (a : _root_.GlobalTheory.Fam.GeometricFamily W u), a.Is → a.True → ∀ j (hj : j + 2 ≤ B.R.m), ∀ t (J : _root_.GlobalTheory.Fam.QuadraticExtensionData a t), J.Reads → ∀ g ∈ _root_.GlobalTheory.LevProd.upperLevelSubgroup a j hj, ∀ i, _root_.GlobalTheory.LevProd.localHomProduct J j hj g i ∈ KO (J.G i).k _ := by
   intro B X I l Z L hT Gi Gl Kc Yd cX ex W hW u a ha hTr j hj t J hJ g hg i

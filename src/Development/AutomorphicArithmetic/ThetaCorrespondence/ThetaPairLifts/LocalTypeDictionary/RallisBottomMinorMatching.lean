@@ -583,26 +583,6 @@ namespace GlobalTheory.MinorFrame
 
 open MvPolynomial
 
-theorem colSub_totalDegree_le {ι : Type} [Fintype ι] {d a : ℕ} (g : ι → Matrix (Fin a) (Fin a) ℂ) (P : Pol ι d a) :
-    (colSub g P).totalDegree ≤ P.totalDegree := by
-  classical
-  unfold colSub
-  conv_lhs => rw [P.as_sum]
-
-  rw [map_sum]
-  refine totalDegree_finsetSum_le fun s hs => ?_
-  rw [aeval_monomial]
-  refine (totalDegree_mul _ _).trans ?_
-  rw [algebraMap_eq, totalDegree_C, zero_add]
-  refine le_trans ?_ (le_totalDegree hs)
-  unfold Finsupp.prod Finsupp.sum
-  refine (totalDegree_finsetProd _ _).trans (Finset.sum_le_sum fun i _ => ?_)
-  refine (totalDegree_pow _ _).trans ?_
-  have h1 : (∑ j' : Fin a, C (g i.1 j' i.2.2) * (X (i.1, i.2.1, j') : Pol ι d a)).totalDegree ≤ 1 :=
-    totalDegree_finsetSum_le fun j _ => (totalDegree_mul _ _).trans (by rw [totalDegree_C, totalDegree_X])
-  calc s i * _ ≤ s i * 1 := Nat.mul_le_mul_left _ h1
-    _ = s i := mul_one _
-
 theorem star_detChar_mul_detChar {ι : Type} [Fintype ι] {a : ℕ} (n : ι → ℕ) (g : ι → Matrix.unitaryGroup (Fin a) ℂ) :
     starRingEnd ℂ (detChar n (fun τ => (g τ : Matrix (Fin a) (Fin a) ℂ))) *
       detChar n (fun τ => (g τ : Matrix (Fin a) (Fin a) ℂ)) = 1 := by
@@ -651,7 +631,7 @@ theorem exists_mem_inv_eq_of_twisted : ∀ {ι : Type} [Fintype ι] (a d : ℕ) 
   letI : NormedAddCommGroup S := InnerProductSpace.Core.toNormedAddCommGroup (𝕜 := ℂ)
   letI : InnerProductSpace ℂ S := InnerProductSpace.ofCore _
   have hmemS : ∀ (g : ι → Matrix (Fin a) (Fin a) ℂ) (x : Pol ι d a), x ∈ S → colSub g x ∈ S := fun g x hx =>
-    (mem_restrictTotalDegree _ _ _).2 ((colSub_totalDegree_le g x).trans ((mem_restrictTotalDegree _ _ _).1 hx))
+    (mem_restrictTotalDegree _ _ _).2 ((_root_.GlobalTheory.ColLie.totalDegree_colSub_le g x).trans ((mem_restrictTotalDegree _ _ _).1 hx))
   let gen : Set S := {w | ∃ (g : ι → Matrix.unitaryGroup (Fin a) ℂ) (x : S),
       (w : Pol ι d a) = colSub (fun τ => (g τ : Matrix (Fin a) (Fin a) ℂ)) x.1 -
         detChar n (fun τ => (g τ : Matrix (Fin a) (Fin a) ℂ)) • x.1}

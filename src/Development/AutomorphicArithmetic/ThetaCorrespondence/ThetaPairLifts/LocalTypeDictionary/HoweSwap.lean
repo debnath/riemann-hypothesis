@@ -303,10 +303,6 @@ theorem resEtaPow_div {F E : Type} [Field F] [NumberField F] [Field E] [NumberFi
   · rw [pow_add]
     rcases neg_one_pow_eq_or ℂ m with hm | hm <;> rw [hm] <;> ring
 
-theorem isHecke_div {F E : Type} [Field F] [NumberField F] [Field E] [NumberField E] [Algebra F E]
-    {χ χ' : Chr F E} (h : IsHecke F E χ) (h' : IsHecke F E χ') : IsHecke F E (χ / χ') :=
-  ⟨h.1.div' h'.1, fun x => by simp only [MonoidHom.div_apply, h.2 x, h'.2 x, div_self']⟩
-
 theorem actsD_zero {F : Type} [Field F] [NumberField F] {κ : Type} [Fintype κ]
     (T : ℝ → ((κ → AF F) → ℂ) →ₗ[ℂ] (κ → AF F) → ℂ) :
     ActsD (evI F) (fun t => T t) ((0 : SInf F κ) : (κ → mixedEmbedding.mixedSpace F) → ℂ) ((0 : SInf F κ) : _) := by
@@ -344,8 +340,8 @@ theorem main : GlobalTheory.Published.HoweDualityReal → ∀ (F E : Type) [Fiel
   have hresW' : ResEtaPow (Units.map (algebraMap F (AF F)).toMonoidHom).range (Xc.α / Xc.β) (a' + a) :=
     resEtaPow_div ht.chars.resα ht.chars.resβ
   rw [Nat.add_comm a' a] at hresW'
-  have hHk := isHecke_div ht.chars.heckeβ ht.chars.heckeα
-  have hHk' := isHecke_div ht.chars.heckeα ht.chars.heckeβ
+  have hHk := _root_.GlobalTheory.HoweGlobalPair.hecke_div ht.chars.heckeβ ht.chars.heckeα
+  have hHk' := _root_.GlobalTheory.HoweGlobalPair.hecke_div ht.chars.heckeα ht.chars.heckeβ
   obtain ⟨hchain, hsum⟩ := hHD F E σ ht.base.cm a (a + a') G.V G.W G.M Bs.ψ Xc.β (Xc.β / Xc.α) om ht.base.std
     ht.geo.hV.herm hVdet ht.geo.hW.skew hWdet ht.chars.resβ hresW ht.chars.heckeβ hHk ht.weil Bs.emb
     ht.geo.hV.cartan ht.geo.hW.cartan

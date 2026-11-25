@@ -934,17 +934,9 @@ theorem Rder_mem_cuspSub (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (F
   show IsAutFunSm θ V _ ∧ IsCuspFun V _
   exact ⟨GlobalTheory.CuspLie.isAutFunSm_Rder hθ hX hf'.1, GlobalTheory.CuspLie.isCuspFun_Rder hθ hX hf'.1 hf'.2⟩
 
-private theorem det_gramAt_ne_zero {D : D7} (V : HSp D) (τ : D.what₂.Tau) : (gramAt D V τ).det ≠ 0 := by
-  intro h
-  have h' : (V.gram.map (tauE D τ)).det = 0 := h
-  apply _root_.Formalism.L2.Theta.gram_det_ne V
-  apply (tauE D τ).injective
-  rw [RingHom.map_det, map_zero]
-  exact h'
-
 private theorem oneP_add_twisted_operators (hθ : IsInfFam θ) {τ : D.what₂.Tau} {X : Matrix (Fin V.rank) (Fin V.rank) ℂ}
     (hX : X ∈ lieAt V τ) (s t : ℝ) : oneP θ V τ X (s + t) = oneP θ V τ X s * oneP θ V τ X t := by
-  have hJ : IsUnit (gramAt D V τ).det := (det_gramAt_ne_zero V τ).isUnit
+  have hJ : IsUnit (gramAt D V τ).det := (_root_.GlobalTheory.FockAdjoint.gramAt_det_ne V τ).isUnit
   have hX' : Xᴴ * gramAt D V τ + gramAt D V τ * X = 0 := hX
   have hmem : ∀ r : ℝ, NormedSpace.exp (r • X) ∈ Formalism.QuantumDeterminants.UH (gramAt D V τ) := fun r =>
     GlobalTheory.SmoothForms.exp_mem_UH hJ (by

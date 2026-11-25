@@ -610,10 +610,6 @@ theorem series_sum {D : D7} {S T : HSp D} (B : Base S T) (hB : B.Good) (ω : Pai
     rw [GlobalTheory.FockFiniteHeis.pureTensorO_lin _ _ _ _ hB.frame.vac.1 hB.frame.vac.2.inf _ _ _ _ _ (hf a) (hθ s), map_add (f := _), map_smul]
     rfl
 
-theorem theta_vecAt {D : D7} {S T : HSp D} {B : Base S T} (hB : B.Good) {Q : Finset (Pl D.host.E)} (hQ : B.admitted Q)
-    (φ : ∀ PP : ↥Q, Matrix (Fin T.rank) (Fin S.rank) (kP PP.1) → ℂ) : IsThetaFunO B.F.ψ S T (B.vecAt Q φ) :=
-  GlobalTheory.GalLift.Vec.theta_of_thetaAt hB.frame.vac.1 hB.frame.vac.2.inf (Base.isThetaAt_vecAt hB hQ φ) hB.frame.vac.2.theta
-
 open Classical in
 theorem twist_series_mem_span {D : D7} {S T : HSp D} (B : Base S T) (hB : B.Good) (hS : S.SigOK) (ω : PairRep S T)
     (hω : B.IsWeil 1 ω) (t : Twist D Circle) (hQ : B.admitted t.Q) (O : Subring ℂ) (ι : ↥t.Q → Type) [∀ PP, Fintype (ι PP)]
@@ -637,7 +633,7 @@ theorem twist_series_mem_span {D : D7} {S T : HSp D} (B : Base S T) (hB : B.Good
     rw [e1, map_sum]
     simp only [map_smul]
 
-  rw [hvec, series_sum B hB ω _ _ _ (fun τ => theta_vecAt hB hQ (φ τ)), map_sum]
+  rw [hvec, series_sum B hB ω _ _ _ (fun τ => _root_.GlobalTheory.DistRel.theta_vecAt hB hQ (φ τ)), map_sum]
   refine Submodule.sum_mem _ fun τ _ => ?_
   obtain ⟨hQτ, hsupp, hmove⟩ := _root_.GlobalTheory.SourceTrans.exists_series_vecAt_translate_eq_series_mul D S T B hB hS ω hω t.Q hQ (fun PP => g PP (τ PP))
   have e2 : series B.F ω (B.vecAt t.Q (φ τ)) h P = series B.F ω (B.vecFlat t) (h * hQτ) P :=

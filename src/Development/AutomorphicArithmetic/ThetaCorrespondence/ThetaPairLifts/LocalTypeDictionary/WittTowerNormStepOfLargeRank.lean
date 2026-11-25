@@ -425,20 +425,6 @@ theorem sesq_unimod (hV : V.IsHerm D.sp.cm.sig B r s) :
     simp only [dotProduct, Matrix.mulVec, Finset.mul_sum, Pi.star_apply, mul_assoc]
   rw [e]
 
-theorem hasSig_map_conj {m a b : ℕ} {M : Matrix (Fin m) (Fin m) ℂ} (h : HasSig M a b) :
-    HasSig (M.map (starRingEnd ℂ)) a b := by
-  obtain ⟨hn, A, hA⟩ := h
-  refine ⟨hn, A.map star, ?_⟩
-  have e1 : (A.map star).map star = A := by ext i j; simp
-  have e2 : (A.map star)ᵀ * M.map (starRingEnd ℂ) * A = (Aᵀ * M * A.map star).map (starRingEnd ℂ) := by
-    simp only [Matrix.map_mul, Matrix.transpose_map]
-    congr 1
-    ext i j; simp
-  rw [e1, e2, hA, Matrix.fromBlocks_map]
-  have e3 : (-1 : Matrix (Fin b) (Fin b) ℂ).map (starRingEnd ℂ) = -1 := by
-    ext i j; by_cases hij : i = j <;> simp [hij]
-  simp [e3]
-
 theorem hasSignature_all (hG : B.IsGood D.sp.cm.sig) {m a b : ℕ} (J : Matrix (Fin m) (Fin m) D.host.E)
     (hs : ∀ w, HasSig (J.map (B.emb w).1) a b) (φ : D.host.E →+* ℂ) : Formalism.UG.HasSignature (J.map φ) a b := by
   have h := hG.cm
@@ -450,7 +436,7 @@ theorem hasSignature_all (hG : B.IsGood D.sp.cm.sig) {m a b : ℕ} (J : Matrix (
     rw [(B.emb w).2, hw, InfinitePlace.embedding_mk_eq_of_isReal hreal]
   refine GlobalTheory.FunObj.hasSignature_of_hasSig_conj ?_
   rcases GlobalTheory.IdxAll.eq_or_eq_comp _ h _ _ he with h1 | h1
-  · rw [h1]; exact hasSig_map_conj (hs w)
+  · rw [h1]; exact _root_.GlobalTheory.PlaceSpaces.hasSig_map_conj (hs w)
   · have e : (J.map φ).map (starRingEnd ℂ) = J.map (B.emb w).1 := by
       ext i j; simp [h1]
     rw [e]; exact hs w

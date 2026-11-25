@@ -1133,16 +1133,6 @@ noncomputable section
 
 namespace GlobalTheory.PerRedTw
 
-section Copied
-
-open Formalism.BasicNotions Formalism.BasicNotions.DV Formalism.MainNotions Formalism.MainNotions.G Formalism.MainNotions.WeilJacquetShalikaLaw Formalism.L2.Forms Matrix NumberField
-open scoped BigOperators
-
-theorem nfAll_zero_tw {D : D7} (n : ℕ) (lam : D.what₂.Tau → DomWeight n) : nfAll lam 0 0 = 0 := by
-  simp [nfAll, Formalism.REAL.fockF]
-
-end Copied
-
 open Formalism.BasicNotions Formalism.MainNotions Formalism.L2.Forms Formalism.MainNotions.RT.PeriodPointConditions GlobalTheory.PerQ
 
 attribute [local instance] MemberForms.clsPFin
@@ -1212,7 +1202,7 @@ theorem petersson_eq_sum_restrict_twist (t : SymmetricTwistedColumnsAtPrimes tp 
   rw [(t.pt.val u μ hμ).ipP o ho _ _ _ _ hP' hQ' hPe' hQe', Finset.sum_eq_single c]
   · simp
   · intro c' _ hc'
-    simp [hc', nfAll_zero_tw]
+    simp [hc', _root_.GlobalTheory.PerRed.nfAll_zero]
   · intro h; exact absurd (Finset.mem_univ c) h
 
 open Classical in

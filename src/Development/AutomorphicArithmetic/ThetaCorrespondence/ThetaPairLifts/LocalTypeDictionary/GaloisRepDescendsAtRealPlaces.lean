@@ -180,16 +180,6 @@ theorem DownLift.nonvanishing_of_down_lift : GlobalTheory.Published.CuspRapidDec
 end GlobalTheory
 end
 
-section
-open Formalism.BasicNotions Formalism.BasicNotions.TH Formalism.MainNotions.GlobalTheoryTheory.GenusMassVolumes Formalism.MainNotions.StandardLattice Formalism.MainNotions.S MeasureTheory IsDedekindDomain NumberField Matrix
-open Formalism.L2.Theta Formalism.L2.DIV Formalism.L2.Indef
-open Formalism.IndefR.Lev Formalism.IndefR.Mult Formalism.IndefR.Datum Formalism.IndefR.Cx Formalism.IndefR.Links
-open scoped TensorProduct InnerProductSpace Classical
-open GlobalTheory.DownLift GlobalTheory.Core.Rk.Exh
-
-theorem _root_.GlobalTheory.T.nonGalois_downLift_nonvanishing : GlobalTheory.Published.CuspRapidDecay → _root_.GlobalTheory.Published.DoublingMethodLocalZetaIntegrals → GlobalTheory.Published.UnramifiedDoublingGL → GlobalTheory.Published.HeckeLPartialContinuation → GlobalTheory.Hk3.HoweUnram → ∀ (D : D7) (G : Type) [Group G] [Fintype G] (Pl0 T : Type) (A : FamIn D.what₂.LL G Pl0 T D.R.m) (Ks : Type) [Field Ks] [NumberField Ks] [Algebra Ks D.what₂.LL] (R : RealDat D A Ks) (F : Face D A), GlobalTheory.LiftRows.Given R F → R.FullP → ∀ i t, NonVan R i t := by
-  first | exact @_root_.GlobalTheory.DownLift.nonvanishing_of_down_lift
-end
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.LocalTypeDictionary.NonGaloisDownLiftNonvanishing =====
@@ -205,7 +195,7 @@ namespace GlobalTheory.DownLift.AtReal
 theorem lift_splits_locally : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Hk3.HoweUnram → _root_.GlobalTheory.NRows.GeometricGaloisRepCompatibility → ∀ (D : D7) (cf : CharFrame D)
     (nch : NChoice D) (tp : TupTied D cf nch) (X : GlobalTheory.NJoin.RealAt D cf nch tp) j t, GlobalTheory.DownLift.TypeNZ X.R j t := by
   intro hP hH hX D cf nch tp X j t
-  have hN := GlobalTheory.T.nonGalois_downLift_nonvanishing hP hX.dbl hX.udbl hX.hl hH
+  have hN := _root_.GlobalTheory.DownLift.nonvanishing_of_down_lift hP hX.dbl hX.udbl hX.hl hH
     D X.G X.Pl0 X.T X.A X.Ks X.R X.F X.given X.full j t
   have hGI := GlobalTheory.GenReal.genInf D X.G X.Pl0 X.T X.A X.Ks X.R X.F X.given X.full j t
   have hGF := GlobalTheory.DownLift.GenFinite.genFin hH D X.G X.Pl0 X.T X.A X.Ks X.R X.F X.given X.full j t

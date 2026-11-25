@@ -1184,18 +1184,6 @@ open GlobalTheory.StepData GlobalTheory.SplitWeil ValuativeRel
 noncomputable section
 namespace GlobalTheory.TwLevRed
 
-theorem reGL_symm_mem_KO_iff {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    {a b : Type} [Fintype a] [DecidableEq a] [Fintype b] [DecidableEq b] (e : a ≃ b)
-    {x : GL b k} : (reGL e).symm x ∈ KO k a ↔ x ∈ KO k b := by
-  rw [mem_KO, mem_KO, ← map_inv, reGL_symm_val, reGL_symm_val]
-  constructor
-  · rintro ⟨h1, h2⟩
-    refine ⟨fun i j => ?_, fun i j => ?_⟩
-    · simpa using h1 (e.symm i) (e.symm j)
-    · simpa using h2 (e.symm i) (e.symm j)
-  · rintro ⟨h1, h2⟩
-    exact ⟨fun i j => h1 _ _, fun i j => h2 _ _⟩
-
 theorem blockTri_iff_mem_lev : ∀ (E : Type) [Field E] [NumberField E] (k : Type) [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] (PP : HeightOneSpectrum (𝓞 E)) (ι : E →+* k), (∀ z : 𝓞 E, valuation k (ι z) < 1 → z ∈ PP.asIdeal) → ∀ (K T s j d : ℕ) (hd : j + d = s + 1) (δ : kˣ →* ℂˣ) (hδ : IsTame δ) (η : ℕ → kˣ →* ℂˣ) (n : ℕ) (e : Ix (Fin K ⊕ Fin (s + 1)) (Fin T) j ≃ Fin n), GlobalTheory.SymBridge.IsOrd GlobalTheory.SymBridge.zPos e → ∀ (x : GL (XIx (Fin K) (Fin T) j ⊕ Fin d) k), x ∈ KO k _ → ∀ (R : GL (Fin n) (𝓞 E ⧸ PP.asIdeal)), (∀ (a a' : Fin n) (z : 𝓞 E), R.val a a' = Ideal.Quotient.mk PP.asIdeal z → valuation k (x.val (stdOrd (Fin K) (Fin T) j d hd (e.symm a)) (stdOrd (Fin K) (Fin T) j d hd (e.symm a')) - ι z) < 1) → (R ∈ Formalism.L2.DIV.blockTri (Formalism.L2.DIV.blk2 (K + (s + 1))) ↔ x ∈ ((twistChain s (Fin T) (Fin K) δ hδ η).lev j d hd).J) := by
   intro E _ _ k _ _ _ _ PP ι hPP K T s j d hd δ hδ η n e he x hx R hR
   have hent : ∀ a b, R.val a b = 0 ↔ valuation k (x.val (stdOrd (Fin K) (Fin T) j d hd (e.symm a))
@@ -1240,7 +1228,7 @@ theorem blockTri_iff_mem_lev : ∀ (E : Type) [Field E] [NumberField E] (k : Typ
         (reGL (stdOrd (Fin K) (Fin T) j d hd)).symm x := by
       simp [LatFrame.conj, plainFrame]
       rfl
-    rw [e', reGL_symm_mem_KO_iff]
+    rw [e', _root_.GlobalTheory.BottomWt.reGL_symm_mem_KO_iff]
     simp only [hx, true_and]
     rfl
   rw [hJ, Formalism.L2.DIV.mem_blockTri]

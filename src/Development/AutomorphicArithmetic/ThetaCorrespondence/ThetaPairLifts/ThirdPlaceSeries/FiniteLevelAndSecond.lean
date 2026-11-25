@@ -415,9 +415,6 @@ theorem disjoint_of_heq {R R' : Ranks} (hR : R = R') {H : Host R} {H' : Host R'}
     {A B : Finset (PlE H)} {A' B' : Finset (PlE H')} (hA : HEq A A') (hB : HEq B B') (h : Disjoint A B) : Disjoint A' B' := by
   subst hR; cases hH; cases hA; cases hB; exact h
 
-theorem plE_eq {R R' : Ranks} (hR : R = R') {H : Host R} {H' : Host R'} (hH : HEq H H') : PlE H = PlE H' := by
-  subst hR; cases hH; rfl
-
 theorem auxiliaryPrime_eq_of_same_ranks_host {D D' : D7} (hR : D.R = D'.R) (hH : HEq D.host D'.host) : AbsolutelyIrreducibleSpan.q0 D = AbsolutelyIrreducibleSpan.q0 D' := by
   cases D; cases D'
   dsimp only at hR hH
@@ -539,7 +536,7 @@ theorem goodO_of_seed : ∀ (D₁ D₂ D₃ : D7) (A : D₁.ntw.Tw → Finset (P
   have h23 : SameExport D₂ D₃ := ⟨hK.gal, hK.set, hK.forms, hK.br, hav⟩
   have h13 : SameExport D₁ D₃ := h12.trans h23
   obtain ⟨hTw, -, hSS, hcomp, hsame⟩ := same_basic h13.gal h13.set h13.frm
-  have hY : PlE D₁.host = PlE D₃.host := plE_eq h13.gal.R h13.gal.host
+  have hY : PlE D₁.host = PlE D₃.host := _root_.GlobalTheory.HeightCounting.Up.HkCopy.plE_eq h13.gal.R h13.gal.host
 
   have key : ∀ v, TwistedAt D₃ v → TwistedAt D₁ (u v) ∧ ∃ a : ℤ, Nat.Coprime a.natAbs (D₁.ntw.l (σ.s (u v))) ∧
       HEq (GlobalTheory.HeightCounting.twPackPow D₁ a (σ.pack (u v))) (rawPack C₃ v) := by
@@ -548,7 +545,7 @@ theorem goodO_of_seed : ∀ (D₁ D₂ D₃ : D7) (A : D₁.ntw.Tw → Finset (P
     refine ⟨ht, a, ha, hp.symm.trans ?_⟩
     exact heq_sigma_app (RCG := D₂.ntw.RCG) (RCG' := D₃.ntw.RCG) (gR := D₂.ntw.grpRCG) (gR' := D₃.ntw.grpRCG)
       (Ok := D₂.ntw.Ok) (Ok' := D₃.ntw.Ok) (cO := D₂.ntw.crOk) (cO' := D₃.ntw.crOk)
-      hPl (eq_of_heq hK.set.Tw) (plE_eq hK.gal.R hK.gal.host) hK.set.RCG hK.set.grpRCG hK.set.Ok hK.set.crOk
+      hPl (eq_of_heq hK.set.Tw) (_root_.GlobalTheory.HeightCounting.Up.HkCopy.plE_eq hK.gal.R hK.gal.host) hK.set.RCG hK.set.grpRCG hK.set.Ok hK.set.crOk
       hK.twI hK.Q hK.k hK.psi (cast_heq _ _)
   have hN0 : (D₁.ntw.Tw → ℕ) = (D₃.ntw.Tw → ℕ) := by rw [hTw]
   let I₁ : TwIn D₁ := ⟨normE σ.xd σ.all, σ.N0, σ.S⟩
@@ -722,7 +719,7 @@ theorem move_pack {D D' : D7} {N : NData D.R D.host D.what₂} {N' : NData D'.R 
     {X : NTw D.R D.host D.what₂ D.LL0 N} {X' : NTw D'.R D'.host D'.what₂ D'.LL0 N'} (h1 : SameGalois N N') (h2 : TwistDataAgreeAcrossCoefficients X X')
     {i : X.Tw} {i' : X'.Tw} (hi : HEq i i') {Q : Finset (PlE D.host)} {k : ℕ} (ψ : X.RCG i Q →* (X.Ok i k)ˣ) :
     ∃ (Q' : Finset (PlE D'.host)) (ψ' : X'.RCG i' Q' →* (X'.Ok i' k)ˣ), HEq Q Q' ∧ ∀ a : ℤ, HEq (ψ ^ a) (ψ' ^ a) :=
-  move_pack_aux (GoodPrimeSelection.plE_eq h1.R h1.host) (eq_of_heq h2.Tw)
+  move_pack_aux (_root_.GlobalTheory.HeightCounting.Up.HkCopy.plE_eq h1.R h1.host) (eq_of_heq h2.Tw)
     (RCG := X.RCG) (RCG' := X'.RCG) (gR := X.grpRCG) (gR' := X'.grpRCG)
     (Ok := X.Ok) (Ok' := X'.Ok) (cO := X.crOk) (cO' := X'.crOk)
     h2.RCG h2.grpRCG h2.Ok h2.crOk hi ψ

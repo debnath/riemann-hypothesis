@@ -1248,12 +1248,9 @@ variable {D : D7}
 theorem one_le_scL (L : SizeData₂ D) : 1 ≤ L.sc.L :=
   Real.one_le_rpow L.sc.one_lt_alt.le L.sc.eps_pos.le
 
-theorem one_le_b (L : SizeData₂ D) : 1 ≤ L.sc.b :=
-  Real.one_le_exp (by linarith [one_le_scL L])
-
 theorem b'_pos (L : SizeData₂ D) : 0 < L.sc.b' := by
   have := L.sc.one_lt_alt
-  have := one_le_b L
+  have := _root_.Formalism.MainNotions.BridgeLemma.sza_b_ge_one L
   unfold Scale.b' Scale.a Scale.X'
   positivity
 
@@ -1284,7 +1281,7 @@ theorem nuRow_zero_le_three_mul (large₂ : SizeData₂ D) (P : ParameterChoice'
     have : D.R.k ≤ D.R.N i := by unfold Ranks.N; omega
     exact_mod_cast this
   have hx := large₂.sc.one_lt_alt
-  have hb1 := one_le_b large₂
+  have hb1 := _root_.Formalism.MainNotions.BridgeLemma.sza_b_ge_one large₂
   have hb' := b'_pos large₂
   have hba : large₂.sc.b ≤ large₂.sc.a := le_mul_of_one_le_left (by linarith) hx.le
   have hX : 2 ≤ large₂.sc.X' := by
@@ -1416,7 +1413,7 @@ theorem nuAbs_le (P : ParameterChoice' D L) (u : D.what₂.Word) (j : ℕ) (hj :
   have hT : GlobalTheory.CoreHt.ThickUp L := fun j h1 h2 τ hc => (L.win_thick j h1 h2 τ hc).2
   have ha : 0 ≤ L.sc.a := by
     unfold Scale.a
-    have := GlobalTheory.CoreHt.RowsRange.one_le_b L
+    have := _root_.Formalism.MainNotions.BridgeLemma.sza_b_ge_one L
     have := L.sc.one_lt_alt
     positivity
   have hrow : ∀ r ∈ Finset.range (D.R.N (i + 1 - 1)), DV.nuRow D u (i + 1) τ r ≤ 3 * L.sc.a := by
@@ -1492,7 +1489,7 @@ theorem sizeAt_of_params : ∀ eps : ℝ, 0 < eps → eps < 1 / 52 → ∃ x0 : 
     have h1 := Dpi_le P u j hj
     have hN0 : 0 ≤ N := by linarith
     have h2 : (D.R.f : ℝ) * (N * (3 * L.sc.a)) ≤ (D.R.k : ℝ) * (N * (3 * (D.R.k * L.sc.b))) := by
-      apply mul_le_mul hfk _ (by have := GlobalTheory.CoreHt.RowsRange.one_le_b L; unfold Scale.a; positivity) (by linarith)
+      apply mul_le_mul hfk _ (by have := _root_.Formalism.MainNotions.BridgeLemma.sza_b_ge_one L; unfold Scale.a; positivity) (by linarith)
       exact mul_le_mul_of_nonneg_left (by linarith) hN0
     have h3 : (D.R.k : ℝ) * (N * (3 * (D.R.k * L.sc.b))) = 3 * ((D.R.k : ℝ) ^ 2 * L.sc.b) * N := by ring
     have h4 : 3 * ((D.R.k : ℝ) ^ 2 * L.sc.b) * N ≤ 3 * A ^ 2 * N := by

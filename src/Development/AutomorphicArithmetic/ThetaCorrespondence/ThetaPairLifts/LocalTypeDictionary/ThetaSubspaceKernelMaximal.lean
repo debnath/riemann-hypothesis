@@ -306,21 +306,6 @@ theorem isExp_piEnd {V : Type} [AddCommGroup V] [Module ℂ V] {L U : Module.End
   rw [key, hl]
   exact hasSum_sum fun i _ => h (y i) _
 
-theorem exp_conj_rect {β ι : Type} [Fintype β] [DecidableEq β] [Fintype ι] [DecidableEq ι]
-    (C : Matrix β ι ℂ) (A' : Matrix ι β ℂ) (hCA : C * A' = 1) (hAC : A' * C = 1) (Y : Matrix ι ι ℂ) :
-    NormedSpace.exp (C * Y * A') = C * NormedSpace.exp Y * A' := by
-  let f : Matrix ι ι ℂ →+* Matrix β β ℂ :=
-    { toFun := fun X => C * X * A'
-      map_one' := by simp [hCA]
-      map_mul' := fun X Z => by
-        calc C * (X * Z) * A' = C * X * (A' * C) * Z * A' := by rw [hAC, Matrix.mul_one]; simp only [Matrix.mul_assoc]
-          _ = _ := by simp only [Matrix.mul_assoc]
-      map_zero' := by simp
-      map_add' := fun X Z => by simp [Matrix.mul_add, Matrix.add_mul] }
-  have hf : Continuous f := (continuous_const.matrix_mul continuous_id).matrix_mul continuous_const
-  open scoped Norms.Operator in
-  exact (NormedSpace.map_exp f hf Y).symm
-
 theorem sumPl_single {ι : Type} [Fintype ι] [DecidableEq ι] {V : Type} [AddCommGroup V] [Module ℂ V] {κ : Type}
     [Fintype κ] (act : Matrix κ κ ℂ →ₗ[ℂ] Module.End ℂ V) (c : ι → ℂ) (w : ι) (Y : Matrix κ κ ℂ) :
     sumPl (V := fun _ : ι => V) (fun w' => act ((Pi.single w Y : ι → Matrix κ κ ℂ) w') +
@@ -483,7 +468,7 @@ theorem kStable_subspace_sums : _root_.GlobalTheory.FunPr.ThetaLocalInputs → �
         _ = C w * NormedSpace.exp (t • Yg w) * A' := by rw [h1]
         _ = NormedSpace.exp (t • (C w * Yg w * A')) := by
             rw [show t • (C w * Yg w * A') = C w * (t • Yg w) * A' by rw [Matrix.mul_smul, Matrix.smul_mul],
-              exp_conj_rect _ _ hCA hAC]
+              _root_.PositivityTheory.RL.Up.exp_conj' _ _ hCA hAC]
     · intro t w' hw'
       have h1 := hgw t w'
       rw [Pi.single_eq_of_ne hw', smul_zero, NormedSpace.exp_zero, Matrix.mul_one] at h1

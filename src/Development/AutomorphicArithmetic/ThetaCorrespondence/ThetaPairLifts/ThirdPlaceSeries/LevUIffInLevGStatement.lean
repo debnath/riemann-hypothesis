@@ -542,19 +542,6 @@ noncomputable section
 
 namespace GlobalTheory.FamTrace.LatFwd
 
-theorem finM_inv_eq {D : D7} (V : HSp D) {n : ℕ} (hn : V.rank = n) (κ : GA D V) (x : GL (Fin n) (GlobalTheory.AdForm.EF D))
-    (h : GlobalTheory.AdForm.finM V hn κ = x.1) : GlobalTheory.AdForm.finM V hn κ⁻¹ = (x⁻¹).1 := by
-  subst hn
-  have e : GlobalTheory.AdForm.finM V rfl κ * GlobalTheory.AdForm.finM V rfl κ⁻¹ = 1 := by
-    have e1 : ∀ g, GlobalTheory.AdForm.finM V rfl g = (mt V g).map (toEAf D) := fun g => rfl
-    have e2 : mt V κ * mt V κ⁻¹ = 1 := by
-      simp only [Formalism.L2.Theta.mt]
-      rw [← Units.val_mul, ← map_mul, mul_inv_cancel, map_one, Units.val_one]
-    rw [e1, e1, ← Matrix.map_mul, e2]
-    exact Matrix.map_one _ (map_zero _) (map_one _)
-  rw [h] at e
-  exact (Units.inv_eq_of_mul_eq_one_right e).symm
-
 theorem proj_mem_stabLoc_std {D : D7} (V : HSp D) (g : GA D V) (v : HeightOneSpectrum (𝓞 D.host.F))
     (hM : ∀ i j, (GlobalTheory.AdelicU.matHom _ D.sp.cm.sig V.gram (GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g)).1 i j ∈ GlobalTheory.AdelicU.intLoc D.host.F D.host.E v)
     (hM' : ∀ i j, (GlobalTheory.AdelicU.matHom _ D.sp.cm.sig V.gram (GlobalTheory.AdelicU.proj D.sp.cm.sig V.gram v g⁻¹)).1 i j ∈ GlobalTheory.AdelicU.intLoc D.host.F D.host.E v) :
@@ -769,7 +756,7 @@ theorem lattice_forward_preserves_base_alt : ∀ {B : GlobalTheory.Mem.Base} {X 
   have hloc : ∀ v, ∀ g ∈ (_root_.GlobalTheory.MiTop.formsAtZero W u).cls0.lev.Uloc v, ∀ i j, g.1 i j ∈ Formalism.UG.tensInt (F := (I.rec7 l Z).host.F) (v.adicCompletion (I.rec7 l Z).host.F) (Formalism.UG.intOE (I.rec7 l Z).host.E) (v.adicCompletionIntegers (I.rec7 l Z).host.F).toSubring :=
     fun v g hgv => _root_.GlobalTheory.UnitLevelInt.entry_mem_of_levelVL _ _ _ hσ _ _ hg _ hne' _ hΛ v g ((_root_.GlobalTheory.MiTop.formsAtZero W u).cls0.lev.Uloc_lev v hgv)
   have hyv := (((_root_.GlobalTheory.MiTop.formsAtZero W u).cls0.lev.U_eq y.1).1 hU).2
-  have hyinv := finM_inv_eq _ _ κ y.1 hy
+  have hyinv := _root_.GlobalTheory.FamTrace.PairsFwd.finM_inv _ _ κ y.1 hy
   refine GlobalTheory.FinPl.KOpen.moves_of_levelOpen _ _ hfg _ ?_
   clear hs hk hlb row col hc
   have hL : (a.g.x 0).L = GlobalTheory.AdelicU.stdLattice (I.rec7 l Z).host.E ((I.rec7 l Z).sp.X 0).rank := by

@@ -1064,13 +1064,6 @@ theorem isAlgComb_of_isThetaAt {ψ : AddChar (AF D.host.F) ℂ} (hψ : IsStdChar
   rw [← hgw p]
   rfl
 
-theorem exists_den_dualCoord {A' WW : HSp D} {ΛS : Submodule (𝓞 D.host.E) (Fin A'.rank → D.host.E)}
-    {ΛT : Submodule (𝓞 D.host.E) (Fin WW.rank → D.host.E)} (hS : ΛS.FG) (hT : ΛT.FG) (βA' : GL (Fin A'.rank) (EAf D))
-    (βW : GL (Fin WW.rank) (EAf D)) : ∃ M : ℕ, 0 < M ∧
-      ∀ u ∈ latO A' WW (ΛS : Set (Fin A'.rank → D.host.E)) (ΛT : Set (Fin WW.rank → D.host.E)) (fun _ => True),
-        ∀ i j, (M : EAf D) * dualCoord A' WW βA' βW u i j ∈ Formalism.L2.Herm.intAf D.host.F D.host.E :=
-  GlobalTheory.CompanionTheory.StdSndTheta.exists_den_dualCoord hS hT βA' βW
-
 theorem finDatum'_isAlgComb : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Consts} {G : GridData L sc} {W : G.Weil}
     {i j : Fin D.R.m} {A A' WW : HSp D} {X : Tri T A A' WW}, IsBottomTri W i j X →
     ∀ t : T, GlobalTheory.MovedAlg.IsAlgComb W.ψ A' WW X.vac' (X.f' t) := by
@@ -1084,7 +1077,7 @@ theorem finDatum'_isAlgComb : ∀ {D : D7} {T : Type} {L : LevCh D T} {sc : Cons
   have hWd : IsSelfDualC WW X.rW.Λ := hI.rigW.1
   exact isAlgComb_of_isThetaAt hI.isVac'.1 hSd hWd (by rw [← RingHom.map_mul, hee]) hinf
     (GlobalTheory.CompanionTheory.StdSndTheta.stdSnd_isSB hν.1 he (GlobalTheory.ConstRatio.ideal_ne_bot X (locPl G) t) _ A' WW X.rA'.β X.rW.β _
-      (exists_den_dualCoord hSd.1.fg hWd.1.fg X.rA'.β X.rW.β)
+      (_root_.GlobalTheory.CompanionTheory.StdSndTheta.exists_den_dualCoord hSd.1.fg hWd.1.fg X.rA'.β X.rW.β)
       (GlobalTheory.CompanionTheory.StdSndTheta.exists_mul_dualCoord (GlobalTheory.ProjXCols.selfDual_isFullLattice A' _ hSd)
         (GlobalTheory.ProjXCols.selfDual_isFullLattice WW _ hWd) hinf X.rA'.β X.rW.β))
     (fun x => stdSnd_mem hν.1 he _ _ A' WW X.rA'.β X.rW.β x) (hI.snd t)

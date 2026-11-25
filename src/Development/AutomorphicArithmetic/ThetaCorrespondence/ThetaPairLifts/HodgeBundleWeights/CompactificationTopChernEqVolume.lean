@@ -1325,20 +1325,11 @@ end Frames
 
 def ratio (X Y : Data E r) : E := X.κ0 / Y.κ0
 
-theorem cc_κ (X : Data E r) : cc X.κ0 = -X.κ0 := by
-  have h := X.ξ0_im
-  unfold cc at h ⊢
-  rcases X.κ0_xi with e | e <;> simp [e, h, map_ofNat]
-
-theorem κ_ne (X : Data E r) : X.κ0 ≠ 0 := by
-  have h := X.ξ0_ne
-  rcases X.κ0_xi with e | e <;> simp [e, h]
-
-theorem ratio_ne (X Y : Data E r) : ratio X Y ≠ 0 := div_ne_zero (κ_ne X) (κ_ne Y)
+theorem ratio_ne (X Y : Data E r) : ratio X Y ≠ 0 := div_ne_zero (_root_.GlobalTheory.SW.DblPer.kappa_ne X) (_root_.GlobalTheory.SW.DblPer.kappa_ne Y)
 
 theorem cc_ratio (X Y : Data E r) : cc (ratio X Y) = ratio X Y := by
-  have h := cc_κ X
-  have h' := cc_κ Y
+  have h := _root_.GlobalTheory.SW.DblPer.cc_kappa X
+  have h' := _root_.GlobalTheory.SW.DblPer.cc_kappa Y
   unfold cc at h h' ⊢
   rw [ratio, map_div₀, h, h', neg_div_neg_eq]
 
@@ -1353,7 +1344,7 @@ theorem ξ_mul_ratio (X Y : Data E r) : Y.ξ0 * ratio X Y = X.ξ0 ∨ Y.ξ0 * ra
 
 theorem re_κ (X : Data E r) (τ : E →+* ℂ) : (τ X.κ0).re = 0 := by
   have h := IsCMField.complexEmbedding_complexConj E τ X.κ0
-  have h' := cc_κ X
+  have h' := _root_.GlobalTheory.SW.DblPer.cc_kappa X
   unfold cc at h'
   rw [h', map_neg] at h
   have := congrArg Complex.re h
@@ -1614,7 +1605,7 @@ def move : Data E r where
       convert hγ using 1
       group
     · have h1 := transv_conj X Y P hP ξ ((X.m : E) * s * Y.κ0)
-      rw [mul_assoc _ Y.κ0, ratio, mul_div_cancel₀ _ (κ_ne Y), ← e] at h1
+      rw [mul_assoc _ Y.κ0, ratio, mul_div_cancel₀ _ (_root_.GlobalTheory.SW.DblPer.kappa_ne Y), ← e] at h1
       rw [Units.val_mul, Units.val_mul, ← h1, Matrix.mul_assoc, Units.mul_inv, Matrix.mul_one]
       rfl
 

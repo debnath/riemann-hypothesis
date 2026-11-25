@@ -129,9 +129,6 @@ theorem GlobalTheory.EvenOnto.parBound_of_rapidDecay : GlobalTheory.Published.Cu
   rw [GlobalTheory.LFun.IsParamVecOff.unique h3 hB' hw]
   exact hbd w hw
 
-theorem _root_.GlobalTheory.T.evenRankChain_params_trivialBound_rapidDecay : GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, ParBound D := by
-  first | exact @GlobalTheory.EvenOnto.parBound_of_rapidDecay
-
 namespace GlobalTheory.EvenOnto.QuotL
 
 variable {D : D7}
@@ -330,9 +327,6 @@ theorem GlobalTheory.EvenOnto.chainL_and_inj : ∀ D : D7, ChainL D ∧ ∀ (c :
       have h2 := add_right_cancel h
       exact Multiset.map_injective (mul_right_injective _) h2
 
-theorem _root_.GlobalTheory.T.evenThetaChain_LValues_ne_zero_and_params_injective : ∀ D : D7, ChainL D ∧ ∀ (c : Com D) (k : ℕ) (B B' : GlobalTheory.LFun.Fam D.host.E) (w : HeightOneSpectrum (𝓞 D.host.E)), chainPar c B k w = chainPar c B' k w → B w = B' w := by
-  first | exact @GlobalTheory.EvenOnto.chainL_and_inj
-
 namespace GlobalTheory.EvenOnto
 
 theorem exists_tprod_ne_zero_of_cc {D : D7} {c : Com D} {s : PiLocalization₂ D} (z : s.CC c) (hz : z ≠ 0) :
@@ -386,7 +380,7 @@ theorem chainUp_of : ∀ D : D7, MetEx D → ParBound D → ChainL D → StepUp 
 
 theorem ontoAll_of : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep D → ParBound D → StepUp D → OntoAll D := by
   intro D hFin hMet hEig hInd hPB hSU c hc s₀ hs₀ k hk s Θ hR
-  have hUp := chainUp_of D hMet hPB (GlobalTheory.T.evenThetaChain_LValues_ne_zero_and_params_injective D).1 hSU
+  have hUp := chainUp_of D hMet hPB (_root_.GlobalTheory.EvenOnto.chainL_and_inj D).1 hSU
   obtain ⟨hs, hadj⟩ := hUp c hc s₀ hs₀ k hk s Θ hR
   obtain ⟨ipD₀, ip₀, hm₀⟩ := hMet c hc 0 (Nat.zero_le _) s₀ hs₀
   obtain ⟨ipD, ip, hm⟩ := hMet c hc k hk s hs
@@ -400,7 +394,7 @@ theorem ontoAll_of : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep
     (fun u B => IsPar u B) (fun x B => IsPar x B) R R (fun B => chainPar c B k)
     hm₀.herm hm₀.pos hm.pos hRe (hEig c hc 0 (Nat.zero_le _) s₀ hs₀) hlin₀.1 hlin₀.2 ?_ ?_ ?_
   · intro B B' h w hw
-    exact (GlobalTheory.T.evenThetaChain_LValues_ne_zero_and_params_injective D).2 c k B B' w (h w hw)
+    exact (_root_.GlobalTheory.EvenOnto.chainL_and_inj D).2 c k B B' w (h w hw)
   · intro ι x B hx hne
     refine hInd c hc k hk s hs ι x B hx ?_
     intro i i' hii'
@@ -412,9 +406,6 @@ theorem ontoAll_of : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep
     exact hadj ipD₀ ip₀ ipD ip hm₀ hm u B hu
 
 end GlobalTheory.EvenOnto
-
-theorem _root_.GlobalTheory.T.evenRankThetaChainLift_surjective_of_adjoint_nonzero : ∀ D : D7, FinDim D → MetEx D → EigSpan D → ParIndep D → ParBound D → StepUp D → OntoAll D := by
-  first | exact @GlobalTheory.EvenOnto.ontoAll_of
 
 namespace GlobalTheory.EvenMetric
 
@@ -496,9 +487,6 @@ theorem finDim_and_metEx : GlobalTheory.Published.HarishChandraFinite → Global
 
 end GlobalTheory.EvenMetric
 
-theorem _root_.GlobalTheory.T.evenThetaChain_finiteDimensional_and_peterssonProducts : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → ∀ D : D7, FinDim D ∧ MetEx D := by
-  first | exact @GlobalTheory.EvenMetric.finDim_and_metEx
-
 namespace GlobalTheory.EvenOnto
 
 theorem PiLocalization₂.val_autCusp {D : D7} (c : Com D) (s : PiLocalization₂ D) (u : s.CC c) (x : SmT s.M) :
@@ -545,9 +533,6 @@ theorem upPar_of_transfer : GlobalTheory.Published.CuspRapidDecay → GlobalTheo
 
 end GlobalTheory.EvenOnto
 
-theorem _root_.GlobalTheory.T.evenThetaChainUpwardLift_heckeParam_transferred : GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Hk3.HoweUnram → ∀ D : D7, UpPar D := by
-  first | exact @GlobalTheory.EvenOnto.upPar_of_transfer
-
 namespace GlobalTheory.EvenOnto
 
 theorem pet_val_sum {D : D7} {c : Com D} {s : PiLocalization₂ D} {ipD : SmT s.M →ₗ[ℂ] SmT s.M →ₗ⋆[ℂ] ℂ}
@@ -583,9 +568,6 @@ theorem stepUp : ∀ D : D7, FinDim D → ParOfVal D → UpSpan D → UpAdj D �
 
 end GlobalTheory.EvenOnto
 
-theorem _root_.GlobalTheory.T.even_theta_step_adjoint_nonzero_transferred_params : ∀ D : D7, FinDim D → ParOfVal D → UpSpan D → UpAdj D → UpPar D → UpNe D → StepUp D := by
-  first | exact @GlobalTheory.EvenOnto.stepUp
-
 section
 open GlobalTheory.Chain (ptOf)
 open GlobalTheory.Chain.RealIt (glue)
@@ -615,9 +597,6 @@ theorem realZeta : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.P
 
 end GlobalTheory.EvenOntoRealZeta
 end
-
-theorem _root_.GlobalTheory.T.evenThetaStep_realZeta_nonvanishing : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → ∀ D : D7, RealZeta D := by
-  first | exact @GlobalTheory.EvenOntoRealZeta.realZeta
 
 namespace GlobalTheory.EvenOnto.MeasPet
 
@@ -710,9 +689,6 @@ theorem meas_petco : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff 
 
 end GlobalTheory.EvenOnto.MeasPet
 
-theorem _root_.GlobalTheory.T.evenThetaChainStage_levelMeasure_peterssonCoefficient : ∀ D : D7, ForStage D fun c _ s => (MeasurableSet (intOff c s) ∧ MeasurableSet s.big ∧ s.big ⊆ intOff c s ∧ ∃ mR : Measure (GinfC s.V), mR.IsHaarMeasure ∧ ∀ (f : GinfC s.V → ℂ) (F : GA D s.V → ℂ), Integrable f mR → (∀ (b : GinfC s.V), ∀ κ ∈ s.J, F ((b : GA D s.V) * κ) = f b) → IntegrableOn F s.big s.ν ∧ ∫ g in s.big, F g ∂s.ν = ∫ b, f b ∂mR) ∧ ∀ ipD ip, IsMet c s ipD ip → ∀ (u : s.CC c) (v : s.M.Vec) (b : GinfC s.V), ∀ κ ∈ s.J, s.pet (rTr s.V ((b : GA D s.V) * κ) (PiLocalization₂.val u (PiTensorProduct.tprod ℂ v))) (PiLocalization₂.val u (PiTensorProduct.tprod ℂ v)) = ip u u * ∏ τ, ⟪(v τ : s.M.H τ), s.M.rep τ (infMat D.sp.cm.sig s.V.gram (c.θ τ) (b : GA D s.V)) (v τ : s.M.H τ)⟫_ℂ := by
-  first | exact @GlobalTheory.EvenOnto.MeasPet.meas_petco
-
 namespace GlobalTheory.EvenOnto.ZetaNeProof
 
 variable {D : D7}
@@ -756,7 +732,7 @@ theorem zetaNe_of_real : ∀ D : D7, MetEx D → RealZeta D → ZetaNe D := by
   obtain ⟨φ, v, hvK, hR⟩ := hRZ c hc k hk s s' hs hs' p hp m X hcov
   have hkm : k ≤ c.m := hk.le
   obtain ⟨ipD, ip, hip⟩ := hMet c hc k hkm s hs
-  obtain ⟨⟨hmOff, _, hAsub, mR, hmR, hint⟩, hpet⟩ := GlobalTheory.T.evenThetaChainStage_levelMeasure_peterssonCoefficient D c hc k hkm s hs
+  obtain ⟨⟨hmOff, _, hAsub, mR, hmR, hint⟩, hpet⟩ := _root_.GlobalTheory.EvenOnto.MeasPet.meas_petco D c hc k hkm s hs
   have hlaw : ∀ κ ∈ s.J, (p.ω (κ, 1)) (p.pt φ) = p.pt φ :=
     fun κ hκ => hp.pre.law φ κ hκ 1 s'.J.one_mem
   have hsupp := hp.pre.supp m X hcov φ
@@ -805,9 +781,6 @@ theorem zetaNe_of_real : ∀ D : D7, MetEx D → RealZeta D → ZetaNe D := by
       rw [hoff g hg, zero_mul]
 
 end GlobalTheory.EvenOnto.ZetaNeProof
-
-theorem _root_.GlobalTheory.T.evenThetaStep_semilocalZeta_ne_zero_of_real : ∀ D : D7, MetEx D → RealZeta D → ZetaNe D := by
-  first | exact @GlobalTheory.EvenOnto.ZetaNeProof.zetaNe_of_real
 
 section
 open GlobalTheory.Chain GlobalTheory.ChainFr GlobalTheory.PairLift
@@ -868,9 +841,6 @@ theorem liftUp_stage_span : GlobalTheory.Published.DiscreteSeriesCover → Globa
 end GlobalTheory.EvenOnto.LiftUp
 end
 
-theorem _root_.GlobalTheory.T.liftUp_multiplicitySpaces_span_kFiniteVectors : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → ∀ (D : D7) (c : Com D) (k : ℕ) (s s' : PiLocalization₂ D) ω f, c.Is → k < c.m → s.Is c k → s'.Is c (k + 1) → PreStep c k s s' ω f → ∃ T : PolF D s'.V.rank s.V.rank → SmT s.M → SmT s'.M, (∀ P v, T P v ∈ s'.KF) ∧ s'.KF ≤ Submodule.span ℂ {w | ∃ P v, w = T P v} ∧ GlobalTheory.PairLift.LiftsM c.θ s.M s'.M s.ν s.fd (fun P h g => conj (thetaKO ω g h (GlobalTheory.Chain.ptOf c.ψ c.θ s.M s'.M f P))) T := by
-  first | exact @GlobalTheory.EvenOnto.LiftUp.liftUp_stage_span
-
 namespace GlobalTheory.EvenOnto.UpLift
 
 variable {D : D7}
@@ -886,7 +856,7 @@ theorem multT_le_noLevel' {V : HSp D} {S : D.what₂.Tau → SPar} (θ : InfFam 
 theorem upSpan : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay →
     GlobalTheory.Published.CasselmanWallach → ∀ D : D7, UpSpan D := by
   intro h1 h2 h3 h4 D c hc k hk s s' hs hs' p hp u φ v _hv
-  obtain ⟨T, hTK, hKT, hL⟩ := GlobalTheory.T.liftUp_multiplicitySpaces_span_kFiniteVectors h1 h2 h3 h4 D c k s s' p.ω p.f hc hk hs hs' hp.pre
+  obtain ⟨T, hTK, hKT, hL⟩ := _root_.GlobalTheory.EvenOnto.LiftUp.liftUp_stage_span h1 h2 h3 h4 D c k s s' p.ω p.f hc hk hs hs' hp.pre
   obtain ⟨F', hF', hint⟩ := hL _ (multT_le_noLevel' c.θ s.M _ _ u.2)
   have hlaw : ∀ P v', ∀ κ ∈ s'.J, ∀ g, F' (T P v') (g * κ) = F' (T P v') g := by
     intro P v' κ hκ g
@@ -948,9 +918,6 @@ theorem upSpan_upAdj : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheo
 
 end GlobalTheory.EvenOnto.UpLift
 
-theorem _root_.GlobalTheory.T.thetaLiftUpward_cuspSpan_and_adjoint : GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.CasselmanWallach → ∀ D : D7, UpSpan D ∧ UpAdj D := by
-  first | exact @GlobalTheory.EvenOnto.UpLift.upSpan_upAdj
-
 namespace GlobalTheory.EvenOnto
 
 theorem conj_stage_val_mem_A0_and_cartan_frame : ∀ D : D7, ForStage D fun c _ s => ∃ (cA : GlobalTheory.Mem.Th.CptF s.V) (a : GL (Fin s.V.rank) (AE D)), GlobalTheory.Cusp.IsCartanFrame s.V cA ∧ (∀ τ, IsCartanInv (gramAt D s.V τ) (cart s.M τ)) ∧ (∀ τ, cA τ * cart s.M τ = Formalism.UG.Jpq (s.V.sig (tauE D τ)).1 (s.V.sig (tauE D τ)).2 * cA τ) ∧ GlobalTheory.Doubling.IsMaj s.V a ∧ (∀ τ, (compAt c.θ τ a.1)ᴴ * (gramAt D s.V τ * cart s.M τ) * compAt c.θ τ a.1 = 1) ∧ ∀ (u : s.CC c), ∀ v ∈ s.KF, (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.Cusp.A0 c.θ s.V cA := by
@@ -961,9 +928,6 @@ theorem conj_stage_val_mem_A0_and_cartan_frame : ∀ D : D7, ForStage D fun c _ 
     fun u v hv => GlobalTheory.ChainOnto.RealData.conj_multiplicityValue_mem_cuspFormsArchimedeanKFinite c.θ hc.inf s.M hs.sigOK u.1 u.2 v hv⟩
 
 end GlobalTheory.EvenOnto
-
-theorem _root_.GlobalTheory.T.thetaChainStage_cartanFrame_conj_values_cuspForms : ∀ D : D7, ForStage D fun c _ s => ∃ (cA : GlobalTheory.Mem.Th.CptF s.V) (a : GL (Fin s.V.rank) (AE D)), GlobalTheory.Cusp.IsCartanFrame s.V cA ∧ (∀ τ, IsCartanInv (gramAt D s.V τ) (cart s.M τ)) ∧ (∀ τ, cA τ * cart s.M τ = Formalism.UG.Jpq (s.V.sig (tauE D τ)).1 (s.V.sig (tauE D τ)).2 * cA τ) ∧ GlobalTheory.Doubling.IsMaj s.V a ∧ (∀ τ, (compAt c.θ τ a.1)ᴴ * (gramAt D s.V τ * cart s.M τ) * compAt c.θ τ a.1 = 1) ∧ ∀ (u : s.CC c), ∀ v ∈ s.KF, (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.Cusp.A0 c.θ s.V cA := by
-  first | exact @GlobalTheory.EvenOnto.conj_stage_val_mem_A0_and_cartan_frame
 
 namespace GlobalTheory.EvenOnto
 
@@ -981,8 +945,8 @@ theorem upNe_of_heckeForm : ∀ D : D7, GlobalTheory.Core.Rk.IP.HeckeForm D → 
       intro g; simp [Step.zint, h0, PiLocalization₂.pet, Lift.pet, rTr]
     simp [this]
   have hparF := hpar v hF
-  obtain ⟨cA, a, hcA, hcart, hJ, hmaj, hmaj_eq, hA0⟩ := GlobalTheory.T.thetaChainStage_cartanFrame_conj_values_cuspForms D c hc k hk.le s hs
-  obtain ⟨-, -, -, hcartB, -, -, -, -⟩ := GlobalTheory.T.thetaChainStage_cartanFrame_conj_values_cuspForms D c hc (k + 1) hk s' hs'
+  obtain ⟨cA, a, hcA, hcart, hJ, hmaj, hmaj_eq, hA0⟩ := _root_.GlobalTheory.EvenOnto.conj_stage_val_mem_A0_and_cartan_frame D c hc k hk.le s hs
+  obtain ⟨-, -, -, hcartB, -, -, -, -⟩ := _root_.GlobalTheory.EvenOnto.conj_stage_val_mem_A0_and_cartan_frame D c hc (k + 1) hk s' hs'
   have hu1 : (fun g => conj (PiLocalization₂.val u v g)) ∈ GlobalTheory.Cusp.A0 c.θ s.V cA := hA0 u v hvK
   have hwitt : GlobalTheory.Cusp.wittIndex s'.V < c.t := hs'.witt
   have hfock := GlobalTheory.T.evenThetaChainStep_fockVectors_spherical_latticeVacua D c hc k hk s s' hs hs' p hp
@@ -1080,24 +1044,21 @@ theorem upNe_of_heckeForm : ∀ D : D7, GlobalTheory.Core.Rk.IP.HeckeForm D → 
 
 end GlobalTheory.EvenOnto
 
-theorem _root_.GlobalTheory.T.upwardThetaLift_ne_zero_of_lValue_ne_zero : ∀ D : D7, GlobalTheory.Core.Rk.IP.HeckeForm D → MetEx D → ZetaNe D → UpNe D := by
-  first | exact @GlobalTheory.EvenOnto.upNe_of_heckeForm
-
 section
 namespace GlobalTheory.EvenOnto
 theorem even_surjective_of_representatives : GlobalTheory.Published.HarishChandraFinite → GlobalTheory.Published.CuspRapidDecay → GlobalTheory.Published.DiscreteSeriesCover → GlobalTheory.Published.HarishChandraModules → GlobalTheory.Published.CasselmanWallach → GlobalTheory.Hk3.HoweUnram → GlobalTheory.Published.WeilRepresentationUnitaryPair → GlobalTheory.Published.WeilSiegelFormulaUnitary → GlobalTheory.Published.SiegelWeilUnitaryConvergent → _root_.GlobalTheory.Published.DoublingMethodLocalZetaIntegrals → GlobalTheory.Published.UnramifiedDoublingGL → ∀ D : D7, OntoAll D := by
   intro hHC hCusp hDS hHCM hCW hHowe hWeil hSW hSWc hDoub hUnr D
   have hHecke := _root_.GlobalTheory.Core.Rk.IP.heckeForm_of_doubling' hWeil hCusp hSW hSWc hDoub hUnr D
-  obtain ⟨hFin, hMet⟩ := GlobalTheory.T.evenThetaChain_finiteDimensional_and_peterssonProducts hHC hCusp D
+  obtain ⟨hFin, hMet⟩ := _root_.GlobalTheory.EvenMetric.finDim_and_metEx hHC hCusp D
   obtain ⟨hEig, hPoV, hInd⟩ := GlobalTheory.T.even_theta_chain_spanned_params_of_value_independent hCusp D hFin hMet
-  have hBd := GlobalTheory.T.evenRankChain_params_trivialBound_rapidDecay hCusp D
-  obtain ⟨hSpan, hAdj⟩ := GlobalTheory.T.thetaLiftUpward_cuspSpan_and_adjoint hDS hHCM hCusp hCW D
-  have hPar := GlobalTheory.T.evenThetaChainUpwardLift_heckeParam_transferred hCusp hHowe D
-  have hRZ := GlobalTheory.T.evenThetaStep_realZeta_nonvanishing hDS hHCM D
-  have hZN := GlobalTheory.T.evenThetaStep_semilocalZeta_ne_zero_of_real D hMet hRZ
-  have hNe := GlobalTheory.T.upwardThetaLift_ne_zero_of_lValue_ne_zero D hHecke hMet hZN
-  have hStep := GlobalTheory.T.even_theta_step_adjoint_nonzero_transferred_params D hFin hPoV hSpan hAdj hPar hNe
-  exact GlobalTheory.T.evenRankThetaChainLift_surjective_of_adjoint_nonzero D hFin hMet hEig hInd hBd hStep
+  have hBd := _root_.GlobalTheory.EvenOnto.parBound_of_rapidDecay hCusp D
+  obtain ⟨hSpan, hAdj⟩ := _root_.GlobalTheory.EvenOnto.UpLift.upSpan_upAdj hDS hHCM hCusp hCW D
+  have hPar := _root_.GlobalTheory.EvenOnto.upPar_of_transfer hCusp hHowe D
+  have hRZ := _root_.GlobalTheory.EvenOntoRealZeta.realZeta hDS hHCM D
+  have hZN := _root_.GlobalTheory.EvenOnto.ZetaNeProof.zetaNe_of_real D hMet hRZ
+  have hNe := _root_.GlobalTheory.EvenOnto.upNe_of_heckeForm D hHecke hMet hZN
+  have hStep := _root_.GlobalTheory.EvenOnto.stepUp D hFin hPoV hSpan hAdj hPar hNe
+  exact _root_.GlobalTheory.EvenOnto.ontoAll_of D hFin hMet hEig hInd hBd hStep
 end GlobalTheory.EvenOnto
 end
 

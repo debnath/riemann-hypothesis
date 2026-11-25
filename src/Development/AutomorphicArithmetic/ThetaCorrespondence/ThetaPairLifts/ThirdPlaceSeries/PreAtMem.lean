@@ -418,8 +418,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 
-theorem _root_.GlobalTheory.T.good_rows_same_eigenvalues_same_frobenius : ∀ (D : D7) (cf : CharFrame D) (Rw : RowSide D) (Sb : Finset (PlE D.host)) (eig : ℕ → D.what₂.FT → ℕ → PlE D.host → ↥D.LL0), GlobalTheory.TwInputs.EigTrue D cf Rw Sb eig → GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.GoodRowCuspParam D Rw → ∀ (j : ℕ), 1 ≤ j → j ≤ D.R.m → ∀ σ σ' : D.what₂.FT, D.what₂.isot j σ ≠ ⊥ → D.nd.goodRow σ → D.what₂.isot j σ' ≠ ⊥ → D.nd.goodRow σ' → ∀ P : PlE D.host, IsSplitPl D.host P → P ∉ Sb → (∀ k, 1 ≤ k → k ≤ D.R.r → eig j σ' k P = eig j σ k P) → D.naut.frobEig (Rw.locR σ' P) = D.naut.frobEig (Rw.locR σ P) := by
-  first | exact @GlobalTheory.FrobSame.frobEig_eq_of_eig_eq
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.GoodRowsSameEigenvaluesSameFrobeniusStatement =====
@@ -510,8 +508,6 @@ section -- clump:auto
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] Formalism.BasicNotions.Host.cmStar GlobalTheory.TypeRec.factG
 
-theorem _root_.GlobalTheory.T.isRhoOfRow_of_frobenius_eigenvalues : ∀ (D : D7) (Rw : RowSide D) (rowS : ∀ i, D.ntw.Sig i → D.what₂.FT), GlobalTheory.HeightCounting.RhoSpec D Rw rowS → GlobalTheory.IndefiniteRowSideFullHecke.CMTypeEmbeddings.GoodRowCuspParam D Rw → ∀ (a : D.nd.Loc) (σ : D.what₂.FT) (s : D.ntw.Sig (D.ntw.twOf a)), GlobalTheory.RowTriple.ReadTw D a → D.ntw.side _ s = D.ntw.twSide a → D.ntw.jS _ s = D.nd.j a → GlobalTheory.IndefiniteRowSideFullHecke.TwistedTriples.IsGoodRow D a σ → (∀ w, IsSplitPl D.host w → D.naut.locW a σ w = Rw.locR σ w) → (∀ᶠ P in Filter.cofinite, IsSplitPl D.host P → D.naut.frobEig (Rw.locR (rowS _ s) P) = D.naut.frobEig (Rw.locR σ P)) → GlobalTheory.IndefiniteRowSideFullHecke.TwistedTriples.IsRhoOfRow D a σ (GlobalTheory.IndefiniteRowSideFullHecke.TwistedTriples.rhoTrip D a s) := by
-  first | exact @GlobalTheory.TripRho.isRhoOfRow_of_frobEig
 end -- clump:auto
 end -- clump:auto
 -- ===== end clump member: Development.AbelianVarietyTheory.Proofs.IwasawaDecomposition.IsRhoOfRowOfFrobeniusEigenvaluesStatement =====
@@ -616,12 +612,12 @@ theorem tripAll_of_sideB (D : D7) (cf : CharFrame D) (Rw : RowSide D) (low : Fin
     (D.ntw.twSide a) (D.nd.j a) h1 h2 σ hiso hgood
   obtain ⟨hiso', hgood', -⟩ := Bs.rhoS _ s
   rw [hj] at hiso'
-  refine ⟨s, hj, hb, GlobalTheory.T.isRhoOfRow_of_frobenius_eigenvalues D Rw Bs.rowS Bs.rhoS hP a σ s (hR a) hb hj ⟨hiso, hgood⟩ (hloc a σ) ?_⟩
+  refine ⟨s, hj, hb, _root_.GlobalTheory.TripRho.isRhoOfRow_of_frobEig D Rw Bs.rowS Bs.rhoS hP a σ s (hR a) hb hj ⟨hiso, hgood⟩ (hloc a σ) ?_⟩
   have hfin : ((Sb ∪ D.ntw.S0 (D.ntw.twOf a) : Finset (PlE D.host)) : Set (PlE D.host)).Finite := Finset.finite_toSet _
   filter_upwards [hfin.compl_mem_cofinite] with P hP' hsp
   have hP1 : P ∉ Sb := fun h => hP' (by simp [h])
   have hP2 : P ∉ D.ntw.S0 (D.ntw.twOf a) := fun h => hP' (by simp [h])
-  exact GlobalTheory.T.good_rows_same_eigenvalues_same_frobenius D cf Rw Sb eig hT hP (D.nd.j a) h1 h2 σ (Bs.rowS _ s) hiso hgood hiso' hgood' P hsp hP1
+  exact _root_.GlobalTheory.FrobSame.frobEig_eq_of_eig_eq D cf Rw Sb eig hT hP (D.nd.j a) h1 h2 σ (Bs.rowS _ s) hiso hgood hiso' hgood' P hsp hP1
     fun k hk1 hk2 => he k P hk1 hk2 hsp hP2
 
 end GlobalTheory.RowTriple
@@ -1352,8 +1348,6 @@ section
 open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host Formalism.L2.NT Formalism.IndefR.NX NumberField IsDedekindDomain GlobalTheory.Mem GlobalTheory.Mem.Col2 GlobalTheory.Mem.Top GlobalTheory.Mem.Top.GroupRetwisting GlobalTheory.Mem.Top.Bl GlobalTheory.Mem.R3 GlobalTheory.Mem.R3.Rw GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up
 attribute [local instance] GlobalTheory.TypeRec.factG
 
-theorem _root_.GlobalTheory.T.adm8_and_lamUsed_of_readL_of_parameters : _root_.GlobalTheory.HeightCounting.Up.PublishedInputsThirdLayerAlt → _root_.GlobalTheory.NRows.GeometricGaloisRepCompatibility → OverRows fun _ _ _ _ w Z _ _ z p0 Y => ReadL z.R z.F p0 Y → (∃ L : SizeData₂ (w.st Z).toD7, Nonempty (ParameterChoice' (w.st Z).toD7 L)) → SumRepresentations.adm8 (w.st Z).toD7 ∧ GlobalTheory.NRows.LamUsed (w.st Z).toD7 := by
-  first | exact @_root_.GlobalTheory.NRows.OverX.lambdaAdic_components_over_base_alt
 end
 end
 end -- clump:auto
@@ -1376,7 +1370,7 @@ theorem exists_inputs_pinAt_jumpsCard_at_mem : _root_.GlobalTheory.HeightCountin
     _root_.GlobalTheory.HeightCounting.Up.MemberAtLayerPoint hL fun _ _ _ _ w Z _ _ _ _ _ c => ∃ I : _root_.GlobalTheory.NRows.LinkedInputs hL (w.D Z), _root_.GlobalTheory.HeightCounting.Up.PinnedAtCharacterChoice c.a I.P ∧ JumpsCard (w.D Z).nd (w.D Z).naut := by
   intro prn prx hL
   have hA := _root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.HeightCounting.Up.Model.AtMem.and_z (_root_.GlobalTheory.T.exists_linked_data_pinned_at_layer prn hL) (_root_.GlobalTheory.T.serLoc_at_member_of_published_inputs prn hL)) (_root_.GlobalTheory.HeightCounting.JumpsAt.jumpsCard_at_members_of_htCard prx.ht hL)
-  refine _root_.GlobalTheory.NRows.AtLayer.atMem_mono_of_colPin (EvG.imp (EvG.inter GlobalTheory.T.eventually_sizes_congruences_hostFacts_columnChoices (_root_.GlobalTheory.T.adm8_and_lamUsed_of_readL_of_parameters prn prx)) fun _ _ _ _ _ hK => large₂.inter hK.1 hK.2) hA ?_
+  refine _root_.GlobalTheory.NRows.AtLayer.atMem_mono_of_colPin (EvG.imp (EvG.inter GlobalTheory.T.eventually_sizes_congruences_hostFacts_columnChoices (_root_.GlobalTheory.NRows.OverX.lambdaAdic_components_over_base_alt prn prx)) fun _ _ _ _ _ hK => large₂.inter hK.1 hK.2) hA ?_
   rintro K B f T ⟨hS, hR⟩ kp w Z Wt p0 t nch n xd c ⟨ne⟩ _ cp ⟨⟨⟨X, hpin, -⟩, ser⟩, jumps⟩
   obtain ⟨-, -, -, -, -, hdef, -⟩ := hS kp T w Z
   have hr := hR kp w cp Z Wt t.hX t.r.z p0 t.r.Y t.r.intersectionNumber_baseChange t.exAt t.inGeo t.grp t.grpAt t.r.Z X.X.given.params
@@ -1560,17 +1554,6 @@ end -- clump:auto
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.InfWtEqInfOfStatement =====
 -- clump-header: {"m": "Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.InfWtEqInfOfStatement", "h": "module\n\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.HeckeOpen\npublic import Formalism.SharpRestriction.CuspSpanNormBounds.BesselShellMomentBounds\npublic import Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.InfWtEqInfOf\nimport Mathlib.Algebra.Order.Floor.Extended\nimport Mathlib.Algebra.Order.Floor.Semifield\nimport Mathlib.Algebra.Order.Interval.Basic\nimport Mathlib.Analysis.SpecialFunctions.Trigonometric.DerivHyp\nimport Mathlib.Combinatorics.Enumerative.DyckWord\nimport Mathlib.Combinatorics.SimpleGraph.Triangle.Removal\nimport Mathlib.Data.NNRat.Floor\nimport Mathlib.Geometry.Euclidean.Volume.Basic\nimport Mathlib.NumberTheory.Chebyshev\nimport Mathlib.NumberTheory.Height.NumberField\nimport Mathlib.NumberTheory.Height.Projectivization\nimport Mathlib.NumberTheory.LucasLehmer\nimport Mathlib.NumberTheory.SelbergSieve\nimport Mathlib.RingTheory.Radical.NatInt\nimport Mathlib.Tactic.Echelon.Zsqrtd\nimport Mathlib.Tactic.Inclusion.Extension.Core.Core\nimport Mathlib.Tactic.Inclusion.Extension.Interval.BinarySplit\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Exp\nimport Mathlib.Tactic.Inclusion.Extension.IntervalDyadicReal.Hypotheses\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Basic\nimport Mathlib.Tactic.Inclusion.Extension.IntervalInt.Hypotheses\nimport Mathlib.Tactic.NormNum.Irrational\nimport Mathlib.Tactic.NormNum.IsCoprime\nimport Mathlib.Tactic.NormNum.IsSquare\nimport Mathlib.Tactic.NormNum.LegendreSymbol\nimport Mathlib.Tactic.NormNum.ModEq\nimport Mathlib.Tactic.NormNum.NatFib\nimport Mathlib.Tactic.NormNum.NatLog\nimport Mathlib.Tactic.NormNum.NatSqrt\nimport Mathlib.Tactic.NormNum.Ordinal\nimport Mathlib.Tactic.NormNum.Parity\nimport Mathlib.Tactic.NormNum.Prime\nimport Mathlib.Tactic.NormNum.RealSqrt\nimport Development.AbelianVarietyTheory.Definitions.AutomorphicMembership.StrictHenselianAcyclic\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ResidualIrreducibilityFormsEquivalent\nimport Development.AbelianVarietyTheory.Definitions.GaloisGeometry.ThetaMod\n\n"}
-section -- clump:auto
-@[expose] public section
-
-section
-open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formalism.L2 Formalism.L2.Host NumberField IsDedekindDomain ReciprocityTheory.Gal GlobalTheory.HeightCounting GlobalTheory.HeightCounting.Up GlobalTheory.NPin GlobalTheory.NFacts
-
-theorem _root_.GlobalTheory.T.infWt_eq_infOf_of_isDual : ∀ (D : D7) (M : MtFam D) (tup : D.what₂.Tup → Fin D.R.m → HChar D.host.E), _root_.GlobalTheory.HeightCounting.HeckeOpenStatements D M tup → ∀ (i : D.nd.Loc) (a : Formalism.L2.NG.AlgWt D.host.E D.R.nV) (τ : D.host.E →+* ℂ) (lam : Fin D.R.nV → ℤ), (M.loc i).wt.IsDual a → a.HWAt τ lam → D.naut.infWt i τ = Formalism.L2.NG.infOf lam := by
-  first | exact @_root_.GlobalTheory.LocInfWt.infWt_eq_infOf_alt
-end
-end -- clump:auto
-end -- clump:auto
 -- ===== end clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.InfWtEqInfOfStatement =====
 
 -- ===== clump member: Development.AutomorphicArithmetic.ThetaCorrespondence.ThetaPairLifts.ThirdPlaceSeries.WeightParamOfPin =====
@@ -1583,7 +1566,7 @@ open Formalism.BasicNotions Formalism.MainNotions Formalism.MainNotions.N Formal
 namespace GlobalTheory
 theorem weightParam_of_pin_alt : ∀ (hL : _root_.UpperTheory.Zero.LLC.RecTExists) (D : D7) (P : _root_.GlobalTheory.NPin.CharacterChoiceData hL D), GlobalTheory.IndefiniteRowSideFullHecke.JumpDictionary.WeightParam D := by
   intro hL D P
-  exact _root_.GlobalTheory.WeightParamTie.weightParam_of_levelTied D P.M P.tp.tup P.H.level (_root_.GlobalTheory.EtaInfType.main D P.cf P.C P.tp P.chr) (_root_.GlobalTheory.T.infWt_eq_infOf_of_isDual D P.M P.tp.tup P.H)
+  exact _root_.GlobalTheory.WeightParamTie.weightParam_of_levelTied D P.M P.tp.tup P.H.level (_root_.GlobalTheory.EtaInfType.main D P.cf P.C P.tp P.chr) (_root_.GlobalTheory.LocInfWt.infWt_eq_infOf_alt D P.M P.tp.tup P.H)
 end GlobalTheory
 end
 end -- clump:auto

@@ -445,10 +445,6 @@ theorem at_add {m k : Type} {D D' : Matrix m k (AE F E)} (hD : At (evI F) D) (hD
     At (evI F) (D + D') := by
   intro u hu; rw [smul_add, hD u hu, hD' u hu, add_zero]
 
-theorem at_mul_right {m k l : Type} [Fintype k] {D : Matrix k l (AE F E)} (hD : At (evI F) D) (N : Matrix m k (AE F E)) :
-    At (evI F) (N * D) := by
-  intro u hu; rw [← Matrix.mul_smul, hD u hu, Matrix.mul_zero]
-
 theorem at_transpose {m k : Type} {D : Matrix m k (AE F E)} (hD : At (evI F) D) : At (evI F) Dᵀ := by
   intro u hu; rw [← Matrix.transpose_smul, hD u hu, Matrix.transpose_zero]
 
@@ -541,8 +537,8 @@ theorem conj_skew : ∀ (F E : Type) [Field F] [NumberField F] [Field E] [Number
           rw [Matrix.map_add _ (map_add _), Matrix.map_one _ (map_zero _) (map_one _), Matrix.transpose_add, Matrix.transpose_one]
           noncomm_ring
         rw [e]
-        exact at_add (at_add (GlobalTheory.FockCompactW.at_mul_right (at_transpose hGat) _) (at_mul_right (at_map_cA σ hGat) _))
-          (at_mul_right (at_map_cA σ hGat) _)
+        exact at_add (at_add (GlobalTheory.FockCompactW.at_mul_right (at_transpose hGat) _) (_root_.GlobalTheory.FockCompactX.at_mul_left (at_map_cA σ hGat) _))
+          (_root_.GlobalTheory.FockCompactX.at_mul_left (at_map_cA σ hGat) _)
       · intro w
         rw [Matrix.map_sub _ (map_sub _), Matrix.map_mul, Matrix.map_mul, Matrix.transpose_map, map_cA_piInf hcm, hgmap,
           GlobalTheory.RealLift.Main.incM_map_piInf, hu, sub_self]

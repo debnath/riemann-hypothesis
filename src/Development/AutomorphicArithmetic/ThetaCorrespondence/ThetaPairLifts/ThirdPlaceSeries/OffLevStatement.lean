@@ -200,11 +200,6 @@ theorem isLoc_one {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpa
   rw [h1, Units.val_one, Matrix.mul_one, F.βγ]
   exact Matrix.map_one _ (map_zero _) (map_one _)
 
-theorem isComp_inv {D : D7} {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k]
-    (p : Place D k) {χ : (AE D)ˣ →* Circle} {μ : kˣ →* ℂˣ} (h : p.IsComp χ⁻¹ μ) : p.IsComp χ μ⁻¹ := by
-  intro x a ha
-  rw [MonoidHom.inv_apply, Units.val_inv_eq_inv_val, h x a ha, MonoidHom.inv_apply, Circle.coe_inv, inv_inv]
-
 theorem om_phi {k : Type} [Field k] [ValuativeRel k] [TopologicalSpace k] [IsNonarchimedeanLocalField k] {s κ : ℕ}
     (S : SymData k s κ) (t : Type) [Fintype t] [DecidableEq t] (μ : ℕ → kˣ →* ℂˣ) (hμ : ∀ j, IsTame (μ j))
     (hu : ∀ j (x : kˣ), valuation k (x : k) = 1 → μ j x = S.μ j x) (j b : ℕ) (H : j + b = s) (hb : j + 1 + b = s + 1)
@@ -252,7 +247,7 @@ theorem std_target : ∀ (D : D7) (c : Comm D) (v : VCom c) (G : GLoc v), IsStdC
   have hR : (G.S.T (Fin D.R.t)).Regular := Chain.ofType_regular _ _ _ _ _
   have e1 := (G.eg_is j b H).2 Tm hTm O ⟨_, hR.1 j b H⟩ hO1 rfl
   rw [← hO O hO1, ← e1, ← map_smul]
-  refine _root_.GlobalTheory.LocOm.omLoc D G.k (ofSplit G.q) c.ψ _ _ χS χT ω hω _ μT (isComp_inv _ hS) hT _ _ _ _ Tm hTm 1 1 h x.1
+  refine _root_.GlobalTheory.LocOm.omLoc D G.k (ofSplit G.q) c.ψ _ _ χS χT ω hω _ μT (_root_.GlobalTheory.SeeSaw.LocSrc.isComp_inv _ hS) hT _ _ _ _ Tm hTm 1 1 h x.1
     (isLoc_one _ _) hx _ _ ?_
   rw [map_one, map_one, Units.val_one, one_smul, inv_inv]
   exact (om_phi G.S _ μ hμ hu j b H hb x).symm

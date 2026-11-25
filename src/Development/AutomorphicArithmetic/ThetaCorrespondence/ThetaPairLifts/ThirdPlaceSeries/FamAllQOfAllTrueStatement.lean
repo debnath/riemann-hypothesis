@@ -741,12 +741,6 @@ namespace GlobalTheory.BaseChainTop
 
 variable {D : D7}
 
-theorem comb_pureTensorO {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D} {S T : HSp D} (hψ : IsStdChar D ψ (-1))
-    (hθ : IsInfFam θ) (sS sT BS BT) {e : WO S T →₀ ℂ} (he : IsFinComb e) {f₀ : WO S T → ℂ}
-    (hf₀ : IsThetaFunO ψ S T f₀) (P) :
-    comb ψ S T e (pureTensorO ψ θ S T sS sT BS BT f₀ P) = pureTensorO ψ θ S T sS sT BS BT (comb ψ S T e f₀) P :=
-  by apply _root_.GlobalTheory.GVecAt.comb_pureTensorO <;> assumption
-
 theorem isItW_of_comb {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ : AddChar (AF D.host.F) ℂ} {θ : InfFam D}
     {M : DSModel V S} {M' : DSModel W S'} {χS χT : (AE D)ˣ →* Circle}
     {ω : GA D V × GA D W →* Module.End ℂ (WO V W → ℂ)} (hω : IsWeilDatumO ψ V W χS χT ω) (hθ : IsInfFam θ)
@@ -760,7 +754,7 @@ theorem isItW_of_comb {V W : HSp D} {S S' : D.what₂.Tau → SPar} {ψ : AddCha
   have hrel : ∀ φ, comb ψ V W b (pureTensorO ψ θ V W (cart M) (cart M') (onb M) (onb M') f φ) =
       pureTensorO ψ θ V W (cart M) (cart M') (onb M) (onb M') g φ := fun φ => by
     rw [← hg]
-    exact comb_pureTensorO hψ hθ _ _ _ _ hb hf φ
+    exact _root_.GlobalTheory.GVecAt.comb_pureTensorO hψ hθ _ _ _ _ hb hf φ
   have hcomm : ∀ a ∈ GinfC V, ∀ a' ∈ GinfC W, ∀ φ,
       ω (a, a') (pureTensorO ψ θ V W (cart M) (cart M') (onb M) (onb M') g φ) =
         comb ψ V W b (ω (a, a') (pureTensorO ψ θ V W (cart M) (cart M') (onb M) (onb M') f φ)) := fun a ha a' ha' φ => by
